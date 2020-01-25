@@ -69,7 +69,7 @@ public class Main {
 //        int[] arr = {1,8,6,2,5,4,8,3,7};
 //        System.out.println("Max1 Container Area = " + s1.maxArea(arr));
         int [] arr = {-1, 0, 1, 2, -1, -4};
-        System.out.println("Git!!");
+        System.out.println("Git WOW!!");
         s1.threeSum(arr);
 
     }
