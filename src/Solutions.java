@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Solutions {
@@ -304,31 +305,37 @@ public class Solutions {
         Arrays.sort(nums);
         // we now loop through each element targetx in array make it -targetx
         // and search for a pair in the sorted array which is equal to -targetx
+        HashMap<Integer,Integer> map = new HashMap<Integer, Integer>();
 
         for (int i = 0 ; i < nums.length; i++){
             int start = 0;
             int end = nums.length - 1;
             int targetx = -nums[i];
 
-            ArrayList<Integer> ilist = new ArrayList<Integer>();
-            for (int j = 0; j < nums.length; j++) {
+            ArrayList<Integer> ilist = new ArrayList<>();
+
+            while (start < end) {
                 if (start == i)
-                    start ++;
+                    start++;
                 if (end == i)
-                    end --;
-
-                if (start >= end)
-                    break;
-
-                if (start + end > targetx)
                     end--;
-                else if (start + end < targetx)
+
+                if (nums[start] + nums[end] > targetx &&
+                        (start <= nums.length-1 && end >= 0))
+                    end--;
+                else if (nums[start] + nums[end] < targetx &&
+                        (start <= nums.length-1 && end >= 0))
                     start++;
                 else {
-                    ilist.add(nums[start]);
-                    ilist.add(nums[end]);
-                    ilist.add(-targetx);
-                    results.add(ilist);
+                    if ((start <= nums.length-1 && end >= 0) &&
+                            map.containsKey(-targetx) == false) {
+                        System.out.println(-targetx);
+                        map.put(-targetx,1);
+                        ilist.add(nums[start]);
+                        ilist.add(nums[end]);
+                        ilist.add(-targetx);
+                        results.add(ilist);
+                    }
                     break;
                 }
             }
