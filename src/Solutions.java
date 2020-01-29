@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import javafx.print.Collation;
+
+import java.util.*;
 
 public class Solutions {
 
@@ -298,14 +297,19 @@ public class Solutions {
         }
         return maxAr;
     }
+
+    // this does not work
     public List<List<Integer>> threeSum(int[] nums) {
         List <List<Integer>> results = new ArrayList();
+        List <List<Integer>> resultUn = new ArrayList();
+        if (nums.length <= 2)
+            return resultUn;
 
         // sort the inputs
         Arrays.sort(nums);
         // we now loop through each element targetx in array make it -targetx
         // and search for a pair in the sorted array which is equal to -targetx
-        HashMap<Integer,Integer> map = new HashMap<Integer, Integer>();
+
 
         for (int i = 0 ; i < nums.length; i++){
             int start = 0;
@@ -313,7 +317,7 @@ public class Solutions {
             int targetx = -nums[i];
 
             ArrayList<Integer> ilist = new ArrayList<>();
-
+            System.out.println(nums[i]);
             while (start < end) {
                 if (start == i)
                     start++;
@@ -327,25 +331,50 @@ public class Solutions {
                         (start <= nums.length-1 && end >= 0))
                     start++;
                 else {
-                    if ((start <= nums.length-1 && end >= 0) &&
-                            map.containsKey(-targetx) == false) {
-                        System.out.println(-targetx);
-                        map.put(-targetx,1);
+                    if ((start <= nums.length-1 && end >= 0)
+                            ) {
                         ilist.add(nums[start]);
                         ilist.add(nums[end]);
                         ilist.add(-targetx);
+                        Collections.sort(ilist);
                         results.add(ilist);
+                        break;
                     }
-                    break;
                 }
             }
         }
 
-        for (int i = 0; i<results.size(); i++){
-            System.out.println(results.get(i));
+
+        Collections.sort(results, new Comparator<List<Integer>>() {
+            @Override
+            public int compare(List<Integer> o1, List<Integer> o2) {
+                return (o1.get(0) == o2.get(0) ?
+                        ((o1.get(1) == o1.get(1)) ?
+                                o1.get(2) - o2.get(2)
+                        : o1.get(1) - o2.get(1))
+                        : o1.get(0) - o2.get(0));
+            }
+        });
+
+        if (results.size() == 0)
+            return resultUn;
+        ArrayList<Integer> ilist;
+        ilist = (ArrayList<Integer>) results.get(0);
+        resultUn.add(results.get(0));
+        for (int i = 1; i<results.size(); i++){
+            ArrayList<Integer> jlist;
+            jlist = (ArrayList<Integer>) results.get(i);
+            if (!(ilist.get(0) == jlist.get(0) &&
+                    ilist.get(1) == jlist.get(1) &&
+                    ilist.get(2) == jlist.get(2))) {
+                resultUn.add(results.get(i));
+
+            }
+            ilist = jlist;
+
         }
 
-        return results;
+        return resultUn;
 
     }
 }
