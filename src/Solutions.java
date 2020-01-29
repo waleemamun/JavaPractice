@@ -316,30 +316,34 @@ public class Solutions {
             int end = nums.length - 1;
             int targetx = -nums[i];
 
-            ArrayList<Integer> ilist = new ArrayList<>();
-            System.out.println(nums[i]);
-            while (start < end) {
+
+
+            while (start < end &&
+                   (start <= nums.length-1 && end >= 0)) {
                 if (start == i)
                     start++;
                 if (end == i)
                     end--;
 
-                if (nums[start] + nums[end] > targetx &&
-                        (start <= nums.length-1 && end >= 0))
+                if (nums[start] + nums[end] > targetx )
                     end--;
-                else if (nums[start] + nums[end] < targetx &&
-                        (start <= nums.length-1 && end >= 0))
+                else if (nums[start] + nums[end] < targetx)
                     start++;
                 else {
-                    if ((start <= nums.length-1 && end >= 0)
-                            ) {
-                        ilist.add(nums[start]);
-                        ilist.add(nums[end]);
-                        ilist.add(-targetx);
-                        Collections.sort(ilist);
-                        results.add(ilist);
-                        break;
-                    }
+                    ArrayList<Integer> ilist = new ArrayList<>();
+                    ilist.add(nums[start]);
+                    ilist.add(nums[end]);
+                    ilist.add(-targetx);
+                    Collections.sort(ilist);
+                    while (start < end && nums[start] == nums[start+1])
+                        start++;
+                    while(start < end && nums[end] == nums[end-1])
+                        end--;
+                    results.add(ilist);
+                    start++;
+                    end--;
+
+
                 }
             }
         }
