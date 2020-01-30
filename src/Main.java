@@ -72,7 +72,7 @@ public class Main {
         int [] arr1 = {-1,0,1,0};
         // -4 -1 -1 0 1 2
         System.out.println("Git WOW!!");
-        List<List<Integer>> result = s1.threeSum(arr1);
+        List<List<Integer>> result = s1.threeSum(arr);
         System.out.println(result);
 
     }

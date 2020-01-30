@@ -298,7 +298,9 @@ public class Solutions {
         return maxAr;
     }
 
-    // this does not work
+    // 1. sort the array
+    // 2. take the first item from the sorted array as the target_sum i.e -targetx as a+b+c = 0 so b+c = -a
+    // 3. in the sorted fine two items that adds up to -targetx
     public List<List<Integer>> threeSum(int[] nums) {
         List <List<Integer>> results = new ArrayList();
         List <List<Integer>> resultUn = new ArrayList();
@@ -312,73 +314,40 @@ public class Solutions {
 
 
         for (int i = 0 ; i < nums.length; i++){
-            int start = 0;
-            int end = nums.length - 1;
-            int targetx = -nums[i];
+            if (i == 0 || (i>0 && nums[i]!=nums[i-1])) {
+                // start from the next item it will ensure uniqueness as this is a sorted array
+                // cause if we have already discovered all the pairs that is equal to ith entry
+                // the previous ones already accounted for ie already in the list hence no need add them again
+                // this is how uniqueness  is stored
+                int start = i + 1;
+                int end = nums.length - 1;
+                int targetx = -nums[i];
 
+                while (start < end ) {
 
-
-            while (start < end &&
-                   (start <= nums.length-1 && end >= 0)) {
-                if (start == i)
-                    start++;
-                if (end == i)
-                    end--;
-
-                if (nums[start] + nums[end] > targetx )
-                    end--;
-                else if (nums[start] + nums[end] < targetx)
-                    start++;
-                else {
-                    ArrayList<Integer> ilist = new ArrayList<>();
-                    ilist.add(nums[start]);
-                    ilist.add(nums[end]);
-                    ilist.add(-targetx);
-                    Collections.sort(ilist);
-                    while (start < end && nums[start] == nums[start+1])
+                    if (nums[start] + nums[end] == targetx) {
+                        ArrayList<Integer> ilist = new ArrayList<>();
+                        ilist.add(nums[start]);
+                        ilist.add(nums[end]);
+                        ilist.add(nums[i]);
+                        //skip the same occurences to maintain uniqueness
+                        while (start < end && nums[start] == nums[start+1])
+                            start++;
+                        while(start < end && nums[end] == nums[end-1])
+                            end--;
+                        results.add(ilist);
                         start++;
-                    while(start < end && nums[end] == nums[end-1])
                         end--;
-                    results.add(ilist);
-                    start++;
-                    end--;
-
-
+                    }
+                    else if (nums[start] + nums[end] > targetx)
+                        end--;
+                    else
+                        start++;
                 }
             }
         }
 
-
-        Collections.sort(results, new Comparator<List<Integer>>() {
-            @Override
-            public int compare(List<Integer> o1, List<Integer> o2) {
-                return (o1.get(0) == o2.get(0) ?
-                        ((o1.get(1) == o1.get(1)) ?
-                                o1.get(2) - o2.get(2)
-                        : o1.get(1) - o2.get(1))
-                        : o1.get(0) - o2.get(0));
-            }
-        });
-
-        if (results.size() == 0)
-            return resultUn;
-        ArrayList<Integer> ilist;
-        ilist = (ArrayList<Integer>) results.get(0);
-        resultUn.add(results.get(0));
-        for (int i = 1; i<results.size(); i++){
-            ArrayList<Integer> jlist;
-            jlist = (ArrayList<Integer>) results.get(i);
-            if (!(ilist.get(0) == jlist.get(0) &&
-                    ilist.get(1) == jlist.get(1) &&
-                    ilist.get(2) == jlist.get(2))) {
-                resultUn.add(results.get(i));
-
-            }
-            ilist = jlist;
-
-        }
-
-        return resultUn;
+        return results;
 
     }
 }
