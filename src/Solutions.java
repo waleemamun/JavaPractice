@@ -351,7 +351,9 @@ public class Solutions {
         return results;
 
     }
+
     public int threeSumClosest(int[] nums, int target) {
+
         int sumClosest = 0;
         int  sDiff = Integer.MAX_VALUE;
 
@@ -385,7 +387,6 @@ public class Solutions {
 
             }
         }
-
         return sumClosest;
 
     }
