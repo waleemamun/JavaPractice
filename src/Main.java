@@ -68,12 +68,15 @@ public class Main {
 
 //        int[] arr = {1,8,6,2,5,4,8,3,7};
 //        System.out.println("Max1 Container Area = " + s1.maxArea(arr));
-        int [] arr = {-1, 0, 1, 2, -1, -4};
+        int [] arr = {0,1,2};
         int [] arr1 = {-1,0,1,0};
         // -4 -1 -1 0 1 2
+        //List<List<Integer>> result = s1.threeSum(arr);
+        //System.out.println(result);
         System.out.println("Git WOW!!");
-        List<List<Integer>> result = s1.threeSum(arr);
-        System.out.println(result);
+        System.out.println("Closest Sum " + s1.threeSumClosest(arr,3));
+
+
 
     }
 

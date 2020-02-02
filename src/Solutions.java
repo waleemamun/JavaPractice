@@ -298,6 +298,7 @@ public class Solutions {
         return maxAr;
     }
 
+
     // 1. sort the array
     // 2. take the first item from the sorted array as the target_sum i.e -targetx as a+b+c = 0 so b+c = -a
     // 3. in the sorted fine two items that adds up to -targetx
@@ -350,4 +351,43 @@ public class Solutions {
         return results;
 
     }
+    public int threeSumClosest(int[] nums, int target) {
+        int sumClosest = 0;
+        int  sDiff = Integer.MAX_VALUE;
+
+        // 1. sort the array so that if we use two pointer we can determine sum of two numbers in O(n)
+        // 2. use start = i + 1 in every iteration because the i th position was
+        //    considered already in the previous loop
+        // 3. pick nums[i], and search for two numbers in the array,
+        //    track the smallestDiff (target - sum_of_3) & the tempSum
+        //    at the end return the closest sum tracked in the whole loop
+        // 4. At any point if sum_of_3 == target return the target or sum_of_3
+        Arrays.sort(nums);
+
+        for (int i = 0; i<nums.length; i++){
+            int start = i + 1;
+            int end = nums.length - 1;
+            while (start < end) {
+                int tempSum = nums[i] + nums[start] + nums[end];
+
+                if (Math.abs(target - tempSum ) < sDiff) {
+                    sDiff = Math.abs (target - tempSum );
+                    sumClosest = tempSum;
+                }
+
+                if (tempSum == target) {
+                    return tempSum;
+                } else if (tempSum > target) {
+                    end--;
+                } else {
+                    start++;
+                }
+
+            }
+        }
+
+        return sumClosest;
+
+    }
+
 }
