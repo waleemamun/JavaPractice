@@ -48,4 +48,35 @@ public class LinkList {
 
      }
 
+     public LinkList removeNthFromEnd(LinkList head, int n) {
+          LinkList prevN = head;
+          LinkList fast = head;
+          int count = 0;
+          if (head == null)
+               return null;
+          // now fast points to the nth element from start
+          while (fast != null && count < n) {
+               count++;
+               fast = fast.next;
+          }
+          if (fast == null) {
+
+               if (head.next != null)
+                    return head.next;
+               else
+                    return null;
+          }
+          // now move fast to the prev last item
+          while(fast.next != null) {
+               fast = fast.next;
+               prevN = prevN.next;
+          }
+          // now prevN point to the previous entry of the nth last entry
+          if (prevN.next != null)
+               prevN.next = prevN.next.next;
+
+          return head;
+     }
+
+
 }
