@@ -390,5 +390,53 @@ public class Solutions {
         return sumClosest;
 
     }
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<String>();
+        int []count = new int[digits.length()];
+        char [][]letterMap = {
+                {'0','0','0','0','0'}, //0
+                {'0','0','0','0','0'}, //1
+                {'a','b','c','0','3'}, //2
+                {'d','e','f','0','3'}, //3
+                {'g','h','i','0','3'}, //4
+                {'j','k','l','0','3'}, //5
+                {'m','n','o','0','3'}, //5
+                {'p','q','r','s','4'}, //6
+                {'t','u','v','0','3'}, //8
+                {'w','x','y','z','4'}, //9
 
+        };
+        int loopbreak = 0;
+        while (count[0] <= 2) {
+            loopbreak++;
+            if (loopbreak > Math.pow(3,digits.length()))
+                break;
+            StringBuilder tempStr = new StringBuilder();
+            for (int i = 0; i < digits.length(); i++) {
+                tempStr.append(letterMap[digits.charAt(i) - '0'][count[i]]);
+            }
+            result.add(tempStr.toString());
+            for (int i = digits.length() - 1 ; i >= 0; i--) {
+                if (i == digits.length() -1)
+                    count[i] = (count[i] + 1) % (letterMap[digits.charAt(i) - '0'][4] - '0');
+                else {
+                    int j = i+1;
+                    while (j < digits.length()){
+                        if (count[j] != 2)
+                            break;
+                        j++;
+                    }
+                    if (j == digits.length())
+                        count[i] = (count[i] + 1) % (letterMap[digits.charAt(i) - '0'][4] - '0');
+                }
+            }
+            System.out.println(tempStr.toString());
+            for (int i = 0; i<digits.length(); i++)
+                System.out.println("count["+ i+"] " + count[i]);
+
+        }
+
+        return result;
+
+    }
 }

@@ -74,7 +74,9 @@ public class Main {
         //List<List<Integer>> result = s1.threeSum(arr);
         //System.out.println(result);
         System.out.println("Git WOW!!");
-        System.out.println("Closest Sum " + s1.threeSumClosest(arr,3));
+        //System.out.println("Closest Sum " + s1.threeSumClosest(arr,3));
+        List <String> ls = s1.letterCombinations("23");
+        System.out.println("LetterCombo ("+ls.size()+") :" + ls);
 
 
 
