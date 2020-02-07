@@ -390,53 +390,45 @@ public class Solutions {
         return sumClosest;
 
     }
-    public List<String> letterCombinations(String digits) {
-        List<String> result = new ArrayList<String>();
-        int []count = new int[digits.length()];
-        char [][]letterMap = {
-                {'0','0','0','0','0'}, //0
-                {'0','0','0','0','0'}, //1
-                {'a','b','c','0','3'}, //2
-                {'d','e','f','0','3'}, //3
-                {'g','h','i','0','3'}, //4
-                {'j','k','l','0','3'}, //5
-                {'m','n','o','0','3'}, //5
-                {'p','q','r','s','4'}, //6
-                {'t','u','v','0','3'}, //8
-                {'w','x','y','z','4'}, //9
 
-        };
-        int loopbreak = 0;
-        while (count[0] <= 2) {
-            loopbreak++;
-            if (loopbreak > Math.pow(3,digits.length()))
-                break;
-            StringBuilder tempStr = new StringBuilder();
-            for (int i = 0; i < digits.length(); i++) {
-                tempStr.append(letterMap[digits.charAt(i) - '0'][count[i]]);
-            }
-            result.add(tempStr.toString());
-            for (int i = digits.length() - 1 ; i >= 0; i--) {
-                if (i == digits.length() -1)
-                    count[i] = (count[i] + 1) % (letterMap[digits.charAt(i) - '0'][4] - '0');
-                else {
-                    int j = i+1;
-                    while (j < digits.length()){
-                        if (count[j] != 2)
-                            break;
-                        j++;
-                    }
-                    if (j == digits.length())
-                        count[i] = (count[i] + 1) % (letterMap[digits.charAt(i) - '0'][4] - '0');
-                }
-            }
-            System.out.println(tempStr.toString());
-            for (int i = 0; i<digits.length(); i++)
-                System.out.println("count["+ i+"] " + count[i]);
+    // The solution for letterCombinations Problem
+    Map<String, String> phone = new HashMap<String, String>() {{
+        put("2", "abc");
+        put("3", "def");
+        put("4", "ghi");
+        put("5", "jkl");
+        put("6", "mno");
+        put("7", "pqrs");
+        put("8", "tuv");
+        put("9", "wxyz");
+    }};
 
+    List<String> output = new ArrayList<String>();
+
+    public void backtrack(String combination, String next_digits) {
+        // if there is no more digits to check
+        if (next_digits.length() == 0) {
+            // the combination is done
+            output.add(combination);
         }
+        // if there are still digits to check
+        else {
+            // iterate over all letters which map
+            // the next available digit
+            String digit = next_digits.substring(0, 1);
+            String letters = phone.get(digit);
+            for (int i = 0; i < letters.length(); i++) {
+                String letter = phone.get(digit).substring(i, i + 1);
+                // append the current letter to the combination
+                // and proceed to the next digits
+                backtrack(combination + letter, next_digits.substring(1));
+            }
+        }
+    }
 
-        return result;
-
+    public List<String> letterCombinations(String digits) {
+        if (digits.length() != 0)
+            backtrack("", digits);
+        return output;
     }
 }
