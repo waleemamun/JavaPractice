@@ -431,4 +431,64 @@ public class Solutions {
             backtrack("", digits);
         return output;
     }
+
+    // KSum Solution
+
+
+    public ArrayList<List<Integer>> kSum(int[] nums, int target, int k, int index) {
+        ArrayList <List<Integer>> results = new ArrayList();
+        int kSumLen = nums.length;
+        if (k == 2) {
+            int start = index;
+            int end = kSumLen - 1;
+
+            while (start < end) {
+
+                if( nums[start] + nums[end] == target) {
+                    List <Integer> tempList = new ArrayList<>();
+                    tempList.add(nums[start]);
+                    tempList.add(nums[end]);
+                    results.add(tempList);
+                    // skip the duplicates if any from both sides
+                    while (start < end && nums[start] == nums[start + 1])
+                        start++;
+                    while (start < end && nums[end] == nums[end - 1])
+                        end--;
+                    start++;
+                    end--;
+                } else if (nums[start] + nums[end] > target)
+                    end--;
+                else
+                    start++;
+
+            }
+        } else {
+            // start with index as we want to skip the previously processed ones
+            for (int i = index; i < kSumLen - k + 1; i++) {
+                //use current number to reduce ksum into k-1sum
+                if (i > index && nums[i] == nums[i-1])
+                    continue;
+                ArrayList <List<Integer>> tempRes = kSum(nums,target - nums[i], k-1,i+1);
+                if(tempRes != null){
+                    //add previous results
+                    for (List<Integer> t: tempRes) {
+                        // update the each list entry in tempRes
+                        // note the t is used as a reference  so it modifies each list entry inplace
+                        t.add(0,nums[i]);
+                    }
+                    results.addAll(tempRes);
+                }
+
+            }
+        }
+
+        return results;
+    }
+    public List <List<Integer>> fourSum(int[] nums, int target) {
+
+        // Sort the array
+        Arrays.sort(nums);
+        return kSum(nums,target,4, 0);
+
+    }
 }

@@ -76,18 +76,20 @@ public class Main {
 //        // -4 -1 -1 0 1 2
 //        //List<List<Integer>> result = s1.threeSum(arr);
 //        //System.out.println(result);
-//        System.out.println("Git WOW!!");
+
 //        //System.out.println("Closest Sum " + s1.threeSumClosest(arr,3));
 //        List <String> ls = s1.letterCombinations("23");
 //        System.out.println("LetterCombo ("+ls.size()+") :" + ls);
-        int [] arr  = {10,2,5,6,8,1,15};
-        LinkList ls = new LinkList();
-        ls = ls.createList(arr);
-        ls.printList();
-        LinkList tempList = ls.removeNthFromEnd(ls,2);
-        System.out.println("After");
-        tempList.printList();
-
+//        int [] arr  = {10,2,5,6,8,1,15};
+//        LinkList ls = new LinkList();
+//        ls = ls.createList(arr);
+//        ls.printList();
+//        LinkList tempList = ls.removeNthFromEnd(ls,2);
+//        System.out.println("After");
+//        tempList.printList();
+        int [] arr  = {1, 0, -1, 0, -2, 2};
+        System.out.println(" res" + s1.fourSum(arr,0));
+        System.out.println("Git WOW!");
 
 
 
