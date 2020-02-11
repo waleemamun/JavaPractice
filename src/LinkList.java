@@ -83,6 +83,10 @@ public class LinkList {
 
           LinkList head = null;
           LinkList curr = null;
+          if (l1 ==null)
+               return l2;
+          if (l2 == null)
+               return l1;
           while (l1 != null  && l2 != null){
                LinkList tmpElem = new LinkList();
 
@@ -102,8 +106,10 @@ public class LinkList {
                     curr = tmpElem;
                }
                tmpElem.next = null;
+               //System.out.println(" cur " + curr.data + " temp "+ tmpElem.data);
 
           }
+
           while (l1 != null) {
                LinkList tmpElem = new LinkList();
                tmpElem.data = l1.data;

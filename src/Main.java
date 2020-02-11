@@ -91,12 +91,14 @@ public class Main {
         //System.out.println(" res" + s1.fourSum(arr,0));
         System.out.println("Git WOW!");
 //        System.out.println("Parenthesis " + s1.isValid("([)]"));
-        int [] arr1  = {1,2,4};
-        int [] arr2 = {1,3,4};
+        int [] arr1  = {1,4,6,9,10};
+        int [] arr2 = {2,4,8,10,45,67,88,99,100};
         LinkList l1 = new LinkList();
         LinkList l2 = new LinkList();
-        l1.createList(arr1);
-        l2.createList(arr2);
+        l1 = l1.createList(arr1);
+        l2 = l2.createList(arr2);
+        //l1.printList();
+        //l2.printList();
         LinkList res = new LinkList();
         LinkList resx = res.mergeTwoLists(l1,l2);
         System.out.println("My list");
