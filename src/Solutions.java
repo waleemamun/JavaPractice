@@ -491,4 +491,44 @@ public class Solutions {
         return kSum(nums,target,4, 0);
 
     }
+
+    public char getOpposit(char ch) {
+        if (ch ==')')
+            return '(';
+        else if (ch == '}')
+            return '{';
+        else if (ch == ']')
+            return '[';
+        else
+            return 'a';
+    }
+
+
+    public boolean isValid(String s) {
+
+        Stack<Character> ptStack = new Stack<>();
+        int i = 0;
+        for( i = 0; i<s.length() ; i++) {
+            char ch = s.charAt(i);
+            if (ch == '(' || ch == '{' || ch == '[' )
+                ptStack.push(ch);
+            else {
+                if (ptStack.empty())
+                    break;
+                else {
+                    ch = getOpposit(ch);
+                    char popCh = ptStack.pop();
+                    //System.out.println("ch = " + ch + " popCh = " + popCh);
+                    if(popCh != ch)
+                        break;
+                }
+
+            }
+        }
+        //System.out.println("i =" +i + " isempty" + ptStack.empty());
+        if (ptStack.empty() && i == s.length())
+            return true;
+        else
+            return false;
+    }
 }

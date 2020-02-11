@@ -88,8 +88,9 @@ public class Main {
 //        System.out.println("After");
 //        tempList.printList();
         int [] arr  = {1, 0, -1, 0, -2, 2};
-        System.out.println(" res" + s1.fourSum(arr,0));
+        //System.out.println(" res" + s1.fourSum(arr,0));
         System.out.println("Git WOW!");
+        System.out.println("Parenthesis " + s1.isValid("([)]"));
 
 
 
