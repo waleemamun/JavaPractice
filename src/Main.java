@@ -87,10 +87,21 @@ public class Main {
 //        LinkList tempList = ls.removeNthFromEnd(ls,2);
 //        System.out.println("After");
 //        tempList.printList();
-        int [] arr  = {1, 0, -1, 0, -2, 2};
+
         //System.out.println(" res" + s1.fourSum(arr,0));
         System.out.println("Git WOW!");
-        System.out.println("Parenthesis " + s1.isValid("([)]"));
+//        System.out.println("Parenthesis " + s1.isValid("([)]"));
+        int [] arr1  = {1,2,4};
+        int [] arr2 = {1,3,4};
+        LinkList l1 = new LinkList();
+        LinkList l2 = new LinkList();
+        l1.createList(arr1);
+        l2.createList(arr2);
+        LinkList res = new LinkList();
+        LinkList resx = res.mergeTwoLists(l1,l2);
+        System.out.println("My list");
+        resx.printList();
+
 
 
 

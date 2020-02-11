@@ -1,3 +1,5 @@
+import sun.awt.image.ImageWatched;
+
 import java.util.HashSet;
 
 public class LinkList {
@@ -77,6 +79,49 @@ public class LinkList {
 
           return head;
      }
+     public LinkList mergeTwoLists(LinkList l1, LinkList l2) {
+
+          LinkList head = null;
+          LinkList curr = null;
+          while (l1 != null  && l2 != null){
+               LinkList tmpElem = new LinkList();
+
+               if (l1.data <= l2.data) {
+                   tmpElem.data = l1.data;
+                   l1 = l1.next;
+               }
+               else {
+                    tmpElem.data = l2.data;
+                    l2 = l2.next;
+               }
+               if (head == null) {
+                    head = tmpElem;
+                    curr = tmpElem;
+               } else {
+                    curr.next = tmpElem;
+                    curr = tmpElem;
+               }
+               tmpElem.next = null;
+
+          }
+          while (l1 != null) {
+               LinkList tmpElem = new LinkList();
+               tmpElem.data = l1.data;
+               curr.next = tmpElem;
+               curr = tmpElem;
+               l1 = l1.next;
+          }
+          while (l2 != null) {
+               LinkList tmpElem = new LinkList();
+               tmpElem.data = l2.data;
+               curr.next = tmpElem;
+               curr = tmpElem;
+               l2 = l2.next;
+          }
+
+          return head;
+     }
+
 
 
 }
