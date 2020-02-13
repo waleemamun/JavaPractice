@@ -92,17 +92,19 @@ public class Main {
         System.out.println("Git WOW!");
 //        System.out.println("Parenthesis " + s1.isValid("([)]"));
         int [] arr1  = {1,4,6,9,10};
-        int [] arr2 = {2,4,8,10,45,67,88,99,100};
-        LinkList l1 = new LinkList();
-        LinkList l2 = new LinkList();
-        l1 = l1.createList(arr1);
-        l2 = l2.createList(arr2);
-        //l1.printList();
-        //l2.printList();
-        LinkList res = new LinkList();
-        LinkList resx = res.mergeTwoLists(l1,l2);
-        System.out.println("My list");
-        resx.printList();
+//        int [] arr2 = {2,4,8,10,45,67,88,99,100};
+//        LinkList l1 = new LinkList();
+//        LinkList l2 = new LinkList();
+//        l1 = l1.createList(arr1);
+//        l2 = l2.createList(arr2);
+//        //l1.printList();
+//        //l2.printList();
+//        LinkList res = new LinkList();
+//        LinkList resx = res.mergeTwoLists(l1,l2);
+//        System.out.println("My list");
+//        resx.printList();
+    Recursions r1 = new Recursions();
+    System.out.println("ways to climb: " + r1.countWaysDP(5));
 
 
 
