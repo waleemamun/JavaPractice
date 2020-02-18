@@ -37,8 +37,35 @@ public class Recursions {
             return getMagic(arr, mid+1, high);
 
     }
+    //This version works in case of non distinct case
+    public int getMagicV2(int arr[], int low, int high) {
+        if (low > high)
+            return -1;
+        int mid = (low+high) / 2;
+        if (arr[mid] == mid)
+            return mid;
+        /*search left */
+        int leftIndex = Math.min(mid -1, arr[mid]);
+        // if already found in left no need to go to right
+        int left = getMagicV2(arr,low, leftIndex);
+        // this actually skipping all the calls for which left -1
+        // This is interesting way of storing the recursive result
+        // and only return if a certain condition is met
+        if (left >= 0)
+            return left;
+        // did not find in left go search in right
+        int rightIndex = Math.max(arr[mid],mid + 1);
+        int right = getMagicV2(arr,rightIndex,high);
+
+        return right;
+
+    }
     public int magicShow(int arr[]) {
         int mid = getMagic(arr,0,arr.length-1);
+        return mid;
+    }
+    public int magicShowV2(int arr[]) {
+        int mid = getMagicV2(arr,0,arr.length-1);
         return mid;
     }
 }

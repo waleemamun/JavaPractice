@@ -91,8 +91,8 @@ public class Main {
         //System.out.println(" res" + s1.fourSum(arr,0));
         System.out.println("Git WOW!");
 //        System.out.println("Parenthesis " + s1.isValid("([)]"));
-        int [] arr1  = {1,4,6,9,10};
-//        int [] arr2 = {2,4,8,10,45,67,88,99,100};
+        int [] arr1 = {-40, -20, -1, 1, 2, 3, 5, 7, 9, 12, 13};
+        int [] arr2 = {-10, -5, 2, 2, 2, 3, 4, 8, 9, 12, 13};
 //        LinkList l1 = new LinkList();
 //        LinkList l2 = new LinkList();
 //        l1 = l1.createList(arr1);
@@ -104,7 +104,8 @@ public class Main {
 //        System.out.println("My list");
 //        resx.printList();
     Recursions r1 = new Recursions();
-    System.out.println("ways to climb: " + r1.countWaysDP(5));
+    System.out.println("Magic pos " + r1.magicShowV2(arr2));
+    //System.out.println("ways to climb: " + r1.countWaysDP(5));
 
 
 
