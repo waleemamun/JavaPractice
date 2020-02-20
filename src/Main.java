@@ -103,15 +103,12 @@ public class Main {
 //        LinkList resx = res.mergeTwoLists(l1,l2);
 //        System.out.println("My list");
 //        resx.printList();
-    Recursions r1 = new Recursions();
-    ArrayList<Integer> set = new ArrayList<>();
-    set.add(1);
-    set.add(2);
-    set.add(3);
-    System.out.println("Subsets " + r1.getSubset(set,0));
+
+    //System.out.println("Subsets " + r1.getSubset(set,0));
     //System.out.println("Magic pos " + r1.magicShowV2(arr2));
     //System.out.println("ways to climb: " + r1.countWaysDP(5));
-
+    Recursions r1 = new Recursions();
+    r1.printAllpermutation("abcd");
 
 
 

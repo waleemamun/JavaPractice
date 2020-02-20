@@ -12,6 +12,7 @@ public class Recursions {
             return countWays(n-1) + countWays(n-2) + countWays(n-3);
 
     }
+
     /*
      *  Count for 1 steps 2 steps and 3 steps - the stairs
      *  as the previous position already accounted for n-1, n-2 n-3 steps
@@ -28,6 +29,7 @@ public class Recursions {
         }
         return ways[n];
     }
+
     public int getMagic(int arr[], int low, int high) {
         int mid = (low + high) / 2;
         if (low > high)
@@ -40,6 +42,7 @@ public class Recursions {
             return getMagic(arr, mid+1, high);
 
     }
+
     //This version works in case of non distinct case
     public int getMagicV2(int arr[], int low, int high) {
         if (low > high)
@@ -63,14 +66,17 @@ public class Recursions {
         return right;
 
     }
+
     public int magicShow(int arr[]) {
         int mid = getMagic(arr,0,arr.length-1);
         return mid;
     }
+
     public int magicShowV2(int arr[]) {
         int mid = getMagicV2(arr,0,arr.length-1);
         return mid;
     }
+
     public ArrayList<ArrayList<Integer>> getSubset (ArrayList<Integer> set, int index) {
         ArrayList<ArrayList<Integer>> allSubset;
         if (index == set.size()) { // base case
@@ -93,6 +99,43 @@ public class Recursions {
 
         }
         return allSubset;
+    }
+
+    public void printAllpermutation(String str) {
+
+        StringBuilder strB = new StringBuilder(str);
+        System.out.println("---Start---");
+        printPermutation(strB,0);
+        System.out.println("---END----");
+    }
+
+    private void printPermutation (StringBuilder str,  int index) {
+        if (index == str.length() -1) {
+            System.out.println(str);
+            return;
+        }
+        for (int i = index; i < str.length(); i++) {
+            if (i != index) {
+                char tempC = str.charAt(i);
+                str.setCharAt(i,str.charAt(index));
+                str.setCharAt(index,tempC);
+
+            }
+            printPermutation(str,index +1);
+            // revert back the changes made earlier after the recursive call
+            // this will ensure that when we start the next recursion we start
+            // from the initial position. For example abc wil produce {abc,acb}
+            // so current string will acb but before going to the next step we need to make it abc
+            // This will make sure when we swap next time we perform
+            // the swap on abc (which generate bac) instead of acb (which generates cab)
+            if (i != index) {
+                char tempC = str.charAt(i);
+                str.setCharAt(i,str.charAt(index));
+                str.setCharAt(index,tempC);
+
+            }
+
+        }
     }
 
 }
