@@ -1,3 +1,6 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Recursions {
 
     public int countWays(int n) {
@@ -68,4 +71,28 @@ public class Recursions {
         int mid = getMagicV2(arr,0,arr.length-1);
         return mid;
     }
+    public ArrayList<ArrayList<Integer>> getSubset (ArrayList<Integer> set, int index) {
+        ArrayList<ArrayList<Integer>> allSubset;
+        if (index == set.size()) { // base case
+            allSubset = new ArrayList<ArrayList<Integer>>();
+            allSubset.add(new ArrayList<>());
+            System.out.println(allSubset.size());
+
+        } else {
+            allSubset = getSubset(set,index + 1);
+            System.out.println(allSubset.size());
+            int item = set.get(index);
+            ArrayList<ArrayList<Integer>> moreSet = new ArrayList<ArrayList<Integer>>();
+            for (ArrayList<Integer> subset : allSubset) {
+                ArrayList<Integer> newSet = new ArrayList<>();
+                newSet.addAll(subset);
+                newSet.add(item);
+                moreSet.add(newSet);
+            }
+            allSubset.addAll(moreSet);
+
+        }
+        return allSubset;
+    }
+
 }
