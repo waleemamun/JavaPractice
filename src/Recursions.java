@@ -174,4 +174,38 @@ public class Recursions {
         towerOfHanoi(nDisk-1,midPeg,destPeg,srcPeg);
     }
 
+    // Leetcode 22 Generate Parentheses
+    public ArrayList<String> generateParenthesis(int n) {
+        ArrayList<String> list = new ArrayList<>();
+        char [] str = new char[2*n];
+        addParenthesis(list, n, n, str,0);
+        return  list;
+    }
+
+    private void addParenthesis(ArrayList<String> list, int leftRem,
+                                        int rightRem, char [] str, int index) {
+        // invalid case we need to stop nothing needs to be added to list
+        if (leftRem < 0 || rightRem < leftRem)
+            return;
+        // we exhausted all left & right parenthesis,
+        // str now has a valid combination lets add it to the list
+        if (leftRem == 0 && rightRem == 0) {
+            list.add(String.copyValueOf(str));
+        } else {
+            // add the left parenthesis & go in the deep of recursion to add
+            // the next parenthesis (which could be a left ot right parenthesis)
+            // str will store all the parenthesis possible in this recursion depth,
+            // when the first call reaches the depth of recursion
+            // we move to the 2nd call with by reducing the right parenthesis,
+            // this allows us to have different combination of left & right; ie for left = 3 & right = 3,
+            // The possible values are at every recursive  (3,3) (2,3) (1,3) (0,3), (2,2) (2,1) ... (1,1)
+
+            str[index] = '(';
+            addParenthesis(list, leftRem-1, rightRem,str,index +1);
+            str[index] = ')';
+            addParenthesis(list, leftRem, rightRem-1, str, index+1);
+        }
+    }
 }
+
+
