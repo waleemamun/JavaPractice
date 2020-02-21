@@ -50,6 +50,7 @@ public class LinkList {
 
      }
 
+     // Leetcode 19
      public LinkList removeNthFromEnd(LinkList head, int n) {
           LinkList prevN = head;
           LinkList fast = head;
@@ -79,6 +80,8 @@ public class LinkList {
 
           return head;
      }
+
+     // Leetcode 21
      public LinkList mergeTwoLists(LinkList l1, LinkList l2) {
 
           LinkList head = null;

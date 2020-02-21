@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 public class CodeArray {
 
+    // Leetcode 1
     public int[] twoSum(int[] nums, int target) {
         int [] elem = new int[2];
         elem[0]  = elem[1] = -1;
@@ -90,6 +91,7 @@ public class CodeArray {
 
     }
 
+    // LeetCode 3
     public int lengthOfLongestSubstringV2(String s) {
         Freuency [] freuency = new Freuency[128];
         int max_len = 0;
@@ -179,6 +181,7 @@ public class CodeArray {
         public int lastPos;
     }
 
+    // Leetcode 4 ******* Hard Problem ******
     public double findMedianSortedArraysV2(int[] nums1, int[] nums2) {
 
 

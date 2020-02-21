@@ -16,18 +16,6 @@ public class Solutions {
             this.j= j;
         }
     }
-    public void towerOfHanoi(int nDisk, int srcPeg, int destPeg, int midPeg) {
-
-        if (nDisk == 1 ) {
-            System.out.println("Move disk " +nDisk + " from "+ srcPeg +" to "+ destPeg);
-            return;
-        }
-        towerOfHanoi(nDisk-1,srcPeg,midPeg,destPeg);
-        System.out.println("Move disk " +nDisk + " from "+ srcPeg +" to "+ destPeg);
-        towerOfHanoi(nDisk-1,midPeg,destPeg,srcPeg);
-
-
-    }
 
     public void robotMove (ArrayList<Path>  moveList , int i , int j) {
 
@@ -60,6 +48,8 @@ public class Solutions {
         }
         return fibonacci(n-1) + fibonacci(n-2);
     }
+
+    // LeetCode problem 6
     public String convert(String s, int numRows) {
 
         StringBuilder [] sbArray = new StringBuilder[numRows];
@@ -105,7 +95,7 @@ public class Solutions {
     public boolean isDigit(char ch) {
         return ch >= '0' && ch <='9' ? true: false;
     }
-    // atoi leetcode
+    // atoi leetcode 7
     // converts string to integer handle overflow and underflow
     // handle whitespace and leading zero and now whitespcae char
     // returns zero if the string is like "   wpr 9032"
@@ -178,6 +168,9 @@ public class Solutions {
 
     return number;
     }
+
+    //LeetCode 8
+
     public boolean isPalindrome(int x) {
         if (x < 0)
             return false;
@@ -198,8 +191,11 @@ public class Solutions {
      * a bigger difference in the rest of the array. Note that after updating the low_point
      * with a lower value we have to continue search for  a bigger difference than
      * the current difference if not the older difference was the biggest difference.
+     * The following input arr can be used as the input to this function.
      * */
-
+    //    int [] arr  = {10,2,5,6,8,9,15};
+//        int maxDiff = s1.maxDiffInArrayLeft2Right(arr);
+//        System.out.println("max diff = " + maxDiff);
     public int maxDiffInArrayLeft2Right (int[] arr) {
         int maxDiff = 0;
         int low = arr[0];
@@ -298,7 +294,7 @@ public class Solutions {
         return maxAr;
     }
 
-
+    // Leetcode 15
     // 1. sort the array
     // 2. take the first item from the sorted array as the target_sum i.e -targetx as a+b+c = 0 so b+c = -a
     // 3. in the sorted fine two items that adds up to -targetx
@@ -352,6 +348,7 @@ public class Solutions {
 
     }
 
+    //Leetcode 16
     public int threeSumClosest(int[] nums, int target) {
 
         int sumClosest = 0;
@@ -392,6 +389,7 @@ public class Solutions {
     }
 
     // The solution for letterCombinations Problem
+    // Leetcode 17
     Map<String, String> phone = new HashMap<String, String>() {{
         put("2", "abc");
         put("3", "def");
@@ -433,7 +431,6 @@ public class Solutions {
     }
 
     // KSum Solution
-
 
     public ArrayList<List<Integer>> kSum(int[] nums, int target, int k, int index) {
         ArrayList <List<Integer>> results = new ArrayList();
@@ -484,6 +481,7 @@ public class Solutions {
 
         return results;
     }
+    // Leetcode 18
     public List <List<Integer>> fourSum(int[] nums, int target) {
 
         // Sort the array
@@ -503,7 +501,7 @@ public class Solutions {
             return 'a';
     }
 
-
+    //Leetcode 20 valid parethesis
     public boolean isValid(String s) {
 
         Stack<Character> ptStack = new Stack<>();

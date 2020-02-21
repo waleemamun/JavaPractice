@@ -108,8 +108,8 @@ public class Main {
     //System.out.println("Magic pos " + r1.magicShowV2(arr2));
     //System.out.println("ways to climb: " + r1.countWaysDP(5));
     Recursions r1 = new Recursions();
-    r1.printAllpermutation("abcd");
-
+    //r1.printAllpermutation("abcd");
+    System.out.println(r1.minProduct(7,8));
 
 
     }

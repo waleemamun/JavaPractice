@@ -2,7 +2,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Recursions {
-
+// This set of problems are from CTCI
     public int countWays(int n) {
         if (n < 0)
             return 0;
@@ -136,6 +136,42 @@ public class Recursions {
             }
 
         }
+    }
+
+    public int minProduct (int a, int b){
+        int smaller = (a <= b) ? a : b;
+        int bigger = (a > b) ? a : b;
+        return minProductHelper(smaller,bigger);
+    }
+    // to calc mupliply we can add the (bigger + bigger) number recursively
+    // with each recursion the number will increase by double compared to the last one
+    // we need smaller/2 steps.
+    private int minProductHelper (int smaller, int bigger) {
+        // base case if one of the number is zero product is zero
+        if (smaller == 0)
+            return 0;
+        else if(smaller == 1)
+            return bigger;
+        // devide by 2 , here we pass the recursive variable s but keep actual var to use for later calc
+        // we save the recursive result in a temp var and later work on it and return it.
+        int s = smaller >> 1;
+        int halfprod = minProductHelper(s,bigger);
+
+        if (smaller % 2 == 0)
+            return halfprod + halfprod;
+        else // for even we need to add bigger for example 21*25 = 2 * 10 * 25 + 25
+            return halfprod + halfprod +bigger;
+    }
+
+    public void towerOfHanoi(int nDisk, int srcPeg, int destPeg, int midPeg) {
+
+        if (nDisk == 1 ) {
+            System.out.println("Move disk " +nDisk + " from "+ srcPeg +" to "+ destPeg);
+            return;
+        }
+        towerOfHanoi(nDisk-1,srcPeg,midPeg,destPeg);
+        System.out.println("Move disk " +nDisk + " from "+ srcPeg +" to "+ destPeg);
+        towerOfHanoi(nDisk-1,midPeg,destPeg,srcPeg);
     }
 
 }
