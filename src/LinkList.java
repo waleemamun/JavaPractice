@@ -230,6 +230,30 @@ public class LinkList {
         return resultList.next;
 
     }
+   // reverse a List recursively
+    private LinkList revList (LinkList nodeC, LinkList nodeN, LinkList head) {
+        // reached the end, get head to point the last node or first node in rev order
+        if (nodeN.next == null) {
+            nodeN.next = nodeC;
+            head = nodeN;
+            return head;
+        }
+
+        if (head == nodeC)
+            nodeC.next = null;
+        LinkList savedNode = nodeN.next;
+        nodeN.next = nodeC;
+        return revList(nodeN, savedNode, head);
+
+    }
+
+    public LinkList reverseList(LinkList head) {
+        if (head == null)
+            return null;
+        head = revList(head,head.next,head);
+        return head;
+
+    }
 
 
 

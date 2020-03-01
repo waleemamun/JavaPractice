@@ -125,9 +125,10 @@ public class Main {
     //l4 = l4.mergeKLists(arrList);
     //l4.printList();
     l1.printList();
-    LinkList l2 = l1.swapPairs(l1);
+    LinkList l2 = l1.reverseList(l1);
 
     l2.printList();
+
 
 
 
