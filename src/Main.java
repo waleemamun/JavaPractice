@@ -91,8 +91,8 @@ public class Main {
         //System.out.println(" res" + s1.fourSum(arr,0));
         System.out.println("Git WOW!");
 //        System.out.println("Parenthesis " + s1.isValid("([)]"));
-        int [] arr1 = {-40, -20, -1, 1, 2, 3, 5, 7, 9, 12, 13};
-        int [] arr2 = {-10, -5, 2, 2, 2, 3, 4, 8, 9, 12, 13};
+//        int [] arr1 = {-40, -20, -1, 1, 2, 3, 5, 7, 9, 12, 13};
+//        int [] arr2 = {-10, -5, 2, 2, 2, 3, 4, 8, 9, 12, 13};
 //        LinkList l1 = new LinkList();
 //        LinkList l2 = new LinkList();
 //        l1 = l1.createList(arr1);
@@ -107,9 +107,25 @@ public class Main {
     //System.out.println("Subsets " + r1.getSubset(set,0));
     //System.out.println("Magic pos " + r1.magicShowV2(arr2));
     //System.out.println("ways to climb: " + r1.countWaysDP(5));
-    Recursions r1 = new Recursions();
+    //Recursions r1 = new Recursions();
     //r1.printAllpermutation("abcd");
-    System.out.println(r1.generateParenthesis(3));
+    //System.out.println(r1.generateParenthesis(3));
+    int [] arr1 = {1, 4, 5};
+    int [] arr2 = {1, 3, 4};
+    int [] arr3 = {2, 6};
+    LinkList l1 = new LinkList();
+    LinkList l2 = new LinkList();
+    LinkList l3 = new LinkList();
+    l1 = l1.createList(arr1);
+    l2 = l2.createList(arr2);
+    l3 = l3.createList(arr3);
+    LinkList [] arrList = {l1,l2,l3};
+    LinkList l4 = new LinkList();
+    LinkList [] empltyList = {};
+    l4 = l4.mergeKLists(arrList);
+    l4.printList();
+
+
 
 
     }
