@@ -53,7 +53,7 @@ public class Main {
 //        } else {
 //            System.out.println("No Pred!");
 //        }
-        Solutions s1 = new Solutions();
+//        Solutions s1 = new Solutions();
 //        String instr = "PAYPALISHIRING";
 //        String outstr = s1.convert(instr,4);
 //        System.out.println(instr+ "  " + outstr);
@@ -110,20 +110,25 @@ public class Main {
     //Recursions r1 = new Recursions();
     //r1.printAllpermutation("abcd");
     //System.out.println(r1.generateParenthesis(3));
-    int [] arr1 = {1, 4, 5};
-    int [] arr2 = {1, 3, 4};
-    int [] arr3 = {2, 6};
+    int [] arr1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    int [] arr2 = {};
+    //int [] arr3 = {2, 6};
     LinkList l1 = new LinkList();
-    LinkList l2 = new LinkList();
-    LinkList l3 = new LinkList();
+    //LinkList l2 = new LinkList();
+    //LinkList l3 = new LinkList();
     l1 = l1.createList(arr1);
-    l2 = l2.createList(arr2);
-    l3 = l3.createList(arr3);
-    LinkList [] arrList = {l1,l2,l3};
-    LinkList l4 = new LinkList();
-    LinkList [] empltyList = {};
-    l4 = l4.mergeKLists(arrList);
-    l4.printList();
+
+    //l3 = l3.createList(arr3);
+    //LinkList [] arrList = {l1,l2,l3};
+    //LinkList l4 = new LinkList();
+    //LinkList [] empltyList = {};
+    //l4 = l4.mergeKLists(arrList);
+    //l4.printList();
+    l1.printList();
+    LinkList l2 = l1.swapPairs(l1);
+
+    l2.printList();
+
 
 
 

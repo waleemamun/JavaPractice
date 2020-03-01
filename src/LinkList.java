@@ -146,7 +146,7 @@ public class LinkList {
      *      b) Replace heap root with next element from the linkList (the next pointer of the removed list still points
      *         to the next Item in the original list) from which the element is extracted.
      *         Add the item pointed by the next ptr due to heapify call internally it will go to its proper position
-     *         
+     *
      */
 
     public LinkList mergeKLists(LinkList[] lists) {
@@ -187,6 +187,48 @@ public class LinkList {
             curr.next = null;
 
         return resultList.next;
+    }
+
+    // LeetCode 24
+    public LinkList swapPairs(LinkList head) {
+        LinkList resultList = new LinkList(-1);
+        if (head == null)
+            return null;
+        if (head.next == null)
+            return head;
+
+        LinkList node1 = head;
+        LinkList node2 = head.next;
+        resultList.next = head.next;
+        LinkList prev = node1;
+        boolean isfirst = true;
+        while (node1 != null && node1.next != null) {
+            //swap nodes by changing the next pointers of the nodes
+            node1.next = node2.next;    // first node1 points to the next pointer of node2
+            node2.next = node1;          // now 2nd node points to first node swap done
+            if (!isfirst) {
+                // the node2 has been swapped with node 1 we need the prev to point to node2
+                // so that the linklist remain connected.
+                // 2 -> 1 -> 3 -> 4 -> 5 need to become 2 -> 1 > 4 -> 3 - >5 not 2 -> 1 -> 3 <-4
+                //                                                                         |
+                //                                                                         V
+                //                                                                         5
+                prev.next = node2;
+            } else {
+                isfirst = false;
+            }
+            // store the prev node for the next iteration as we need to update it to point to the new node2
+            prev = node1;
+            // update node1 & node2 to point to the next pair to be swapped
+            node1 = node1.next;
+            if (node1 != null)
+                node2 = node1.next;
+
+
+
+        }
+        return resultList.next;
+
     }
 
 
