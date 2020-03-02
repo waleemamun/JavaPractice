@@ -529,4 +529,26 @@ public class Solutions {
         else
             return false;
     }
+
+    //LeetCode 26: Remove Duplicates from Sorted Array
+    public int removeDuplicates(int[] nums) {
+        int curr = 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            if(nums[i] != nums[i-1])
+                nums[curr++] = nums[i];
+        }
+        return curr;
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

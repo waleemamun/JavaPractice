@@ -89,7 +89,6 @@ public class Main {
 //        tempList.printList();
 
         //System.out.println(" res" + s1.fourSum(arr,0));
-        System.out.println("Git WOW!");
 //        System.out.println("Parenthesis " + s1.isValid("([)]"));
 //        int [] arr1 = {-40, -20, -1, 1, 2, 3, 5, 7, 9, 12, 13};
 //        int [] arr2 = {-10, -5, 2, 2, 2, 3, 4, 8, 9, 12, 13};
@@ -104,32 +103,41 @@ public class Main {
 //        System.out.println("My list");
 //        resx.printList();
 
-    //System.out.println("Subsets " + r1.getSubset(set,0));
-    //System.out.println("Magic pos " + r1.magicShowV2(arr2));
-    //System.out.println("ways to climb: " + r1.countWaysDP(5));
-    //Recursions r1 = new Recursions();
-    //r1.printAllpermutation("abcd");
-    //System.out.println(r1.generateParenthesis(3));
-    int [] arr1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+//    System.out.println("Subsets " + r1.getSubset(set,0));
+//    System.out.println("Magic pos " + r1.magicShowV2(arr2));
+//    System.out.println("ways to climb: " + r1.countWaysDP(5));
+//    Recursions r1 = new Recursions();
+//    r1.printAllpermutation("abcd");
+//    System.out.println(r1.generateParenthesis(3));
 
-    //int [] arr3 = {2, 6};
-    LinkList l1 = new LinkList();
-    //LinkList l2 = new LinkList();
-    //LinkList l3 = new LinkList();
-    l1 = l1.createList(arr1);
-    //System.out.println("List Size " + l1.getSize());
+//    int [] arr3 = {2, 6};
+//    LinkList l1 = new LinkList();
+//    LinkList l2 = new LinkList();
+//    LinkList l3 = new LinkList();
+//    l1 = l1.createList(arr1);
+//    System.out.println("List Size " + l1.getSize());
+//
+//    l3 = l3.createList(arr3);
+//    LinkList [] arrList = {l1,l2,l3};
+//    LinkList l4 = new LinkList();
+//    LinkList [] empltyList = {};
+//    l4 = l4.mergeKLists(arrList);
+//    l4.printList();
+//    LinkList l2 = l1.reverseKGroup(l1, 3);
+//    LinkList l2 = l1.swapPairs(l1);
+//
+//    l2.printList();
 
-    //l3 = l3.createList(arr3);
-    //LinkList [] arrList = {l1,l2,l3};
-    //LinkList l4 = new LinkList();
-    //LinkList [] empltyList = {};
-    //l4 = l4.mergeKLists(arrList);
-    //l4.printList();
-    LinkList l2 = l1.reverseKGroup(l1, 3);
-    //LinkList l2 = l1.swapPairs(l1);
-
-    l2.printList();
-
+        System.out.println("Git WOW!");
+        int [] arr1 = {0, 0, 0, 1, 1, 2 ,2, 2, 2, 3,3, 3, 3, 4, 4, 5};
+        int [] arr2 = {0 ,1 ,2 ,3 ,4 ,5, 6 };
+        Solutions s1 = new Solutions();
+        int size = s1.removeDuplicates(arr2);
+        System.out.println("Arr Len = " + size);
+        for (int i =0 ; i< size; i++) {
+            System.out.print(arr2[i] +" ");
+        }
+        System.out.println();
 
 
 
