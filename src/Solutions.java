@@ -532,8 +532,11 @@ public class Solutions {
 
     //LeetCode 26: Remove Duplicates from Sorted Array
     public int removeDuplicates(int[] nums) {
-        int curr = 1;
-
+        int curr = 1; // curr is the pointer to unique item start with position 1 as pos 0 will always be unique
+        
+        // Keep one running pointer i to check if the entry in the ith position
+        // matches the i-1 th position, if not we copy the unique item in the position pointed by curr and
+        // update curr top point to the nest pos
         for (int i = 1; i < nums.length; i++) {
             if(nums[i] != nums[i-1])
                 nums[curr++] = nums[i];
