@@ -111,12 +111,13 @@ public class Main {
     //r1.printAllpermutation("abcd");
     //System.out.println(r1.generateParenthesis(3));
     int [] arr1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-    int [] arr2 = {};
+
     //int [] arr3 = {2, 6};
     LinkList l1 = new LinkList();
     //LinkList l2 = new LinkList();
     //LinkList l3 = new LinkList();
     l1 = l1.createList(arr1);
+    //System.out.println("List Size " + l1.getSize());
 
     //l3 = l3.createList(arr3);
     //LinkList [] arrList = {l1,l2,l3};
@@ -124,8 +125,8 @@ public class Main {
     //LinkList [] empltyList = {};
     //l4 = l4.mergeKLists(arrList);
     //l4.printList();
-    l1.printList();
-    LinkList l2 = l1.reverseList(l1);
+    LinkList l2 = l1.reverseKGroup(l1, 3);
+    //LinkList l2 = l1.swapPairs(l1);
 
     l2.printList();
 

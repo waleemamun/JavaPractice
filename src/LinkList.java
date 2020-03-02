@@ -1,5 +1,3 @@
-import sun.awt.image.ImageWatched;
-
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -7,14 +5,17 @@ import java.util.PriorityQueue;
 public class LinkList {
     int data;
     LinkList next;
+
     public LinkList() {
         int data = 0;
         next = null;
     }
+
     public LinkList (int data){
         this.data = data;
         next = null;
     }
+
     public LinkList createList(int []arr) {
         LinkList head = null;
 
@@ -26,14 +27,41 @@ public class LinkList {
         }
         return head;
     }
+
+    public int getSize(){
+        LinkList ls = this;
+        int count = 0;
+        while(ls!=null) {
+            count++;
+            ls = ls.next;
+        }
+        return count;
+
+    }
     public void printList() {
         LinkList ls = this;
+        int count = 0;
         while(ls!=null) {
+            count++;
             System.out.print(ls.data + "->");
             ls = ls.next;
         }
+        System.out.println("null ::size = "+count);
+    }
+
+    public void printList(int size) {
+        LinkList ls = this;
+        int count = 0;
+        while(ls != null) {
+            System.out.print(ls.data + "->");
+            ls = ls.next;
+            count++;
+            if (count == size)
+                break;
+        }
         System.out.println("null");
     }
+
     public void removeDuplicate () {
         HashSet <Integer> map = new HashSet<>();
         LinkList ls = this;
@@ -218,6 +246,7 @@ public class LinkList {
                 isfirst = false;
             }
             // store the prev node for the next iteration as we need to update it to point to the new node2
+            // Useful Tips: to save prev node skip using it in the first iteration & init  after using the first time
             prev = node1;
             // update node1 & node2 to point to the next pair to be swapped
             node1 = node1.next;
@@ -238,12 +267,46 @@ public class LinkList {
             head = nodeN;
             return head;
         }
-
+        // nodeC is the current node & nodeN is the next node. At call
+        // (some other node)<-2(nodeC)  (nodeN) 3->(some other node) now lets make it 2<-3
         if (head == nodeC)
             nodeC.next = null;
         LinkList savedNode = nodeN.next;
         nodeN.next = nodeC;
         return revList(nodeN, savedNode, head);
+
+    }
+
+    // reverse a List recursively between nodes fromNode to toNode,
+    // return  a pointer the points to the reversed list
+    private LinkList revListFromTo(LinkList nodeC, LinkList nodeN,
+                                   LinkList fromNode, LinkList toNode) {
+
+        // from & to pointing to the same no change required
+        if (fromNode == toNode)
+            return fromNode;
+        // swap case: fromNode & toNode are adjacent
+        if (fromNode == nodeC && toNode == nodeN){
+            LinkList saveNext = toNode.next;
+            nodeN.next = nodeC;
+            nodeC.next = saveNext;
+            return toNode;
+        }
+        // either we reached the end, or we reached toNode and sould stop processing any more node
+        // get frmonNode to point the last node or first node in rev order
+        if (nodeN.next == null || nodeN == toNode) {
+            nodeN.next = nodeC;
+            fromNode = nodeN;
+            return fromNode;
+        }
+        // make the first node point to the next node of the last_node/toNode
+        // example:: 1->2->3->4 if fromNode = 1 and toNode = 3 after this we have 1->4
+        // later this will help us achieve 3->2->1->4
+        if (fromNode == nodeC)
+            nodeC.next = toNode.next;
+        LinkList savedNode = nodeN.next;
+        nodeN.next = nodeC;
+        return revListFromTo(nodeN, savedNode, fromNode, toNode);
 
     }
 
@@ -253,6 +316,66 @@ public class LinkList {
         head = revList(head,head.next,head);
         return head;
 
+    }
+
+    // LeetCode 25:  Reverse Nodes in k-Group
+    // The idea is to call the api (revListFromTo) multiple times.
+    // The api reverses all the node between fromNode & toNode.
+    // So we move along the list and pick group of size K and call the revListFromTo.
+    // We need to consider few things here
+    //    1.In the first call to revListFromTo save list in head
+    //    2. Subsequent call save the list in tempHead
+    //    3. We need to save the last node (this is the fromNode which is now after reverse became last Node)
+    //       of the reversed k size list in prevLastNode. This will be used link the list properly after each reverse.
+    //       The prevLastNode will create the link between the original list and the newly reversed k size list.
+    //       Example 1->2->3->4->5->6 in first step 3->2->1->4->5->6 now prevLastNode = 1 and
+    //       the new reversed group is 6->5->4, so prevLastNode now links it by 3->2->1-> 6->5->4
+    public LinkList reverseKGroup(LinkList head, int k) {
+        // if k = 1 we dont need to process
+        if (k == 1)
+            return head;
+
+        LinkList curr = head;      // get a pointer to head
+        int count = 1;             // count for k
+        boolean isFirst = true;
+        LinkList fromNode =null, toNode = null;
+        LinkList tempHead = null, prevLastNode = null;
+
+        while (curr != null) {
+            if (count % k == 1) {
+                fromNode = curr;
+            }
+            if (count % k == 0) {
+                toNode = curr;
+                if (isFirst) {
+                    // use head only once as head needs to point to the start of the list
+                    head = revListFromTo(fromNode, fromNode.next, fromNode, toNode);
+                    isFirst = false;
+                } else {
+                    // temphead will point to the newly reversed (only k items reversed rest are same) list
+                    tempHead = revListFromTo(fromNode, fromNode.next, fromNode, toNode);
+                    // link the original list to the newly reversed list
+                    // we saved the prevLastNode in the previous iteration
+                    prevLastNode.next = tempHead;
+                }
+                // save the current fromNode to be used in the next iteration for linking
+                prevLastNode = fromNode;
+                // update curr to point to the currently processed list,
+                // This is a very crucial step curr needs to be updated properly
+                // because the list is changing with every call to revListFromTo , we need to update curr accordingly.
+                // No need to point curr to curr.next here as it will be done just below this.
+                curr = fromNode;
+            }
+            count++;
+            curr = curr.next;
+        }
+
+        /* Ignore: Test code for the revListFromTo
+        fromNode = head.next.next.next;
+        toNode = fromNode.next.next;
+        head = revListFromTo(fromNode,fromNode.next,fromNode,toNode);*/
+
+        return head;
     }
 
 
