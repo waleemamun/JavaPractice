@@ -130,9 +130,9 @@ public class Main {
 
         System.out.println("Git WOW!");
         int [] arr1 = {0, 0, 0, 1, 1, 2 ,2, 2, 2, 3,3, 3, 3, 4, 4, 5};
-        int [] arr2 = {0 ,1 ,2 ,3 ,4 ,5, 6 };
+        int [] arr2 = {0,1,2,2,3,0,4,2};
         Solutions s1 = new Solutions();
-        int size = s1.removeDuplicates(arr2);
+        int size = s1.removeElement(arr2,2);
         System.out.println("Arr Len = " + size);
         for (int i =0 ; i< size; i++) {
             System.out.print(arr2[i] +" ");

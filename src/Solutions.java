@@ -532,8 +532,9 @@ public class Solutions {
 
     //LeetCode 26: Remove Duplicates from Sorted Array
     public int removeDuplicates(int[] nums) {
+
         int curr = 1; // curr is the pointer to unique item start with position 1 as pos 0 will always be unique
-        
+
         // Keep one running pointer i to check if the entry in the ith position
         // matches the i-1 th position, if not we copy the unique item in the position pointed by curr and
         // update curr top point to the nest pos
@@ -542,6 +543,36 @@ public class Solutions {
                 nums[curr++] = nums[i];
         }
         return curr;
+    }
+
+    // LeetCode 27: Remove Element val from an unsorted array O(n)
+    // Have two pointer one starting from left (I) another starting from right (J). If we find the 'val' while scanning
+    // from left. We swap the item(val) with the item pointed by the right pointer J.
+    // if we encounter item (val) from right, we just skip it
+    public int removeElement(int[] nums, int val) {
+        if (nums.length == 0)
+            return 0;
+
+        int j = nums.length - 1;
+        int i = 0;
+
+        while (i < j) {
+            // found val from right side skip this cause we need j to point to an item != val, so that it can be
+            // swapped with nums[i] (when nums[i] == val)
+            if (nums[j] == val) {
+                j--;
+                continue;
+            }
+            if (nums[i] == val) {
+                int temp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = temp;
+                j--;
+            }
+            i++;
+
+        }
+        return nums[i] == val ? i : (i + 1);
     }
 
 
