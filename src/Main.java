@@ -135,6 +135,8 @@ public class Main {
         int size = s1.removeElement(arr2,2);
         System.out.println("Arr Len = " + size);
         System.out.println("Index " + s1.strStr("waleeMamun", "n"));
+        SubStringSearch sb1 = new SubStringSearch();
+        System.out.println("Index Sub " + sb1.strStr("waleeMamun", "ema"));
 
 
 
