@@ -575,6 +575,12 @@ public class Solutions {
         return nums[i] == val ? i : (i + 1);
     }
 
+    // LeetCode 28: strStr
+    public int strStr(String haystack, String needle) {
+        int index = 0;
+        return index;
+    }
+
 
 
 
