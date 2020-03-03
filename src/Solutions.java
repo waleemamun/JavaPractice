@@ -575,9 +575,31 @@ public class Solutions {
         return nums[i] == val ? i : (i + 1);
     }
 
-    // LeetCode 28: strStr
+    // LeetCode 28: strStr Look at the KMP search which is O(m +n )
+    // This is O(mn) algo
     public int strStr(String haystack, String needle) {
-        int index = 0;
+
+        if (haystack.length() == 0 && needle.length() == 0)
+            return 0;
+        int index = -1;
+        int i = 0;
+        int j = 0;
+        int k = 0;
+
+        while (i < haystack.length() && j < needle.length()) {
+            if(haystack.charAt(i) == needle.charAt(j)) {
+                i++;
+                j++;
+            } else {
+                j = 0;
+                k++;
+                i = k;
+            }
+            if (j == needle.length()){
+                index = i - j;
+                break;
+            }
+        }
         return index;
     }
 

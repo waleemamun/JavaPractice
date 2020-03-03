@@ -134,10 +134,7 @@ public class Main {
         Solutions s1 = new Solutions();
         int size = s1.removeElement(arr2,2);
         System.out.println("Arr Len = " + size);
-        for (int i =0 ; i< size; i++) {
-            System.out.print(arr2[i] +" ");
-        }
-        System.out.println();
+        System.out.println("Index " + s1.strStr("waleeMamun", "n"));
 
 
 
