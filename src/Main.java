@@ -128,15 +128,17 @@ public class Main {
 //
 //    l2.printList();
 
-        System.out.println("Git WOW!");
-        int [] arr1 = {0, 0, 0, 1, 1, 2 ,2, 2, 2, 3,3, 3, 3, 4, 4, 5};
-        int [] arr2 = {0,1,2,2,3,0,4,2};
-        Solutions s1 = new Solutions();
-        int size = s1.removeElement(arr2,2);
-        System.out.println("Arr Len = " + size);
-        System.out.println("Index " + s1.strStr("waleeMamun", "n"));
-        SubStringSearch sb1 = new SubStringSearch();
-        System.out.println("Index Sub " + sb1.strStr("waleeMamun", "ema"));
+//        System.out.println("Git WOW!");
+//        int [] arr1 = {0, 0, 0, 1, 1, 2 ,2, 2, 2, 3,3, 3, 3, 4, 4, 5};
+//        int [] arr2 = {0,1,2,2,3,0,4,2};
+//        Solutions s1 = new Solutions();
+//        int size = s1.removeElement(arr2,2);
+//        System.out.println("Arr Len = " + size);
+//        System.out.println("Index " + s1.strStr("waleeMamun", "n"));
+//        SubStringSearch sb1 = new SubStringSearch();
+//        System.out.println("Index Sub " + sb1.strStr("waleeMamun", "ema"));
+        System.out.println(" Res " + Bits.multiply(7,9));
+        System.out.println(" Res " + Bits.add(7,9));
 
 
 

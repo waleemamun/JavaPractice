@@ -86,4 +86,42 @@ public class Bits {
 
         return num;
     }
+
+    // multiply without multiplication operator
+    // use multiplication method learned in school (choto bela :))
+    public static long multiply (long x, long y) {
+        long result = 0;
+        int k = 0;
+
+        while (x != 0) {
+            if ((x & 0x1) == 1) {
+                result += (y << k);
+            }
+            k++;
+            x >>>= 1; // we are doing right shift lets do unsigned shift using '>>>'
+        }
+        return result;
+    }
+
+    public static long add(long a, long b) {
+        long sum = 0;
+        long carryin = 0;
+        long carryout = 0;
+        long tempA = a;
+        long tempB = b;
+        int k = 1;
+
+        while (tempA != 0 || tempB != 0){
+            long ak = a & k;          // get kth pos in a
+            long bk = b & k;          // get kth pos in b
+            carryout = (ak & bk) | (ak & carryin) | (bk & carryin);
+            sum |= (ak ^ bk ^ carryin);
+            carryin = carryout << 1;  // need to shift we need to move carryin to be kth position too
+            k <<= 1;
+            tempA >>>= 1;
+            tempB >>>= 1;
+        }
+
+        return sum | carryin;
+    }
 }
