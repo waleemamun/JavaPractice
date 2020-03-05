@@ -105,6 +105,8 @@ public class SubStringSearch {
         }
         return false;
     }
+
+    // get first index of the first occurances of pattern in text
     public int kmpIndex(char []text, char []pattern){
 
         int lps[] = computeTemporaryArray(pattern);
@@ -127,6 +129,8 @@ public class SubStringSearch {
         }
         return -1;
     }
+
+    // strStr: substr
     public int strStr(String haystack, String needle) {
         return kmpIndex(haystack.toCharArray(),needle.toCharArray());
     }

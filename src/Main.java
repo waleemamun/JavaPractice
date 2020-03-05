@@ -139,6 +139,7 @@ public class Main {
 //        System.out.println("Index Sub " + sb1.strStr("waleeMamun", "ema"));
         System.out.println(" Res " + Bits.multiply(7,9));
         System.out.println(" Res " + Bits.add(7,9));
+        System.out.println("Res " + Bits.divide(-2147483648,-1));
 
 
 

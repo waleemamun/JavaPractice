@@ -103,7 +103,8 @@ public class Bits {
         return result;
     }
 
-    public static long add(long a, long b) {
+    // add without addition operation
+    public static long add (long a, long b) {
         long sum = 0;
         long carryin = 0;
         long carryout = 0;
@@ -123,5 +124,56 @@ public class Bits {
         }
 
         return sum | carryin;
+    }
+
+    // LeetCode 29 :: divide two number
+    public static int divide (long x, long y) {
+
+
+        // both same no need to calc more
+        if (x == y)
+            return 1;
+        // if divisor is 1 return dividend
+        if (y == 1)
+            return (int)x;
+        // This is a very special case
+        if (y == -1 && x == Integer.MIN_VALUE)
+            return Integer.MAX_VALUE;
+        // make the number positive
+        // we keep track of the +/- and handle it in return
+        boolean isNeg = false;
+
+        if (y < 0) {
+            y = -y;
+            isNeg = true;
+        }
+        if (x < 0) {
+            x =-x;
+            if (isNeg == true)
+                isNeg = false;
+            else
+                isNeg = true;
+        }
+        long quotient = 0;
+        long reminder = 0;
+        int power = 32;
+        long ypower = y << power; // 2^ky
+
+        // idea is to find  2^ky <=x then add 2^K to the quotient
+        // and update reduce x - 2^ky. For the news k again find 2^Ky <= x
+
+        while (x >= y) {
+            while (ypower > x) {
+                ypower >>>= 1; // 2^ky/2 == (2^k-1)y
+                power--;
+            }
+            quotient += 1L << power;
+            x -= ypower;
+
+        }
+        reminder = x;
+        System.out.println("reminder " + reminder);
+
+        return (int) (isNeg ? -quotient: quotient);
     }
 }
