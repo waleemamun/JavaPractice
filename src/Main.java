@@ -1,3 +1,4 @@
+import org.omg.PortableInterceptor.INACTIVE;
 import sun.awt.image.ImageWatched;
 
 import java.util.ArrayList;
@@ -137,11 +138,17 @@ public class Main {
 //        System.out.println("Index " + s1.strStr("waleeMamun", "n"));
 //        SubStringSearch sb1 = new SubStringSearch();
 //        System.out.println("Index Sub " + sb1.strStr("waleeMamun", "ema"));
-        System.out.println(" Res " + Bits.multiply(7,9));
-        System.out.println(" Res " + Bits.add(7,9));
-        System.out.println("Res " + Bits.divide(-2147483648,-1));
+//        System.out.println(" Res " + Bits.multiply(7,9));
+//        System.out.println(" Res " + Bits.add(7,9));
+//        System.out.println("Res " + Bits.divide(-2147483648,-1));
 
-
+        Solutions s1 = new Solutions();
+        String mystr = "abcwordgoodgoodgoodbestwordwordolaf";
+        String mystr1 = "abaababbaba" ;
+        String []words1 = {"ab","ba","ab","ba"};
+        String [] words = {"word","good","best","word", "word"};
+        List <Integer> ls = s1.findSubstringV3(mystr,words);
+        System.out.println("Indices =  " + ls);
 
 
 

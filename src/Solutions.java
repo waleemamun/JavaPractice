@@ -603,6 +603,173 @@ public class Solutions {
         return index;
     }
 
+    public class Counts{
+        int fixedCount;
+        int currenCount;
+
+        public Counts(int count) {
+            fixedCount = count;
+            currenCount = count;
+        }
+        public void reset() {
+            currenCount = fixedCount;
+        }
+        public void incrementAll() {
+            fixedCount++;
+            currenCount++;
+        }
+
+    }
+
+    // LeetCode 30:: Substring with Concatenation of All Words
+    public List<Integer> findSubstringV1(String s, String[] words) {
+        List <Integer> indicies = new LinkedList<>();
+        HashMap <String,Counts> hashMap = new HashMap<>();
+        int totalWordCount  = words.length;
+        if (words.length == 0) {
+            return indicies;
+        }
+
+        int wordSize = words[0].length();
+        int currIdx = 0;
+        List <String> listStr = new LinkedList<>();
+        int k = 0;
+        boolean isInSearch = false;
+        boolean isReset = false;
+
+        // setup the hashtable for the words;
+        for (String word : words) {
+            if(hashMap.containsKey(word)) {
+                hashMap.get(word).incrementAll();
+            } else {
+                hashMap.put(word, new Counts(1));
+                listStr.add(word);
+            }
+        }
+
+        while ((currIdx + wordSize) <= s.length()) {
+            String lookUpStr = s.substring(currIdx, currIdx + wordSize);
+//            System.out.println(lookUpStr + " tc " + totalWordCount + " search "
+//             + isInSearch + " idx " + currIdx + " k " +k );
+            if (hashMap.containsKey(lookUpStr)) {
+                Counts strCount = hashMap.get(lookUpStr);
+                if (isInSearch == false) {
+                    isInSearch = true;
+                    k = currIdx;
+                }
+
+                if (strCount.currenCount != 0) {
+                    strCount.currenCount--;
+                    currIdx += wordSize;
+                    totalWordCount--;
+                } else {
+                    // reset count for word
+                    isReset = true;
+                    currIdx = k+1;
+                }
+
+                // found the entry add it to the index list
+                if (totalWordCount == 0 && isInSearch) {
+                    indicies.add(k);
+                    // reset to check from the next word
+                    currIdx = k+1;
+                    isReset = true;
+                }
+
+            } else {
+                if (isInSearch) {
+                    isReset = true;
+                    currIdx = k;
+                }
+                currIdx++;
+                // reset count for words
+            }
+            if (isReset) {
+                for (String word : listStr) {
+                    hashMap.get(word).reset();
+                }
+                totalWordCount = words.length;
+                isInSearch = false;
+                isReset = false;
+            }
+        }
+
+        return indicies;
+    }
+
+    // This is a better solution for LeetCode 30::  Substring with Concatenation of All Words
+    public List<Integer> findSubstringV3(String s, String[] words) {
+        int N = s.length();
+        List<Integer> indexes = new ArrayList<Integer>(s.length());
+        if (words.length == 0) {
+            return indexes;
+        }
+        int M = words[0].length();
+        if (N < M * words.length) {
+            return indexes;
+        }
+        int last = N - M + 1;
+
+        //map each string in words array to some index and compute target counters
+        Map<String, Integer> mapping = new HashMap<String, Integer>(words.length);
+        int [][] table = new int[2][words.length];
+        int failures = 0, index = 0;
+        for (int i = 0; i < words.length; ++i) {
+            Integer mapped = mapping.get(words[i]);
+            if (mapped == null) {
+                ++failures;
+                mapping.put(words[i], index);
+                mapped = index++;
+            }
+            ++table[0][mapped];
+            System.out.println("ind " + mapped + " ent " + table[0][mapped]);
+        }
+
+        //find all occurrences at string S and map them to their current integer, -1 means no such string is in words array
+        int [] smapping = new int[last];
+        for (int i = 0; i < last; ++i) {
+            String section = s.substring(i, i + M);
+            Integer mapped = mapping.get(section);
+            if (mapped == null) {
+                smapping[i] = -1;
+            } else {
+                smapping[i] = mapped;
+            }
+        }
+
+        //fix the number of linear scans
+        for (int i = 0; i < M; ++i) {
+            //reset scan variables
+            int currentFailures = failures; //number of current mismatches
+            int left = i, right = i;
+            Arrays.fill(table[1], 0);
+            //here, simply solve the minimum-window-substring problem
+            while (right < last) {
+                while (currentFailures > 0 && right < last) {
+                    int target = smapping[right];
+                    if (target != -1 && ++table[1][target] == table[0][target]) {
+                        --currentFailures;
+                    }
+                    right += M;
+                }
+                while (currentFailures == 0 && left < right) {
+                    int target = smapping[left];
+                    if (target != -1 && --table[1][target] == table[0][target] - 1) {
+                        int length = right - left;
+                        //instead of checking every window, we know exactly the length we want
+                        if ((length / M) ==  words.length) {
+                            indexes.add(left);
+                        }
+                        ++currentFailures;
+                    }
+                    left += M;
+                }
+            }
+
+        }
+        return indexes;
+    }
+
 
 
 
