@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Recursions {
 // This set of problems are from CTCI
@@ -116,6 +117,7 @@ public class Recursions {
         }
         for (int i = index; i < str.length(); i++) {
             if (i != index) {
+                // if its not the first call for this str we swap with next char
                 char tempC = str.charAt(i);
                 str.setCharAt(i,str.charAt(index));
                 str.setCharAt(index,tempC);
@@ -205,6 +207,75 @@ public class Recursions {
             str[index] = ')';
             addParenthesis(list, leftRem, rightRem-1, str, index+1);
         }
+    }
+
+    public void reverserArray (int arr[], int start, int end) {
+        while (start < end) {
+            int temp = arr[start];
+            arr[start] = arr[end];
+            arr[end] = temp;
+            start++;
+            end--;
+        }
+    }
+    // LeetCode 31::  Next Permutation
+    // The basic idea is to use two pointers low & high to scan from the right and found a place and stop
+    // we found the value pointed by high is less than low. Nest we need to find a value (on the right of high pointer)
+    // which is greater than the value pointed by high. If we find such entry we swap value of high with that entry
+    // and reverse rest of the array  from right of high pointer
+    public void nextPermutation(int[] nums) {
+        int [] buffer = new int[nums.length];
+
+        // array size 0 or 1 dont need to process
+        if (nums.length <= 1 )
+            return;
+
+        int low = nums.length-1;
+        int high = nums.length -2;
+
+        // one optimization if the  last two entries can be swapped
+        if (nums[low] > nums[high]) {
+            int temp = nums[low];
+            nums[low] = nums[high];
+            nums[high] = temp;
+            return;
+        }
+        int lowStart = low;
+        while (low >= 0 && high >= 0 &&
+                nums[low] <= nums[high]){
+            low--;
+            high--;
+        }
+
+        if (high < 0 && low == 0) {
+            reverserArray(nums,0,nums.length-1);
+            return;
+        }
+
+        // found the breakpoint in ascending order from right to left
+        // low is pointing to the last entry in ascending order (highest entry) and
+        // high points to our entry of interest
+
+        int end = lowStart;
+
+        if (nums[high] >= nums[lowStart]) {
+
+
+            // if array is of type 1 3 7 6 5 4 4 4 4 4 1
+            // lowStart < high we need to find end > high
+            // if array is of type 1 4 7 6 5 4 4 4 4 4
+            // lowStart == high we need to find end > high
+            while (nums[end] <= nums[high])
+                end--;
+            // non special case like 1 2 3 7 6 5 4  we already found end > high
+        }
+
+        int temp = nums[high];
+        nums[high] = nums[end];
+        nums[end] = temp;
+        //Arrays.sort(nums,low,lowStart+1);
+        // Just simply reverse the remaining array no need to sort
+        reverserArray(nums, low, lowStart);
     }
 }
 

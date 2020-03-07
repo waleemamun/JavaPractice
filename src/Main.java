@@ -142,13 +142,23 @@ public class Main {
 //        System.out.println(" Res " + Bits.add(7,9));
 //        System.out.println("Res " + Bits.divide(-2147483648,-1));
 
-        Solutions s1 = new Solutions();
-        String mystr = "abcwordgoodgoodgoodbestwordwordolaf";
-        String mystr1 = "foobarthefoobarfoofoo" ;
-        String []words1 = {"foo", "bar", "foo"};
-        String [] words = {"word","good","best","word", "word"};
-        List <Integer> ls = s1.findSubstring(mystr1,words1);
-        System.out.println("Indices =  " + ls);
+//        Solutions s1 = new Solutions();
+//        String mystr = "abcwordgoodgoodgoodbestwordwordolaf";
+//        String mystr1 = "foobarthefoobarfoofoo" ;
+//        String []words1 = {"foo", "bar", "foo"};
+//        String [] words = {"word","good","best","word", "word"};
+//        List <Integer> ls = s1.findSubstring(mystr1,words1);
+//        System.out.println("Indices =  " + ls);
+
+        int []arr = {1 ,2 ,3, 7, 6, 5, 4, 4, 4, 4};
+        int [] arr1 = {2,3,1};
+        Recursions r1 = new Recursions();
+        r1.nextPermutation(arr);
+        for (int i =0 ; i<arr.length; i++){
+            System.out.print(" " + arr[i]);
+        }
+        System.out.println();
+
 
 
 
