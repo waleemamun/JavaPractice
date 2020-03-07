@@ -144,10 +144,10 @@ public class Main {
 
         Solutions s1 = new Solutions();
         String mystr = "abcwordgoodgoodgoodbestwordwordolaf";
-        String mystr1 = "abaababbaba" ;
-        String []words1 = {"ab","ba","ab","ba"};
+        String mystr1 = "foobarthefoobarfoofoo" ;
+        String []words1 = {"foo", "bar", "foo"};
         String [] words = {"word","good","best","word", "word"};
-        List <Integer> ls = s1.findSubstringV3(mystr,words);
+        List <Integer> ls = s1.findSubstring(mystr1,words1);
         System.out.println("Indices =  " + ls);
 
 

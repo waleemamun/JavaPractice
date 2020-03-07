@@ -1,5 +1,6 @@
 import javafx.print.Collation;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solutions {
@@ -697,7 +698,7 @@ public class Solutions {
         return indicies;
     }
 
-    // This is a better solution for LeetCode 30::  Substring with Concatenation of All Words
+    // This is a best solution for LeetCode 30::  Substring with Concatenation of All Words 5ms runtime
     public List<Integer> findSubstringV3(String s, String[] words) {
         int N = s.length();
         List<Integer> indexes = new ArrayList<Integer>(s.length());
@@ -719,10 +720,11 @@ public class Solutions {
             if (mapped == null) {
                 ++failures;
                 mapping.put(words[i], index);
+                //System.out.println(words[i] + " " + index);
                 mapped = index++;
             }
             ++table[0][mapped];
-            System.out.println("ind " + mapped + " ent " + table[0][mapped]);
+            //System.out.println("ind " + mapped + " ent " + table[0][mapped]);
         }
 
         //find all occurrences at string S and map them to their current integer, -1 means no such string is in words array
@@ -735,6 +737,7 @@ public class Solutions {
             } else {
                 smapping[i] = mapped;
             }
+            //System.out.println("i " + i + " " +smapping[i]);
         }
 
         //fix the number of linear scans
@@ -747,8 +750,13 @@ public class Solutions {
             while (right < last) {
                 while (currentFailures > 0 && right < last) {
                     int target = smapping[right];
+                    //System.out.println(target);
+                    if (target!=-1)
+                        //System.out.println("Bef : target "+ target+" table[0]" + table[0][target] + " table[1] " + table[1][target]);
                     if (target != -1 && ++table[1][target] == table[0][target]) {
+                        //System.out.println("target "+ target+" table[0]" + table[0][target] + " table[1] " + table[1][target]);
                         --currentFailures;
+                        //System.out.println("current failuers" + currentFailures);
                     }
                     right += M;
                 }
@@ -768,6 +776,72 @@ public class Solutions {
 
         }
         return indexes;
+    }
+
+    // This is better than V1 run time 13ms
+    public List<Integer> findSubstring(String s, String[] words) {
+        List <Integer> indicies = new ArrayList<>();
+        int wordsLen = words.length;
+        if (wordsLen == 0) {
+            return indicies;
+        }
+        int N = s.length();
+        HashMap <String,Integer> map = new HashMap<>(wordsLen);
+        int [][] wordsTable = new int[2][wordsLen];
+        int subStrSize = words[0].length();
+        int last = N - subStrSize + 1;
+        int [] sMapping = new int[last];
+        int totalWordCount  = words.length;
+        int index = 0;
+
+        if ( N < wordsLen * subStrSize)
+            return indicies;
+
+        for (int i = 0; i < wordsLen; i++){
+            Integer idx = map.get(words[i]);
+            if (idx == null) {
+                map.put(words[i],index);
+                idx = index++;
+            }
+            ++wordsTable[0][idx];
+        }
+
+        for (int i = 0; i < last; i++){
+            String lookUpStr = s.substring(i, i + subStrSize);
+            //System.out.println(lookUpStr);
+            Integer idx = map.get(lookUpStr);
+            if (idx == null)
+                sMapping[i] = -1;
+            else
+                sMapping[i] = idx;
+            //System.out.print(" " + sMapping[i]);
+        }
+        //System.out.println();
+
+        for (int i = 0; i< last; i++) {
+            Arrays.fill(wordsTable[1],0);
+            int currrentCount = totalWordCount;
+            int k = i;
+
+            while(currrentCount > 0  && k < last) {
+                int target = sMapping[k];
+                if (target != -1) {
+                        wordsTable[1][target]++;
+                        if (wordsTable[0][target] >= wordsTable[1][target])
+                            currrentCount--;
+                        else
+                            break;
+                } else {
+                    break;
+                }
+                k += subStrSize;
+            }
+            if (currrentCount == 0) {
+                indicies.add(i);
+            }
+
+        }
+        return indicies;
     }
 
 
