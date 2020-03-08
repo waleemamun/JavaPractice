@@ -247,6 +247,7 @@ public class Recursions {
             high--;
         }
 
+        // if the whole array is of the form 4 3 2 1 , we can just reverse it. 
         if (high < 0 && low == 0) {
             reverserArray(nums,0,nums.length-1);
             return;
