@@ -150,15 +150,19 @@ public class Main {
 //        List <Integer> ls = s1.findSubstring(mystr1,words1);
 //        System.out.println("Indices =  " + ls);
 
-        int []arr = {1 ,2 ,3, 7, 6, 5, 4, 4, 4, 4};
-        int [] arr1 = {2,3,1};
-        Recursions r1 = new Recursions();
-        r1.nextPermutation(arr);
-        for (int i =0 ; i<arr.length; i++){
-            System.out.print(" " + arr[i]);
-        }
-        System.out.println();
+//        int []arr = {1 ,2 ,3, 7, 6, 5, 4, 4, 4, 4};
+//        int [] arr1 = {2,3,1};
+//        Recursions r1 = new Recursions();
+//        r1.nextPermutation(arr);
+//        for (int i =0 ; i<arr.length; i++){
+//            System.out.print(" " + arr[i]);
+//        }
+//        System.out.println();
 
+        Solutions s1 = new Solutions();
+        String parenthesisStr = "()(()";
+        String parenthesisStr1 = "()(())";
+        System.out.println(s1.longestValidParentheses(parenthesisStr));
 
 
 

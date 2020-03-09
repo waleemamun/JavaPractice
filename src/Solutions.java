@@ -844,6 +844,34 @@ public class Solutions {
         return indicies;
     }
 
+    // LeetCode 32:: Longest Valid Parentheses
+    public int longestValidParentheses(String s) {
+        if (s.length() <= 1)
+            return 0;
+        int maxLen = Integer.MIN_VALUE;
+        Stack <Character> ptStack = new Stack<>();
+        int count = 0;
+        for (int i = 0; i < s.length(); i++) {
+
+            if (s.charAt(i) == '(') {
+                ptStack.push(s.charAt(i));
+
+            } else {
+                if (!ptStack.empty()) {
+                    ptStack.pop();
+                    count++;
+                    maxLen = Math.max(maxLen, count);
+
+                } else {
+                    count = 0;
+                }
+
+            }
+        }
+
+        return maxLen * 2;
+    }
+
 
 
 
