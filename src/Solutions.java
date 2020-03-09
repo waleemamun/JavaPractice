@@ -844,30 +844,55 @@ public class Solutions {
         return indicies;
     }
 
-    // LeetCode 32:: Longest Valid Parentheses
+    // LeetCode 32 (Hard):: Longest Valid Parentheses This is a 3ms solution , there is a better solution
+    // The basic idea here is to maintain an countArray and a stack. The stack stores idx of the
+    // left parenthesis. We store the index so that after we scanned the whole string we can find the idx
+    // where there was no matching parenthesis. We put -1 in countArray for such index.
+    // In the countArr we store the count of parenthesis at a specific point. for Left parenthesis
+    // we always store zero in countArray. for right parenthesis if stack is empty we store -1, other wise 1.
+    // Finally scan through countArray to find the longest uninterrupted substing;
+    // a -1 in countArray means interruption
     public int longestValidParentheses(String s) {
         if (s.length() <= 1)
             return 0;
         int maxLen = Integer.MIN_VALUE;
-        Stack <Character> ptStack = new Stack<>();
-        int count = 0;
+        Stack <Integer> ptStack = new Stack<>();
+        int [] countArr = new int[s.length()];
+
         for (int i = 0; i < s.length(); i++) {
 
             if (s.charAt(i) == '(') {
-                ptStack.push(s.charAt(i));
+                ptStack.push(i);
+                countArr[i] = 0;
 
             } else {
                 if (!ptStack.empty()) {
                     ptStack.pop();
-                    count++;
-                    maxLen = Math.max(maxLen, count);
+                    countArr[i] = 1;
 
                 } else {
-                    count = 0;
+                    countArr[i] = -1;
                 }
 
             }
         }
+
+        while (!ptStack.empty()) {
+            int i = ptStack.pop();
+            countArr[i] = -1;
+        }
+
+        int tempCount = 0;
+        for (int i = 0; i < countArr.length; i++) {
+            if (countArr[i] != -1) {
+                tempCount += countArr[i];
+            } else {
+                maxLen = Math.max(maxLen,tempCount);
+                tempCount = 0;
+            }
+
+        }
+        maxLen = Math.max(maxLen,tempCount);
 
         return maxLen * 2;
     }
