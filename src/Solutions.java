@@ -844,7 +844,8 @@ public class Solutions {
         return indicies;
     }
 
-    // LeetCode 32 (Hard):: Longest Valid Parentheses This is a 3ms solution , there is a better solution
+    // LeetCode 32 (Hard):: Longest Valid Parentheses This is a 3ms solution. This requires O(n) solution.
+    // It requires 3 n passes in the array. But there is a DP solution to this problem which requires 1 n pass.
     // The basic idea here is to maintain an countArray and a stack. The stack stores idx of the
     // left parenthesis. We store the index so that after we scanned the whole string we can find the idx
     // where there was no matching parenthesis. We put -1 in countArray for such index.
@@ -895,6 +896,77 @@ public class Solutions {
         maxLen = Math.max(maxLen,tempCount);
 
         return maxLen * 2;
+    }
+
+    /**
+     *
+     * if s[i] = ')' & s[i-1] ='('
+     *    dp[i] = dp[i-1] +2
+     *
+     * if s[i- dp[i-1]-1] = '('
+     *    dp[i] = dp[i-1] + dp[i - d[i-1] - 2] + 2
+     *
+     * */
+    public int longestValidParenthesesV2(String s) {
+        int maxans = 0;
+        int dp[] = new int[s.length()];
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == ')') {
+                if (s.charAt(i - 1) == '(') {
+                    dp[i] = (i >= 2 ? dp[i - 2] : 0) + 2;
+                } else if (i - dp[i - 1] > 0 && s.charAt(i - dp[i - 1] - 1) == '(') {
+                    dp[i] = dp[i - 1] + ((i - dp[i - 1]) >= 2 ? dp[i - dp[i - 1] - 2] : 0) + 2;
+                }
+                maxans = Math.max(maxans, dp[i]);
+            }
+        }
+        return maxans;
+    }
+
+    // This is the best solution . Time : O(n) Space: O(1)
+    // The idea is to first scan from left and have left counter for ( and right counter for )
+    // Increase left for ( & right for ). when left == right update the current subString length. when right > left
+    // reset left & right. Now scan from left & do the same only difference is reset when left >= right.
+    // Think of scanning from right is reversing the string. We count the valid substring from left & right
+    // when going from right '(' looks as if ')' in the reverse string. Thats why we need to go from right.
+    public int longestValidParenthesesV3( String s) {
+        if (s.length() <= 1)
+            return 0;
+        int maxLen = 0;
+        int left = 0;
+        int right = 0;
+
+        for (int i = 0 ; i < s.length(); i++) {
+            if (s.charAt(i) == '(')
+                left++;
+            else
+                right++;
+            if (left == right)
+                maxLen = Math.max(maxLen, right * 2);
+            else if (right > left)
+                left = right = 0;
+        }
+        //System.out.println(maxLen);
+        left = right = 0;
+
+        for (int i = s.length() -1; i >=0 ; i--) {
+            if (s.charAt(i) == '(') {
+                left++;
+            }
+            else {
+                right++;
+            }
+            if (left == right) {
+                maxLen = Math.max(maxLen, left * 2);
+            }
+            else if (right <= left) {
+                left = right = 0;
+            }
+
+        }
+        //System.out.println(maxLen);
+
+        return  maxLen;
     }
 
 
