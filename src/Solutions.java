@@ -969,6 +969,42 @@ public class Solutions {
         return  maxLen;
     }
 
+    // 33. Search in Rotated Sorted Array
+    private int rotatedBinSearch (int []nums, int low, int high, int target){
+        System.out.println();
+        if (low > high)
+            return -1;
+        int mid = (low + high)/2;
+        if (nums[mid] == target)
+            return mid;
+        else  {
+            int leftMid = mid -1;
+            int rightMid = mid + 1;
+
+            if (nums[low] < nums[leftMid] &&
+                    (target <= nums[leftMid]
+                            && target >= nums[low])) {
+                // search the left, left side is ascending & target in range
+                return rotatedBinSearch(nums, low, leftMid, target);
+            } else if (nums[rightMid] < nums[high] &&
+                        (nums[rightMid] <= target
+                        && target <= nums[high])){
+                // search the right, right side is ascending & target in range
+                return rotatedBinSearch(nums, rightMid, high, target);
+            } else {
+                if(nums[low] >= nums[leftMid]) {
+                    return rotatedBinSearch(nums, low, leftMid, target);
+                } else
+                    return rotatedBinSearch(nums, rightMid, high, target);
+            }
+        }
+
+
+    }
+
+    public int search(int[] nums, int target) {
+        return rotatedBinSearch(nums,0, nums.length -1, target);
+    }
 
 
 

@@ -160,9 +160,11 @@ public class Main {
 //        System.out.println();
 
         Solutions s1 = new Solutions();
-        String parenthesisStr = "()((())";
-        String parenthesisStr1 = "()(())";
-        System.out.println(s1.longestValidParenthesesV3(parenthesisStr));
+//        String parenthesisStr = "()((())";
+//        String parenthesisStr1 = "()(())";
+//        System.out.println(s1.longestValidParenthesesV3(parenthesisStr));
+        int [] arr = {90, 100, 110, 5, 10, 20, 30, 40, 50 , 60};
+        System.out.println(s1.search(arr,60));
 
 
 
