@@ -971,35 +971,36 @@ public class Solutions {
 
     // 33. Search in Rotated Sorted Array
     private int rotatedBinSearch (int []nums, int low, int high, int target){
-        System.out.println();
-        if (low > high)
+        if (low > high) {
             return -1;
+        }
+        //System.out.println("low " + low +", " + nums[low] +" ::high " + high +"," + nums[high] +" target " + target);
         int mid = (low + high)/2;
         if (nums[mid] == target)
             return mid;
-        else  {
-            int leftMid = mid -1;
-            int rightMid = mid + 1;
-
-            if (nums[low] < nums[leftMid] &&
-                    (target <= nums[leftMid]
-                            && target >= nums[low])) {
-                // search the left, left side is ascending & target in range
-                return rotatedBinSearch(nums, low, leftMid, target);
-            } else if (nums[rightMid] < nums[high] &&
-                        (nums[rightMid] <= target
-                        && target <= nums[high])){
-                // search the right, right side is ascending & target in range
-                return rotatedBinSearch(nums, rightMid, high, target);
-            } else {
-                if(nums[low] >= nums[leftMid]) {
-                    return rotatedBinSearch(nums, low, leftMid, target);
-                } else
-                    return rotatedBinSearch(nums, rightMid, high, target);
-            }
+        // if the portion between low to high is sorted in ascending order we can use the original bin search
+        if (nums[low] <= nums[high]) {
+            if (target < nums[mid])
+                return rotatedBinSearch(nums, low, mid - 1, target);
+            else
+                return rotatedBinSearch(nums, mid + 1, high, target);
+        } else { // there exist a rotation between low to high
+            // One side of mid either left or right will  have ascending order.
+            if (nums[low] < nums[mid]
+                    && target < nums[mid] && target >= nums[low])  // left side of mid is ascending ; target in left
+                return rotatedBinSearch(nums, low, mid - 1, target);
+            else if (nums[mid] < nums[high]
+                    && target > nums[mid] && target <= nums[high]) // right side of mid is ascending; target in right
+                return rotatedBinSearch(nums, mid + 1, high, target);
+            else if (nums[low] > nums[mid]
+                    && (target < nums[mid] || target >= nums[low])) // left side not ascending; target in left
+                return rotatedBinSearch(nums, low, mid - 1, target);
+            else if (nums[mid] > nums[high]
+                    && (target > nums[mid] || target <= nums[high])) // right side not ascending; target in right
+                return rotatedBinSearch(nums, mid + 1, high, target);
+            else
+                return rotatedBinSearch(nums, mid + 1, high, target); // check if target in right; most likely dead code
         }
-
-
     }
 
     public int search(int[] nums, int target) {

@@ -163,8 +163,10 @@ public class Main {
 //        String parenthesisStr = "()((())";
 //        String parenthesisStr1 = "()(())";
 //        System.out.println(s1.longestValidParenthesesV3(parenthesisStr));
-        int [] arr = {90, 100, 110, 5, 10, 20, 30, 40, 50 , 60};
-        System.out.println(s1.search(arr,60));
+        int [] arr = {100, 200, 10 , 20};
+        System.out.println("Index = " + s1.search(arr, 67));
+        for (int i =0; i <arr.length;i++)
+            System.out.println("Index = " + s1.search(arr,arr[i]));
 
 
 
