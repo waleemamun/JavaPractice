@@ -969,43 +969,7 @@ public class Solutions {
         return  maxLen;
     }
 
-    // 33. Search in Rotated Sorted Array
-    private int rotatedBinSearch (int []nums, int low, int high, int target){
-        if (low > high) {
-            return -1;
-        }
-        //System.out.println("low " + low +", " + nums[low] +" ::high " + high +"," + nums[high] +" target " + target);
-        int mid = (low + high)/2;
-        if (nums[mid] == target)
-            return mid;
-        // if the portion between low to high is sorted in ascending order we can use the original bin search
-        if (nums[low] <= nums[high]) {
-            if (target < nums[mid])
-                return rotatedBinSearch(nums, low, mid - 1, target);
-            else
-                return rotatedBinSearch(nums, mid + 1, high, target);
-        } else { // there exist a rotation between low to high
-            // One side of mid either left or right will  have ascending order.
-            if (nums[low] < nums[mid]
-                    && target < nums[mid] && target >= nums[low])  // left side of mid is ascending ; target in left
-                return rotatedBinSearch(nums, low, mid - 1, target);
-            else if (nums[mid] < nums[high]
-                    && target > nums[mid] && target <= nums[high]) // right side of mid is ascending; target in right
-                return rotatedBinSearch(nums, mid + 1, high, target);
-            else if (nums[low] > nums[mid]
-                    && (target < nums[mid] || target >= nums[low])) // left side not ascending; target in left
-                return rotatedBinSearch(nums, low, mid - 1, target);
-            else if (nums[mid] > nums[high]
-                    && (target > nums[mid] || target <= nums[high])) // right side not ascending; target in right
-                return rotatedBinSearch(nums, mid + 1, high, target);
-            else
-                return rotatedBinSearch(nums, mid + 1, high, target); // check if target in right; most likely dead code
-        }
-    }
 
-    public int search(int[] nums, int target) {
-        return rotatedBinSearch(nums,0, nums.length -1, target);
-    }
 
 
 
