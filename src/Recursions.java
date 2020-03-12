@@ -368,6 +368,38 @@ public class Recursions {
 
     }
 
+    // 35. Search Insert Position
+    // The idea is to do binary search to find the entry, if found return index, if not found (low > high)
+    // low will the index where this entry could be inserted
+    public int searchInsert(int[] nums, int target) {
+
+        return binarySearchInsert(nums, 0, nums.length-1, target);
+    }
+
+    private int binarySearchInsert(int[] nums, int low, int high, int target) {
+
+        // item not found, lets find the position it can be inserted.
+        // as low > high in this case that means the item is bigger than the item high-1,
+        // it does not matter if we search the left side or right side,
+        // low will point to the index where we want to insert the 'not found' the entry.
+        // Even in corner cases where low == 0 high = -1 we are trying to found
+        // the entry which ise smaller then the lowest item in array. Same goes for low == nums.length.
+        if (low > high) {
+            return low;
+        }
+
+        int mid = (low + high)/2;
+        // just do binary search for the entry and if found return the position
+        if (nums[mid] == target)
+            return mid;
+        else if (target < nums[mid])
+            return binarySearchInsert(nums, low, mid -1, target);
+        else
+            return binarySearchInsert(nums, mid+1, high, target);
+
+
+    }
+
 
 
 }
