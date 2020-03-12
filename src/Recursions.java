@@ -324,6 +324,9 @@ public class Recursions {
         return range;
     }
 
+    // Search the range in the ascending sorted array. We do a regular binary search to
+    // reach the target we are looking for. After finding the target == nums[mid] we check the
+    // left side of the array and the right side of the for the same target
     private void binarySearchRng (int [] nums, int low , int high, int target, int [] range) {
 
         if(low > high){
@@ -331,31 +334,35 @@ public class Recursions {
             return;
         }
         int mid = (low + high)/2;
+        // found the mid now check for the range on both on the left & the right side
         if (nums[mid] == target) {
-
+            // found target at the leftmost corner, update the left range
             if (mid == 0 && range[0] == -1)
                 range[0] = mid;
+            // found target at the right most corner, update the right range
             if (mid == nums.length -1 && range[1] == -1)
                 range[1] = mid;
-
+            // target is not the same as the prev entry, so this is the left range
             if (mid - 1 >= 0 && nums[mid] != nums[mid-1] && range[0] == -1)
                 range[0] = mid;
-
+            // target is not the same as the next entry, so this is the right range
             if (mid + 1 <= nums.length -1 && nums[mid] != nums[mid +1] && range[1] == -1)
                 range[1] = mid;
-
+            // found both left & right range, we are done
             if (range[0] != -1 && range[1]!= -1)
                 return;
+            // search for the left range on the left side of mid,
+            // we need to consider the whole left side (0 to mid-1)
             if (range[0] == -1)
                 binarySearchRng(nums, 0, mid-1, target, range);
+            // search for the right range on the right side of mid,
+            // we need to consider the whole right side (mid+1 to length of array)
             if (range[1] == -1)
                 binarySearchRng(nums, mid+1, nums.length-1, target, range);
 
-
-
-        } else if (target < nums[mid]) {
+        } else if (target < nums[mid]) { // regular bin search
             binarySearchRng(nums, low, mid -1, target, range);
-        } else {
+        } else {                         // regular bin search
             binarySearchRng(nums, mid+1, high, target, range);
         }
 
