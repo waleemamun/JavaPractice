@@ -280,6 +280,10 @@ public class Recursions {
     }
 
     // 33. Search in Rotated Sorted Array
+    public int search(int[] nums, int target) {
+        return rotatedBinSearch(nums,0, nums.length -1, target);
+    }
+
     private int rotatedBinSearch (int []nums, int low, int high, int target){
         if (low > high) {
             return -1;
@@ -313,9 +317,51 @@ public class Recursions {
         }
     }
 
-    public int search(int[] nums, int target) {
-        return rotatedBinSearch(nums,0, nums.length -1, target);
+    // LeetCode 34:: Find First and Last Position of Element in Sorted Array
+    public int[] searchRange(int[] nums, int target) {
+        int [] range = {-1,-1};
+        binarySearchRng(nums, 0, nums.length-1, target, range);
+        return range;
     }
+
+    private void binarySearchRng (int [] nums, int low , int high, int target, int [] range) {
+
+        if(low > high){
+            range [0] = range[1] = -1;
+            return;
+        }
+        int mid = (low + high)/2;
+        if (nums[mid] == target) {
+
+            if (mid == 0 && range[0] == -1)
+                range[0] = mid;
+            if (mid == nums.length -1 && range[1] == -1)
+                range[1] = mid;
+
+            if (mid - 1 >= 0 && nums[mid] != nums[mid-1] && range[0] == -1)
+                range[0] = mid;
+
+            if (mid + 1 <= nums.length -1 && nums[mid] != nums[mid +1] && range[1] == -1)
+                range[1] = mid;
+
+            if (range[0] != -1 && range[1]!= -1)
+                return;
+            if (range[0] == -1)
+                binarySearchRng(nums, 0, mid-1, target, range);
+            if (range[1] == -1)
+                binarySearchRng(nums, mid+1, nums.length-1, target, range);
+
+
+
+        } else if (target < nums[mid]) {
+            binarySearchRng(nums, low, mid -1, target, range);
+        } else {
+            binarySearchRng(nums, mid+1, high, target, range);
+        }
+
+    }
+
+
 
 }
 
