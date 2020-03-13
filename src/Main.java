@@ -159,14 +159,25 @@ public class Main {
 //        }
 //        System.out.println();
 
-        Recursions s1 = new Recursions();
+//        Recursions s1 = new Recursions();
 //        String parenthesisStr = "()((())";
 //        String parenthesisStr1 = "()(())";
 //        System.out.println(s1.longestValidParenthesesV3(parenthesisStr));
-        int [] arr = {1,3,5,7};
+//        int [] arr = {1,3,5,7};
+//        int  rng = s1.searchInsert(arr,6) ;
 
-        int  rng = s1.searchInsert(arr,6) ;
-        System.out.println("["+ rng +"]" );
+        char [][]brd = {{'5','3','.','.','7','.','.','.','.'}, // 0
+                        {'6','.','.','1','9','5','.','.','.'}, // 1
+                        {'.','9','8','.','.','.','.','6','.'}, // 2
+                        {'8','.','.','.','6','.','.','.','3'}, // 3
+                        {'4','.','.','8','.','3','.','.','1'}, // 4
+                        {'7','.','.','.','2','.','.','.','6'}, // 5
+                        {'.','6','.','.','.','.','2','8','.'}, // 6
+                        {'.','.','.','4','1','9','.','.','5'}, // 7
+                        {'.','.','.','.','8','.','.','7','9'}};// 8
+        Solutions s1 = new Solutions();
+        boolean isValid = s1.isValidSudoku(brd);
+        System.out.println(" Vaild Sudoku " + isValid);
 
 
 

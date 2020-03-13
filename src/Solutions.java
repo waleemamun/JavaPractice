@@ -969,7 +969,60 @@ public class Solutions {
         return  maxLen;
     }
 
+    // Leetcode ::36. Valid Sudoku
+    // This version is slower due to the use of string in set,
+    // the next method uses Integer instead of String and performance has been improved significantly
+    public boolean isValidSudokuV2(char[][] board) {
 
+        HashSet <String> set = new HashSet<>();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+
+                int boxNum = (i/3)* 3 + (j/3);
+                //System.out.println(" "+ i + " "+ j+ " " + boxNum);
+                if(board[i][j] != '.') {
+                    String row = "r:" + i + ":" + board[i][j];
+                    String col = "c:" + j + ":" + board[i][j];
+                    String box = "b:" + boxNum + ":" + board[i][j];
+
+                    if(!set.contains(row) && !set.contains(col) && !set.contains(box)) {
+                        set.add(row);
+                        set.add(col);
+                        set.add(box);
+                    } else
+                        return  false;
+                }
+
+            }
+        }
+
+        return true;
+    }
+
+
+    // This is the better solution, instead of using a String in Set just
+    // by using a number we can get a very fast run time only 2ms. We maintain a set of row/col/board for each entry.
+    // Each entry is unique for row/col/board. So if we found the same entry while scanning then its not valid sudoku.
+    public boolean isValidSudoku(char[][] board) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                if(board[i][j] != '.') {
+                    int boxNum = 1000 * ((i/3)* 3 + (j/3) + 1) + board[i][j] - '0';
+                    int row = 10 * (i+1) + board[i][j] - '0';
+                    int col = 100 * (j+1) + board[i][j] - '0';
+                    if(!set.contains(row) && !set.contains(col) && !set.contains(boxNum)) {
+                        set.add(row);
+                        set.add(col);
+                        set.add(boxNum);
+                    } else
+                        return  false;
+                }
+            }
+        }
+        return true;
+    }
 
 
 
