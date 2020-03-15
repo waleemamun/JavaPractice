@@ -176,9 +176,11 @@ public class Main {
                         {'.','.','.','4','1','9','.','.','5'}, // 7
                         {'.','.','.','.','8','.','.','7','9'}};// 8
         Solutions s1 = new Solutions();
-        boolean isValid = s1.isValidSudoku(brd);
-        System.out.println(" Vaild Sudoku " + isValid);
+//        boolean isValid = s1.isValidSudoku(brd);
+//        System.out.println(" Vaild Sudoku " + isValid);
 
+        Recursions r1 = new Recursions();
+        r1.placeAllQueens();
 
 
 

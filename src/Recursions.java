@@ -1,3 +1,5 @@
+import javafx.geometry.Pos;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -397,6 +399,61 @@ public class Recursions {
         else
             return binarySearchInsert(nums, mid+1, high, target);
 
+
+    }
+
+
+    // Eight Queen Problem
+    public void placeAllQueens() {
+        int queen = 1;
+        int [] columns = new int[8];
+        Arrays.fill(columns, -1);
+        placeQueen(0, columns);
+
+    }
+
+    // check if the row, col is available for an queen placement, We main a column array which is indexed by the row
+    // and stores the column used by each row. if the current columns we are considering the.
+    // While placing a queen need to consider in each iteration only about columns as we place 8 queens on 8 rows
+    // so no need to worry about rows.
+    boolean checkAvailable(int [] queenColumns, int rowUpTo, int col){
+        for (int row1 = 0; row1 < rowUpTo; row1++) {
+            int colCurr = queenColumns[row1];
+            // if the current columns we are considering the is already
+            // used by other queen in a previous row we cannot use it
+            if (colCurr == col)
+                return false;
+            // Check if the column is not diagonally covered by queens in the previous row.
+            // To be diagonally covered by a queen in previous row. The difference of columns and row has to ve equal
+            int colDiff = Math.abs(col - colCurr);
+            int rowDiff = rowUpTo - row1;
+            // difference of row & columns are equal, its diagonally covered. Hence cant use this column
+            if (rowDiff == colDiff)
+                return false;
+
+        }
+        // This columns can be used to place a queen
+        return true;
+    }
+
+    // While placing 8 queen we need to put one queen per row,
+    // now lets figure out which column each queen will go into
+    private void placeQueen (int row, int [] columns) {
+        if (row == 8) {
+            // We placed 8 queens successfully lets print the columns
+            for (int i = 0; i<8; i++){
+                System.out.print(" " + columns[i]);
+            }
+            System.out.println();
+            return;
+        }
+        // We check all possible scenario to place 8 queens.
+        for (int col = 0; col < 8; col++) {
+            if (checkAvailable(columns,row,col)){
+                columns[row] = col;
+                placeQueen(row + 1, columns);
+            }
+        }
 
     }
 
