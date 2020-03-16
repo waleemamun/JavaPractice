@@ -180,7 +180,8 @@ public class Main {
 //        System.out.println(" Vaild Sudoku " + isValid);
 
         Recursions r1 = new Recursions();
-        r1.placeAllQueens();
+        r1.solveSudokuV2(brd);
+
 
 
 

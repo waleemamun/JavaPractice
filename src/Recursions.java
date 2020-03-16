@@ -457,6 +457,140 @@ public class Recursions {
 
     }
 
+    // 37. Sudoku Solver (Hard) Solve the sudoku given the board
+    // We are using a backtraciing approach similar to 8 queen problem.
+    // We solve each position at a time, by moving left to right in the board.
+    public void solveSudoku(char[][] board) {
+        // Solve the sudoku board
+        solveSudokuBoard(board,0,0);
+        //System.out.println(isSolved);
+        /*for (int i =0; i<9;i++){
+            for(int j=0;j<9;j++) {
+                System.out.print(" " + board[i][j]);
+            }
+            System.out.println();
+        }*/
+    }
+    private boolean isValidSuBoard (char [][] board , int row, int col, int num) {
+        // Get the sub block row & col start
+        int blkrow = (row / 3) * 3, blkcol = (col / 3) * 3;
+        for (int i = 0; i < 9; i++) {
+            // check if the row or  column or block has the number
+            if(board[row][i] == ('0' + num) || board[i][col] == ('0' + num) ||
+               board[blkrow + i/3][blkcol + i%3] == ('0' + num)) { // i/3 gives rows in each block & i%3 gives column
+                return false;
+            }
+        }
+        return true;
+
+    }
+    private boolean solveSudokuBoard(char [][] board, int row, int col) {
+
+        for (int i = row; i < 9; i++) {
+            for (int j = col; j < 9; j++) {
+
+                // found an empty postion to fill
+                if(board[i][j] == '.') {
+                    for (int k = 1; k <= 9; k++){
+                        if(isValidSuBoard(board, i, j, k)) {
+                            board[i][j] =  (char)('0' + k);
+                            if(solveSudokuBoard(board, i , j + 1))
+                                return true;
+                            // so the current k value is not going to give us the solution,
+                            // revert it back and try k +1
+                            board[i][j] = '.';
+                        }
+                    }
+                    // we checked for 1-9 and could not find a solution lets we have to backtrack
+                    // and go back prev call to solve the problem. Note board[i][j] is reverted back to '.'
+                    // before exiting the above for loop
+                    return false;
+                }
+            }
+            col = 0;
+        }
+
+        return true;
+    }
+
+    public void solveSudokuV2(char[][] board) {
+        boolean[][] row = new boolean[9][9];
+        boolean[][] col = new boolean[9][9];
+        boolean[][] box = new boolean[9][9];
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') {
+                    int num = board[i][j] - '1';
+                    row[i][num] = true;
+                    col[j][num] = true;
+                    box[i / 3 * 3 + j / 3][num] = true;
+                }
+            }
+        }
+
+        boolean isSolved = solveSudokuBetter(board, 0, 0, row, col, box);
+        System.out.println(isSolved);
+        for (int i =0; i<9;i++){
+            for(int j=0;j<9;j++) {
+                System.out.print(" " + board[i][j]);
+            }
+            System.out.println();
+        }
+    }
+
+    private boolean solveSudokuBetter(char[][] board, int i, int j, boolean[][] row, boolean[][] col, boolean[][] box) {
+        // reached the end, solved all the rows. we solved the board return
+        if (i == board.length) {
+            return true;
+        }
+        // Reached the end of this row , goto next row to solve the next row
+        if (j == board[0].length) {
+            return solveSudokuBetter(board, i + 1, 0, row, col, box);
+        }
+        // this is not an empty position, move to the next column to solve
+        if (board[i][j] != '.') {
+            return solveSudokuBetter(board, i, j + 1, row, col, box);
+        }
+        // calculate the box index;
+        int boxIndex = i / 3 * 3 + j / 3;
+        for (int k = 0; k < 9; k++) {
+            // if the number k is not in the row , col & box lets put this k in this osition and solve for the tnext position
+            if (!row[i][k] && !col[j][k] && !box[boxIndex][k]) {
+                row[i][k] = true;
+                col[j][k] = true;
+                box[boxIndex][k] = true;
+                board[i][j] = (char)(k + '1');
+
+                // solved for the next
+                if (solveSudokuBetter(board, i, j + 1, row, col, box)) {
+                    return true;
+                }
+                // we checked for 1-9 and could not find a solution we have to backtrack
+                // and go back prev call to solve the problem. Revert the changes we made for this before leaving
+                board[i][j] = '.';
+                row[i][k] = false;
+                col[j][k] = false;
+                box[boxIndex][k] = false;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
