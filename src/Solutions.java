@@ -1027,6 +1027,42 @@ public class Solutions {
 
 
 
+    // 38. Count and Say
+    public String countAndSay(int n) {
+
+        ArrayList<String> result = new ArrayList<>();
+        result.add("1");
+        result.add("11");
+        result.add("21");
+        result.add("1211");
+        result.add("111221");
+
+        if (n > 5) {
+            int curr = 5;
+            while (curr <= n) {
+                String s = result.get(curr-1);
+                int count = 1;
+                int i = 0;
+                StringBuilder strB = new StringBuilder();
+                for (i = 0; i< s.length() -1; i++) {
+
+                    if (s.charAt(i) != s.charAt(i+1)) {
+                        strB.append(count);
+                        strB.append(s.charAt(i));
+                        count = 1;
+                    } else {
+                        count++;
+                    }
+                }
+                strB.append(count);
+                strB.append(s.charAt(i));
+                result.add(strB.toString());
+                curr++;
+
+            }
+        }
+        return result.get(n-1);
+    }
 
 
 
