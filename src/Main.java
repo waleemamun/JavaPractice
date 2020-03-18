@@ -178,9 +178,9 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        r1.solveSudokuV2(brd);
 
-        int [] arr = {4,1,2,3,4,1,6,6,1};
+        int [] arr = {1,3,4,5,4,2,4};
         Solutions s1 = new Solutions();
-        s1.printDuplicateValuesV2(arr);
+        System.out.println(s1.findDuplicate(arr));
 
 
 

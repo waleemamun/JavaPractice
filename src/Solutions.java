@@ -1115,6 +1115,43 @@ public class Solutions {
         System.out.println();
     }
 
+    // 287. Find the Duplicate Number. We have to find the duplicate number using O(n) time and O(1) space.
+    // Now we use the floyd's tortoise & hare algorithm to detect a loop in linked list.
+    // The numbers in the array is between 1 to N for an array of N+1 size.
+    // so each value in the array can be consider as a pointer to the next array element.
+    // For example 3 2 1 2 4 index 0 points to index 3 as arr[0] value is '3'. So now considering
+    // the array as linked list with loop we use the tortoise & hare algo.
+    // The algorithm is to use to pointers one slow and another fast.
+    // Slow increase by 1 where fast increase by double that speed.
+    // So in case of a loop the fast will catch up with the slow. The point slow and fast meet inside
+    // the loop is the same distance from the start(position 0) to the loop start.
+    // So now we move fast to the beginning (position 0). Then increase slow & fast at the same speed.
+    // The two pointer will meet at loop start
+    public int findDuplicate(int[] nums) {
+        if (nums.length <= 1)
+            return -1;
+
+        int slow = 0;
+        int fast = 0;
+
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        // move fast @ double spped than slow until they meet.
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        // fast & slow met @ a point from which the distant to the beginning
+        // of the loop is same as it its from the start (pos 0). Move fast to start
+        fast = 0;
+        // increase slow & fast @ same speed (slow speed), they will meet at the loop start
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        // slow & fast both points to loop start
+        return slow;
+    }
 
 
 
