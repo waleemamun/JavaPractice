@@ -1064,6 +1064,56 @@ public class Solutions {
         return result.get(n-1);
     }
 
+    // Get the duplicate number in an array  of n where numbers are between 0 to  n -1.
+    // Find a solution that is O(n) and O(1) space, You are allowed to modify the array elements.
+    // If we are allowed to modify the array elements, we can use an interesting approach
+    // of marking the array position with negative values as we discovers them in the array.
+    // For example say in 1 2 3 1 1 4 ; the value 1 appears more than once,
+    // when we first see 1 in arr[0] we mark element @ array_index 1 negative,
+    // now when we encounter 1 another time we find the index is marked negative so 1 is repeated
+    //  One issue with this approach is it prints multiple occurrences say
+    //  if 1 appears 3 time it will print out 1 twice,
+    //  so basically it assumes repeated number is there twice
+    public void printDuplicateValues(int[] nums) {
+
+        for (int i = 0; i < nums.length; i++) {
+            if( nums[Math.abs(nums[i])] >= 0) {
+
+                    nums[Math.abs(nums[i])] = -nums[Math.abs(nums[i])];
+
+
+            } else {
+
+                System.out.print(" " + Math.abs(nums[i]));
+            }
+        }
+        System.out.println();
+
+    }
+    private int decode (int x, int offset) {
+        if (x < offset)
+            return x;
+        else
+            return x-offset;
+
+    }
+    public void printDuplicateValuesV2(int[] nums) {
+
+        for (int i = 0; i < nums.length; i++) {
+            //System.out.println(nums[i]);
+            if( nums[decode(nums[i], nums.length)] < nums.length) {
+
+                nums[decode(nums[i],nums.length)] = nums[decode(nums[i],nums.length)] + nums.length;
+
+            } else {
+
+                System.out.print(" " + decode(nums[i],nums.length));
+            }
+
+        }
+
+        System.out.println();
+    }
 
 
 
