@@ -587,7 +587,7 @@ public class Recursions {
     }
 
 
-    // 39. Combination Sum
+    // LeetCode:: 39. Combination Sum
     // Please check the following links for same type of backtracking problems
     // https://leetcode.com/problems/combination-sum/discuss/16502/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partitioning)
     // The basic idea is to recursively solve this problem, more like 8 Queen.
@@ -597,7 +597,8 @@ public class Recursions {
 
         List<List<Integer>> resList = new ArrayList<>();
         // sorting to optimise; we can skip bigger values than target also stop duplication,
-        // by never looking back into the array. As the previous position has already solved the problem for this position.
+        // by never looking back into the array. As the previous position has already solved
+        // the problem for this position.
         // so for (3,5) and target 8, 3 has solved the 3 + 5 = 8 , we dont need to 5+3 = 8.
         Arrays.sort(candidates);
         for (int i = 0; i < candidates.length && candidates[i] <= target; i++) {
@@ -608,7 +609,8 @@ public class Recursions {
             // So for all List lets use ArrayList as much as possible
             ArrayList<Integer> tempList = new ArrayList<>();
             tempList.add(candidates[i]);
-            // This take care of each item in the set of candidates, so for [2,3,5] it take cares of 2, 3 & 5 separately
+            // This take care of each item in the set of candidates, so for [2,3,5]
+            // it take cares of 2, 3 & 5 separately
             combinationSumRecurse(candidates, i, target - candidates[i], tempList, resList);
         }
 
@@ -636,9 +638,36 @@ public class Recursions {
             // we are not using true path of return like we do for sudoku solver as that one search for one solution.
             // Here we go for all path and only store the success case in the result
             tList.add(candidates[i]);
+            // we done need increase index here as we need to try to subtract the same item as much as possible
             combinationSumRecurse(candidates, i, target - candidates[i], tList, resultList);
             tList.remove(tList.size() -1);
 
+        }
+
+    }
+
+    // LeetCode :: 78. Subsets
+    // backtrack to solve the all subset problem,
+    // we start with a empty set and keep adding the subsets.
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(nums);
+        subsetsBacktrack(nums, 0, new ArrayList<>(), resList);
+        return resList;
+    }
+
+    public void subsetsBacktrack(int []nums, int index, ArrayList<Integer> tempList,
+                                  List<List<Integer>> resultList) {
+        // we add to the result on each call at first add the empty set [], next add [1], then [1,2] then [1,2,3]
+        // and so on. The set created in this call will added to the result in the next call.
+        resultList.add(new ArrayList<>(tempList));
+        System.out.println(index + " " + resultList);
+        for (int i = index; i <nums.length; i++){
+            // use the backtrack approach add the current item and recurse,
+            // remove the current item and add the next from the list
+            tempList.add(nums[i]);
+            subsetsBacktrack(nums, i + 1, tempList,resultList);
+            tempList.remove(tempList.size()-1);
         }
 
     }
