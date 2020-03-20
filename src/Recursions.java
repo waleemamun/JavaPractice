@@ -3,6 +3,8 @@ import javafx.geometry.Pos;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Recursions {
 // This set of problems are from CTCI
@@ -79,21 +81,27 @@ public class Recursions {
         int mid = getMagicV2(arr,0,arr.length-1);
         return mid;
     }
-
+    // The idea is to start with a empty set, then add the last item of the set to the resultSet
+    // For example for [1,2,3] we first have [[]], then add [[] , 3] next we move to the previous item (2)
+    // and get [(), 2, 3 (2,3)] and so on.
     public ArrayList<ArrayList<Integer>> getSubset (ArrayList<Integer> set, int index) {
         ArrayList<ArrayList<Integer>> allSubset;
-        if (index == set.size()) { // base case
+        if (index == set.size()) {
+            // base case, iff the set is empty just add empty set,
+            // we can use this empty to add more entries up the recursion chain
             allSubset = new ArrayList<ArrayList<Integer>>();
             allSubset.add(new ArrayList<>());
             System.out.println(allSubset.size());
 
         } else {
+            // get the subset for index + 1
             allSubset = getSubset(set,index + 1);
             System.out.println(allSubset.size());
             int item = set.get(index);
             ArrayList<ArrayList<Integer>> moreSet = new ArrayList<ArrayList<Integer>>();
             for (ArrayList<Integer> subset : allSubset) {
                 ArrayList<Integer> newSet = new ArrayList<>();
+                // we add all the element of the current subset.
                 newSet.addAll(subset);
                 newSet.add(item);
                 moreSet.add(newSet);
@@ -555,7 +563,7 @@ public class Recursions {
         // calculate the box index;
         int boxIndex = i / 3 * 3 + j / 3;
         for (int k = 0; k < 9; k++) {
-            // if the number k is not in the row , col & box lets put this k in this osition and solve for the tnext position
+            // if the number k is not in the row , col & box lets put this k in this position and solve for the next position
             if (!row[i][k] && !col[j][k] && !box[boxIndex][k]) {
                 row[i][k] = true;
                 col[j][k] = true;
@@ -579,8 +587,61 @@ public class Recursions {
     }
 
 
+    // 39. Combination Sum
+    // Please check the following links for same type of backtracking problems
+    // https://leetcode.com/problems/combination-sum/discuss/16502/A-general-approach-to-backtracking-questions-in-Java-(Subsets-Permutations-Combination-Sum-Palindrome-Partitioning)
+    // The basic idea is to recursively solve this problem, more like 8 Queen.
+    // We start with a number from the combination and keep subtracting it from the target until the target becomes zero.
+    // We the take the next number from the combination and subtract.
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
 
+        List<List<Integer>> resList = new ArrayList<>();
+        // sorting to optimise; we can skip bigger values than target also stop duplication,
+        // by never looking back into the array. As the previous position has already solved the problem for this position.
+        // so for (3,5) and target 8, 3 has solved the 3 + 5 = 8 , we dont need to 5+3 = 8.
+        Arrays.sort(candidates);
+        for (int i = 0; i < candidates.length && candidates[i] <= target; i++) {
+            // This list keeps track of the current solution for candidate[i],
+            // remember this list would get overwritten in the recursion multiple times
+            // hence in the recursion we need to make a copy of this list
+            // Note: By just changing the LinkedList to ArrayList the runtime is improved from 3ms to 2ms.
+            // So for all List lets use ArrayList as much as possible
+            ArrayList<Integer> tempList = new ArrayList<>();
+            tempList.add(candidates[i]);
+            // This take care of each item in the set of candidates, so for [2,3,5] it take cares of 2, 3 & 5 separately
+            combinationSumRecurse(candidates, i, target - candidates[i], tempList, resList);
+        }
 
+        return resList;
+    }
+
+    private void combinationSumRecurse(int [] candidates, int index, int target,
+                                       ArrayList<Integer> tList, List<List<Integer>> resultList) {
+        //  Note: By just using this condition we reduced the number of recursion and have better runtime
+        // of 3ms compared to 4ms without this condition
+        if(target < candidates[index] && target != 0)
+            return;
+        // base case
+        if (target == 0) {
+            // only store success case in the result,
+            // look by doing this we are adding the current list to the result List,
+            // the tlist on this recursion path will contain valid entries,
+            // in other recursion path it may contain invalid entries
+            // but that is not our concern as we add only the valid list on to the result list
+            resultList.add(new ArrayList<>(tList));
+            return;
+        }
+
+        for (int i = index; i < candidates.length && candidates[i] <= target; i++) {
+            // we are not using true path of return like we do for sudoku solver as that one search for one solution.
+            // Here we go for all path and only store the success case in the result
+            tList.add(candidates[i]);
+            combinationSumRecurse(candidates, i, target - candidates[i], tList, resultList);
+            tList.remove(tList.size() -1);
+
+        }
+
+    }
 
 
 
