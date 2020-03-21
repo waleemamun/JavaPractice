@@ -618,7 +618,8 @@ public class Recursions {
     }
 
     private void combinationSumRecurse(int [] candidates, int index, int target,
-                                       ArrayList<Integer> tList, List<List<Integer>> resultList) {
+                                       ArrayList<Integer> tList,
+                                       List<List<Integer>> resultList) {
         //  Note: By just using this condition we reduced the number of recursion and have better runtime
         // of 3ms compared to 4ms without this condition
         if(target < candidates[index] && target != 0)
@@ -656,7 +657,8 @@ public class Recursions {
         return resList;
     }
 
-    public void subsetsBacktrack(int []nums, int index, ArrayList<Integer> tempList,
+    private void subsetsBacktrack(int []nums, int index,
+                                  ArrayList<Integer> tempList,
                                   List<List<Integer>> resultList) {
         // we add to the result on each call at first add the empty set [], next add [1], then [1,2] then [1,2,3]
         // then [1,3] (removed 2 from here and added the next item after 2  which is 3 )
@@ -672,6 +674,61 @@ public class Recursions {
         }
 
     }
+
+    //LeetCode :: 90 Subset With Duplicate
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(nums);
+        subsetsWithDupBacktrack(nums, 0, new ArrayList<>(), resList);
+        return resList;
+    }
+
+    private void subsetsWithDupBacktrack(int[] nums, int index,
+                                         ArrayList<Integer> tempList,
+                                         List<List<Integer>> resultList) {
+        resultList.add(new ArrayList<>(tempList));
+        System.out.println(index + " : " + resultList);
+        for (int i = index; i < nums.length; i++) {
+            tempList.add(nums[i]);
+            subsetsWithDupBacktrack(nums, i + 1, tempList, resultList);
+            int x = tempList.remove(tempList.size()-1);
+            // avoid the processing the duplicates,
+            // we pop the item and then if the item matches the next item, skip all of matching item processing
+            while (i+1 <nums.length && x == nums[i + 1])
+                i++;
+        }
+
+    }
+
+    // Version 2 of duplicate subset
+    public List<List<Integer>> subsetsWithDupV2(int[] nums) {
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(nums);
+        subsetsWithDupBacktrackV2(nums, 0, new ArrayList<>(), resList);
+        return resList;
+    }
+
+    // The difference is we are checking if the previous item is a duplicate of the current item
+    // and skip processing for them. Note: the two algo have same runtime, so it deos not matter
+    // if we check the next item or previous item
+    private void subsetsWithDupBacktrackV2(int[] nums, int index,
+                                           ArrayList<Integer> tempList,
+                                           List<List<Integer>> resultList) {
+        resultList.add(new ArrayList<>(tempList));
+        System.out.println(index + " : " + resultList);
+        for (int i = index; i < nums.length; i++) {
+            // avoid the processing the duplicates
+            if(i != index && nums[i-1] == nums[i])
+                continue;
+            tempList.add(nums[i]);
+            subsetsWithDupBacktrackV2(nums, i + 1, tempList, resultList);
+            tempList.remove(tempList.size()-1);
+
+        }
+
+    }
+
+
 
 
 

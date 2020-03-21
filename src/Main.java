@@ -181,8 +181,8 @@ public class Main {
 //        Solutions s1 = new Solutions();
 //        System.out.println(s1.findDuplicate(arr));
         Recursions r1 = new Recursions();
-        int [] arr = {1,  2, 2};
-        System.out.println(r1.subsets(arr));
+        int [] arr = { 1,2,2};
+        System.out.println(r1.subsetsWithDupV2(arr));
 
 
 
