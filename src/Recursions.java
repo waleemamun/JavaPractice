@@ -659,6 +659,7 @@ public class Recursions {
     public void subsetsBacktrack(int []nums, int index, ArrayList<Integer> tempList,
                                   List<List<Integer>> resultList) {
         // we add to the result on each call at first add the empty set [], next add [1], then [1,2] then [1,2,3]
+        // then [1,3] (removed 2 from here and added the next item after 2  which is 3 )
         // and so on. The set created in this call will added to the result in the next call.
         resultList.add(new ArrayList<>(tempList));
         System.out.println(index + " " + resultList);
