@@ -1,10 +1,8 @@
 import javafx.geometry.Pos;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Recursions {
 // This set of problems are from CTCI
@@ -133,6 +131,9 @@ public class Recursions {
                 str.setCharAt(index,tempC);
 
             }
+            // increase index by 1, after a swap we need to increase the index not i,
+            // because index + 1 points to the position
+
             printPermutation(str,index +1);
             // revert back the changes made earlier after the recursive call
             // this will ensure that when we start the next recursion we start
@@ -727,6 +728,64 @@ public class Recursions {
         }
 
     }
+
+    // Leetcode:: 46 Permutation
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> resList = new ArrayList<>();
+        permutateBacktrack(nums, 0, new ArrayList<>(), resList);
+        return resList;
+    }
+
+    private void permutateBacktrack(int[] nums, int index,
+                                    ArrayList<Integer> tempList,
+                                    List<List<Integer>> rList) {
+        if(index == nums.length) {
+            rList.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = index; i < nums.length; i++) {
+            if (index != i) {
+                int tmp = nums[index];
+                nums[index] = nums[i];
+                nums[i] = tmp;
+                tempList.add(nums[index]);
+            }
+            else
+                tempList.add(nums[i]);
+            permutateBacktrack(nums,  index+ 1, tempList, rList);
+            tempList.remove(tempList.size()-1);
+            if (index!=i) {
+                int tmp = nums[index];
+                nums[index] = nums[i];
+                nums[i] = tmp;
+            }
+
+        }
+
+    }
+
+    public List<List<Integer>> permuteV2(int[] nums) {
+        List<List<Integer>> resList = new ArrayList<>();
+        permutateBacktrackV2(nums, new ArrayList<>(), resList);
+        return resList;
+    }
+
+    private void permutateBacktrackV2(int[] nums,
+                                      ArrayList<Integer> tempList,
+                                    List<List<Integer>> rList) {
+        if(tempList.size() == nums.length){
+            rList.add(new ArrayList<>(tempList));
+        } else{
+            for(int i = 0; i < nums.length; i++){
+                if(tempList.contains(nums[i])) continue; // element already exists, skip
+                tempList.add(nums[i]);
+                permutateBacktrackV2(nums, tempList, rList);
+                tempList.remove(tempList.size() - 1);
+            }
+        }
+
+    }
+
 
 
 
