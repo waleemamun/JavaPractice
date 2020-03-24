@@ -739,6 +739,8 @@ public class Recursions {
     private void permutateBacktrack(int[] nums, int index,
                                     ArrayList<Integer> tempList,
                                     List<List<Integer>> rList) {
+        // when the list size equals the total number of entries
+        // we reached our solution lets add it to the result list
         if(index == nums.length) {
             rList.add(new ArrayList<>(tempList));
             return;
@@ -752,6 +754,7 @@ public class Recursions {
             }
             else
                 tempList.add(nums[i]);
+
             permutateBacktrack(nums,  index+ 1, tempList, rList);
             tempList.remove(tempList.size()-1);
             if (index!=i) {
@@ -764,19 +767,28 @@ public class Recursions {
 
     }
 
+    // This is more simpler version
     public List<List<Integer>> permuteV2(int[] nums) {
         List<List<Integer>> resList = new ArrayList<>();
         permutateBacktrackV2(nums, new ArrayList<>(), resList);
         return resList;
     }
 
+    // we keep adding to the list if the entry is not in the list
+    // until the list size equals the total number of element
     private void permutateBacktrackV2(int[] nums,
                                       ArrayList<Integer> tempList,
                                     List<List<Integer>> rList) {
+        // when the list size equals the total number of entries
+        // we reached our solution lets add it to the result list
         if(tempList.size() == nums.length){
             rList.add(new ArrayList<>(tempList));
         } else{
+            // This way we start with each position in the array and try the numbers is other position,
+            // so we dont need to do a swap revert the swap as done in version 1.
+            // For example {1,2,3} in pos 0 we will try 1, 2, 3
             for(int i = 0; i < nums.length; i++){
+                // this list search will be linear search
                 if(tempList.contains(nums[i])) continue; // element already exists, skip
                 tempList.add(nums[i]);
                 permutateBacktrackV2(nums, tempList, rList);
@@ -785,6 +797,54 @@ public class Recursions {
         }
 
     }
+
+    // LeetCode :: 47 Permutation II with duplicate.
+    // Use the sam logic as permutation backtrack algo.
+    // To identify the duplicate use a boolean to keep track of each used postion in nums,
+    // We only add to list if the position is not used before, we also skip the duplicates processing
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(nums);
+        boolean []used = new boolean[nums.length];
+        Arrays.fill(used,false);
+        permutateUniqueBackTrk(nums, new ArrayList<>(), resList , used);
+        return resList;
+
+    }
+
+    private void permutateUniqueBackTrk(int [] nums, ArrayList<Integer> tempList,
+                                        List<List<Integer>> rList,
+                                        boolean []used) {
+        if (tempList.size() == nums.length) {
+            rList.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            // iff the current number has been used skip this,
+            // otherwise check for duplicate numbers and skip the duplicates.
+            // during duplicate check , we verify that the number the current number has not been used
+            // but the previous number is also not used. If the previous number is used then we can
+            // add the current number to the list.
+            // the condition after || handles the case when we start with the duplicate item in the next iteration
+            //  for example in [1,1,2] when in 2nd iteration nums[1]  was being considered at position 0 its skipped
+            //  as it would give same result as nums[0] at position 0
+            if(used[i] ||
+                    (i != 0 && nums[i] == nums[i-1]
+                            && used[i-1] == false)) {
+                continue;
+            }
+            tempList.add(nums[i]);
+            used[i] = true;
+            permutateUniqueBackTrk(nums, tempList, rList, used);
+            tempList.remove(tempList.size()-1);
+            used[i] = false;
+
+
+        }
+
+
+    }
+
 
 
 
