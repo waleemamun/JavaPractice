@@ -669,6 +669,11 @@ public class Recursions {
         for (int i = index; i <nums.length; i++){
             // use the backtrack approach add the current item and recurse,
             // remove the current item and add the next from the list
+            // [  using generic backtrack approach,
+            //    the next three lines is a very generic backtrack approach
+            //    we used this same approach in other recursion problems
+            //    like permutation, palindrom partition , combination sum
+            // ]
             tempList.add(nums[i]);
             subsetsBacktrack(nums, i + 1, tempList,resultList);
             tempList.remove(tempList.size()-1);
@@ -721,6 +726,7 @@ public class Recursions {
             // avoid the processing the duplicates
             if(i != index && nums[i-1] == nums[i])
                 continue;
+            // using generic backtrack approach
             tempList.add(nums[i]);
             subsetsWithDupBacktrackV2(nums, i + 1, tempList, resultList);
             tempList.remove(tempList.size()-1);
@@ -789,7 +795,10 @@ public class Recursions {
             // For example {1,2,3} in pos 0 we will try 1, 2, 3
             for(int i = 0; i < nums.length; i++){
                 // this list search will be linear search
-                if(tempList.contains(nums[i])) continue; // element already exists, skip
+                if(tempList.contains(nums[i]))
+                    continue; // element already exists, skip
+
+                // using generic backtrack approach
                 tempList.add(nums[i]);
                 permutateBacktrackV2(nums, tempList, rList);
                 tempList.remove(tempList.size() - 1);
@@ -833,6 +842,7 @@ public class Recursions {
                             && used[i-1] == false)) {
                 continue;
             }
+            // using generic backtrack approach
             tempList.add(nums[i]);
             used[i] = true;
             permutateUniqueBackTrk(nums, tempList, rList, used);
@@ -844,6 +854,97 @@ public class Recursions {
 
 
     }
+
+    //LeetCode:: 131. Palindrome Partitioning.
+    // The basic idea is to use backtracking to check all possible partition
+    // and only add the valid parttion in the list. For example in case of abcba we start with a,bcba
+    // then a,b,cba, then a,b,c,ba then a,b,c,b,a (only partion that gives valid palindrome so we add it to the list).
+    // Next we check a,b,cb, a and so on
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> resList = new ArrayList<>();
+        partitionPalindrome(s, 0, new ArrayList<String>(), resList);
+        return resList;
+    }
+
+    private boolean checkPalindrome (String s) {
+
+        int start = 0;
+        int end = s.length() - 1;
+        while (start <= end && s.charAt(start) == s.charAt(end)) {
+            start++;
+            end--;
+        }
+        if (start>end)
+            return true;
+        return false;
+    }
+
+    private void partitionPalindrome(String s, int index,
+                                     ArrayList<String> tempList,
+                                     List<List<String>> rList) {
+        // base condition: we reached the end of the string
+        // lets add the the valid partitions to our list.
+        // This will have partitions that are valid palindrome as
+        // we dont put non valid palindrome in templist;
+        // check the condition in the for loop below
+        if(index == s.length()){
+            rList.add(new ArrayList<>(tempList));
+            System.out.println(rList);
+            return;
+        }
+
+        for (int i = index + 1 ; i <= s.length(); i++){
+            // Note we start with i = index + 1  so that in the substring method
+            // we can start with substring that is  between (index, i).
+            // For that reasons i <= s.length to include the last character of the string
+            // as substring method's 2nd parameter is exclusive
+            String substr = s.substring(index, i);
+            // Skip the invalid partition; if the current partition is not a valid palindrome
+            // we dont need to process this partition and move to the next partition.
+            if (!checkPalindrome(substr))
+                continue;
+            // using generic backtrack approach
+            tempList.add(substr);
+            // we need to send i in the next iteration as i is the next position
+            // cause we start from i = index +1 so now i points to the next position in recursion
+            partitionPalindrome(s, i, tempList,rList);
+            tempList.remove(tempList.size()-1);
+        }
+
+    }
+    // This approach also uses the same backtrack idea
+    // only difference instead of i = index + 1 we start with i = index in the main for loop
+
+    public List<List<String>> partitionV2(String s) {
+        List<List<String>> resList = new ArrayList<>();
+        partitionPalindromeV2(s, 0, new ArrayList<String>(), resList);
+        return resList;
+    }
+    private void partitionPalindromeV2(String s, int index,
+                                     ArrayList<String> tempList,
+                                     List<List<String>> rList) {
+        if(index == s.length()){
+            rList.add(new ArrayList<>(tempList));
+            System.out.println(rList);
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            // get the substr between i , i+1
+            // dont worry about i + 1 breaking s.length as i+1 is  exclusive in subString method
+            String substr = s.substring(index,i+1);
+            // skip processing invalid partitions
+            if(!checkPalindrome(substr))
+                continue;
+            // using generic backtrack approach
+            tempList.add(substr);
+            // we use i +1 as the next iteration as i +1 will be the position in the partition
+            partitionPalindromeV2(s,i +1, tempList,rList);
+            tempList.remove(tempList.size()-1);
+        }
+
+    }
+
 
 
 
