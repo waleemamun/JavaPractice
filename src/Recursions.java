@@ -594,6 +594,7 @@ public class Recursions {
     // The basic idea is to recursively solve this problem, more like 8 Queen.
     // We start with a number from the combination and keep subtracting it from the target until the target becomes zero.
     // We the take the next number from the combination and subtract.
+    // *********** Faster version **********
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
 
         List<List<Integer>> resList = new ArrayList<>();
@@ -644,6 +645,37 @@ public class Recursions {
             combinationSumRecurse(candidates, i, target - candidates[i], tList, resultList);
             tList.remove(tList.size() -1);
 
+        }
+
+    }
+
+    // This is another version of combination sum using the same approach
+    // as the previous one only reducing the loop in non recursive function
+    // although this version is very slow compared to the previous one
+    // ***** Slower version ******
+    public List<List<Integer>> combinationSumV2(int[] candidates, int target) {
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(candidates);
+        combSumRecV2(candidates,0,target,new ArrayList<>(),resList);
+        return resList;
+    }
+
+    private void combSumRecV2(int [] candidates, int index, int target,
+                                       ArrayList<Integer> tList,
+                                       List<List<Integer>> resultList) {
+        if (target < 0 )
+            return;
+        if (target == 0) {
+            resultList.add(new ArrayList<>(tList));
+            System.out.println(resultList);
+            return;
+        }
+        for (int i = index; i<candidates.length && candidates[i] <= target; i++) {
+            tList.add(candidates[i]);
+            // we done need increase i here as we need to try to subtract the same item as much as possible
+            // not i + 1 because we can reuse same elements
+            combSumRecV2(candidates,i, target - candidates[i], tList, resultList);
+            tList.remove(tList.size()-1);
         }
 
     }
