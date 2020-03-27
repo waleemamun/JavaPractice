@@ -594,7 +594,7 @@ public class Recursions {
     // The basic idea is to recursively solve this problem, more like 8 Queen.
     // We start with a number from the combination and keep subtracting it from the target until the target becomes zero.
     // We the take the next number from the combination and subtract.
-    // *********** Faster version **********
+
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
 
         List<List<Integer>> resList = new ArrayList<>();
@@ -652,30 +652,92 @@ public class Recursions {
     // This is another version of combination sum using the same approach
     // as the previous one only reducing the loop in non recursive function
     // although this version is very slow compared to the previous one
-    // ***** Slower version ******
-    public List<List<Integer>> combinationSumV2(int[] candidates, int target) {
+    // This version is not slow the issue was the presence of "System.out.println(resultList);" <-- not commented out
+    public List<List<Integer>> combinationSumAlt(int[] candidates, int target) {
         List<List<Integer>> resList = new ArrayList<>();
         Arrays.sort(candidates);
-        combSumRecV2(candidates,0,target,new ArrayList<>(),resList);
+        combSumRecAlt(candidates,0,target,new ArrayList<>(),resList);
         return resList;
     }
 
-    private void combSumRecV2(int [] candidates, int index, int target,
+    private void combSumRecAlt(int [] candidates, int index, int target,
                                        ArrayList<Integer> tList,
                                        List<List<Integer>> resultList) {
         if (target < 0 )
             return;
         if (target == 0) {
             resultList.add(new ArrayList<>(tList));
-            System.out.println(resultList);
+            //System.out.println(resultList);
             return;
         }
         for (int i = index; i<candidates.length && candidates[i] <= target; i++) {
             tList.add(candidates[i]);
             // we done need increase i here as we need to try to subtract the same item as much as possible
             // not i + 1 because we can reuse same elements
-            combSumRecV2(candidates,i, target - candidates[i], tList, resultList);
+            combSumRecAlt(candidates,i, target - candidates[i], tList, resultList);
             tList.remove(tList.size()-1);
+        }
+
+    }
+
+    // LeetCode::40 Combination Sum II
+    // Both v1 & v2 has same runtime lets use the V2 version that is more clean
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(candidates);
+        for (int i = 0; i < candidates.length && candidates[i] <= target; i++) {
+            ArrayList<Integer> tempList = new ArrayList<>();
+            if ((i != 0 && candidates[i] == candidates[i-1]))
+                continue;
+            tempList.add(candidates[i]);
+            combinationSum2Recurse(candidates, i +1, target - candidates[i], tempList, resList);
+
+        }
+        return resList;
+
+    }
+
+    // This has the same run time as the one above but it looks easy to read.
+    // In both case runtime was very low 2ms. The loop in the above case is not needed.
+    // Its better to use this version
+    public List<List<Integer>> combinationSum2V2(int[] candidates, int target) {
+        List<List<Integer>> resList = new ArrayList<>();
+        // lets sort to skip processing for larger numbers than target & also to remove duplicate
+        Arrays.sort(candidates);
+        ArrayList tempList = new ArrayList();
+        combinationSum2Recurse(candidates, 0, target, tempList, resList);
+        return resList;
+    }
+
+    // We uses exactly the same approach as used in the first combinationSum problem
+    // using the method "combinationSum". Dont worry about the loop in that problem that was not necessary.
+    // The only difference here is we need ot skip the duplicates.
+    // So in the recursion we check if the current number matches the previous number.
+    // Iff yes then we can skip processing for the current item as it will lead to duplicate entries.
+    // The sorted Array also helps in this case
+    private void combinationSum2Recurse (int [] candidates, int index, int target,
+                                         ArrayList<Integer> tempList,
+                                         List<List<Integer>> resList) {
+        if (target < 0)
+            return;
+        // we found the result, lets add to the result list
+        if (target == 0) {
+            resList.add(new ArrayList<>(tempList));
+            //System.out.println(resList);
+            return;
+        }
+        for (int i = index; i<candidates.length && candidates[i] <= target; i++){
+            // skip the duplicates, for example in case of 2, 2, 5, 7
+            // we dont need to process for 2 at postion 1 as we already considered 2 at psotion 0
+            if ((i != index && candidates[i] == candidates[i-1]))
+                continue;
+            // lets use the generic back tracking approach
+            tempList.add(candidates[i]);
+            // lets use i + 1 as we do not want to the substract the same value multiple time,
+            // this is another key difference with the first combination sum problem
+            // check 'combinationSum' or 'combinationSumAlt' where we used 'i'
+            combinationSum2Recurse(candidates,i +1,target - candidates[i], tempList, resList);
+            tempList.remove(tempList.size()-1);
         }
 
     }

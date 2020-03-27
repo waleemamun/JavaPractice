@@ -180,9 +180,9 @@ public class Main {
 
 //        Solutions s1 = new Solutions();
 //        System.out.println(s1.findDuplicate(arr));
-        int [] arr = { 2,3,5,8};
+        int [] arr = { 10,1,2,7,6,1,5};
         Recursions r1 = new Recursions();
-        System.out.println("res = " + r1.combinationSumV2(arr,8));
+        System.out.println("res = " + r1.combinationSum2V2(arr,8));
 
 
 
