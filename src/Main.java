@@ -180,9 +180,12 @@ public class Main {
 
 //        Solutions s1 = new Solutions();
 //        System.out.println(s1.findDuplicate(arr));
-        int [] arr = { 10,1,2,7,6,1,5};
-        Recursions r1 = new Recursions();
-        System.out.println("res = " + r1.combinationSum2V2(arr,8));
+//        Recursions r1 = new Recursions();
+//        System.out.println("res = " + r1.combinationSum2V2(arr,8));
+        int [] arr = { 3, -10, 5 , -1, 0, 2, 6, 1, -15, 20};
+        int [] arr1 = {1,1};
+        Solutions s1 = new Solutions();
+        System.out.println("Missing Positive = " + s1.firstMissingPositive(arr1));
 
 
 

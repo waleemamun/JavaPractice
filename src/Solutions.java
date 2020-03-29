@@ -1064,7 +1064,7 @@ public class Solutions {
         return result.get(n-1);
     }
 
-    // Get the duplicate number in an array  of n where numbers are between 0 to  n -1.
+    // Get the duplicate number in an array  of n where numbers are between 1 to  n -1.
     // Find a solution that is O(n) and O(1) space, You are allowed to modify the array elements.
     // If we are allowed to modify the array elements, we can use an interesting approach
     // of marking the array position with negative values as we discovers them in the array.
@@ -1153,6 +1153,62 @@ public class Solutions {
         return slow;
     }
 
+    // LeetCode 41 :: First Missing Positive (Hard)
+    // The algo needs to be O(n) time & O(1) space, so we cannot use any kind of special data struct features.
+    // We can mark the array and using couple N passes figure out a solution.
+    // First we nove the positive numbers to the left of array.
+    // The idea is to check the presence of consecutive numbers starting from 1 in the array,
+    // so we mark the array indexes for example if 1 is present we mark nums[0] if 3 is present we mark num[2]
+    // during marking we just make th number negative
+
+    public int firstMissingPositive(int[] nums) {
+        int missPv = 1;
+        int i = 0;
+
+        // move the positive numbers on left side of the array,
+        // we dont care if we override negative numbser & zero
+        int nextPositive = 0;
+        for( i = 0; i < nums.length; i++){
+            if(nums[i] > 0) {
+                nums[nextPositive] = nums[i];
+                nextPositive++;
+            }
+        }
+
+
+        // Up to nextPositve everything is positive number. Now lets mark the array up to nextPositive.
+        // We mark nums[0] with a negative if we found 1 in the array ,
+        // we mark nums[2] negative if we found 3 in the array and so on.
+        // After this the array indices will be marked negative, for the entries present in the array.
+        for ( i = 0; i < nextPositive; i++){
+
+            if(Math.abs(nums[i]) <= nextPositive) {
+                // before marking negative lets check if we already marked i negative or not
+                // to avoid double negative making the value positive,
+                // this could happen if dupleicates number is in the  array
+                if(nums[Math.abs(nums[i])-1] > 0)
+                    nums[Math.abs(nums[i])-1] = -nums[Math.abs(nums[i])-1];
+            }
+
+        }
+        // Now the array is marked and we scane from left to right upto nextPositve
+        // to find the first array position  that have a positive value.
+        // the index of the first positive position is the missing number
+        // we need to add +1 to indexes start from zero
+        for ( i = 0; i < nextPositive; i++) {
+
+            if(nums[i] > 0) {
+                missPv = i + 1;
+                break;
+            }
+
+        }
+        // we reached the end so we have consecutive 1 to nextPositve in the array,
+        // missing number will be  nextPositive +1
+        if (i == nextPositive)
+            missPv = nextPositive +1;
+        return missPv;
+    }
 
 
 
