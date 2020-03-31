@@ -182,10 +182,11 @@ public class Main {
 //        System.out.println(s1.findDuplicate(arr));
 //        Recursions r1 = new Recursions();
 //        System.out.println("res = " + r1.combinationSum2V2(arr,8));
-        int [] arr = { 3, -10, 5 , -1, 0, 2, 6, 1, -15, 20};
-        int [] arr1 = {1,1};
+//        System.out.println("Missing Positive = " + s1.firstMissingPositive(arr1));
+        int [] arr = { 0,3,0,0,1,0,0,2,0,0,1,0,0,3,0,0,2};
+        int [] arr1 = {0,1,0,2,1,0,1,3,2,1,2,1};
         Solutions s1 = new Solutions();
-        System.out.println("Missing Positive = " + s1.firstMissingPositive(arr1));
+        System.out.println("Trap Water = " + s1.trap(arr1));
 
 
 

@@ -270,7 +270,7 @@ public class Solutions {
     // From this point update the height by one and
     // check if the current height[left] or height[right] is large enough.
     // if yes the rectangle can be used and
-    // if no the move to the next left/right position that can support this height
+    // if no then move to the next left/right position that can support this height
     // This approach will significantly reduce the complexity to O(n) as the unnecessary area calc is avoided
     public int maxArea(int[] height) {
         int maxAr = Integer.MIN_VALUE; // the max area covered by the rectangle
@@ -1209,6 +1209,66 @@ public class Solutions {
             missPv = nextPositive +1;
         return missPv;
     }
+
+    // LeetCode :: 42 Trapping Rain Water
+    // Use the same idea of max containter problem LeetCode 11 see maxArea method in this file
+    // The idea is to use two pointers left & right starting from two ends.
+    // We calculate the water trap per height. Then increase the height and calculate for that height.
+    // In a regular case we increase height by 1, but if we found a entry where
+    // the left and right entry is big enough we can Increase the currentHeight by more(min of two heights)
+
+    public int trap(int[] height) {
+        if( height.length <= 2)
+            return 0;
+        int totWater = 0;
+        int left = 0;
+        int right = height.length - 1;
+
+        // skip the zeros for both left & right, lets move left right pointer to first non zero entries
+        while (left < height.length && height[left] == 0)
+            left++;
+        while (right >= 0 &&height[right] == 0)
+            right--;
+
+        // get a head start on current height,
+        // Update currentHeight to the lower of the two rather than starting with 1.
+        // In worst case this could very well be 1
+        int currentHeight = Integer.min(height[left], height[right]);
+
+
+
+        while (left + 1 < right) {
+            if (currentHeight <= height[left] && currentHeight <= height[right]) {
+                int curTotal = 0;
+                // calculate between left & right, no need to consider left or right
+                for(int i = left + 1; i <= right - 1; i++) {
+                    if (height[i] < currentHeight){
+                        // store the count per height
+                        curTotal += (currentHeight - height[i]);
+                        // update the height of this pos to current consider height to avoid double counting
+                        height[i] = currentHeight;
+                    }
+                }
+                totWater += curTotal;
+
+                //System.out.println( left+ " " +right + " curHgt "+ currentHeight+" curTot " + curTotal);
+                currentHeight++;
+            }
+            // move left to skip the lower values as the are irrelevant (already counted)
+            while ( left < right && currentHeight > height[left])
+                left++;
+            // move right to skip the lower values as the are irrelevant (already counted)
+            while (left < right && currentHeight > height[right])
+                right--;
+            // update the height if its possible to increase by more the 1
+            currentHeight = Integer.min(height[left], height[right]);
+
+        }
+
+        return totWater;
+
+    }
+
 
 
 
