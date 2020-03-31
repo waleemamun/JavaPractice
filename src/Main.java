@@ -186,7 +186,7 @@ public class Main {
         int [] arr = { 0,3,0,0,1,0,0,2,0,0,1,0,0,3,0,0,2};
         int [] arr1 = {0,1,0,2,1,0,1,3,2,1,2,1};
         Solutions s1 = new Solutions();
-        System.out.println("Trap Water = " + s1.trap(arr1));
+        System.out.println("Trap Water = " + s1.trapV2(arr));
 
 
 

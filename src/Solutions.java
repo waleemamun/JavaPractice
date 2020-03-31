@@ -1216,6 +1216,8 @@ public class Solutions {
     // We calculate the water trap per height. Then increase the height and calculate for that height.
     // In a regular case we increase height by 1, but if we found a entry where
     // the left and right entry is big enough we can Increase the currentHeight by more(min of two heights)
+    //
+    // *************** NOTE: There is a better solution for this problem *******************
 
     public int trap(int[] height) {
         if( height.length <= 2)
@@ -1263,6 +1265,51 @@ public class Solutions {
             // update the height if its possible to increase by more the 1
             currentHeight = Integer.min(height[left], height[right]);
 
+        }
+
+        return totWater;
+
+    }
+
+    // This is the better O(n) & O(1) space solution; Easy to read solution.
+    // The idea is to use two pointers left & right starting from two ends.
+    // Also keep track of current leftMax & rightMax.
+    // The idea is we always will be able to store/trap rain water covered by
+    // the rectangle whose height is MIn(leftMax,rightMax). Now if we find such leftMax or rightMax
+    // we move from that side counting the trap water size.
+    // we add height[left] to the count if there is  a rightMax taller than height[left] or height[leftMax]
+    // so for example height[left] = 1 is between height[leftMax] = 2  & height[rightMax] = 3
+    // so a taller bar exist on the right side of height[left], hence its safe to add height[left]'s value
+    // the value would be leftMax - height[left], as we also already stored the tallest left bar.
+    // Note that for the bar position the count will be zero and thats ok
+    // for example in [0, 3,1,2, 6] in position 1 bar size = 3  and left max = 3
+    // so for position 1 totwater is zero but for position 2 it will be 2
+    //
+    public int trapV2(int[] height) {
+        // sanity check
+        if( height.length <= 2)
+            return 0;
+        int totWater = 0;
+        int left = 0;
+        int right = height.length-1;
+        int leftMax = 0;
+        int rightMax = 0;
+
+        while (left < right) {
+            if (height[left] > leftMax)
+                leftMax = height[left];
+            if (height[right] > rightMax)
+                rightMax = height[right];
+            // as we know a rightMax exist which is taller than current left & leftMax,
+            // so it is safe to add this postion's count to the trap water
+            // this height[i] should covered  by leftMax  & rightMax
+            if (leftMax < rightMax) {
+                totWater += (leftMax - height[left]);
+                left++;
+            } else { // same we know a taller leftMax exist so safe to add this postion's count
+                totWater += (rightMax-height[right]);
+                right--;
+            }
         }
 
         return totWater;
