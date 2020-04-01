@@ -183,10 +183,13 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        System.out.println("res = " + r1.combinationSum2V2(arr,8));
 //        System.out.println("Missing Positive = " + s1.firstMissingPositive(arr1));
+//        Solutions s1 = new Solutions();
+//        System.out.println("Trap Water = " + s1.trapV2(arr));
         int [] arr = { 0,3,0,0,1,0,0,2,0,0,1,0,0,3,0,0,2};
         int [] arr1 = {0,1,0,2,1,0,1,3,2,1,2,1};
-        Solutions s1 = new Solutions();
-        System.out.println("Trap Water = " + s1.trapV2(arr));
+        DPs dp1 = new DPs();
+        System.out.println(dp1.isWildCardMatch("abcd","*****a***b****"));
+
 
 
 
