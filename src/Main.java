@@ -188,7 +188,7 @@ public class Main {
         int [] arr = { 0,3,0,0,1,0,0,2,0,0,1,0,0,3,0,0,2};
         int [] arr1 = {0,1,0,2,1,0,1,3,2,1,2,1};
         DPs dp1 = new DPs();
-        System.out.println(dp1.isWildCardMatch("abcd","*****a***b****"));
+        System.out.println(dp1.isWildCardMatchV2("aaaa","****a"));
 
 
 

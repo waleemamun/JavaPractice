@@ -50,4 +50,56 @@ public class DPs {
         return dpTable[text.length][reWrite];
 
     }
+
+    // using Yu's method to solve the wildcard problem, This is faster than the DP solution
+    // http://yucoding.blogspot.com/2013/02/leetcode-question-123-wildcard-matching.html
+    // The idea is to use two pointer for text &  pointers for pattern.
+    // When we see a match or '?' we move the regular pointes s & p.
+    // But when we see '*' it means we can match zero or more so we store the '*' position in another pointer
+    // starIdx & advance p pointer by 1 we also store the matched s pointer position
+    boolean isWildCardMatchV2(String str, String pattern) {
+        // lets create two pointers one for pattern & 1 for string
+        int s = 0, p = 0, match = 0, starIdx = -1;
+        while (s < str.length()){
+            //System.out.println(s+ " " + p);
+            // advancing both pointers
+            if (p < pattern.length()  && (pattern.charAt(p) == '?' || str.charAt(s) == pattern.charAt(p))){
+                s++;
+                p++;
+            }
+            // * found, only advancing pattern pointer
+            // but before that store current pattern pointer position.
+            // This pattern pointer position will be saved so that
+            // we can match next zero or multiple chars of text with the '*'
+            else if (p < pattern.length() && pattern.charAt(p) == '*'){
+                starIdx = p++;
+                match = s;
+            }
+
+            // current characters didn't match, last pattern pointer was *,
+            // current pattern pointer is not '*'
+            // last pattern pointer was '*',
+            // advancing string pointer & reset patter pointer to point to position after '*'
+            else if (starIdx != -1){
+                p = starIdx + 1;
+                s = ++match;
+            }
+            // current pattern pointer is not star, last pattern pointer was not *.
+            // so the characters do not match hence we found invalid case
+            else {
+                return false;
+            }
+        }
+        //System.out.println(s+ " " + p);
+        // we already reached the end of text
+        // check for remaining characters in pattern.
+        // If all of them are * then we will find a valid solution; for example
+        // pattern is a**b**c***** and text is abc; the below code check for trailing '*'
+        // otherwise the pattern has more unmatched char no valid solution; for example
+        // if pattern is a**b**c****k & text abc ; then we wont find valid match
+        while (p < pattern.length() && pattern.charAt(p) == '*')
+            p++;
+
+        return p == pattern.length();
+    }
 }
