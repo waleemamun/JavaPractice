@@ -1316,6 +1316,98 @@ public class Solutions {
 
     }
 
+    // LeetCode 45:: Jump Game 2 (Hard)
+    // This solution is not good at all, very bad runtime
+    // This is very bad cause consider example 5 5 5 5 1 1 1 1 1 almost becomes exponential run time
+    class Node {
+        int edgeCount;
+        int index;
+        public Node(int e, int idx){
+            index = idx;
+            edgeCount = e;
+        }
+    }
+
+    public int jump(int[] nums) {
+        int jmpCount = Integer.MAX_VALUE;
+        PriorityQueue<Node> priorityQueue = new PriorityQueue<>(new Comparator<Node>() {
+            @Override
+            public int compare(Node o1, Node o2) {
+                return o1.edgeCount - o2.edgeCount;
+            }
+        });
+
+        int [] jumpDist = new int [nums.length];
+        Arrays.fill(jumpDist, Integer.MAX_VALUE);
+        priorityQueue.add(new Node(0,0));
+        jumpDist[0] = 0;
+
+        while(!priorityQueue.isEmpty()){
+            Node u = priorityQueue.poll();
+            //System.out.println(u.index +" " + u.edgeCount);
+
+            if (u.index == nums.length-1) {
+                jmpCount = Math.min(jmpCount,u.edgeCount);
+            }
+
+            for (int edg = 1; edg <= nums[u.index]  && u.index + edg < nums.length ; edg++) {
+
+                if(jumpDist[u.index + edg] > u.edgeCount + 1 ){
+                    priorityQueue.add(new Node(u.edgeCount +1,u.index +edg));
+                    jumpDist[u.index + edg] = u.edgeCount + 1;
+                }
+
+            }
+
+        }
+
+
+        return jmpCount;
+    }
+
+    // Lets try a different solution for LeetCode 45:: Jump Game 2 (Hard)
+    // This is an interesting problem at first it seems we need to use shortest path but thats not true
+    // This requires a greedy approach, one each turn we figure out the max range cover by an index.
+    // For example if nums[0] == 2 then the range cover by num[0] is (1,2) so we check the array elements in (1,2)
+    // and try to find out which gives a better greedy choice.
+    // The greedy choice here is nums[i] + i <-- the max index covered by nums[i] for
+    //  example num[2] == 3 actaully allows a jump of nums[2] + 3 == 5. On each range evaluation we increase
+    //  the jump count
+    public int jumpV2(int[] nums) {
+        int jmpCount = 0;
+
+        if(nums.length ==1)
+            return 0;
+        for(int i = 0; i< nums.length; ) {
+            // lets get the range in curSt & curEnd
+            int curSt =  i + 1;
+            int currEnd = i + nums[i];
+            // max to store the max range covered by current choice
+            int max = 0;
+            // already the range covers the destination
+            // increase the jump count we found our solution
+            if (currEnd >= nums.length -1){
+                i = currEnd;
+                jmpCount++;
+                break;
+            } else {
+                // lets look for the max covered by this range
+                for (int j = curSt; j <= currEnd; j++) {
+                    if(j >= nums.length) break;
+                    if(j + nums[j] > max) {
+                        max = j + nums[j];
+                        // update the i to be new greedy choice we will start from this postion in the next iteration
+                        i = j;
+                    }
+                }
+            }
+
+            jmpCount++;
+        }
+
+        return jmpCount;
+    }
+
 
 
 

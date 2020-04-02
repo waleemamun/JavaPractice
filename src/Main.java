@@ -185,10 +185,12 @@ public class Main {
 //        System.out.println("Missing Positive = " + s1.firstMissingPositive(arr1));
 //        Solutions s1 = new Solutions();
 //        System.out.println("Trap Water = " + s1.trapV2(arr));
-        int [] arr = { 0,3,0,0,1,0,0,2,0,0,1,0,0,3,0,0,2};
-        int [] arr1 = {0,1,0,2,1,0,1,3,2,1,2,1};
-        DPs dp1 = new DPs();
-        System.out.println(dp1.isWildCardMatchV2("aaaa","****a"));
+//        DPs dp1 = new DPs();
+//        System.out.println(dp1.isWildCardMatchV2("aaaa","****a"));
+        int [] arr = { 0};
+        int [] arr1 = {2,3,4,1,1,4,2,2,1,2,8};
+        Solutions s1 = new Solutions();
+        System.out.println("Jump count = " + s1.jumpV2(arr1));
 
 
 
