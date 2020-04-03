@@ -191,6 +191,9 @@ public class Main {
         int [] arr1 = {2,3,4,1,1,4,2,2,1,2,8};
         Solutions s1 = new Solutions();
         System.out.println("Jump count = " + s1.jumpV2(arr1));
+        Recursions r1 = new Recursions();
+        int [] nums = {1,3,5,7,9,11,13,15};
+        System.out.println(r1.combineThree(nums));
 
 
 

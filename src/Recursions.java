@@ -829,6 +829,29 @@ public class Recursions {
 
     }
 
+    // solve nC3 combination
+    public List<List<Integer>> combineThree(int[] nums) {
+        List<List<Integer>> resultList = new ArrayList<>();
+        combineThreeRec(nums, 0, new ArrayList<>(), resultList);
+        return resultList;
+    }
+    private void combineThreeRec(int []nums, int index,
+                                 ArrayList<Integer> tmpList,
+                                 List<List<Integer>> rList ) {
+        // we use nC3 here so comparing with size == 3 if we want nCr then compare with size == r 
+        if(tmpList.size() == 3) {
+            rList.add(new ArrayList<>(tmpList));
+            return;
+        }
+        for (int i = index; i < nums.length; i++){
+            tmpList.add(nums[i]);
+            combineThreeRec(nums, i +1,tmpList, rList);
+            tmpList.remove(tmpList.size()-1);
+        }
+
+
+    }
+
     // Leetcode:: 46 Permutation
     public List<List<Integer>> permute(int[] nums) {
         List<List<Integer>> resList = new ArrayList<>();
