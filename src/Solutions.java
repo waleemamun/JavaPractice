@@ -1408,6 +1408,42 @@ public class Solutions {
         return jmpCount;
     }
 
+    //LeetCode :: 48 Rotate Image
+    // we need to rotate the 2d array 90 degree clockwise
+    public void rotate(int[][] matrix) {
+        // we process the 2d matrix in layers, starting with the first layer and
+        // we only need to process half of the size, as that will cover the whole array
+        // first ->  1  2  3  4 <--- layer 0
+        //           5  6  7  8
+        //           9 10 11 12
+        // last ->  13 14 15 16
+        // we need to maintain first and last pointer for row & column
+        for (int layer = 0; layer < matrix.length/2; layer++) {
+
+            int first = layer; // points to start for this layer
+            int last = matrix.length - first - 1; // points to last for this layer
+            // scan through the whole layer and in each iteration rotate  4 elements
+            // Note that we need to process first to last (exclusive),
+            // because while processing the first one we already processed the last one
+            for (int i = first; i < last; i++) {
+                int offset = i - first;
+                // for elem 1 the first row is fixed, store elem 1 in tmp
+                int tmp = matrix[first][i];
+                // copy the elem 4 in elem 1 pos, for elem 4 the column is fixed
+                matrix[first][i] = matrix[last - offset][first];
+                // copy elem 3 in elem 4; for elem 3 the row is fixed (last row)
+                matrix[last-offset][first] = matrix[last][last - offset];
+                // copy elem 2 in elem 3;  for elem 2 the column is fixed (last column)
+                matrix[last][last - offset] = matrix[i][last];
+                // copy the elem 1 stored in tmp to elem 2
+                matrix[i][last] = tmp;
+            }
+        }
+
+    }
+
+
+
 
 
 

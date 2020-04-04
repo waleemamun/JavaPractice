@@ -838,7 +838,7 @@ public class Recursions {
     private void combineThreeRec(int []nums, int index,
                                  ArrayList<Integer> tmpList,
                                  List<List<Integer>> rList ) {
-        // we use nC3 here so comparing with size == 3 if we want nCr then compare with size == r 
+        // we use nC3 here so comparing with size == 3 if we want nCr then compare with size == r
         if(tmpList.size() == 3) {
             rList.add(new ArrayList<>(tmpList));
             return;
