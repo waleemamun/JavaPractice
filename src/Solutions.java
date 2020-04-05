@@ -1442,6 +1442,92 @@ public class Solutions {
 
     }
 
+    //LeetCode :: 49 Group Anagrams
+    // The basic idea is to create a frequency counter for each string
+    // and store it in a hash table. We scan the array of string and
+    // if we discover a freq count that does exist in the hastable
+    // we add it to hashtable and the list. If it exist in the hastable
+    // we get the list index to group it with other anagrams
+
+    public List<List<String>> groupAnagrams(String[] strs) {
+        List<List<String>> rList = new ArrayList<>();
+        HashMap<String, Integer> hashMap = new HashMap();
+        int []freq = new int[26];
+        int index = 0;
+
+        for (int i = 0; i < strs.length; i++) {
+            String s = strs[i];
+
+            for (int j = 0; j < s.length(); j++){
+                freq[s.charAt(j)-'a']++;
+            }
+            StringBuilder key = new StringBuilder();
+            for (int j = 0; j < freq.length; j++) {
+                if (freq[j] > 0) {
+                    char ch = (char) ('a' + j);
+                    char num = (char) ('0' + freq[j]);
+                    key.append(ch);
+                    key.append(num);
+                    freq[j] = 0;
+                }
+
+            }
+            String keyStr = key.toString();
+            //System.out.println(strs[i] + " " + key.toString());
+            if (hashMap.containsKey(keyStr)) {
+                rList.get(hashMap.get(keyStr)).add(strs[i]);
+
+            } else {
+                hashMap.put(keyStr, index);
+                List<String> tmp = new ArrayList<>();
+                tmp.add(strs[i]);
+                rList.add(tmp);
+                index++;
+
+            }
+
+        }
+
+        return rList;
+    }
+
+    // This is the version 2 of this group Anagram problem,
+    // here we used sorting instead of frequency counting,
+    // its runtime is actually better than version 1 but  for version 2  the Big O is O(nklgk)
+    // where as in version 1 BigO is O(nk), most like this is happening due to the test cases.
+    // This algo uses sorting instead of using a frequency counter.
+    // lets us the version 1 as ist BigO is better.
+    // If the test cases had longer string we would have seen better performance with the version 1
+
+    public List<List<String>> groupAnagramsV2(String[] strs){
+        List<List<String>> rList = new ArrayList<>();
+        HashMap<String, Integer> hashMap = new HashMap();
+        int index = 0;
+        for(String str: strs){
+            String sortedStr = sortStr(str);
+            //System.out.println( str + " " + sortedStr);
+            if(hashMap.containsKey(sortedStr)) {
+                rList.get(hashMap.get(sortedStr)).add(str);
+            } else {
+                List <String> tmp = new ArrayList<>();
+                tmp.add(str);
+                rList.add(tmp);
+                hashMap.put(sortedStr,index);
+                index++;
+            }
+
+        }
+        return rList;
+    }
+
+    private String sortStr( String str){
+        char [] cArray = str.toCharArray();
+        Arrays.sort(cArray);
+        return new String(cArray);
+    }
+
+
+
 
 
 

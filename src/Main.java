@@ -187,13 +187,16 @@ public class Main {
 //        System.out.println("Trap Water = " + s1.trapV2(arr));
 //        DPs dp1 = new DPs();
 //        System.out.println(dp1.isWildCardMatchV2("aaaa","****a"));
+//        System.out.println("Jump count = " + s1.jumpV2(arr1));
+//        Recursions r1 = new Recursions();
+//        int [] nums = {1,3,5,7,9,11,13,15};
+//        System.out.println(r1.combineThree(nums));
         int [] arr = { 0};
         int [] arr1 = {2,3,4,1,1,4,2,2,1,2,8};
+        String []str1 = {"eat", "tea", "tan", "ate", "nat", "bat"};
         Solutions s1 = new Solutions();
-        System.out.println("Jump count = " + s1.jumpV2(arr1));
-        Recursions r1 = new Recursions();
-        int [] nums = {1,3,5,7,9,11,13,15};
-        System.out.println(r1.combineThree(nums));
+        System.out.println("res = " + s1.groupAnagramsV2(str1));
+
 
 
 
