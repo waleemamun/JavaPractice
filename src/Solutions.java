@@ -1526,6 +1526,64 @@ public class Solutions {
         return new String(cArray);
     }
 
+    //leetCode :: 50 pow
+    public double myPow(double x, int n) {
+        // handle some corner cases
+        if (n == 0)
+            return 1.0;
+        if (x == 1)
+            return 1.0;
+        if (x == -1) {
+            if(n%2 == 0)
+                return 1.0;
+            else
+                return -1.0;
+        }
+        if (n == Integer.MIN_VALUE)
+            return 0;
+        // The main algo start here, use the basic idea of multiplying faster
+        // by multiplying x*x = x2 ; x2 * x2 = x4 ; x4 * x4 = x8 and so on
+        // if the LSB bit is non-zero we have odd number power so x9 becomes x8 * x
+        double result = 1.0;
+
+        if (n < 0){
+            n = -n;
+            x = 1.0/x;
+        }
+        while (n != 0) {
+            if( (n & 1) != 0){
+                result *= x;
+            }
+            x *=x;
+            n >>>= 1;
+        }
+
+        return result;
+    }
+
+    // Another recurseive approach for the myPow
+    // This version was faster in leetcode
+    private double fastPow(double x, long n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        double half = fastPow(x, n / 2);
+        if (n % 2 == 0) {
+            return half * half;
+        } else {
+            return half * half * x;
+        }
+    }
+    public double myPowV2(double x, int n) {
+        long N = n;
+        if (N < 0) {
+            x = 1 / x;
+            N = -N;
+        }
+
+        return fastPow(x, N);
+    }
+
 
 
 
