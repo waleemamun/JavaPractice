@@ -1,6 +1,7 @@
 import javafx.geometry.Pos;
 import org.omg.PortableInterceptor.INACTIVE;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -411,11 +412,23 @@ public class Recursions {
 
     }
 
-
     // Eight Queen Problem
-    public void placeAllQueens() {
+    public void placeNPrintQueens() {
         int queen = 1;
         int [] columns = new int[8];
+        char [][]board = new char[8][8];
+        Arrays.fill(columns, -1);
+        for(int i=0; i<8;i++)
+            for(int j=0; j< 8;j++)
+                board[i][j]= '.';
+        placeQueenPrint(0, columns, board);
+
+    }
+
+    public void placeAllQueens() {
+
+        int [] columns = new int[8];
+        char [][]board = new char[8][8];
         Arrays.fill(columns, -1);
         placeQueen(0, columns);
 
@@ -465,6 +478,72 @@ public class Recursions {
         }
 
     }
+
+    private void placeQueenPrint (int row, int [] columns, char [][] board) {
+        if (row == 8) {
+            // We placed 8 queens successfully lets print the columns
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++){
+                    System.out.print(board[i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+            return;
+        }
+        // We check all possible scenario to place 8 queens.
+        for (int col = 0; col < 8; col++) {
+            if (checkAvailable(columns,row,col)){
+                columns[row] = col;
+                board[row][col] = 'Q';
+                placeQueenPrint(row + 1, columns, board);
+                board[row][col] = '.';
+            }
+        }
+
+    }
+
+    // 51. N-Queens solve this similar to 8 Queen problem above using backtracking
+    // Use the columns array to build  2d solution
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> resList = new ArrayList<>();
+        int [] columns = new int[n];
+        Arrays.fill(columns, -1);
+        placeNQueen(0, columns, n, resList);
+        return resList;
+    }
+
+    private void placeNQueen (int row, int [] columns, int n, List<List<String>> resList) {
+        if (row == n) {
+            // We placed n queens successfully lets create the board from the column array
+            ArrayList<String> tmpList = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                int queen = columns[i];
+                String s = "";
+                for (int j = 0; j < n; j++){
+                    if(j == queen)
+                        s+= "Q";
+                    else
+                        s+= ".";
+                }
+                tmpList.add(s);
+            }
+            resList.add(new ArrayList<>(tmpList));
+
+            return;
+        }
+        // We check all possible scenario to place 8 queens.
+        for (int col = 0; col < n; col++) {
+            if (checkAvailable(columns,row,col)){
+                columns[row] = col;
+                placeNQueen(row + 1, columns, n, resList);
+
+            }
+        }
+
+    }
+
 
     // 37. Sudoku Solver (Hard) Solve the sudoku given the board
     // We are using a backtraciing approach similar to 8 queen problem.

@@ -193,9 +193,8 @@ public class Main {
 //        System.out.println(r1.combineThree(nums));
         int [] arr = { 0};
         int [] arr1 = {2,3,4,1,1,4,2,2,1,2,8};
-        String []str1 = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        Solutions s1 = new Solutions();
-        System.out.println("res = " + s1.groupAnagramsV2(str1));
+        Recursions r1 = new Recursions();
+        System.out.println(r1.solveNQueens(4));
 
 
 
