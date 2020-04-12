@@ -544,6 +544,35 @@ public class Recursions {
 
     }
 
+    // 52. N-Queens II, solve the same we would solve 8 Queen using backtracking
+    // if are able place n queen we increase the global count variable by 1
+    int queenCount;
+
+    public int totalNQueens(int n) {
+        int [] columns = new int[n];
+        Arrays.fill(columns, -1);
+        queenCount = 0;
+        counNQueenSolution(0,columns,n);
+        return queenCount;
+    }
+
+    private void counNQueenSolution(int row, int [] columns, int n) {
+        // reached a solution, increase the solution count by one 
+        if(row == n){
+            queenCount++;
+            return;
+        }
+        // We check all possible scenario to place 8 queens.
+        for (int col = 0; col < n; col++) {
+            if (checkAvailable(columns,row,col)){
+                columns[row] = col;
+                counNQueenSolution(row + 1, columns, n);
+
+            }
+        }
+
+    }
+
 
     // 37. Sudoku Solver (Hard) Solve the sudoku given the board
     // We are using a backtraciing approach similar to 8 queen problem.

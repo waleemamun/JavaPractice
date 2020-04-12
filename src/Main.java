@@ -194,7 +194,7 @@ public class Main {
         int [] arr = { 0};
         int [] arr1 = {2,3,4,1,1,4,2,2,1,2,8};
         Recursions r1 = new Recursions();
-        System.out.println(r1.solveNQueens(4));
+        System.out.println(r1.totalNQueens(4));
 
 
 
