@@ -51,4 +51,25 @@ public class SolutionsV1 {
 
         return 0;
     }
+
+    //Leetcode :: 53  Maximum SubArray
+    // if the value of the ith position is greater than the sum of the left side + the current val
+    // the we can just discard the left side of the array.
+    // We keep track of the max sum on each update of current sum which gurantees that we wend up with max SUm
+    public int maxSubArray(int[] nums) {
+
+        int maxSum = nums[0];
+        int currSum = nums[0];
+
+        for(int i = 1; i < nums.length; i++) {
+            currSum += nums[i];
+            // the current number is actually greater than the cumulative sum so discard everything
+            // on the left and update the current sum to current value as its bigger
+            if (nums[i] > currSum ) {
+                currSum = nums[i];
+            }
+            maxSum = Math.max(maxSum,currSum);
+        }
+        return  maxSum;
+    }
 }
