@@ -103,20 +103,38 @@ public class SolutionsV1 {
     }
 
     // Leetcode :: 55. Jump Game
+    // The basic idea is if there is a zero in the array there is a chance we may not reach the end
+    // so we have to check anything on the left of zero that can jump over the zero, for example 3 1 0;
+    // so 3 can jump over 0. We need to check the same thing for all zeros.
     public boolean canJump(int[] nums) {
-        int i;
         if (nums.length == 1)
             return true;
+        // no need to consider the last element the value in it does not matter
+        // start from the right side as it make more sense cause we need
+        // to check on the left
+        int i = nums.length-2;
         int j = -1;
-        for(i = nums.length -2; i >= 0; i--){
-            if (nums[i] == 0) {
+        boolean isZero = false;
+        boolean zeroCovered = true;
+        while (i >= 0 ){
+            if (nums[i] == 0 && isZero == false) {
                 j = i;
+                isZero = true;
+                zeroCovered = false;
+                continue;
             }
-
-
+            if(isZero) {
+                if(j-i < nums[i]) {
+                   while(i >= 0 && nums[i] != 0)
+                       i--;
+                    isZero = false;
+                    zeroCovered = true;
+                    continue;
+                }
+            }
+            i--;
         }
-
-        return true;
+        return zeroCovered;
     }
 
 }
