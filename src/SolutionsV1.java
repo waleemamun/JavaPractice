@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class SolutionsV1 {
@@ -135,6 +136,50 @@ public class SolutionsV1 {
             i--;
         }
         return zeroCovered;
+    }
+
+    // Leetcode 55:: Merge Intervals
+    class Intervals {
+        int left;
+        int right;
+        public Intervals(int l, int r){
+            left = l;
+            right = r;
+        }
+    }
+    public int[][] merge(int[][] intervals) {
+        List<Intervals> iList = new ArrayList<>();
+        for (int i = 0; i < intervals.length; i++){
+            iList.add(new Intervals(intervals[i][0],intervals[i][1]));
+        }
+        iList.sort(new Comparator<Intervals>(){
+            @Override
+            public int compare(Intervals o1, Intervals o2) {
+                return o1.left - o2.left;
+            }
+        });
+        int i = 0;
+        int left = iList.get(0).left;
+        int right = iList.get(0).right;
+        intervals[0][0] = left;
+        intervals[0][1] = right;
+        for (Intervals il : iList ) {
+            if(right >= il.right)
+                continue;
+            else {
+                if(right >= il.left ) {
+                    right = il.right;
+                    intervals[i][1] = right;
+                } else {
+                    i++;
+                    left = intervals[i][0] = il.left;
+                    right = intervals[i][1] = il.right;
+
+                }
+            }
+        }
+        return intervals;
+
     }
 
 }
