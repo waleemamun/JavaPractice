@@ -8,7 +8,7 @@ public class SolutionsV1 {
         int j = 0;
         while (i < version1.length() && version1.charAt(i) == '0')
             i++;
-        int v1=i;
+        int v1 = i;
         while (i < version1.length() && version1.charAt(i) != '.') {
             i++;
         }
@@ -21,10 +21,9 @@ public class SolutionsV1 {
         int len1 = i - v1;
         int len2 = j - v2;
 
-        if(len1 > len2) {
+        if (len1 > len2) {
             return 1;
-        }
-        else if(len1 < len2) {
+        } else if (len1 < len2) {
             return -1;
         }
         i = v1;
@@ -34,20 +33,18 @@ public class SolutionsV1 {
 
             if (version1.length() == i) {
                 ch1 = '0';
-            }
-            else {
+            } else {
                 ch1 = version1.charAt(i++);
             }
             if (j == version2.length()) {
                 ch2 = '0';
-            }
-            else {
+            } else {
                 ch2 = version2.charAt(j++);
             }
-            if(ch1 =='.' || ch2 =='.') continue;
+            if (ch1 == '.' || ch2 == '.') continue;
             else if (ch1 > ch2)
-                return  1;
-            else if (ch1 < ch2){
+                return 1;
+            else if (ch1 < ch2) {
                 return -1;
             }
         }
@@ -64,22 +61,22 @@ public class SolutionsV1 {
         int maxSum = nums[0];
         int currSum = nums[0];
 
-        for(int i = 1; i < nums.length; i++) {
+        for (int i = 1; i < nums.length; i++) {
             currSum += nums[i];
             // the current number is actually greater than the cumulative sum so discard everything
             // on the left and update the current sum to current value as its bigger
-            if (nums[i] > currSum ) {
+            if (nums[i] > currSum) {
                 currSum = nums[i];
             }
-            maxSum = Math.max(maxSum,currSum);
+            maxSum = Math.max(maxSum, currSum);
         }
-        return  maxSum;
+        return maxSum;
     }
 
     // Leetcode :: 54 Spiral Matrix
     // The answer will be all the elements in clockwise order from the first-outer layer,
     // followed by the elements from the second-outer layer, and so on.
-    public List< Integer > spiralOrder(int[][] matrix) {
+    public List<Integer> spiralOrder(int[][] matrix) {
         List ans = new ArrayList();
         if (matrix.length == 0)
             return ans;
@@ -100,3 +97,5 @@ public class SolutionsV1 {
         return ans;
 
     }
+
+}
