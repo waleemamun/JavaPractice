@@ -191,10 +191,10 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = { -2,1,-3,4,-1,2,1,-5,4};
+        int [] arr = {3,2,5,3,2,1,0,4};
         int [] arr1 = {-3,10,-7,10,-8,5,2,-3,1};
         SolutionsV1 sv1 = new SolutionsV1();
-        System.out.println("Sum = " +sv1.maxSubArray(arr1));
+        System.out.println("Can Jump = " +sv1.canJump(arr));
 
 
 

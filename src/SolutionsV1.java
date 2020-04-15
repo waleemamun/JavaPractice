@@ -102,4 +102,21 @@ public class SolutionsV1 {
 
     }
 
+    // Leetcode :: 55. Jump Game
+    public boolean canJump(int[] nums) {
+        int i;
+        if (nums.length == 1)
+            return true;
+        int j = -1;
+        for(i = nums.length -2; i >= 0; i--){
+            if (nums[i] == 0) {
+                j = i;
+            }
+
+
+        }
+
+        return true;
+    }
+
 }
