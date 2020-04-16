@@ -148,6 +148,8 @@ public class SolutionsV1 {
         }
     }
     public int[][] merge(int[][] intervals) {
+        if (intervals.length <=1)
+            return intervals;
         List<Intervals> iList = new ArrayList<>();
         for (int i = 0; i < intervals.length; i++){
             iList.add(new Intervals(intervals[i][0],intervals[i][1]));
@@ -178,7 +180,12 @@ public class SolutionsV1 {
                 }
             }
         }
-        return intervals;
+        int [][] result = new int [i+1][2];
+        for (int j = 0; j<result.length ;j++){
+            result[j][0] = intervals[j][0];
+            result[j][1] = intervals[j][1];
+        }
+        return result;
 
     }
 
