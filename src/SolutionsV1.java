@@ -138,7 +138,12 @@ public class SolutionsV1 {
         return zeroCovered;
     }
 
-    // Leetcode 55:: Merge Intervals
+    // Leetcode 56:: Merge Intervals
+    // FB phone interview problem
+    // The idea is to sort the intervals first O(nlgn)
+    // The we can just scan the intervals, if the right of the current interval can cover
+    // the next interval we can absorb it in current interval. If not the we either update
+    // the right if right is in between  the next interval. Other wise we got a new interval
     class Intervals {
         int left;
         int right;
@@ -154,6 +159,7 @@ public class SolutionsV1 {
         for (int i = 0; i < intervals.length; i++){
             iList.add(new Intervals(intervals[i][0],intervals[i][1]));
         }
+        // sort the intervals
         iList.sort(new Comparator<Intervals>(){
             @Override
             public int compare(Intervals o1, Intervals o2) {
@@ -165,14 +171,17 @@ public class SolutionsV1 {
         int right = iList.get(0).right;
         intervals[0][0] = left;
         intervals[0][1] = right;
+
         for (Intervals il : iList ) {
+            // we can cover this interval with the previous interval, so skip this
             if(right >= il.right)
                 continue;
             else {
+                // previous interval ends in between this interval, lets increase the right of the interval
                 if(right >= il.left ) {
                     right = il.right;
                     intervals[i][1] = right;
-                } else {
+                } else { // we cannot cover this interval using the previous interval, create a new interval
                     i++;
                     left = intervals[i][0] = il.left;
                     right = intervals[i][1] = il.right;
