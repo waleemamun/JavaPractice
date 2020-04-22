@@ -191,10 +191,20 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = {1,3,0,0,1,2,2,0,3};
-        int [] arr1 = {-3,10,-7,10,-8,5,2,-3,1};
+        int [] arr = {0,2};
+
+        int [][] arr2d = {
+                {3,5},
+                {6,7},
+                {8,9},
+                {12,14},
+                {16,19}
+        };
         SolutionsV1 sv1 = new SolutionsV1();
-        System.out.println("Can Jump = " +sv1.canJump(arr));
+        int [][]res = sv1.insert(arr2d,arr);
+        for(int i =0; i <res.length;i++)
+            System.out.println(res[i][0] + " " + res[i][1]);
+
 
 
 

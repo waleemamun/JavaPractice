@@ -198,4 +198,75 @@ public class SolutionsV1 {
 
     }
 
+    // LeetCode :: 57 Insert Intervals
+    // The idea is to search the left & right side of the newInterval in the sorted intervals
+    // when such positions are found then merge the intervals into one interval.
+    // This will create three parts in general, leftside of merge interval, merge interval itself,
+    // the right side of the merge interval
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        int left = newInterval[0];
+        int right = newInterval[1];
+        int [][] result;
+        int leftNew = left;
+        int rightNew = right;
+        ArrayList<Intervals> rList = new ArrayList<>();
+        // search the intervals for the left value,
+        // if not found then get the position where we can fit he new interval
+        int leftInt = Utilities.binSearcPos2D(intervals,0,intervals.length-1, left);
+        // search the intervals for the right value,
+        // if not found then get the position where we can fit he new interval
+        int rightInt = Utilities.binSearcPos2D(intervals,0, intervals.length -1, right);
+        // found the left value inside existing interval
+        if (leftInt < intervals.length) {
+            if(leftInt >=0)
+                leftNew = intervals[leftInt][0] < left ? intervals[leftInt][0] : left;
+
+        } else if (leftInt > intervals.length){
+            // did not find in existing interval leftInt
+            // now points to new pos of insertion
+            leftInt = leftInt - intervals.length;
+        }
+        // add everything before leftInterval
+        for (int i = 0; i < leftInt; i++) {
+            rList.add(new Intervals(intervals[i][0], intervals[i][1]));
+        }
+        // the right value falls into one of the intervals
+        if (rightInt < intervals.length) {
+            if (rightInt >= 0)
+            rightNew = intervals[rightInt][1] > right ? intervals[rightInt][1] : right;
+            // increase rightInt by 1, as this is part of existing interval
+            // so when we process right of rightInt it points to the correct value
+            rightInt++;
+
+        } else if (rightInt > intervals.length){
+            rightInt = rightInt -intervals.length;
+        }
+        // add the merger new interval
+        rList.add(new Intervals(leftNew, rightNew));
+        // add everything on the right of right interval
+        for (int i = rightInt; i<intervals.length; i++) {
+            rList.add(new Intervals(intervals[i][0], intervals[i][1]));
+        }
+
+        // copy result into the new array
+        result = new int[rList.size()][2];
+        int i = 0;
+        for (Intervals il : rList) {
+            result[i][0] = il.left;
+            result[i][1] = il.right;
+            i++;
+        }
+
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+
 }
