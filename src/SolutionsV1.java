@@ -260,6 +260,27 @@ public class SolutionsV1 {
         return result;
     }
 
+    // LeetCode 58:: last word length
+    private boolean isChar(char ch){
+        if ((ch >= 'a' && ch <='z') || (ch>='A' && ch <='Z'))
+            return true;
+        return false;
+    }
+    public int lengthOfLastWord(String s) {
+        if(s.length() == 0)
+            return 0;
+        int count = 0;
+        int i = s.length() - 1;
+        while (i>= 0 && !isChar(s.charAt(i)))
+            i--;
+        while(i >=0 && isChar(s.charAt(i))) {
+            count++;
+            i--;
+        }
+
+        return count;
+    }
+
 
 
 

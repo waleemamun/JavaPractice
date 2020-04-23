@@ -201,9 +201,11 @@ public class Main {
                 {16,19}
         };
         SolutionsV1 sv1 = new SolutionsV1();
-        int [][]res = sv1.insert(arr2d,arr);
-        for(int i =0; i <res.length;i++)
-            System.out.println(res[i][0] + " " + res[i][1]);
+        Recursions r1 = new Recursions();
+        r1.printAllpermutation("123");
+
+
+
 
 
 
