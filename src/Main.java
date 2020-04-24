@@ -202,7 +202,8 @@ public class Main {
         };
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
-        r1.printAllpermutation("123");
+
+            System.out.println("perm = " + sv1.getPermutation(5,1));
 
 
 

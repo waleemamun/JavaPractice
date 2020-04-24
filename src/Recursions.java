@@ -234,7 +234,8 @@ public class Recursions {
     // The basic idea is to use two pointers low & high to scan from the right and found a place and stop
     // we found the value pointed by high is less than low. Nest we need to find a value (on the right of high pointer)
     // which is greater than the value pointed by high. If we find such entry we swap value of high with that entry
-    // and reverse rest of the array  from right of high pointer
+    // and reverse rest of the array  from right of high pointer. The reverse  part is the most interesting it
+    // makes the algo very simple.
     public void nextPermutation(int[] nums) {
         int [] buffer = new int[nums.length];
 
