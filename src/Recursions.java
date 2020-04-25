@@ -1213,6 +1213,54 @@ public class Recursions {
         return pathCount[n-1][m-1];
     }
 
+    // LeetCode 63 :: Unique Path II
+    // The basic idea is same as the Unique Path algo,
+    // pathcount at position i,j can be calculated by adding
+    // the ways we can reach the up & left grids so the DP solution will as follows
+    // pathcount(i,j) = patchcount(i-1,j) + pathcount(i,j-1) (if the there is no obstacle)
+    // if there is an obstacle at (i,j) we can block that in pathCount(i,j) = 0,
+    // so that position will always be skipped by the  to tal pathcount
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        if (obstacleGrid.length == 1 && obstacleGrid[0].length == 1)
+            return 0;
+        int m = obstacleGrid[0].length;
+        int n = obstacleGrid.length;
+        int [][] pathCount= new int[n][m];
+
+        // set starting position as based on the obstacle
+        pathCount[0][0] = obstacleGrid[0][0] == 1? 0 : 1;
+        // set the 1st row & col count based on the obstacle,
+        // if the we observed a block in previous position (i-1)
+        // then we cannot actually access i so we set pathCount to zero
+        for (int i = 1; i < m; i++){
+            if (obstacleGrid[0][i] == 1 || pathCount[0][i-1] == 0)
+                pathCount[0][i] = 0;
+            else
+                pathCount[0][i] = 1;
+        }
+        // repeat the same for rows
+        for (int i = 1; i < n; i++) {
+            if (obstacleGrid[i][0] == 1 || pathCount[i-1][0] == 0)
+                pathCount[i][0] = 0;
+            else
+                pathCount[i][0] = 1;
+        }
+
+        // calculate the pathcount for all other positions using the DP
+        // pathcount will be zero if there is an obstacle at (i,j)
+        for(int i = 1; i < n; i++){
+            for(int j = 1; j < m; j++){
+                if (obstacleGrid[i][j] == 1)
+                    pathCount[i][j] = 0;
+                else
+                    pathCount[i][j] = pathCount[i-1][j] + pathCount[i][j-1];
+            }
+        }
+
+
+        return pathCount[n-1][m-1];
+    }
+
 
 
 

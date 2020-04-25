@@ -194,17 +194,15 @@ public class Main {
         int [] arr = {1, 2, 3, 4, 5};
 
         int [][] arr2d = {
-                {3,5},
-                {6,7},
-                {8,9},
-                {12,14},
-                {16,19}
+                {0 ,0, 0},
+                {0, 1, 0},
+                {0, 0, 0}
         };
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
-        System.out.println("up = " + r1.uniquePaths(7,3));
-        System.out.println("upv2 = "+r1.uniquePathsV2(7,3));
+        System.out.println("Path = " + r1.uniquePathsWithObstacles(arr2d));
+
 
 
 
