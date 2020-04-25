@@ -1261,6 +1261,39 @@ public class Recursions {
         return pathCount[n-1][m-1];
     }
 
+    // LeetCode 64 :: Minimum Path Sum
+    // Same approach similar to unique path in grid problem
+    // We create a DP array misSum that holds the minSum value at postion (i,j)
+    // So that, minSum(i,j) = grid(i,j) + Min(minSum(i-1,j) , misSUm(i,j-1))
+    // Here grid(i,j) is the pathcost at (i,j) its supplied as an input in param as grid array
+    public int minPathSum(int[][] grid) {
+        int [][]minSum = new int [grid.length][grid[0].length];
+        // set the starting postion as the grid value
+        minSum[0][0] = grid[0][0];
+        // init the first row & column, the value at position i will be the sum of its
+        // value on grid + the value of minSum of prev position
+        for (int i = 1; i < grid[0].length; i++) {
+            minSum[0][i] = grid[0][i] + minSum[0][i-1];
+        }
+        // do the same for the row
+        for (int i = 1; i < grid.length; i++) {
+            minSum[i][0] = grid[i][0] + minSum[i-1][0];
+        }
+        // lets build the minSum array based on our DP property,
+        // minSum(i,j) = grid(i,j) + Min(minSum(i-1,j) , misSUm(i,j-1))
+        // remember the only valid moves are right & down from a position.
+        // But we are considering how to reach (i,j) hence the valid positions
+        // to consider at (i,j) is coming from Up & left
+        // so for position (i,j) we consider (i-1,j) up & (i,j-1) left
+        for (int i = 1; i < grid.length; i++) {
+            for(int j = 1; j <grid[0].length; j++){
+                minSum[i][j] = grid[i][j] + Math.min(minSum[i-1][j], minSum[i][j-1]);
+            }
+        }
+        return minSum[grid.length -1][grid[0].length-1];
+
+    }
+
 
 
 

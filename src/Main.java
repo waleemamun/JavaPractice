@@ -194,14 +194,14 @@ public class Main {
         int [] arr = {1, 2, 3, 4, 5};
 
         int [][] arr2d = {
-                {0 ,0, 0},
-                {0, 1, 0},
-                {0, 0, 0}
+                {1, 2, 5},
+                {3, 2, 1}
+
         };
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
-        System.out.println("Path = " + r1.uniquePathsWithObstacles(arr2d));
+        System.out.println("Path = " + r1.minPathSum(arr2d));
 
 
 
