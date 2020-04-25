@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = {0,2};
+        int [] arr = {1, 2, 3, 4, 5};
 
         int [][] arr2d = {
                 {3,5},
@@ -202,10 +202,9 @@ public class Main {
         };
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
-
-            System.out.println("perm = " + sv1.getPermutation(5,1));
-
-
+        LinkList ls1 = new LinkList();
+        System.out.println("up = " + r1.uniquePaths(7,3));
+        System.out.println("upv2 = "+r1.uniquePathsV2(7,3));
 
 
 

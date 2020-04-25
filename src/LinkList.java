@@ -1,3 +1,5 @@
+import sun.awt.image.ImageWatched;
+
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -376,6 +378,49 @@ public class LinkList {
         head = revListFromTo(fromNode,fromNode.next,fromNode,toNode);*/
 
         return head;
+    }
+
+    // LeetCode :: 61 Rotate List, The idea is to find which node will become the new start node,
+    // after that make the end node point to the first (node pointed by head) node.
+    // The node before the new start node points to null
+    // for example 1->2->3->4->5->null becomes 2->3->4->5->1->null
+    public LinkList rotateRight(LinkList head, int k) {
+        if(head == null || head.next == null)
+            return head;
+
+        LinkList cur = head;
+        LinkList end = null;
+        LinkList prev = null;
+        int count = 0;
+
+        // count the size of the list, end points to the last list
+        while (cur != null) {
+            count++;
+            end = cur;
+            cur = cur.next;
+        }
+
+        // calc the actual rotation needed
+        int rotateCount = k % count;
+
+        // if rotatecount zero then no rotation needed
+        if (rotateCount == 0)
+            return head;
+
+        // move cur back to head
+        cur = head;
+        //System.out.println(count + " " + rotateCount);
+        while (cur !=null &&(count - rotateCount) != 0) {
+            prev = cur;
+            rotateCount++;
+            cur = cur.next;
+        }
+        // now cur points to the start of the list and prev point the node before cur
+        // end still points to end of the list, we move end.next to point the first node
+        end.next = head;
+        prev.next = null;
+        return cur;
+
     }
 
 

@@ -1171,6 +1171,49 @@ public class Recursions {
 
     }
 
+    //LeetCode 62 Unique Path
+    int pathCount = 0;
+    private void uniquePathRec(int curRow,int  curCol, int maxRow, int maxCol) {
+
+        if(curRow == maxRow && curCol == maxCol) {
+            pathCount++;
+            //System.out.println(pathCount);
+            return;
+        }
+        if (curRow < maxRow && curCol <= maxCol)
+            uniquePathRec(curRow+1, curCol, maxRow, maxCol);
+        if (curCol < maxCol && curRow <= maxRow)
+            uniquePathRec(curRow, curCol + 1, maxRow, maxCol);
+    }
+
+    public int uniquePaths(int m, int n) {
+        if(m == 0 || n ==0)
+            return 0;
+        uniquePathRec(1,1, m, n);
+        return pathCount;
+    }
+
+    // UniquePath V2 using a DP solution
+    // pathcount at position i,j can be calculated by adding
+    // the ways we can reach the up & left grids so the DP solution will as follows
+    // pathcount(i,j) = patchcount(i-1,j) + pathcount(i,j-1)
+    public int uniquePathsV2(int m, int n) {
+        int [][] pathCount= new int[n][m];
+        // set the 1st row & col to 1as there only 1 ways to reach
+        for (int i = 0; i<m; i++)
+            pathCount[0][i] = 1;
+        for (int i = 0; i<n; i++)
+            pathCount[i][0] = 1;
+        // calculate the pathcount for all other positions using the DP
+        for(int i = 1; i < n; i++){
+            for(int j = 1; j < m; j++){
+                pathCount[i][j] = pathCount[i-1][j] + pathCount[i][j-1];
+            }
+        }
+        return pathCount[n-1][m-1];
+    }
+
+
 
 
 
