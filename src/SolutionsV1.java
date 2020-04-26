@@ -315,7 +315,118 @@ public class SolutionsV1 {
         return String.valueOf(sb);
     }
 
+    // LeetCode :: 65 Valid Number (Hard)
+    private boolean isDigit(char ch) {
+        if (ch >='0' && ch <= '9')
+            return true;
+        else
+            return false;
+    }
 
+    public boolean isNumber(String s) {
+        int i = 0;
+        int j = s.length()-1;
+
+        // remove leading & trailing spaces so that we dont need to handle space in the main loop
+        // & any space in the main loop will indicate invalid number.
+
+        while (i < s.length() && s.charAt(i) == ' ')
+            i++;
+        while ( j>= 0 && s.charAt(j) == ' ')
+            j--;
+        if(i > j)
+            return false;
+        // handle leading +/-, the first one is fine anything after this in the main loop is invalid
+        // only exception is presence of e, that needs special treatment
+        if(i < s.length() && (s.charAt(i) == '+' || s.charAt(i) == '-'))
+            i++;
+
+        // this the main deciding loop to scan the whole string, only valid chars here is
+        // 0-9, '.' & 'e' anything else indicates invalid number
+        // i & j will point to 1st non space char
+        int dotCount = 0;
+        int eCount = 0;
+        int startI = i;
+        boolean validE = false;
+
+        while( i <= j) {
+            // 'e' found this needs special treatment
+            if(s.charAt(i) == 'e') {
+                eCount++;
+                if (eCount == 1) {
+                    if(i - 1 >= startI && i+1 <= j &&
+                            isDigit(s.charAt(i-1)) &&
+                            isDigit(s.charAt(i+1))) {
+                        i+=2;
+                        validE = true;
+                    } else if (i - 1 >= startI && i+2 <= j &&
+                            isDigit(s.charAt(i-1)) &&
+                            isDigit(s.charAt(i+2)) &&
+                            (s.charAt(i+1) == '+' || s.charAt(i+1) == '-')){
+                        i+=3;
+                        validE = true;
+                    } else if (i - 2 >= startI &&
+                            isDigit(s.charAt(i-2)) &&
+                            s.charAt(i-1) == '.') {
+                            System.out.println(i + " " + j);
+                        if (i+1 <=j &&
+                                isDigit(s.charAt(i+1)))
+                            i+=2;
+                        else if (i+2 <=j && (isDigit(s.charAt(i+2)) && s.charAt(i+1) == '-' || s.charAt(i+1)== '+') )
+                            i+=3;
+                        validE = true;
+
+                    } else {
+                        return false;
+                    }
+
+                } else {
+                    return  false;
+                }
+
+            } else if (s.charAt(i) == '.') {
+                dotCount++;
+                // '.' found only 1 is allowed and the char cannot be a '.'
+                if (dotCount > 1 || validE || (startI == j) ||
+                        (i-1 >= startI && !isDigit(s.charAt(i-1)) ||
+                                (i+1 <= j && !isDigit(s.charAt(i+1)) && s.charAt(i+1) != 'e')))
+                    return false;
+                i++;
+            } else if (isDigit(s.charAt(i))){
+                i++;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // LeetCode 66 plus one 
+    public int[] plusOne(int[] digits) {
+        if (digits.length == 0)
+            return digits;
+        int j = digits.length-1;
+        int []result;
+        if(digits[j] !=9){
+            digits[j]++;
+            return digits;
+        }
+        if(digits[0] == 9)
+            result = new int[digits.length+1];
+        else
+            result = digits;
+
+        while (j >= 0 && digits[j]== 9){
+            result[j] = 0;
+            j--;
+        }
+        if (j < 0)
+            result[0] = 1;
+        else
+            result[j]++;
+
+        return result;
+    }
 
 
 

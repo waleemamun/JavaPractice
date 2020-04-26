@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = {1, 2, 3, 4, 5};
+        int [] arr = {9,0,2,0,9,2,3};
 
         int [][] arr2d = {
                 {1, 2, 5},
@@ -201,9 +201,11 @@ public class Main {
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
-        System.out.println("Path = " + r1.minPathSum(arr2d));
-
-
+        //System.out.println("Path = " + r1.minPathSum(arr2d));
+        int res [] = sv1.plusOne(arr);
+        for (int i = 0 ; i< res.length; i++)
+            System.out.print( res[i] + " ");
+        System.out.println();
 
 
 
