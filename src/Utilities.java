@@ -70,6 +70,9 @@ public class Utilities {
         return entry;
     }
 
+    // split the string by the delim, if you have repeated delim that will be skipped
+    // hence all string size in the returned ArrayList is greater than zero
+
     public static ArrayList<String> splitStr(String str, char delim){
         ArrayList<String>  listStr = new ArrayList<>();
         int i = 0;

@@ -537,18 +537,24 @@ public class SolutionsV1 {
     }
 
     //LeetCode :: 70 climb stairs
+    // Simple DP solution the current step can be calculated by the last possible steps
+    // here the option is to take 1 & 2 steps so to calc number of ways at n step using the
+    // dp is ways[n] = ways[n-1] + ways [n-2]
     public int climbStairs(int n) {
         int []ways = new int[n +1];
         ways[0] = 0;
         ways[1] = 1;
         ways[2] = 2;
-        for (int i = 3; i <= n; i++)
+        for (int i = 3; i <= n; i++) {
+            // the ways at current step is the sum of the last two steps
             ways[i] = ways[i-1] + ways[i-2];
+        }
         return ways[n];
 
     }
 
     //LeetCode :: 71 Simplify Path
+
     private boolean isEqStr(String str1 , String str2) {
         if (str1.length() != str2.length())
             return false;
@@ -558,6 +564,9 @@ public class SolutionsV1 {
         }
         return true;
     }
+    // Check V2 its easy to read
+    // The idea is to split the strings using the delim '/', and get a list of strings,
+    // Now scan through the list of strings to get and put them in a stack if its not (".", "..")
     public String simplifyPath(String path) {
         if (path.length() == 0)
             return path;
@@ -596,6 +605,8 @@ public class SolutionsV1 {
         return canonicalPathSb.toString();
     }
 
+    // The idea is to split the strings using the delim '/', and get a list of strings,
+    // Now scan through the list of strings to get and put them in a stack if its not (".", "..")
     public String simplifyPathV2(String path) {
         if (path.length() == 0)
             return path;
@@ -609,16 +620,20 @@ public class SolutionsV1 {
             return path;
         ArrayList<String> strList = Utilities.splitStr(path,'/');
         for (String str : strList){
-            if (isEqStr(str,"."))
-                continue;
-            else if (isEqStr(str,"..")){
+            // .. encountered need to move up one dir, so pop from the stack
+            if (isEqStr(str,"..")){
                 if(!isEqStr(dir.peek(), "/"))
                     dir.pop();
             } else {
+                // ignore doing anything for current dir
+                if (isEqStr(str,"."))
+                    continue;
+                // new dir lets push it on the stack
                 dir.push(str);
             }
         }
-
+        // The result dir list is in the stack, create stack iterator
+        // and add the dirs from the stack to the string
         Iterator itr = dir.iterator();
         canonicalPathSb.append(itr.next());
 
