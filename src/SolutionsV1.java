@@ -1,3 +1,4 @@
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.*;
 
 public class SolutionsV1 {
@@ -401,7 +402,7 @@ public class SolutionsV1 {
         return true;
     }
 
-    // LeetCode 66 plus one 
+    // LeetCode 66 plus one
     public int[] plusOne(int[] digits) {
         if (digits.length == 0)
             return digits;
@@ -427,6 +428,186 @@ public class SolutionsV1 {
 
         return result;
     }
+
+    //Leetcode :: 68. Text Justification (Hard)
+    // The basic idea is to scan through the array and find out how many words
+    // fit per line and  how many space per line in O(n). To do that we create and additional array which store
+    // word count per line & another array that store total space per line. The we scan through the words array again
+    // & build the line by getting  the word from words array using wordCount per line from strCount array also used
+    // the space count per line to distribute the spaces
+    private String createSpace(int count){
+        String s= "";
+        for(int i = 0; i < count; i++)
+            s+=" ";
+        return s;
+    }
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> resultList = new ArrayList<String>();
+
+
+        int []strCount = new int[words.length]; //word per Line
+        int []spaceUnfilled = new int[words.length];
+        int currLen = 0;
+        int line = 0;
+        int wCount = 0;
+        for(int i = 0; i< words.length; i++){
+            currLen+= words[i].length();
+
+            if( currLen >= maxWidth) {
+                if (currLen == maxWidth) {
+                    wCount++;
+                } else {
+                    currLen--; // remove the last space from current length
+                    currLen -= words[i].length(); // remove the current word length
+                    spaceUnfilled[line] = maxWidth - currLen; // calc the space unused after the last word removal
+                    i--; // decrement i to remove or reprocess the last in the next iteration
+                }
+                strCount[line] = wCount;
+                spaceUnfilled[line] += wCount -1;
+                System.out.println(line +" " +strCount[line] + " " +  spaceUnfilled[line]);
+                // we found the words for this line
+                // reset the word count and current length for next line
+                wCount = 0;
+                currLen = 0;
+                line++;
+            } else{
+                currLen++; // add the space after a word
+                wCount++;  // increase the word count for this line
+                if ( i == words.length - 1) {
+                    strCount[line] = wCount;
+                    spaceUnfilled[line] = maxWidth - (currLen - 1);
+
+                    //System.out.println(line +" " +strCount[line] + " " +  spaceUnfilled[line]);
+                    line++;
+                }
+
+            }
+
+        }
+
+        int totLine = line;
+        line = 0;
+        int len = 0;
+        int j = 0;
+        int evenSpace = 0;
+        int extrSpace = 0;
+        while (line < totLine){
+
+            StringBuilder lineSb = new StringBuilder();
+            j = len;
+            len += strCount[line];
+
+            if (strCount[line] == 1) {
+                evenSpace = maxWidth - words[j].length();
+                extrSpace = 0;
+            }else {
+                evenSpace = spaceUnfilled[line] / (strCount[line] -1);
+                extrSpace = spaceUnfilled[line] % (strCount[line] -1);
+            }
+
+            //System.out.println(line +" "+ evenSpace +" "+ extrSpace);
+            while (j < len) {
+                lineSb.append(words[j]);
+                if (j != len-1) {
+                    if (line == totLine -1) {
+                        lineSb.append(" ");
+                        j++;
+                        continue;
+                    }
+                    else
+                        lineSb.append(createSpace(evenSpace));
+                    if (extrSpace != 0) {
+                        lineSb.append(" ");
+                        extrSpace--;
+                    }
+                } else {
+                    if (strCount[line] == 1 && line != totLine -1)
+                        lineSb.append(createSpace(evenSpace));
+                }
+                j++;
+            }
+            if (line == totLine - 1 && spaceUnfilled[line] != (strCount[line ] -1))
+                lineSb.append(createSpace(spaceUnfilled[line]));
+            resultList.add(lineSb.toString());
+            line++;
+        }
+
+
+        return resultList;
+    }
+
+    public List<String> fullJustifyV2(String[] words, int maxWidth) {
+        List<String> resultList = new ArrayList<String>();
+
+
+        int []strCount = new int[words.length]; //word per Line
+        int []spaceUnfilled = new int[words.length];
+        int currLen = 0;
+        int line = 0;
+        int wCount = 0;
+        for(int i = 0; i< words.length; i++){
+            currLen+= words[i].length();
+
+            if( currLen >= maxWidth) {
+                if (currLen == maxWidth) {
+                    wCount++;
+                } else {
+                    currLen--; // remove the last space from current length
+                    currLen -= words[i].length(); // remove the current word length
+                    spaceUnfilled[line] = maxWidth - currLen; // calc the space unused after the last word removal
+                    i--; // decrement i to remove or reprocess the last in the next iteration
+                }
+                strCount[line] = wCount;
+                spaceUnfilled[line] += wCount -1;
+
+                // we found the words for this line
+                // reset the word count and current length for next line
+                wCount = 0;
+                currLen = 0;
+                line++;
+            } else{
+                currLen++; // add the space after a word
+                wCount++;  // increase the word count for this line
+                if ( i == words.length - 1) {
+                    strCount[line] = wCount;
+                    spaceUnfilled[line] = maxWidth - (currLen - 1);
+                    line++;
+                }
+
+            }
+
+        }
+
+        int totLine = line;
+        line = 0;
+        int len = 0;
+        int j = 0;
+        int evenSpace = 0;
+        int extrSpace = 0;
+        while (line < totLine){
+            StringBuilder lineSb = new StringBuilder();
+            j = len;
+            len += strCount[line];
+
+            if (strCount[line] == 1) {
+                evenSpace = maxWidth - words[j].length();
+                lineSb.append(strCount[line]);
+                lineSb.append(evenSpace);
+                resultList.add(lineSb.toString());
+                continue;
+            }
+            evenSpace = spaceUnfilled[line] / (strCount[line] -1);
+            extrSpace = spaceUnfilled[line] % (strCount[line] -1);
+
+
+            resultList.add(lineSb.toString());
+            line++;
+        }
+
+
+        return resultList;
+    }
+
 
 
 

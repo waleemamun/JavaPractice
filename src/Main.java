@@ -198,14 +198,13 @@ public class Main {
                 {3, 2, 1}
 
         };
+        String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
-        //System.out.println("Path = " + r1.minPathSum(arr2d));
-        int res [] = sv1.plusOne(arr);
-        for (int i = 0 ; i< res.length; i++)
-            System.out.print( res[i] + " ");
-        System.out.println();
+        System.out.println("List = " + sv1.fullJustify(words,20));
+
+
 
 
 
