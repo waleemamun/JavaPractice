@@ -199,10 +199,13 @@ public class Main {
 
         };
         String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
+        String str = "/a//b////c/d//././/..";
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
-        System.out.println("List = " + sv1.fullJustify(words,20));
+        System.out.println(sv1.simplifyPathV2(str));
+
+        System.out.println("List = " + Utilities.splitStr(str,'/'));
 
 
 

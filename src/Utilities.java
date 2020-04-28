@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Utilities {
 
     // Remember to call with high == arr.length - 1 as high is
@@ -66,6 +68,32 @@ public class Utilities {
             entry++;
         }
         return entry;
+    }
+
+    public static ArrayList<String> splitStr(String str, char delim){
+        ArrayList<String>  listStr = new ArrayList<>();
+        int i = 0;
+        StringBuilder tempSb = new StringBuilder();
+        boolean inWord = true;
+        while (i < str.length()) {
+            if (inWord && str.charAt(i) == delim) {
+                if(tempSb.length() != 0)
+                    listStr.add(tempSb.toString());
+                inWord = false;
+            } else if (inWord && str.charAt(i)!= delim) {
+                tempSb.append(str.charAt(i));
+            } else {
+                inWord = true;
+                tempSb = new StringBuilder();
+                if (str.charAt(i) != delim)
+                    tempSb.append(str.charAt(i));
+            }
+            i++;
+        }
+        if(str.charAt(str.length() -1) != delim)
+            listStr.add(tempSb.toString());
+        return listStr;
+
     }
 
 

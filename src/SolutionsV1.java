@@ -536,76 +536,100 @@ public class SolutionsV1 {
         return resultList;
     }
 
-    public List<String> fullJustifyV2(String[] words, int maxWidth) {
-        List<String> resultList = new ArrayList<String>();
+    //LeetCode :: 70 climb stairs
+    public int climbStairs(int n) {
+        int []ways = new int[n +1];
+        ways[0] = 0;
+        ways[1] = 1;
+        ways[2] = 2;
+        for (int i = 3; i <= n; i++)
+            ways[i] = ways[i-1] + ways[i-2];
+        return ways[n];
 
+    }
 
-        int []strCount = new int[words.length]; //word per Line
-        int []spaceUnfilled = new int[words.length];
-        int currLen = 0;
-        int line = 0;
-        int wCount = 0;
-        for(int i = 0; i< words.length; i++){
-            currLen+= words[i].length();
-
-            if( currLen >= maxWidth) {
-                if (currLen == maxWidth) {
-                    wCount++;
-                } else {
-                    currLen--; // remove the last space from current length
-                    currLen -= words[i].length(); // remove the current word length
-                    spaceUnfilled[line] = maxWidth - currLen; // calc the space unused after the last word removal
-                    i--; // decrement i to remove or reprocess the last in the next iteration
-                }
-                strCount[line] = wCount;
-                spaceUnfilled[line] += wCount -1;
-
-                // we found the words for this line
-                // reset the word count and current length for next line
-                wCount = 0;
-                currLen = 0;
-                line++;
-            } else{
-                currLen++; // add the space after a word
-                wCount++;  // increase the word count for this line
-                if ( i == words.length - 1) {
-                    strCount[line] = wCount;
-                    spaceUnfilled[line] = maxWidth - (currLen - 1);
-                    line++;
-                }
-
-            }
-
+    //LeetCode :: 71 Simplify Path
+    private boolean isEqStr(String str1 , String str2) {
+        if (str1.length() != str2.length())
+            return false;
+        for (int i = 0; i< str1.length(); i++){
+            if(str1.charAt(i) != str2.charAt(i))
+                return false;
         }
+        return true;
+    }
+    public String simplifyPath(String path) {
+        if (path.length() == 0)
+            return path;
+        StringBuilder canonicalPathSb = new StringBuilder();
+        Stack<String> dir = new Stack<>();
+        // Creating an iterator
 
-        int totLine = line;
-        line = 0;
-        int len = 0;
-        int j = 0;
-        int evenSpace = 0;
-        int extrSpace = 0;
-        while (line < totLine){
-            StringBuilder lineSb = new StringBuilder();
-            j = len;
-            len += strCount[line];
+        if(path.charAt(0) == '/')
+            dir.push("/");
+        else
+            return path;
+        String [] dirList = path.split("\\/");
+        for (int i = 1 ; i< dirList.length; i++){
+            if (dirList[i].length() != 0) {
+                if (isEqStr(dirList[i],"."))
+                    continue;
+                else if (isEqStr(dirList[i],"..")) {
 
-            if (strCount[line] == 1) {
-                evenSpace = maxWidth - words[j].length();
-                lineSb.append(strCount[line]);
-                lineSb.append(evenSpace);
-                resultList.add(lineSb.toString());
+                    if(!isEqStr(dir.peek(),"/")){
+                        dir.pop();
+                    }
+                }else {
+                    dir.push(dirList[i]);
+                }
+            }
+        }
+        Iterator itr = dir.iterator();
+        if(itr.hasNext())
+            canonicalPathSb.append(itr.next());
+        while (itr.hasNext()) {
+            canonicalPathSb.append(itr.next());
+            canonicalPathSb.append("/");
+        }
+        if(canonicalPathSb.length()>1)
+            canonicalPathSb.deleteCharAt(canonicalPathSb.length()-1);
+        return canonicalPathSb.toString();
+    }
+
+    public String simplifyPathV2(String path) {
+        if (path.length() == 0)
+            return path;
+        StringBuilder canonicalPathSb = new StringBuilder();
+        Stack<String> dir = new Stack<>();
+        // Creating an iterator
+
+        if(path.charAt(0) == '/')
+            dir.push("/");
+        else
+            return path;
+        ArrayList<String> strList = Utilities.splitStr(path,'/');
+        for (String str : strList){
+            if (isEqStr(str,"."))
                 continue;
+            else if (isEqStr(str,"..")){
+                if(!isEqStr(dir.peek(), "/"))
+                    dir.pop();
+            } else {
+                dir.push(str);
             }
-            evenSpace = spaceUnfilled[line] / (strCount[line] -1);
-            extrSpace = spaceUnfilled[line] % (strCount[line] -1);
-
-
-            resultList.add(lineSb.toString());
-            line++;
         }
 
+        Iterator itr = dir.iterator();
+        canonicalPathSb.append(itr.next());
 
-        return resultList;
+        while (itr.hasNext()) {
+            canonicalPathSb.append(itr.next());
+            canonicalPathSb.append("/");
+        }
+        if(canonicalPathSb.length()>1)
+            canonicalPathSb.deleteCharAt(canonicalPathSb.length()-1);
+
+        return canonicalPathSb.toString();
     }
 
 
