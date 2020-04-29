@@ -1294,6 +1294,42 @@ public class Recursions {
 
     }
 
+    // Leetcode 718 :: Maximum Length of Repeated Subarray (DP) same as longest common substring
+    public int findLength(int[] A, int[] B) {
+        int result = 0;
+        int m = A.length;
+        int n = B.length;
+        int [][]lcs = new int [n+1][m+1];
+
+        // init the lcs array the 1st row & columns should be zero
+        for (int i = 0; i<=n; i++)
+            lcs[i][0] = 0;
+        for (int i = 0; i <= m; i++)
+            lcs[0][i] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+
+                // to determine longest common substring, if the current char from str1 & str2 matches
+                // then we increments the size by 1, by adding 1 with the previous substring
+                // so the DP solution is Lcs (i,j) = lcs(i-1, j-1) + 1  if the char at i & j position matches
+                // otherwise lcs(i,j) = 0
+                // For this we dont need to consider any other position for example (i-1,j) or(i,j-1)
+                // cause the substring length at (i,j) is important
+                if (A[i-1] == B[j-1]) {
+                    lcs[i][j] = lcs[i-1][j-1] + 1;
+                    result = Math.max(result,lcs[i][j]);
+                }
+                else
+                    lcs[i][j] = 0;
+            }
+        }
+
+        return result;
+    }
+
+
+
 
 
 

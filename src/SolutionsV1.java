@@ -647,6 +647,17 @@ public class SolutionsV1 {
         return canonicalPathSb.toString();
     }
 
+    // Leetcode :: 72 Edit Distance (Hard)
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int distance = 0;
+        int lcsSize = Utilities.getLCSSize(word1, word2);
+        int maxLen = Math.max(len1,len2);
+        distance = maxLen - lcsSize;
+        return distance;
+    }
+
 
 
 

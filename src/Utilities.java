@@ -99,6 +99,122 @@ public class Utilities {
 
     }
 
+    public static int getLongestCommonSubstrSize(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+        int [][]lcs = new int [n+1][m+1];
+
+        // init the lcs array the 1st row & columns should be zero
+        for (int i = 0; i<=n; i++)
+            lcs[i][0] = 0;
+        for (int i = 0; i <= m; i++)
+            lcs[0][i] = 0;
+        int result = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+
+                // to determine longest common substring, if the current char from str1 & str2 matches
+                // then we increments the size by 1, by adding 1 with the previous substring
+                // so the DP solution is Lcs (i,j) = lcs(i-1, j-1) + 1  if the char at i & j position matches
+                // otherwise lcs(i,j) = 0
+                // For this we dont need to consider any other position for example (i-1,j) or(i,j-1)
+                // cause the substring length at (i,j) is important
+                if (str1.charAt(i-1) == str2.charAt(j-1)) {
+                    lcs[i][j] = lcs[i-1][j-1] + 1;
+                    result = Math.max(result,lcs[i][j]);
+                }
+                else
+                    lcs[i][j] = 0;
+            }
+        }
+
+        return result;
+    }
+    public static int getLCSSize(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+        int [][]lcs = new int [n+1][m+1];
+
+        // init the lcs array the 1st row & columns should be zero
+        for (int i = 0; i<=n; i++)
+            lcs[i][0] = 0;
+        for (int i = 0; i <= m; i++)
+            lcs[0][i] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                // we match if the current chars on both string are same,
+                // if yes then we can increase the LCS by add 1 to the previous LCS size at i-1, j-1
+                // dont get confused by the str1.charAt(i-1) == str2.charAt(j-1) the string index are starting
+                // from zero hence we need to use i-1 & j-1, cause LCS (i,j) start with index 1.
+                // In the LCS array 0 index means null string, so when we init we set col 0 & row 0 to zero
+                if (str1.charAt(i-1) == str2.charAt(j-1)) {
+                    lcs[i][j] = lcs[i-1][j-1] + 1;
+                }
+                else
+                    lcs[i][j] = Math.max(lcs[i][j-1],lcs[i-1][j]);
+            }
+        }
+
+        return lcs[n][m];
+    }
+
+    public static String getLCS(String str1, String str2) {
+        int n = str1.length();
+        int m = str2.length();
+        int [][]lcs = new int [n+1][m+1];
+        int [][]path = new int[n+1][m+1];
+
+
+
+        // init the lcs array the 1st row & columns should be zero
+        for (int i = 0; i<=n; i++) {
+            lcs[i][0] = 0;
+            path[i][0] = 0;
+        }
+        for (int i = 0; i <= m; i++){
+            lcs[0][i] = 0;
+            path[0][i] = 0;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+                // we match if the current chars on both string are same,
+                // if yes then we can increase the LCS by add 1 to the previous LCS size at i-1, j-1
+                // dont get confused by the str1.charAt(i-1) == str2.charAt(j-1) the string index are starting
+                // from zero hence we need to use i-1 & j-1, cause LCS (i,j) start with index 1.
+                // In the LCS array 0 index means null string, so when we init we set col 0 & row 0 to zero
+                if (str1.charAt(i-1) == str2.charAt(j-1)) {
+                    lcs[i][j] = lcs[i-1][j-1] + 1;
+                    path[i][j] = 3;
+                }
+                else {
+                    lcs[i][j] = Math.max(lcs[i][j-1],lcs[i-1][j]);
+                    path[i][j] = lcs[i][j-1] >= lcs[i-1][j] ? 1 : 2 ;
+                }
+            }
+        }
+        int i = n;
+        int j = m;
+        StringBuilder lcsStr = new StringBuilder();
+        while (i > 0 && j >0 ) {
+            //System.out.println(i+" " +j + " " + path[i][j]);
+            if(path[i][j] == 3) {
+                lcsStr.append(str1.charAt(i-1));
+                i--;
+                j--;
+            }
+            else if (path[i][j] == 1) {
+                j--;
+            } else if (path[i][j] == 2) {
+                i--;
+            } else
+                break;
+        }
+        lcsStr.reverse();
+        return lcsStr.toString();
+    }
+
 
 
 

@@ -199,13 +199,15 @@ public class Main {
 
         };
         String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
+        String word1 = "abcde";
+        String word2 = "bcxd";
         String str = "/a//b////c/d//././/..";
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
-        System.out.println(sv1.simplifyPathV2(str));
-
-        System.out.println("List = " + Utilities.splitStr(str,'/'));
+        System.out.println("LCS size "  + Utilities.getLCSSize(word1, word2));
+        System.out.println("LC substr = "  + Utilities.getLongestCommonSubstrSize(word1,word2));
+        System.out.println(sv1.minDistance(word1, word2));
 
 
 
