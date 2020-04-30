@@ -1171,128 +1171,6 @@ public class Recursions {
 
     }
 
-    //LeetCode 62 Unique Path
-    int pathCount = 0;
-    private void uniquePathRec(int curRow,int  curCol, int maxRow, int maxCol) {
-
-        if(curRow == maxRow && curCol == maxCol) {
-            pathCount++;
-            //System.out.println(pathCount);
-            return;
-        }
-        if (curRow < maxRow && curCol <= maxCol)
-            uniquePathRec(curRow+1, curCol, maxRow, maxCol);
-        if (curCol < maxCol && curRow <= maxRow)
-            uniquePathRec(curRow, curCol + 1, maxRow, maxCol);
-    }
-
-    public int uniquePaths(int m, int n) {
-        if(m == 0 || n ==0)
-            return 0;
-        uniquePathRec(1,1, m, n);
-        return pathCount;
-    }
-
-    // UniquePath V2 using a DP solution
-    // pathcount at position i,j can be calculated by adding
-    // the ways we can reach the up & left grids so the DP solution will as follows
-    // pathcount(i,j) = patchcount(i-1,j) + pathcount(i,j-1)
-    public int uniquePathsV2(int m, int n) {
-        int [][] pathCount= new int[n][m];
-        // set the 1st row & col to 1as there only 1 ways to reach
-        for (int i = 0; i<m; i++)
-            pathCount[0][i] = 1;
-        for (int i = 0; i<n; i++)
-            pathCount[i][0] = 1;
-        // calculate the pathcount for all other positions using the DP
-        for(int i = 1; i < n; i++){
-            for(int j = 1; j < m; j++){
-                pathCount[i][j] = pathCount[i-1][j] + pathCount[i][j-1];
-            }
-        }
-        return pathCount[n-1][m-1];
-    }
-
-    // LeetCode 63 :: Unique Path II
-    // The basic idea is same as the Unique Path algo,
-    // pathcount at position i,j can be calculated by adding
-    // the ways we can reach the up & left grids so the DP solution will as follows
-    // pathcount(i,j) = patchcount(i-1,j) + pathcount(i,j-1) (if the there is no obstacle)
-    // if there is an obstacle at (i,j) we can block that in pathCount(i,j) = 0,
-    // so that position will always be skipped by the  to tal pathcount
-    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-        if (obstacleGrid.length == 1 && obstacleGrid[0].length == 1)
-            return 0;
-        int m = obstacleGrid[0].length;
-        int n = obstacleGrid.length;
-        int [][] pathCount= new int[n][m];
-
-        // set starting position as based on the obstacle
-        pathCount[0][0] = obstacleGrid[0][0] == 1? 0 : 1;
-        // set the 1st row & col count based on the obstacle,
-        // if the we observed a block in previous position (i-1)
-        // then we cannot actually access i so we set pathCount to zero
-        for (int i = 1; i < m; i++){
-            if (obstacleGrid[0][i] == 1 || pathCount[0][i-1] == 0)
-                pathCount[0][i] = 0;
-            else
-                pathCount[0][i] = 1;
-        }
-        // repeat the same for rows
-        for (int i = 1; i < n; i++) {
-            if (obstacleGrid[i][0] == 1 || pathCount[i-1][0] == 0)
-                pathCount[i][0] = 0;
-            else
-                pathCount[i][0] = 1;
-        }
-
-        // calculate the pathcount for all other positions using the DP
-        // pathcount will be zero if there is an obstacle at (i,j)
-        for(int i = 1; i < n; i++){
-            for(int j = 1; j < m; j++){
-                if (obstacleGrid[i][j] == 1)
-                    pathCount[i][j] = 0;
-                else
-                    pathCount[i][j] = pathCount[i-1][j] + pathCount[i][j-1];
-            }
-        }
-
-
-        return pathCount[n-1][m-1];
-    }
-
-    // LeetCode 64 :: Minimum Path Sum
-    // Same approach similar to unique path in grid problem
-    // We create a DP array misSum that holds the minSum value at postion (i,j)
-    // So that, minSum(i,j) = grid(i,j) + Min(minSum(i-1,j) , misSUm(i,j-1))
-    // Here grid(i,j) is the pathcost at (i,j) its supplied as an input in param as grid array
-    public int minPathSum(int[][] grid) {
-        int [][]minSum = new int [grid.length][grid[0].length];
-        // set the starting postion as the grid value
-        minSum[0][0] = grid[0][0];
-        // init the first row & column, the value at position i will be the sum of its
-        // value on grid + the value of minSum of prev position
-        for (int i = 1; i < grid[0].length; i++) {
-            minSum[0][i] = grid[0][i] + minSum[0][i-1];
-        }
-        // do the same for the row
-        for (int i = 1; i < grid.length; i++) {
-            minSum[i][0] = grid[i][0] + minSum[i-1][0];
-        }
-        // lets build the minSum array based on our DP property,
-        // minSum(i,j) = grid(i,j) + Min(minSum(i-1,j) , misSUm(i,j-1))
-        // remember the only valid moves are right & down from a position.
-        // But we are considering how to reach (i,j) hence the valid positions
-        // to consider at (i,j) is coming from Up & left
-        // so for position (i,j) we consider (i-1,j) up & (i,j-1) left
-        for (int i = 1; i < grid.length; i++) {
-            for(int j = 1; j <grid[0].length; j++){
-                minSum[i][j] = grid[i][j] + Math.min(minSum[i-1][j], minSum[i][j-1]);
-            }
-        }
-        return minSum[grid.length -1][grid[0].length-1];
-
-    }
 
     // Leetcode 718 :: Maximum Length of Repeated Subarray (DP) same as longest common substring
     public int findLength(int[] A, int[] B) {
@@ -1328,6 +1206,56 @@ public class Recursions {
         return result;
     }
 
+    // this uses rolling hash & robin karp algo
+    public int findLengthV2(int[] A, int[] B) {
+        int la = A.length;
+        int lb = B.length;
+
+        int p = 119;
+        int len = Math.max(la, lb)+1;
+        int[] ps = new int[len];
+        ps[0] = 1;
+        for(int i = 1; i < len; i++) {
+            ps[i] = ps[i-1]*p;
+        }
+
+        int[] hashA = new int[la+1];
+        for(int i = 1; i <= la; i++) {
+            hashA[i] = hashA[i-1] + A[i-1] * ps[i];
+        }
+
+        int[] hashB = new int[lb+1];
+        for(int i = 1; i <= lb; i++) {
+            hashB[i] = hashB[i-1] + B[i-1]*ps[i];
+        }
+
+        int lo = 1;
+        int hi = Math.min(la, lb);
+        while(lo <= hi) {
+            int mid = lo + (hi-lo)/2;
+            HashSet<Integer> set = new HashSet<>();
+            for(int i = 1; i+mid-1 <= la; i++) {
+                int hashVal = (hashA[i+mid-1]-hashA[i-1])*ps[len-mid-i+1];
+                set.add(hashVal);
+            }
+            boolean found = false;
+            for(int i = 1; i+mid-1 <= lb; i++) {
+                int hashVal = (hashB[i+mid-1]-hashB[i-1])*ps[len-mid-i+1];
+                if(set.contains(hashVal)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(found) {
+                lo = mid+1;
+            } else {
+                hi = mid-1;
+            }
+        }
+
+        return hi;
+    }
 
 
 

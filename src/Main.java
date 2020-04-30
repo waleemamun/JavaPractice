@@ -207,7 +207,6 @@ public class Main {
         LinkList ls1 = new LinkList();
         System.out.println("LCS size "  + Utilities.getLCSSize(word1, word2));
         System.out.println("LC substr = "  + Utilities.getLongestCommonSubstrSize(word1,word2));
-        System.out.println(sv1.minDistance(word1, word2));
 
 
 

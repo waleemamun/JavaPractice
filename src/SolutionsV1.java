@@ -536,23 +536,6 @@ public class SolutionsV1 {
         return resultList;
     }
 
-    //LeetCode :: 70 climb stairs
-    // Simple DP solution the current step can be calculated by the last possible steps
-    // here the option is to take 1 & 2 steps so to calc number of ways at n step using the
-    // dp is ways[n] = ways[n-1] + ways [n-2]
-    public int climbStairs(int n) {
-        int []ways = new int[n +1];
-        ways[0] = 0;
-        ways[1] = 1;
-        ways[2] = 2;
-        for (int i = 3; i <= n; i++) {
-            // the ways at current step is the sum of the last two steps
-            ways[i] = ways[i-1] + ways[i-2];
-        }
-        return ways[n];
-
-    }
-
     //LeetCode :: 71 Simplify Path
 
     private boolean isEqStr(String str1 , String str2) {
@@ -647,16 +630,7 @@ public class SolutionsV1 {
         return canonicalPathSb.toString();
     }
 
-    // Leetcode :: 72 Edit Distance (Hard)
-    public int minDistance(String word1, String word2) {
-        int len1 = word1.length();
-        int len2 = word2.length();
-        int distance = 0;
-        int lcsSize = Utilities.getLCSSize(word1, word2);
-        int maxLen = Math.max(len1,len2);
-        distance = maxLen - lcsSize;
-        return distance;
-    }
+
 
 
 
