@@ -245,11 +245,41 @@ public class DPs {
 
 
     // Leetcode :: 72 Edit Distance (Hard)
+    // This requires a DP solution. The DP solution is  if the the current character from word1 & word2
+    // is same then we dont need to anything so we get the dp value from the previous distanceDP
+    // as if this matching characters were not there. If the chars do not match then there are three options
+    // add/delete/replace. add is i-1, j delete i, j-1 & replace i-1,j-1 , we need to pick the minimum of
+    // the three and add 1 to it.
+    // The dps eqn dp(i,j) = dp (i-1,j-1) if s[i] = r[j]
+    //             dp (i,j) = min(dp(i-1,j-1), dp(i,j-1), dp(i-1,j)) +1 if s[i]!=r[j]
     public int minDistance(String word1, String word2) {
-        int len1 = word1.length();
-        int len2 = word2.length();
-        int distance = 0;
+        int m = word1.length();
+        int n = word2.length();
 
-        return distance;
+        int [][] distanceDP = new int [m+1][n+1];
+        // init the distanceDP array
+        for (int i = 0; i <= m; i++)
+            distanceDP[i][0] = i;
+        for (int i = 0; i <= n; i++)
+            distanceDP[0][i] = i;
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (word1.charAt(i-1) == word2.charAt(j-1)) {
+                    distanceDP[i][j] = distanceDP[i-1][j-1];
+                } else {
+                    int tempMin = Math.min(distanceDP[i-1][j-1], distanceDP[i][j-1]);
+                    distanceDP[i][j] = Math.min(tempMin, distanceDP[i-1][j]) + 1;
+                }
+            }
+        }
+
+        return distanceDP[m][n];
     }
+
+
+
+
+
+
 }

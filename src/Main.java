@@ -205,9 +205,10 @@ public class Main {
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
+        DPs dp1 = new DPs();
         System.out.println("LCS size "  + Utilities.getLCSSize(word1, word2));
         System.out.println("LC substr = "  + Utilities.getLongestCommonSubstrSize(word1,word2));
-
+        System.out.println("min dist = "+dp1.minDistance(word1, word2));
 
 
 
