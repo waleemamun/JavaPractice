@@ -194,9 +194,12 @@ public class Main {
         int [] arr = {9,0,2,0,9,2,3};
 
         int [][] arr2d = {
-                {0,1,2,0},
-                {3,4,5,2},
-                {1,3,1,5}
+                {10, 11, 15, 16, 17},
+                {20, 21, 23, 26, 29},
+                {30, 31, 35, 36, 37},
+                {40, 41, 44, 46, 48},
+                {50, 51, 55, 56, 57}
+
 
         };
         String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
@@ -207,7 +210,7 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-        sv1.setZeroes(arr2d);
+        System.out.println(" found = " + sv1.searchMatrix(arr2d, 11));
 
 
 

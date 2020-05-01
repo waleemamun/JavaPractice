@@ -634,7 +634,7 @@ public class SolutionsV1 {
     // The idea is to scan &use row 0 & col 0 to store the row & col that have zeros,
     // if there is 0 in row 0 or col 0  then save that info in the boolean value,
     // at the ene we can set the row 0 & col 0 if the bo0lean value are set
-    // in the next scan we only scan row 0 & col 0 and set zero in row/col depending zero value in row 0 & col0 
+    // in the next scan we only scan row 0 & col 0 and set zero in row/col depending zero value in row 0 & col0
     // set all the entry in the col to zero
     private void setColZero (int col, int [][] matrix) {
         for (int i = 1; i < matrix.length; i++) {
@@ -693,6 +693,48 @@ public class SolutionsV1 {
             System.out.println();
         }*/
 
+    }
+
+    // Leetcode :: 74. Search a 2D Matrix
+    // The basic idea is to do binary search on column zero to find  the row where the value might be
+    // then again do a binary search on row to search for the target
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix.length == 0 || matrix[0].length == 0)
+            return false;
+        // optimization if the value is beyond the boundaries lets no even search
+        if (target < matrix[0][0] ||
+                target > matrix[matrix.length-1][matrix[0].length -1])
+            return false;
+
+        int low = 0;
+        int high = matrix.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high)/2;
+            if (matrix[mid][0] == target)
+                return true;
+            else if (target < matrix[mid][0])
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+
+        if (high < 0)
+            return false;
+        int pos = high;
+        low = 0;
+        high = matrix[pos].length - 1;
+
+        while (low <= high) {
+            int mid = (low + high)/2;
+            if (matrix[pos][mid] == target)
+                return true;
+            else if (target < matrix[pos][mid])
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+        return false;
     }
 
 
