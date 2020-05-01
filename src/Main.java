@@ -194,8 +194,9 @@ public class Main {
         int [] arr = {9,0,2,0,9,2,3};
 
         int [][] arr2d = {
-                {1, 2, 5},
-                {3, 2, 1}
+                {0,1,2,0},
+                {3,4,5,2},
+                {1,3,1,5}
 
         };
         String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
@@ -206,10 +207,7 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-        System.out.println("LCS size "  + Utilities.getLCSSize(word1, word2));
-        System.out.println("LC substr = "  + Utilities.getLongestCommonSubstrSize(word1,word2));
-        System.out.println("min dist = "+dp1.minDistance(word1, word2));
-
+        sv1.setZeroes(arr2d);
 
 
 

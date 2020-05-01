@@ -630,6 +630,71 @@ public class SolutionsV1 {
         return canonicalPathSb.toString();
     }
 
+    // LeetCode :: 73. Set Matrix Zeroes
+    // The idea is to scan &use row 0 & col 0 to store the row & col that have zeros,
+    // if there is 0 in row 0 or col 0  then save that info in the boolean value,
+    // at the ene we can set the row 0 & col 0 if the bo0lean value are set
+    // in the next scan we only scan row 0 & col 0 and set zero in row/col depending zero value in row 0 & col0 
+    // set all the entry in the col to zero
+    private void setColZero (int col, int [][] matrix) {
+        for (int i = 1; i < matrix.length; i++) {
+            matrix[i][col] = 0;
+        }
+    }
+    // set all entry in the row to zero
+    private void setRowZero (int row, int [][]matrix) {
+        for (int i = 1; i < matrix[0].length; i++){
+            matrix[row][i] = 0;
+        }
+    }
+
+    public void setZeroes(int[][] matrix) {
+        boolean isColZero = false;
+        boolean isRowZero = false;
+
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
+                    if (i == 0)
+                        isRowZero = true;
+                    if (j == 0)
+                        isColZero = true;
+                    matrix[0][j] = 0;
+                    matrix[i][0] = 0;
+                }
+            }
+        }
+
+
+        for (int i = 1; i < matrix[0].length; i++){
+            if (matrix[0][i] == 0) {
+                setColZero(i, matrix);
+            }
+        }
+
+        for (int i = 1; i < matrix.length; i++) {
+            if (matrix[i][0] == 0) {
+                setRowZero(i, matrix);
+            }
+        }
+        if (isRowZero) {
+            for (int i = 0; i < matrix[0].length; i++)
+                matrix[0][i] = 0;
+        }
+
+        if (isColZero) {
+            for (int i = 0; i < matrix.length; i++)
+                matrix[i][0] = 0;
+        }
+        /*for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print( matrix[i][j] + " ");
+            }
+            System.out.println();
+        }*/
+
+    }
+
 
 
 
