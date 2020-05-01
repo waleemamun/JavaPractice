@@ -737,6 +737,70 @@ public class SolutionsV1 {
         return false;
     }
 
+    // Leetcode :: 75. Sort Colors
+    public void sortColors(int[] nums) {
+        int z = -1;            // pointer for placing zero
+        int t = nums.length;   // pointer for placing two
+        int i = 0;
+        int temp = 0;
+
+        while(i < t){
+            if (nums [i] == 0) {
+                z++;
+                temp = nums[i];
+                nums[i] = nums[z];
+                nums[z] = temp;
+                if (nums[i] == 2)
+                    continue;
+            }
+            else if (nums[i] == 2) {
+                while (t -1 >= 0 && nums[t-1] == 2) t--;
+                if (t != 0) t--;
+                if ( t < i) break;
+                temp = nums[i];
+                nums[i] = nums[t];
+                nums[t] = temp;
+                if (nums[i] == 0)
+                    continue;
+            }
+            i++;
+        }
+        for (i = 0; i< nums.length; i++)
+            System.out.print( nums[i] + " ");
+        System.out.println();
+
+    }
+
+    // LeetCode :: 209. Minimum Size Subarray Sum
+    // The idea is to use two pointers (low & cur) to make a sliding window.
+    // The distance between cur & low continues to increase until we reach the sum s.
+    // After the any next addition to the window we discard the low as long as the
+    // total sum is still >= s, and we reduce the current currentSum to adjust the window (cur <-> low gives the sum)
+    // we keep track of the min window Size.
+    public int minSubArrayLen(int s, int[] nums) {
+        int low = 0;
+        int cur = 0;
+        int minSize = Integer.MAX_VALUE;
+        int curSum = 0;
+        while (cur < nums.length) {
+            curSum += nums[cur];
+            if(curSum >= s){
+                // lets discard item from the left side of the window
+                // as long as the condition holds
+                while (low < cur
+                        && curSum  - nums[low]>= s){
+                    curSum-= nums[low];
+                    low++;
+                }
+                minSize = Math.min(minSize, cur - low +1);
+            }
+            cur++;
+        }
+
+        if(minSize == Integer.MAX_VALUE)
+            minSize = 0;
+        return minSize;
+    }
 
 
 

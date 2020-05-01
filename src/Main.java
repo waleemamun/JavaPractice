@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = {9,0,2,0,9,2,3};
+        int [] arr = {2,3,1,2,4,3};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -210,7 +210,8 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-        System.out.println(" found = " + sv1.searchMatrix(arr2d, 11));
+        //sv1.sortColors(arr);
+        System.out.println("Min len = " + sv1.minSubArrayLen(7, arr));
 
 
 
