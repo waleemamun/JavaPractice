@@ -1019,6 +1019,10 @@ public class SolutionsV1 {
         }
         return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
     }
+    // The basic algo is of this type
+    // 1. Use two pointers: start and end to represent a window.
+    // 2. Move end to find a valid window.
+    // 3. When a valid window is found, move start to find a smaller window.
     // This is the most optimal solution.
     // The idea is to only build the freq count for string T, slide left to right.
     // The smart thing is we decrement the frequency while scanning S so the charcter that are not in T will have negative frequency.
@@ -1027,16 +1031,15 @@ public class SolutionsV1 {
     // Count becomes zero it means the window contain all the char in T
     public String minWindowV4(String s, String t) {
         int[] hash = new int[256];
-        int desiderCount = t.length();
-        int minSize = Integer.MAX_VALUE;
+        // initialize the hash map here
         for(int i = 0; i< t.length(); i++){
             hash[t.charAt(i)]++;
         }
-
-        int left = 0;
-        String res= "";
+        int desiderCount = t.length(); // check whether the substring is valid
+        int left = 0; // two pointers, one point to tail and one  head
         int right = 0;
-        int minL = 0;
+        int minSize = Integer.MAX_VALUE; // min length of  the substring
+        int minL = 0; // store min left & min right
         int minR = 0;
 
         while(right < s.length()){
@@ -1061,11 +1064,13 @@ public class SolutionsV1 {
                 if(hash[s.charAt(left)] > 0){
                     desiderCount++;
                 }
+                /* update min here if finding min*/
                 if(minSize > right - left +1){
                     minSize = right - left + 1;
                     minL = left;
                     minR = right;
                 }
+                //increase left to make it invalid/valid again
                 left++;
             }
             right++;
