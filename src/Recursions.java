@@ -1257,6 +1257,36 @@ public class Recursions {
         return hi;
     }
 
+    // solve nCk combination
+    // LeetCode :: 77. Combinations
+    public List<List<Integer>> combineNCK(int[] nums, int k) {
+        List<List<Integer>> resultList = new ArrayList<>();
+        combineNCKRec(nums, 0, new ArrayList<>(), resultList, k);
+        return resultList;
+    }
+
+    public List<List<Integer>> combine(int n, int k) {
+        int []nums = new int[n];
+        for (int i = 0; i<n; i++)
+            nums[i] = i+1;
+        return combineNCK(nums,k);
+
+    }
+    private void combineNCKRec(int []nums, int index,
+                                 ArrayList<Integer> tmpList,
+                                 List<List<Integer>> rList , int k) {
+        // we use nC3 here so comparing with size == 3 if we want nCr then compare with size == r
+        if(tmpList.size() == k) {
+            rList.add(new ArrayList<>(tmpList));
+            return;
+        }
+        for (int i = index; i < nums.length; i++){
+            tmpList.add(nums[i]);
+            combineNCKRec(nums, i +1,tmpList, rList, k);
+            tmpList.remove(tmpList.size()-1);
+        }
+    }
+
 
 
 
