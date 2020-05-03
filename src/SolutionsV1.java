@@ -1,3 +1,5 @@
+import javafx.util.Pair;
+
 import java.awt.image.AreaAveragingScaleFilter;
 import java.util.*;
 
@@ -787,8 +789,10 @@ public class SolutionsV1 {
             if(curSum >= s){
                 // lets discard item from the left side of the window
                 // as long as the condition holds
+                // only adding the current element we reached the desired sum
+                // hence we check low < cur & not low <= cur
                 while (low < cur
-                        && curSum  - nums[low]>= s){
+                        && curSum  - nums[low] >= s){
                     curSum-= nums[low];
                     low++;
                 }
@@ -801,6 +805,277 @@ public class SolutionsV1 {
             minSize = 0;
         return minSize;
     }
+
+    //LeetCode :: 76. Minimum Window Substring (Hard)
+    // The idea is to count the freq for the word we are searching,
+    // and use a sliding window in the main string to compare frequency
+    // of the chars in the window with the 'searching string' frequency
+    // Run time 13 MS
+    // Check version 4 that's the best solution
+    private boolean isEqualOrGrtFreq (int []fs, int []ft) {
+        for (int i = 0 ; i < 53; i++) {
+            if (fs[i] < ft[i])
+                return false;
+        }
+        return true;
+    }
+    private int convertCharToIndex(char ch) {
+        int idx = 0;
+        if (ch >='A' && ch <= 'Z')
+            idx = ch -'A';
+        else
+            idx = ch - 'a' + 26;
+        return idx;
+    }
+    public String minWindow(String s, String t) {
+        if (s.length() == 0 || t.length() == 0)
+            return "";
+
+        int []freqS = new int[53];
+        int []freqT = new int[53];
+
+        for (int i = 0; i < t.length(); i++){
+            freqT[convertCharToIndex(t.charAt(i))]++;
+        }
+        // no solution return empty string
+        if (s.length() < t.length()){
+            return "";
+        }
+        int start = 0;
+        int cur = 0;
+        int minSt = 0;
+        int minEnd = 0;
+        int minSize = Integer.MAX_VALUE;
+
+        while (cur < s.length()) {
+            freqS[convertCharToIndex(s.charAt(cur))]++;
+            if (cur - start + 1 >= t.length()
+                    && isEqualOrGrtFreq(freqS,freqT)) {
+                freqS[convertCharToIndex(s.charAt(start))]--;
+                while (start <= cur &&
+                        isEqualOrGrtFreq(freqS, freqT)) {
+                    start++;
+                    freqS[convertCharToIndex(s.charAt(start))]--;
+
+                }
+                freqS[convertCharToIndex(s.charAt(start))]++;
+                if (cur - start + 1 < minSize) {
+                    minSize = cur - start + 1;
+                    minSt = start;
+                    minEnd = cur;
+                }
+
+            }
+            cur++;
+
+        }
+        if (minSize == Integer.MAX_VALUE)
+            return "";
+        return s.substring(minSt,minEnd +1);
+    }
+    // The version2 uses a cleaver approach of using a hashmap to store the frequency
+    // This way dont need to loop through the whole 52 size frequncy for A-Z to a-z rather
+    // we can check only unique chars. We also make use of formed unique chars so when we found
+    // the desired number of char is our sliding window only then we start shrinking our sliding window
+
+    public String minWindowV2(String s, String t) {
+        if (s.length() == 0 || t.length() == 0)
+            return "";
+
+        HashMap<Character, Integer> freqT = new HashMap<>();
+        HashMap<Character, Integer> freqS = new HashMap<>();
+
+        for (int i = 0; i < t.length(); i++){
+            int val = freqT.getOrDefault(t.charAt(i), 0);
+            freqT.put(t.charAt(i),val + 1);
+        }
+        // Number of unique characters in t, which need to be present in the desired window.
+        int desiredUniqueChar = freqT.size();
+        // no solution return empty string
+        if (s.length() < t.length()){
+            return "";
+        }
+        int left = 0;
+        int right = 0;
+        int minSt = 0;
+        int minEnd = 0;
+        int minSize = Integer.MAX_VALUE;
+        // formed is used to keep track of how many unique characters in t
+        // are present in the current window in its desired frequency.
+        // e.g. if t is "AABC" then the window must have two A's, one B and one C.
+        // Thus formed would be = 3 when all these conditions are met.
+        int formed = 0;
+
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            int count = freqS.getOrDefault(ch, 0);
+            freqS.put(ch, count +1);
+
+            if(freqT.containsKey(ch) && freqT.get(ch).intValue() == freqS.get(ch).intValue()) {
+                formed++;
+            }
+            // found exactly the same char count in S that matches T so lest try to shrink the sliding window
+            //
+            while (formed == desiredUniqueChar && left <= right) {
+                char leftCh = s.charAt(left);
+                int cnt = freqS.get(leftCh);
+                freqS.put(leftCh, cnt -1);
+                if(freqT.containsKey(leftCh) && freqT.get(leftCh).intValue() > freqS.get(leftCh).intValue())
+                    formed--;
+                if (minSize > right - left +1) {
+                    minSize = right - left +1;
+                    minSt = left;
+                    minEnd = right;
+                }
+                left++;
+            }
+
+
+            right++;
+
+        }
+        if (minSize == Integer.MAX_VALUE)
+            return "";
+        return s.substring(minSt,minEnd +1);
+    }
+
+    // The only difference in this approach is we use a filter_s from version 2 is
+    // We create a list called filtered_s,  filtered_S which has all the characters
+    // from string S along with their indices in S, but these characters should be present in T.
+    // This reduces the checking of unwanted chars in S that does not appears in T
+    public String minWindowV3(String s, String t) {
+
+        if (s.length() == 0 || t.length() == 0) {
+            return "";
+        }
+
+        Map<Character, Integer> dictT = new HashMap<Character, Integer>();
+
+        for (int i = 0; i < t.length(); i++) {
+            int count = dictT.getOrDefault(t.charAt(i), 0);
+            dictT.put(t.charAt(i), count + 1);
+        }
+
+        // Number of unique characters in t, which need to be present in the desired window.
+        int required = dictT.size();
+
+        // Filter all the characters from s into a new list along with their index.
+        // The filtering criteria is that the character should be present in t.
+        // For example:
+        //   S = "ABCDDDDDDEEAFFBC" T = "ABC"
+        //  filtered_S = [(0, 'A'), (1, 'B'), (2, 'C'), (11, 'A'), (14, 'B'), (15, 'C')]
+        //  Here (0, 'A') means in string S character A is at index 0.
+        List<Pair<Integer, Character>> filteredS = new ArrayList<Pair<Integer, Character>>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (dictT.containsKey(c)) {
+                filteredS.add(new Pair<Integer, Character>(i, c));
+            }
+        }
+
+        // Left and Right pointer
+        int l = 0, r = 0;
+
+        // formed is used to keep track of how many unique characters in t
+        // are present in the current window in its desired frequency.
+        // e.g. if t is "AABC" then the window must have two A's, one B and one C.
+        // Thus formed would be = 3 when all these conditions are met.
+        int formed = 0;
+        Map<Character, Integer> windowCounts = new HashMap<Character, Integer>();
+        int[] ans = {-1, 0, 0};
+
+        // Look for the characters only in the filtered list instead of entire s.
+        // This helps to reduce our search.
+        // Hence, we follow the sliding window approach on as small list.
+        while (r < filteredS.size()) {
+            char c = filteredS.get(r).getValue();
+            int count = windowCounts.getOrDefault(c, 0);
+            windowCounts.put(c, count + 1);
+
+            if (dictT.containsKey(c) && windowCounts.get(c).intValue() == dictT.get(c).intValue()) {
+                formed++;
+            }
+
+            // Try and contract the window till the point where it ceases to be 'desirable'.
+            while (l <= r && formed == required) {
+                c = filteredS.get(l).getValue();
+
+                // Save the smallest window until now.
+                int end = filteredS.get(r).getKey();
+                int start = filteredS.get(l).getKey();
+                if (ans[0] == -1 || end - start + 1 < ans[0]) {
+                    ans[0] = end - start + 1;
+                    ans[1] = start;
+                    ans[2] = end;
+                }
+
+                windowCounts.put(c, windowCounts.get(c) - 1);
+                if (dictT.containsKey(c) && windowCounts.get(c).intValue() < dictT.get(c).intValue()) {
+                    formed--;
+                }
+                l++;
+            }
+            r++;
+        }
+        return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
+    }
+    // This is the most optimal solution.
+    // The idea is to only build the freq count for string T, slide left to right.
+    // The smart thing is we decrement the frequency while scanning S so the charcter that are not in T will have negative frequency.
+    // The character that are in T but occured more times (freq in S is greater than freq in T) in the window will also have negative
+    // We also maintain a count of desired number of chars in T when that desired
+    // Count becomes zero it means the window contain all the char in T
+    public String minWindowV4(String s, String t) {
+        int[] hash = new int[256];
+        int desiderCount = t.length();
+        int minSize = Integer.MAX_VALUE;
+        for(int i = 0; i< t.length(); i++){
+            hash[t.charAt(i)]++;
+        }
+
+        int left = 0;
+        String res= "";
+        int right = 0;
+        int minL = 0;
+        int minR = 0;
+
+        while(right < s.length()){
+            // decrement freq count in S
+            hash[s.charAt(right)]--;
+            // if the the char was in T lets decrement the desired char count of T by 1
+            if( hash[s.charAt(right)] >= 0){
+                desiderCount--;
+            }
+            // we have found the desired chars of T in the window bounded by (left, right)
+            // so lets try to shrink the window as we need to find a minimum window.
+            while(desiderCount == 0){
+
+                hash[s.charAt(left)]++;
+                // note that only the hash of chars in T can become positive,
+                // when found such positive it means the desired chars has appeared
+                // more than once while shrinking the window so we can use the newest (current)
+                // and discard everything on the left of it.
+                // Hence make desired count increase by one to break the loop updating minSize
+                // This desired count increase also allow us to to go back to main loop and
+                // increase our right pointer to find an even smaller window if it exist
+                if(hash[s.charAt(left)] > 0){
+                    desiderCount++;
+                }
+                if(minSize > right - left +1){
+                    minSize = right - left + 1;
+                    minL = left;
+                    minR = right;
+                }
+                left++;
+            }
+            right++;
+
+        }
+        if (minSize == Integer.MAX_VALUE)
+            return "";
+        return s.substring(minL,minR+1);
+    }
+
 
 
 

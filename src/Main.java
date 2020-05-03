@@ -203,15 +203,16 @@ public class Main {
 
         };
         String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
-        String word1 = "abcde";
-        String word2 = "bcxd";
+        String word1 = "ADOBECODEBANC";
+        String word2 = "DEC";
         String str = "/a//b////c/d//././/..";
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
         //sv1.sortColors(arr);
-        System.out.println("Min len = " + sv1.minSubArrayLen(7, arr));
+        //System.out.println(sv1.minSubArrayLen(7,arr));
+        System.out.println(" minwindow = " + sv1.minWindowV4(word1, word2));
 
 
 
