@@ -1287,6 +1287,47 @@ public class Recursions {
         }
     }
 
+    // LeetCode :: 79  Words Search
+    // The idea is to recursively  all board position to find the desired output using a backtracking approach
+    // Use backtracking to solve the problem same as 8-Queen or subset or permutation
+    public boolean exist(char[][] board, String word) {
+        for(int i = 0; i < board.length; i++){
+            for (int j = 0; j < board[0].length; j++){
+                // check for all position in board
+                if (traverseBoard(board, i, j, word, 0))
+                    return true;
+            }
+        }
+        return false;
+
+    }
+
+    private boolean traverseBoard (char [][]board, int row, int col, String word, int idx) {
+        //  we found all the chars in board it means we found the word in the board
+        if (idx == word.length())
+            return true;
+        // we exceeded the board boundary lets return false
+        if (row == board.length || row < 0 || col == board[0].length || col < 0)
+            return false;
+        // the current char is not found in board lets return false
+        if(word.charAt(idx) != board[row][col])
+            return false;
+        // mark this position as visited for backtracking, if this visited the during our
+        // dfs traversal we will not visit this again hence avoid a loop.
+        // Note how we ^= with 256 this is done as the all chars are between 0 - 255
+        // xor ing 256 with char sets the char same but the 9th bit becomes 1
+        board[row][col] ^= 256;
+        boolean isFound = traverseBoard(board, row, col +1, word, idx+1) ||
+                traverseBoard(board, row, col - 1, word, idx+1) ||
+                traverseBoard(board, row - 1, col, word, idx+1)||
+                traverseBoard(board, row + 1, col, word, idx+1);
+        // after our recursive call we revert the visited
+        // lets make this not visited as backtracking is done
+        board[row][col] ^= 256;
+        return isFound;
+
+    }
+
 
 
 

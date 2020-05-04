@@ -202,6 +202,12 @@ public class Main {
 
 
         };
+        char [][] board = {
+                {'A','B','C','E'},
+                {'S','F','C','S'},
+                {'A','D','E','E'}
+        };
+
         String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
         String word1 = "ADOBECODEBANC";
         String word2 = "DEC";
@@ -212,7 +218,7 @@ public class Main {
         DPs dp1 = new DPs();
         //sv1.sortColors(arr);
         //System.out.println(sv1.minSubArrayLen(7,arr));
-        System.out.println(" minwindow = " + sv1.minWindowV4(word1, word2));
+        System.out.println(" found = " +r1.exist(board, "CEESECC"));
 
 
 
