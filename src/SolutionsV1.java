@@ -1081,6 +1081,39 @@ public class SolutionsV1 {
         return s.substring(minL,minR+1);
     }
 
+    //LeetCode 80 :: Remove Duplicates from Sorted Array II
+    // In this approach we check if this duplicate is seend for the first time or not
+    // if first time we add it to our new forming array, if not we just skip it
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        int cur = 1;
+        boolean firstTime = true;
+        for (int i = 1; i < nums.length; i++){
+            if (nums[i] == nums[i-1] && firstTime) {
+                nums[cur++] = nums[i];
+                firstTime = false;
+            } else if (nums[i] != nums[i-1]) {
+                firstTime = true;
+                nums[cur++] = nums[i];
+            }
+        }
+        return cur;
+    }
+    //  version 2 looks more cleaner, the trick here is to check back two step on the 'cur' position,
+    //  cause cur point to the end of the new array at each iteration so we need to check back 2 steps on from the cur,
+    // value gets overwritten so the cur gives you the correct position
+    public int removeDuplicatesV2(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        int cur = 0;
+        for (int i = 0; i < nums.length; i++){
+            if (cur < 2 || nums[i] != nums[cur-2])
+                nums[cur++] = nums[i];
+        }
+        return cur;
+    }
+
 
 
 
