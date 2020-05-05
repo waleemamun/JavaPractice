@@ -329,6 +329,43 @@ public class Recursions {
                 return rotatedBinSearch(nums, mid + 1, high, target); // check if target in right; most likely dead code
         }
     }
+    // The version 2 easier & neat
+    // The idea is to do a binary search to find the split/rotation point in the array
+    // we use another binary search to find the target but this time while calculating mid
+    // we use the splitIndex to get the actual mid
+    // we can then use the split index to find the actual mid
+    public int rotatedBinSearchV2 (int []nums, int target){
+        int mid = 0;
+        int low = 0;
+        int high = nums.length - 1;
+        while (low < high) {
+            mid = (low + high)/2;
+            if (nums[mid] > nums[high])
+                low = mid + 1;
+            else
+                high = mid;
+        }
+        int splitIdx = high;
+        low = 0;
+        high = nums.length - 1;
+        int realMid = 0;
+        while (low <= high){
+            mid = (low + high)/2;
+            // calculate the actual mid using the spiltIdx
+            // we dont need to translate the low or high as
+            // our goal is ot get mid so we translate mid
+            realMid = (mid + splitIdx) % nums.length;
+            if (nums[realMid] == target)
+                return realMid;
+            else if (target < nums[realMid])
+                high = mid-1;
+            else
+                low = mid + 1;
+        }
+
+        return -1;
+    }
+
 
     // LeetCode 34:: Find First and Last Position of Element in Sorted Array
     public int[] searchRange(int[] nums, int target) {
