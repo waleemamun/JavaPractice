@@ -191,8 +191,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,4,3,5,6,1,6,4};
-        int [] arr1 = {6,6,5,5,4,1,4,1};
+        int [] arr =  {1,1,1,2,2,2,2,3,4,4,4,4,5,5,5,6,6,6,6,6};
+        int [] arr1 = {1,1};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -217,8 +217,14 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-        System.out.println("isEqual = " + PhoneIQ.equalArrays(arr,arr1));
-
+        //System.out.println("isEqual = " + PhoneIQ.equalArrays(arr,arr1));
+        ls1 = ls1.createList(arr);
+        ls1.printList();
+        LinkList ls2 = ls1.deleteDuplicatesKeepDistinct(ls1);
+        if (ls2 != null)
+            ls2.printList();
+        else
+            System.out.println("Null");
 
 
 

@@ -64,13 +64,18 @@ public class LinkList {
         System.out.println("null");
     }
 
+    // Remove duplicate from a unsorted LIst in O(n) time with O(n) space
+    // We use two pointers one (prev) to point to the unique  elem so far &
+    // another running pointer (ls) to move through the list
+    // We traverse the list when we find a unique value we put in Set, if we see a duplicate
+    // we use the prev pointer to point to the next elem
     public void removeDuplicate () {
         HashSet <Integer> map = new HashSet<>();
         LinkList ls = this;
         LinkList prev = ls;
         while (ls != null) {
             // found the entry time to delete
-            if (map.add(ls.data) == false) {
+            if (!map.add(ls.data)) {
                 prev.next = ls.next;
                 ls = ls.next;
                 continue;
@@ -421,6 +426,55 @@ public class LinkList {
         prev.next = null;
         return cur;
 
+    }
+
+    //LeetCode :: 83. Remove Duplicates from Sorted List
+    // The list is sorted so we store the first unique value and then conitnue
+    // to scan until we found anothe unique value, when we have found such a
+    // value we point to the new unique
+    public LinkList deleteDuplicates(LinkList head) {
+        if (head == null)
+            return head;
+        LinkList unique =  head;
+        LinkList cur = unique.next;
+        while (cur != null) {
+            if(cur.data != unique.data) {
+                unique.next = cur;
+                unique = cur;
+            }
+            cur = cur.next;
+        }
+        unique.next = cur;
+        return  head;
+    }
+
+    // 82. Remove Duplicates from Sorted List II
+    public LinkList deleteDuplicatesKeepDistinct(LinkList head) {
+        if (head == null)
+            return null;
+        LinkList newHead = null;
+        LinkList cur = head;
+        LinkList unq = null;
+        while (cur != null) {
+            int len = 0;
+            LinkList prev = cur;
+            while (cur != null && cur.data == prev.data){
+                len++;
+                cur = cur.next;
+            }
+            if (len == 1) {
+                if(newHead == null)
+                    newHead = prev;
+                if (unq != null)
+                    unq.next = prev;
+                unq = prev;
+            }
+        }
+        if (unq != null) {
+            unq.next = null;
+        }
+
+        return newHead;
     }
 
 
