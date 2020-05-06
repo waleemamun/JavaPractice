@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = { 3, 4,5,0 ,1,2};
+        int [] arr = {2,2,2,0,2,2};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -216,8 +216,7 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-
-        System.out.println(" split = " +  r1.rotatedBinSearchV2(arr,6));
+        System.out.println(" split = " +  r1.searchRotateDup(arr, 2));
 
 
 

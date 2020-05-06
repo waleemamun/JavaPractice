@@ -346,6 +346,7 @@ public class Recursions {
                 high = mid;
         }
         int splitIdx = high;
+        System.out.println("SplitIdx = " + splitIdx);
         low = 0;
         high = nums.length - 1;
         int realMid = 0;
@@ -1363,6 +1364,59 @@ public class Recursions {
         board[row][col] ^= 256;
         return isFound;
 
+    }
+
+    //Leetcode :: 81  Search in Rotated Sorted Array II
+    public int rotatedBinSearchDup (int []nums, int target){
+        int mid = 0;
+        int low = 0;
+        int high = nums.length - 1;
+        while (low < high) {
+            mid = (low + high)/2;
+
+            if (nums[mid] > nums[high])
+                low = mid + 1;
+            else if (nums[mid] == nums[high]) {
+                // this means that the spilt can be in between (mid & high)
+                // or even it can exist beyond left of mid, so we dont have
+                // any other way but a O(n) search to find the split
+                int cur = high;
+                while (cur > 0 && nums[cur] == nums[mid])
+                    cur--;
+                // spilt is beyond left of mid & cur is now pointing to left of
+                // spit point so increase cur by 1 to move to split point
+                if (nums[cur] > nums[mid])
+                    cur++;
+                high = cur;
+                break;
+            }
+            else
+                high = mid;
+        }
+        int splitIdx = high;
+        //System.out.println("SplitIdx = " + splitIdx);
+        low = 0;
+        high = nums.length - 1;
+        int realMid = 0;
+        while (low <= high){
+            mid = (low + high)/2;
+            // calculate the actual mid using the spiltIdx
+            // we dont need to translate the low or high as
+            // our goal is ot get mid so we translate mid
+            realMid = (mid + splitIdx) % nums.length;
+            if (nums[realMid] == target)
+                return realMid;
+            else if (target < nums[realMid])
+                high = mid-1;
+            else
+                low = mid + 1;
+        }
+
+        return -1;
+    }
+    public boolean searchRotateDup(int[] nums, int target) {
+        int x = rotatedBinSearchDup(nums, target);
+        return (x == -1)? false: true;
     }
 
 
