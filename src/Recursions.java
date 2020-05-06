@@ -1367,6 +1367,14 @@ public class Recursions {
     }
 
     //Leetcode :: 81  Search in Rotated Sorted Array II
+    // The idea is to do a binary search to find the split/rotation point in the array
+    // we use another binary search to find the target but this time while calculating mid
+    // we use the splitIndex to get the actual mid
+    // we can then use the split index to find the actual mid
+    // if we have dupleicate items in the array then while searching for splitIndex
+    // we have to modify the binary search for splitIndex to do a O(n)
+    // search [when nums[mid] == nums[high] meaning the split can be between (mid,high)
+    // or its on the left of mid hence o(n) search]
     public int rotatedBinSearchDup (int []nums, int target){
         int mid = 0;
         int low = 0;
