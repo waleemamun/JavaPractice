@@ -1,3 +1,7 @@
+import sun.jvm.hotspot.utilities.Interval;
+
+import java.util.HashMap;
+
 public class PhoneIQ {
     /*
      * FB PHIQ
@@ -31,4 +35,30 @@ public class PhoneIQ {
             drawPoint(a - x, b - y);
         }
     }
+    // Given two arrays with equal length we need to find if the first array can be converted
+    // to second array by any number of subarray reversal of the 2nd array
+    public static boolean equalArrays(int []nums1, int []nums2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < nums1.length; i++) {
+            int count = map.getOrDefault(nums1[i], 0);
+            map.put(nums1[i],count +1);
+        }
+        for (int i = 0 ; i < nums2.length; i++) {
+            if(map.containsKey(nums2[i])) {
+                int count = map.get(nums2[i]);
+                if (count == 0)
+                    return false;
+                map.put(nums2[i],count -1);
+
+            } else
+                return false;
+
+        }
+        return true;
+    }
+
+
+
+
 }

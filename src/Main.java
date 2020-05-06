@@ -191,7 +191,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr = {2,2,2,0,2,2};
+        int [] arr =  {1,4,3,5,6,1,6,4};
+        int [] arr1 = {6,6,5,5,4,1,4,1};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -216,7 +217,7 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-        System.out.println(" split = " +  r1.searchRotateDup(arr, 2));
+        System.out.println("isEqual = " + PhoneIQ.equalArrays(arr,arr1));
 
 
 
