@@ -449,10 +449,14 @@ public class LinkList {
     }
 
     // 82. Remove Duplicates from Sorted List II
+    // The idea is to have two pointers prev & cur we move cur to the right and match
+    // with prev value the distance between prev & cur determines whether this value
+    // is unique or not. If the distance is 1 then its unique otherwise it not unique
+    // and we can skip this value
     public LinkList deleteDuplicatesKeepDistinct(LinkList head) {
         if (head == null)
             return null;
-        LinkList newHead = null;
+        LinkList newHead = null; // we need a newhead if the first entry pointed by head is duplicated
         LinkList cur = head;
         LinkList unq = null;
         while (cur != null) {
@@ -462,14 +466,20 @@ public class LinkList {
                 len++;
                 cur = cur.next;
             }
+            // len == 1 so this value is unique
             if (len == 1) {
+                // lets get a newHead to handle sceanrio like head->1->1->1->2->3
                 if(newHead == null)
                     newHead = prev;
+                // lets use last unq to point to new unq thus
+                // deleting non-unique values from the list
                 if (unq != null)
                     unq.next = prev;
                 unq = prev;
             }
         }
+        // unq next need to point to the null to handle
+        // the scenario 4->5->5->5->5->5->NULL
         if (unq != null) {
             unq.next = null;
         }
