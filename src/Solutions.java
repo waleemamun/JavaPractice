@@ -294,6 +294,28 @@ public class Solutions {
         }
         return maxAr;
     }
+    // This has better run time O(n) compared to height * O(n) in previous solution
+    // Easy to read
+    // Idea is same use two pointers left & right, each time calculate the area covered
+    // left right sides , to calc area we use the height of Min(height[left],height[right])
+    // next we move the left or right pointer based on the height,
+    // we always move the shorter as we plan to maximaize
+    public int maxAreav2(int []height) {
+        int maxAr = Integer.MIN_VALUE; // the max area covered by the rectangle
+        int left = 0;                  // left pointer
+        int right = height.length - 1; // right pointer
+        while (left < right) {
+            int width = right - left;
+            int shorterHeight = Math.min(height[left], height[right]);
+            int area = width * shorterHeight;
+            maxAr = Math.max(maxAr,area);
+            if( height[left] < height[right])
+                left++;
+            else
+                right--;
+        }
+        return maxAr;
+    }
 
     // Leetcode 15
     // 1. sort the array
