@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Bits {
 
     // NUmber of set bits count O(s) where s  is the number bits
@@ -176,4 +179,34 @@ public class Bits {
 
         return (int) (isNeg ? -quotient: quotient);
     }
+
+    // LeetCode :: 89. Gray Code
+    // The grey code has an interesting property, if you know n bits grey code then
+    // for n+1 bit its just  (1<<n | mirrored nbits) for example 2 bit is 00 01 11 10
+    // so 3 bits 100 101 111 110 000 001 011 010. Now if we want ot generate grey code for n bits
+    // we can start adding 0 & 1 to a list and visit the list in reverse order and while visiting
+    // add those entry with i+1 bit set to 1.
+    public List<Integer> grayCode(int n) {
+        List <Integer> rList = new ArrayList<>();
+        int i = 2;
+        if (n == 0) {
+            rList.add(0);
+            return rList;
+        }
+        // add the basic 0 & for 1 bit option
+        rList.add(0);rList.add(1);
+        // outer loops just iterates for each bit position
+        while (i <= n) {
+            int j = rList.size() - 1;
+            // set the msb for ith bit to 1 and add all
+            // the items from the list for (i-1) bit
+            int x = 1 << (i-1);
+            while (j >= 0) {
+                rList.add(x | rList.get(j--));
+            }
+            i++;
+        }
+        return rList;
+    }
+
 }

@@ -217,11 +217,10 @@ public class Main {
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         DPs dp1 = new DPs();
-        //System.out.println("isEqual = " + PhoneIQ.equalArrays(arr,arr1));
-        ls1 = ls1.createList(arr);
-        ls1.printList();
-        LinkList ls2 = ls1.partition(ls1, 3);
-        ls2.printList();
+        Bits bt1 = new Bits();
+        System.out.println(bt1.grayCode(3));
+
+
 
 
 
