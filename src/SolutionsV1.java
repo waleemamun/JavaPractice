@@ -1,4 +1,5 @@
 import javafx.util.Pair;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.awt.image.AreaAveragingScaleFilter;
 import java.util.*;
@@ -1113,6 +1114,63 @@ public class SolutionsV1 {
         }
         return cur;
     }
+
+    // LeetCode :: 84. Largest Rectangle in Histogram (Hard)
+    // This problem is different from trap Water & max area problem in Leetcode where
+    // we could use left & right pointer to get a O(n) solution. This problem requires
+    // us to calc the rectangle and for that the histogram bars needs to be adjacent.
+    // So we need to use a different approach.
+    // The idea is to find out for each i position the max left & max right we can span or cover
+    // to create the rectangle. Max left is where height[leftMost] >= height[i] and for max right
+    // height[rightMost] >= height [i]. We store the  leftmost & right most postion for i in two arrays left & right.
+    // We only update left & right of i if the left & right bars are taller or equals bar i
+    // Then we can calculate the area covered by the rectangle using (height[i] *  right[i] -left[i] +1).
+    // We can iterate faster in left & right array if we iterate using the values of left & right array.
+    public int largestRectangleArea(int[] heights) {
+        // validate input
+        if(heights == null || heights.length == 0) {
+            return 0;
+        }
+        int []left = new int [heights.length]; // stores the max leftMost position spanned for each i
+        int []right = new int [heights.length]; // stores the max rightMost position spanned for each i
+        left[0] = 0;
+        for (int i = 1; i < heights.length; i++) {
+            int leftMost = i -1;
+            // lets find such leftMost pos for i so that the leftMost bar >= bar i
+            while (leftMost >= 0 &&
+                    heights[leftMost] >= heights[i]){
+                // note we are using the left arrays values to jump to the right
+                // to find the leftMost this way er can iterate very fast
+                leftMost = left[leftMost]  - 1;
+            }
+            // update the left array with leftMost for ith position so that for some
+            // other i on the right we dont need to recalculate & jump faster
+            left[i] = leftMost + 1;
+        }
+        right[heights.length -1] = heights.length -1;
+        for (int i = heights.length -2 ; i >= 0; i--){
+            int rightMost = i +1;
+            // lets find such rightMost pos for i so that the rightMost bar >= bar i
+            while (rightMost < heights.length &&
+                    heights[rightMost] >= heights[i]){
+                // note we are using the right arrays values to jump to the right
+                // to find the rightMost this way er can iterate very fast
+                rightMost = right[rightMost] + 1;
+            }
+            // update the right array with rightMost for ith position so that for some
+            // other i on the left we dont need to recalculate & jump faster
+            right[i] = rightMost -1;
+        }
+        int max = Integer.MIN_VALUE;
+        // now find the max are covered using the left & right array to find the
+        // width covered by each position i, height will be the heights[i]
+        for (int i = 0; i < heights.length; i++){
+            max = Math.max(max, heights[i] * (right[i] - left[i] +1));
+        }
+
+        return max;
+    }
+
     
 
 
