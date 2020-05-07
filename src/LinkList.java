@@ -2,6 +2,7 @@ import sun.awt.image.ImageWatched;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class LinkList {
@@ -486,6 +487,60 @@ public class LinkList {
 
         return newHead;
     }
+
+    // Leetcode :: 86 Partition List
+    // The idea is to use two heads frontHead & tailHead, frontHead points to the list of lower values
+    // & tailHead points to the head of greater or equal values. Then we use two moving pointers front
+    // & tail two add element in the fronthead list & tailHead List. At the end we make frontHead list
+    // last element points to the tailHead and have our desired list.
+    // Note we dont need to create any new list we use the current list
+    // pointer & move them around to create the desired list
+    public LinkList partition(LinkList head, int x) {
+        // list has one or zero entries
+        if (head == null || head.next == null)
+            return head;
+        LinkList cur = head;
+        LinkList front = null; // moving pointer in frontHead list
+        LinkList tail = null;  // moving pointer in tailHead list
+        LinkList frontHead = null; // points to the head of list with values < x
+        LinkList tailHead = null;  // points to the head of list with values > x
+        while (cur != null) {
+            if (cur.data < x) {
+                // first elem in frontHead lets the frontHead point ot the first elem
+                if (frontHead == null)
+                    frontHead = cur;
+                // new element can be added to front List so
+                // use front pointer to add it to the list
+                if(front != null)
+                    front.next = cur;
+                front = cur;
+            } else {
+                // first elem in tailHead lets the tailHead point ot the first elem
+                if (tailHead == null)
+                    tailHead = cur;
+                // new element can be added to tail List so
+                // use tail pointer to add it to the list
+                if(tail != null)
+                    tail.next = cur;
+                tail = cur;
+            }
+
+            cur = cur.next;
+        }
+        // frontHead null means we do not found any entry < x,
+        // so we can return the whole list as is
+        if (frontHead == null)
+            return head;
+        else // make the end of front List point to the tailHead so that both list joined
+            front.next = tailHead;
+        // make sure the list end points to null
+        if (tail != null)
+            tail.next = null;
+        return frontHead;
+    }
+
+
+
 
 
 

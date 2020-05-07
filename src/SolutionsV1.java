@@ -1171,8 +1171,25 @@ public class SolutionsV1 {
         return max;
     }
 
-    
 
+    // LeetCode :; 88. Merge Sorted Array
+    // The idea is to compare entries from m-1 in nums1 & n-1 in nums2 positions
+    // and put them in m + n - 1 in nums1
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int pos = m + n - 1;
+        m --; n--;
+        while ( pos >= 0) {
+            if (m >= 0 && n >= 0 && nums1[m] >= nums2[n]){
+                nums1[pos] = nums1[m--];
+            } else {
+                if (n >= 0)
+                    nums1[pos] = nums2[n--];
+            }
+            // reduce pos here cause & not in array subscript
+            // cause in that case pos after becoming zero wont decrement
+            pos--;
+        }
+    }
 
 
 
