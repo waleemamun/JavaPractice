@@ -1427,6 +1427,60 @@ public class Recursions {
         return (x == -1)? false: true;
     }
 
+    // LeetCode :: 91. Decode Ways, This is not the right solution check the DP solution in the DP file
+    int countDecode = 0;
+    private void numDecodingsRec(int idx, String s) {
+        if (idx >= s.length())
+            return;
+        if(s.length() - 1  == idx){
+            countDecode++;
+            return;
+        }
+        if (idx + 1 < s.length()) {
+            if(s.charAt(idx+1) !='0')
+                numDecodingsRec(idx+1, s);
+            else{
+                if(idx +1 == s.length() -1){
+                    countDecode++;
+                    return;
+                }
+                numDecodingsRec(idx+2, s);
+
+            }
+        }
+        if (idx + 1 < s.length()) {
+            if ((s.charAt(idx) == '1' && s.charAt(idx +1) != '0')||
+                    (s.charAt(idx) == '2' &&
+                            s.charAt(idx +1)>='1' &&s
+                            .charAt(idx+1) <='6')) {
+                if (idx + 2 >= s.length()) {
+                    countDecode++;
+                    return;
+                }
+                numDecodingsRec(idx+2, s);
+            }
+        }
+    }
+    public int numDecodings(String s) {
+
+        int i = 1;
+        if(s.charAt(0) == '0')
+            return 0;
+        while (i < s.length()){
+            if (s.charAt(i) == '0' &&
+                    (s.charAt(i-1) != '1' && s.charAt(i-1) != '2')) {
+                countDecode = -1;
+                break;
+            }
+            i++;
+        }
+        if (countDecode == -1)
+            return 0;
+
+        numDecodingsRec(0,s);
+        return countDecode;
+    }
+
 
 
 

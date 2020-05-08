@@ -277,6 +277,45 @@ public class DPs {
         return distanceDP[m][n];
     }
 
+    // LeetCode :: 91. Decode Ways
+    // The idea is to use a DP solution similar to climb ways, this one has more constrains
+    // so we need to take all of them in consideration. Constrains are the curr & prev has to be between  1 -26
+    // if the constrain is met the solutions is similar to climb ways dp [i] = dp[i-1] + dp[i-2]
+    public int numDecodings(String s) {
+        int []decodeCount = new int[s.length() + 1];
+        if(s.length() == 0 || s.charAt(0) == '0')
+            return 0;
+        decodeCount[0] = 1;
+        decodeCount[1] = 1;
+        int j = 2;
+        for (int i = 1; i < s.length(); i++) {
+            int curr = s.charAt(i) - '0';
+            int prev = s.charAt(i - 1) - '0';
+            // the value is of the form 00 or 30 or 40 ... so basically only 10 & 20 is supported
+            if ((prev == 0 && curr == 0)  || (curr == 0 && prev >2)){
+                return 0;
+            } else if(curr == 0) {
+                // value is either 10 or 20 so we get decodeCount
+                // from two positions back as 10 or 20 are two chars,
+                // as no new decoding is possible
+                decodeCount[j] = decodeCount[j-2];
+            } else if (prev == 0 || (prev*10 + curr > 26)){
+                // value is of the form 35 or 105 , so we can decode from the
+                // last position as no new decoding is possible
+                decodeCount[j] = decodeCount[j-1];
+            } else {
+                // constrain met so we can use our dp eqn for constrain met
+                // new decoding is possible value is of the form 11-26 except 20
+                // so we get the decode by adding the last two decodes
+                decodeCount[j] = decodeCount[j-1] + decodeCount[j-2];
+            }
+            j++;
+
+        }
+        return decodeCount[s.length()];
+    }
+
+
 
 
 
