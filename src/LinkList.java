@@ -1,9 +1,6 @@
 import sun.awt.image.ImageWatched;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class LinkList {
     int data;
@@ -267,8 +264,17 @@ public class LinkList {
         return resultList.next;
 
     }
-   // reverse a List recursively
-    private LinkList revList (LinkList nodeC, LinkList nodeN, LinkList head) {
+
+
+
+    // 206. Reverse Linked List
+    // reverse a List recursively, This passed.
+    // The trick is to handle the first node specially
+    private LinkList revListV2 (LinkList nodeC, LinkList nodeN, LinkList head) {
+        // this is  the first node, make it point to null
+        // as in the reverse list it needs to point to NULL
+        if (head == nodeC)
+            nodeC.next = null;
         // reached the end, get head to point the last node or first node in rev order
         if (nodeN.next == null) {
             nodeN.next = nodeC;
@@ -277,54 +283,43 @@ public class LinkList {
         }
         // nodeC is the current node & nodeN is the next node. At call
         // (some other node)<-2(nodeC)  (nodeN) 3->(some other node) now lets make it 2<-3
-        if (head == nodeC)
-            nodeC.next = null;
         LinkList savedNode = nodeN.next;
         nodeN.next = nodeC;
-        return revList(nodeN, savedNode, head);
-
+        return revListV2(nodeN, savedNode, head);
     }
 
-    // reverse a List recursively between nodes fromNode to toNode,
-    // return  a pointer the points to the reversed list
-    private LinkList revListFromTo(LinkList nodeC, LinkList nodeN,
-                                   LinkList fromNode, LinkList toNode) {
-
-        // from & to pointing to the same no change required
-        if (fromNode == toNode)
-            return fromNode;
-        // swap case: fromNode & toNode are adjacent
-        if (fromNode == nodeC && toNode == nodeN){
-            LinkList saveNext = toNode.next;
-            nodeN.next = nodeC;
-            nodeC.next = saveNext;
-            return toNode;
-        }
-        // either we reached the end, or we reached toNode and sould stop processing any more node
-        // get frmonNode to point the last node or first node in rev order
-        if (nodeN.next == null || nodeN == toNode) {
-            nodeN.next = nodeC;
-            fromNode = nodeN;
-            return fromNode;
-        }
-        // make the first node point to the next node of the last_node/toNode
-        // example:: 1->2->3->4 if fromNode = 1 and toNode = 3 after this we have 1->4
-        // later this will help us achieve 3->2->1->4
-        if (fromNode == nodeC)
-            nodeC.next = toNode.next;
-        LinkList savedNode = nodeN.next;
-        nodeN.next = nodeC;
-        return revListFromTo(nodeN, savedNode, fromNode, toNode);
-
-    }
-
-    public LinkList reverseList(LinkList head) {
+    public LinkList reverseListV2(LinkList head) {
         if (head == null)
             return null;
-        head = revList(head,head.next,head);
+        head = revListV2(head,head.next,head);
         return head;
 
     }
+
+    //This is version 1 both version works its just a different way to handle recursion in this case
+    private void revList(LinkList nodeP, LinkList nodeC, LinkList newhead, LinkList head) {
+        if (nodeC.next == null) {
+            newhead.next = nodeC;
+            nodeC.next = nodeP;
+            if (nodeP == head)
+                nodeP.next = null;
+            return;
+        }
+        revList(nodeP.next, nodeC.next, newhead, head);
+        nodeC.next = nodeP;
+        if (nodeP == head)
+            nodeP.next = null;
+
+
+    }
+    public LinkList reverseList(LinkList head) {
+        if (head == null || head.next == null)
+            return head;
+        LinkList newHead = new LinkList();
+        revList(head,head.next, newHead, head);
+        return newHead.next;
+    }
+
 
     // LeetCode 25:  Reverse Nodes in k-Group
     // The idea is to call the api (revListFromTo) multiple times.
@@ -385,7 +380,38 @@ public class LinkList {
 
         return head;
     }
+    // reverse a List recursively between nodes fromNode to toNode,
+    // return  a pointer the points to the reversed list
+    private LinkList revListFromTo(LinkList nodeC, LinkList nodeN,
+                                   LinkList fromNode, LinkList toNode) {
 
+        // from & to pointing to the same no change required
+        if (fromNode == toNode)
+            return fromNode;
+        // swap case: fromNode & toNode are adjacent
+        if (fromNode == nodeC && toNode == nodeN){
+            LinkList saveNext = toNode.next;
+            nodeN.next = nodeC;
+            nodeC.next = saveNext;
+            return toNode;
+        }
+        // either we reached the end, or we reached toNode and sould stop processing any more node
+        // get frmonNode to point the last node or first node in rev order
+        if (nodeN.next == null || nodeN == toNode) {
+            nodeN.next = nodeC;
+            fromNode = nodeN;
+            return fromNode;
+        }
+        // make the first node point to the next node of the last_node/toNode
+        // example:: 1->2->3->4 if fromNode = 1 and toNode = 3 after this we have 1->4
+        // later this will help us achieve 3->2->1->4
+        if (fromNode == nodeC)
+            nodeC.next = toNode.next;
+        LinkList savedNode = nodeN.next;
+        nodeN.next = nodeC;
+        return revListFromTo(nodeN, savedNode, fromNode, toNode);
+
+    }
     // LeetCode :: 61 Rotate List, The idea is to find which node will become the new start node,
     // after that make the end node point to the first (node pointed by head) node.
     // The node before the new start node points to null
@@ -539,8 +565,95 @@ public class LinkList {
         return frontHead;
     }
 
+    // 92. Reverse Linked List II
+    // The idea is to use a stack to reverse the List
+    // This require O(n) time & O(n) space
+    public LinkList reverseBetween(LinkList head, int m, int n) {
+        if (head == null || head.next == null)
+            return head;
+        LinkList curr = head;
+        LinkList mPrevNode = null; // node before m node
+        LinkList nNodeNext = null; // node after n node, if its null its fine
+        Stack<LinkList> listStack = new Stack<>();
+        int pos = 1;
+        // scan the array to build the stack
+        while (curr != null) {
+            if(pos == m-1)
+                mPrevNode = curr;
+            // push all node between m & n to a stack
+            if (pos >= m && pos <= n) {
+                if (pos == n)
+                    nNodeNext = curr.next;
+                listStack.push(curr);
+            }
+            curr = curr.next;
+            pos++;
+        }
+        // remove the node from the stack and add them back between mPrevNode & nNextNode
+        while (!listStack.empty()) {
+            LinkList ls = listStack.pop();
 
+            if (mPrevNode != null) {
+                mPrevNode.next = ls;
+                mPrevNode = mPrevNode.next;
+            } else {
+                // mprevNode is null it means m == 1 so we need
+                // our head to point to the new head entry
+                head = ls;
+                mPrevNode = ls;
+            }
+        }
+        // let the last node from the revese part point to the node next of N
+        mPrevNode.next = nNodeNext;
 
+        return head;
+    }
+    // The version two dont use any stack so ideally uses constant space run time is O(n)
+    // The idea is to use three pointer prev, cur & nextNode , we want to reverse between m & n,
+    // so when we start prev == m curr == m+1 & nexNode = m+2, now we make curr point to prev
+    // but before that save curr's next pointer in nextNode, we keep doing it till node n
+    // after that we just need to fix the tail(nexNode) & head(mPrev or head) pointers
+    public LinkList reverseBetweenV2(LinkList head, int m, int n) {
+        if (head == null || head.next == null || m == n )
+            return head;
+        LinkList curr = head;
+        LinkList mPrev = null;
+        LinkList prev = null;
+        LinkList nextNode = null;
+        LinkList mNode = null;
+        int pos = 1;
+        // scan the array to build the stack
+        while (curr != null) {
+            if(pos == m - 1)
+                mPrev = curr;
+            if (pos >= m && pos <= n){
+                if (pos == m) {
+                    prev = curr;
+                    mNode = curr;
+                } else {
+                    nextNode = curr.next;
+                    curr.next = prev;
+                    prev = curr;
+                    if(pos == n) {
+                        // position is n so curr points to node n hence break and use curr as out node n
+                        // also node nextNode is already saved so we dont need worry about the next node after n
+                        break;
+                    }
+                    curr = nextNode;
+                    pos++;
+                    continue;
+                }
+            }
+            pos++;
+            curr = curr.next;
+        }
+        if (mPrev != null)
+            mPrev.next = curr;
+        else // m == 1 so the head needs to pint to the start of the reverse
+            head = curr;
+        mNode.next = nextNode;
+        return head;
+    }
 
 
 

@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {5,0,2,1,0};
+        int [] arr =  {1,2,3,4,5};
         int [] arr1 = {1,1};
 
         int [][] arr2d = {
@@ -219,9 +219,10 @@ public class Main {
         DPs dp1 = new DPs();
         Bits bt1 = new Bits();
 
-        System.out.println(" Decode count = " + r1.numDecodings(str));
-        System.out.println(" DP decode count = " + dp1.numDecodings(str));
-
+        ls1 = ls1.createList(arr);
+        ls1.printList();
+        LinkList ls2 = ls1.reverseBetweenV2(ls1, 1,4);
+        ls2.printList();
 
 
 
