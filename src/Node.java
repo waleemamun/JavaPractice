@@ -1,8 +1,8 @@
-public class Node {
+public class SNode {
     int val;
     int min;
 
-    public Node(int v, int m) {
+    public SNode(int v, int m) {
         val = v;
         min = m;
     }
