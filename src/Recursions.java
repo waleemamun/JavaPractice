@@ -1481,6 +1481,78 @@ public class Recursions {
         return countDecode;
     }
 
+    // 93. Restore IP Addresses
+    // Simply found the postions where putting the dot makes it a valid IP and add them int the list
+    private boolean isValidIP(String s, int fIdx, int sIdx, int tIdx) {
+        String fQd = s.substring(0, fIdx);
+        String sQd = s.substring(fIdx+1, sIdx);
+        String tQd = s.substring(sIdx+1, tIdx);
+        String lQd = s.substring(tIdx+1, s.length());
+        if((fQd.charAt(0) == '0' && fQd.length() > 1) ||
+                (sQd.charAt(0) == '0' && sQd.length() > 1) ||
+                (tQd.charAt(0) == '0' && tQd.length() > 1) ||
+                (lQd.charAt(0) == '0' && lQd.length() > 1) )
+                return false;
+
+        if(Integer.parseInt(fQd) > 255  ||
+                Integer.parseInt(sQd) > 255 ||
+                Integer.parseInt(tQd) > 255 ||
+                Integer.parseInt(lQd) > 255)
+            return false;
+        return true;
+    }
+
+    public List<String> restoreIpAddresses(String s) {
+        List<String> rList = new ArrayList<>();
+        if (s.length() < 4 || s.length() > 12) {
+            return rList;
+        }
+
+        for (int i = 1; i <=3; i++){
+            for (int j = 1; j <= 3; j++) {
+                for (int k = 1; k<=3; k++){
+                    StringBuilder str = new StringBuilder(s);
+                    int sIdx = i+1+j;
+                    int tIdx = sIdx + 1 + k;
+                    if (i < s.length() && sIdx < s.length() + 1 && tIdx < s.length() +2) {
+                        str.insert(i,'.');
+                        str.insert(sIdx,'.');
+                        str.insert(tIdx,'.');
+
+                        if (isValidIP(str.toString(), i, sIdx, tIdx))
+                            rList.add(str.toString());
+                    }
+                }
+
+            }
+        }
+        return rList;
+    }
+    
+    // The version2 solutions is more interesting, It uses a DFS/ backtracking approach to the problem.
+    // We start with a empty string add substring to it from  the main string and check if this substring part
+    // is valid  & then add the next part check if that is valid when we have found all the four valid parts
+    // then its a valid solution
+    public List<String> restoreIpAddressesV2(String s) {
+        List<String> result = new ArrayList<>();
+        doRestore(result, "", s, 0);
+        return result;
+    }
+
+    private void doRestore(List<String> result, String path, String s, int k) {
+        if (s.isEmpty() || k == 4) {
+            if (s.isEmpty() && k == 4)
+                result.add(path.substring(1));
+            return;
+        }
+        for (int i = 1; i <= (s.charAt(0) == '0' ? 1 : 3) && i <= s.length(); i++) { // Avoid leading 0
+            String part = s.substring(0, i);
+            // if this part is valid go to the next part, if this is not valid
+            // lets do nothing and check the next option by incrementing 1
+            if (Integer.valueOf(part) <= 255)
+                doRestore(result, path + "." + part, s.substring(i), k + 1);
+        }
+    }
 
 
 
