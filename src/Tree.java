@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 public class Tree {
 
@@ -25,8 +27,8 @@ public class Tree {
         }
         int mid = arr.length/2;
         root.data = arr [mid];
-        root.leftChild = createBinaryTreeRecurse(0, mid-1, arr);
-        root.rightChild = createBinaryTreeRecurse(mid+1, arr.length-1,arr);
+        root.left = createBinaryTreeRecurse(0, mid-1, arr);
+        root.right = createBinaryTreeRecurse(mid+1, arr.length-1,arr);
 
     }
 
@@ -37,8 +39,8 @@ public class Tree {
         int mid = (low + high)/2;
         TreeNode node = new TreeNode(arr[mid]);
         System.out.println("Creating node "+ node.data + "[" + low +"," + high + "] " + mid);
-        node.leftChild = createBSTree(low, mid-1, arr);
-        node.rightChild = createBSTree(mid+1, high, arr);
+        node.left = createBSTree(low, mid-1, arr);
+        node.right = createBSTree(mid+1, high, arr);
         return node;
     }
 
@@ -49,25 +51,34 @@ public class Tree {
         int mid = (low + high)/2;
         TreeNode node = new TreeNode(arr[mid]);
         System.out.println("Creating node "+ node.data + "[" + low +"," + high + "] " + mid);
-        node.leftChild = createBinaryTreeRecurse(low, mid-1, arr);
-        node.rightChild = createBinaryTreeRecurse(mid+1, high, arr);
+        node.left = createBinaryTreeRecurse(low, mid-1, arr);
+        node.right = createBinaryTreeRecurse(mid+1, high, arr);
         return node;
     }
 
-    public void inOrderTraversal (TreeNode node) {
+    public void inOrderTraversalRec (TreeNode node) {
         if ( node != null) {
-            inOrderTraversal(node.leftChild);
+            inOrderTraversalRec(node.left);
             System.out.print(node.data + " ");
-            inOrderTraversal(node.rightChild);
+            inOrderTraversalRec(node.right);
         }
     }
 
-    public void preOrderTraversal (TreeNode node) {
+    public void preOrderTraversalRec (TreeNode node) {
         if (node != null) {
             System.out.print(node.data + " ");
-            preOrderTraversal(node.leftChild);
-            preOrderTraversal(node.rightChild);
+            preOrderTraversalRec(node.left);
+            preOrderTraversalRec(node.right);
         }
+    }
+
+    public void postOrderTraversalRec(TreeNode node) {
+        if (node != null) {
+            postOrderTraversalRec(node.left);
+            postOrderTraversalRec(node.right);
+            System.out.print(node.data + " ");
+        }
+
     }
 
     public TreeNode search(int data, TreeNode node) {
@@ -79,9 +90,9 @@ public class Tree {
             return node;
         }
         else if (data < node.data) {
-            return search(data, node.leftChild);
+            return search(data, node.left);
         } else {
-            return search(data, node.rightChild);
+            return search(data, node.right);
         }
     }
 
@@ -89,9 +100,9 @@ public class Tree {
         if (node == null) {
             return null;
         }
-        if (node.rightChild == null)
+        if (node.right == null)
             return node;
-        return searchBiggest(node.rightChild);
+        return searchBiggest(node.right);
 
     }
 
@@ -99,25 +110,25 @@ public class Tree {
         if (node == null) {
             return null;
         }
-        if (node.leftChild == null)
+        if (node.left == null)
             return node;
-        return searchSmallest(node.leftChild);
+        return searchSmallest(node.left);
 
     }
 
     public TreeNode inOrderPredecessorWithoutParent (TreeNode node) {
-        if (node.leftChild != null) {
-            return searchBiggest(node.leftChild);
+        if (node.left != null) {
+            return searchBiggest(node.left);
         }
         TreeNode pred = null;
         TreeNode rt = root;
 
         while (rt != null) {
             if (node.data < rt.data) {
-                rt = rt.leftChild;
+                rt = rt.left;
             } else if (node.data > rt.data) {
                 pred = rt;
-                rt = rt.rightChild;
+                rt = rt.right;
             } else {
                 break;
             }
@@ -126,11 +137,11 @@ public class Tree {
     }
 
     public TreeNode inOrderSuccesorWithParent (TreeNode node) {
-        if (node.rightChild != null) {
-            return searchSmallest(node.rightChild);
+        if (node.right != null) {
+            return searchSmallest(node.right);
         }
         TreeNode pnode = node.parent;
-        while(pnode != null && pnode.rightChild == node) {
+        while(pnode != null && pnode.right == node) {
             pnode = pnode.parent;
             node = node.parent;
         }
@@ -140,16 +151,16 @@ public class Tree {
         TreeNode rt = root;
         TreeNode succ = null;
 
-        if (node.rightChild != null) {
-            return searchSmallest(node.rightChild);
+        if (node.right != null) {
+            return searchSmallest(node.right);
         }
 
         while (rt != null) {
             if (node.data < rt.data) {
                 succ = rt;
-                rt = rt.leftChild;
+                rt = rt.left;
             } else if (node.data > rt.data) {
-                rt = rt.rightChild;
+                rt = rt.right;
             } else
                 break;
         }
@@ -168,10 +179,10 @@ public class Tree {
             list = new LinkedList<>();
             for (int i = 0; i < listArray.get(level).size(); i++) {
                 TreeNode node = (TreeNode) listArray.get(level).get(i);
-                if (node.leftChild != null)
-                    list.add(node.leftChild);
-                if (node.rightChild != null)
-                    list.add(node.rightChild);
+                if (node.left != null)
+                    list.add(node.left);
+                if (node.right != null)
+                    list.add(node.right);
             }
             if (list.size() == 0) {
                 break;
@@ -189,7 +200,7 @@ public class Tree {
         if (node.data == data)
             return true;
         else
-            return covers(data, node.leftChild) | covers(data, node.rightChild);
+            return covers(data, node.left) | covers(data, node.right);
     }
     public TreeNode commonAncestor(TreeNode nodeA, TreeNode nodeB ) {
         TreeNode root = this.root;
@@ -205,20 +216,20 @@ public class Tree {
 
     }
     private TreeNode commonAncestor(TreeNode ancestor, int nodeAData, int nodeBData) {
-        boolean aOnLeft = covers(nodeAData, ancestor.leftChild);
-        boolean bOnleft = covers(nodeBData, ancestor.leftChild);
+        boolean aOnLeft = covers(nodeAData, ancestor.left);
+        boolean bOnleft = covers(nodeBData, ancestor.left);
         //System.out.println("aOnLeft " + aOnLeft + " bOnleft " + bOnleft);
 
         if (aOnLeft != bOnleft)
             return ancestor;
-        return aOnLeft ? commonAncestor(ancestor.leftChild, nodeAData, nodeBData) :
-                         commonAncestor(ancestor.rightChild, nodeAData, nodeBData);
+        return aOnLeft ? commonAncestor(ancestor.left, nodeAData, nodeBData) :
+                         commonAncestor(ancestor.right, nodeAData, nodeBData);
 
 
     }
     public boolean isAncestor (TreeNode ancestor, TreeNode child) {
         TreeNode node = ancestor;
-        return covers(child.data, ancestor.leftChild) | covers(child.data, ancestor.rightChild);
+        return covers(child.data, ancestor.left) | covers(child.data, ancestor.right);
     }
 
     public boolean getPathFromNode (ArrayList<Integer> path, TreeNode src, TreeNode dest) {
@@ -229,8 +240,8 @@ public class Tree {
             path.add(dest.data);
             return true;
         }
-        if ( getPathFromNode(path,src.leftChild, dest) ||
-                getPathFromNode(path, src.rightChild, dest)) {
+        if ( getPathFromNode(path,src.left, dest) ||
+                getPathFromNode(path, src.right, dest)) {
             path.add(src.data);
             return true;
         } else {
@@ -267,4 +278,115 @@ public class Tree {
         }
         return ancestor;
     }
+
+    // 94. Binary Tree Inorder Traversal
+    // The basic idea is to use a stack to do the traversal, We dont need a complicated stack push pop.
+    // Just consider the inroder traversal order we need to keep pushing to stack when there is a left child
+    // if there is no more left child we pop & push the right child in a iterative manner
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> rList = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode node = root;
+        // we start with a empty stack but node is not null so we will push the first node anyways
+        while (!stack.isEmpty() || node != null){
+            // if the node is not null we push this node
+            if (node != null) {
+                stack.push(node);
+                // move to the left node so that we can push it next time
+                node = node.left;
+            } else {
+                // no more left sub tree we visit the node & move node to right for next push
+                node = stack.pop();
+                rList.add(node.data);
+                node = node.right;
+            }
+        }
+
+        return rList;
+    }
+
+    // 144. Binary Tree Preorder Traversal
+    // use a stack visit node first then stack push the right child before the left child
+    // check version2 its easy to read; but same as this one
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> rList = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode node = root;
+        while (!stack.isEmpty() || node != null) {
+            if(node != null) {
+                rList.add(node.data);
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack.pop();
+                if (node.right != null)
+                    node = node.right;
+                else
+                    node = null;
+            }
+        }
+        return rList;
+    }
+    // version2 same logic as before but easy to read
+    public List<Integer> preorderTraversalV2(TreeNode root) {
+        List<Integer> rList = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode node = null;
+        // push the root node
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            // preoder visit the node
+            node = stack.pop();
+            rList.add(node.data);
+            // node lets put the right child on the stack first then the left child so that we visit right subtree after
+            // we have visited the left subtree, because we are suing stack we use
+            // this reverse order of right child before left child
+            if (node.right != null)
+                stack.push(node.right);
+            if (node.left != null)
+                stack.push(node.left);
+        }
+        return rList;
+    }
+
+    // 145. Binary Tree Postorder Traversal (Hard)
+    // The postorder traversal is similar to iterative inorder or preorder traversal
+    // The only difference is we have to keep track if the right subtree has been visited
+    // for the current node if yes then we can pop this node from stack and visit current node
+    // otherwise we have not visited the right substree so move node to the right to put the right
+    // substree in the stack
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> rList = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode lastNode = null;
+        TreeNode node = root;
+        int count = 0;
+
+        while (!stack.isEmpty() || node != null) {
+            if(node != null) {
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack.peek();
+                // check if right subtree has been visited, if yes lets visit current node
+                if (node.right == null ||
+                        node.right == lastNode) {
+                    lastNode = stack.pop();
+                    rList.add(lastNode.data);
+                    // this node has been visited, lets make it null so that we can process
+                    // the next node from the stack
+                    node = null;
+                } else {
+                    // right subtree not visited lets go to right to stack right subtree
+                    node = node.right;
+                }
+            }
+        }
+        return rList;
+    }
+
+
+
+
+
 }

@@ -1528,7 +1528,7 @@ public class Recursions {
         }
         return rList;
     }
-    
+
     // The version2 solutions is more interesting, It uses a DFS/ backtracking approach to the problem.
     // We start with a empty string add substring to it from  the main string and check if this substring part
     // is valid  & then add the next part check if that is valid when we have found all the four valid parts
