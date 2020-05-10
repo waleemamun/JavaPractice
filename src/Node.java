@@ -16,6 +16,7 @@ public class Node {
         val = _val;
         children = _children;
     }
+
     public Node(int v, int m) {
         val = v;
         min = m;

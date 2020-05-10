@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Tree {
 
@@ -380,6 +377,57 @@ public class Tree {
                     // right subtree not visited lets go to right to stack right subtree
                     node = node.right;
                 }
+            }
+        }
+        return rList;
+    }
+    // 590. N-ary Tree Postorder Traversal
+    // The nary post order traversal is easy because we have the list of node children.
+    // At each step we take a node and put its children into the stack, and put the node in a list.
+    // The children are popped from the stack in LIFO so the rightmost child will get pooped first,
+    // so we will in next iteration process the right child's subtree this allow as us to visit the
+    // subtrees of children from right to left. We add node in the list in the same order so to get our
+    // result we just need to revere the fina list
+    public List<Integer> postorder(Node root) {
+        List<Integer> rList = new ArrayList<>();
+        if (root == null)
+            return rList;
+        Stack<Node> stack = new Stack<>();
+        Node node = root;
+        stack.push(node);
+        while (!stack.empty()) {
+            node = stack.pop();
+            rList.add(node.val);
+            // add children into the stack left to right so
+            // when popped they will be popped right to left
+            for (Node n : node.children) {
+                stack.push(n);
+            }
+        }
+        // we have the result in reverse order so lets fix it
+        Collections.reverse(rList);
+        return rList;
+    }
+
+    //589. N-ary Tree Preorder Traversal
+    // The same approach as the Postorder traversal, only difference is adding the children
+    // into the stack in right to left order so when we pop them the come out as left to right.
+    // This allows traversing the children list from left to right as needed by preorder
+    public List<Integer> preorder(Node root) {
+        List<Integer> rList = new ArrayList<>();
+        if (root == null)
+            return rList;
+        Stack<Node> stack = new Stack<>();
+        Node node = root;
+        stack.push(node);
+        while (!stack.empty()) {
+            node = stack.pop();
+            rList.add(node.val);
+            int i = node.children.size() - 1;
+            // add the children from right to left so that
+            // we can traverse the tree from left to right
+            for (;i>= 0;i--) {
+                stack.push(node.children.get(i));
             }
         }
         return rList;
