@@ -276,7 +276,7 @@ public class Tree {
         return ancestor;
     }
 
-    // 94. Binary Tree Inorder Traversal
+    // LeetCode :: 94. Binary Tree Inorder Traversal
     // The basic idea is to use a stack to do the traversal, We dont need a complicated stack push pop.
     // Just consider the inroder traversal order we need to keep pushing to stack when there is a left child
     // if there is no more left child we pop & push the right child in a iterative manner
@@ -302,7 +302,7 @@ public class Tree {
         return rList;
     }
 
-    // 144. Binary Tree Preorder Traversal
+    // LeetCode :: 144. Binary Tree Preorder Traversal
     // use a stack visit node first then stack push the right child before the left child
     // check version2 its easy to read; but same as this one
     public List<Integer> preorderTraversal(TreeNode root) {
@@ -346,7 +346,7 @@ public class Tree {
         return rList;
     }
 
-    // 145. Binary Tree Postorder Traversal (Hard)
+    // LeetCode :: 145. Binary Tree Postorder Traversal (Hard)
     // The postorder traversal is similar to iterative inorder or preorder traversal
     // The only difference is we have to keep track if the right subtree has been visited
     // for the current node if yes then we can pop this node from stack and visit current node
@@ -381,7 +381,7 @@ public class Tree {
         }
         return rList;
     }
-    // 590. N-ary Tree Postorder Traversal
+    // LeetCode :: 590. N-ary Tree Postorder Traversal
     // The nary post order traversal is easy because we have the list of node children.
     // At each step we take a node and put its children into the stack, and put the node in a list.
     // The children are popped from the stack in LIFO so the rightmost child will get pooped first,
@@ -409,7 +409,7 @@ public class Tree {
         return rList;
     }
 
-    //589. N-ary Tree Preorder Traversal
+    // LeetCode :: 589. N-ary Tree Preorder Traversal
     // The same approach as the Postorder traversal, only difference is adding the children
     // into the stack in right to left order so when we pop them the come out as left to right.
     // This allows traversing the children list from left to right as needed by preorder

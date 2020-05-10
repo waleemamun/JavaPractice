@@ -219,11 +219,8 @@ public class Main {
         DPs dp1 = new DPs();
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
-        System.out.println(r1.restoreIpAddresses(str));
-        TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
-        tr1.postOrderTraversalRec(treeNode);
-        System.out.println();
-        System.out.println(tr1.postorderTraversal(treeNode));
+        //TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
+        System.out.println("Bst Count = " + dp1.numTrees(6));
 
 
 

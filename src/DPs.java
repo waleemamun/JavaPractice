@@ -315,6 +315,30 @@ public class DPs {
         return decodeCount[s.length()];
     }
 
+    // LeetCode :: 96. Unique Binary Search Trees
+    // The idea is to use a DP solution here.
+    // The base case for bstCount[0] = 1 && bstCount[1] == 1 (if 1 node there is only 1 tree possible)
+    // Next we need to figure for 1 to n for selecting each of n items as the root how many tree are possible
+    // for example lets do it for 3 , if 1 is root then there are 2 trees, 2 is root there is 1 tree, if 3 is
+    // root there is 1 tree so total of 5. Now  1 ways--->()1 (2,3)<--2 ways , 1 ways -->(1)2(3)<-- 1 ways
+    // 2 ways --> (1,2)3()<--- 1 ways, so if we know for 0 to n-1 how many trees we can use that to calc nth tree
+    // by iterative selecting each item from 1 to n as a root an calc there bstCount and the combined sum would be
+    // bstCount[n] = sum1Ton-1( bstCount[j-1] * bstCount[n-j])
+
+    public int numTrees(int n) {
+        int [] bstCount = new int[n+1];
+        bstCount[0] = 1;
+
+        for (int i = 1; i <=n; i++){
+            int max = i;
+            int min = 1;
+            for (int j = 1; j <= max; j++) {
+                bstCount[i] += bstCount[j-min] * bstCount[max-j];
+            }
+
+        }
+        return bstCount[n];
+    }
 
 
 
