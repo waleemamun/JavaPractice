@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class TreeNode {
     int data;
+    int val;
     TreeNode left;
     TreeNode right;
     TreeNode parent;
@@ -11,6 +12,7 @@ public class TreeNode {
         left = null;
         right = null;
         parent = null;
+        this.val  = data;
     }
     public void print() {
         System.out.print("node "+data);

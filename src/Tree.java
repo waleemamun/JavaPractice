@@ -1,3 +1,5 @@
+import org.omg.PortableInterceptor.INACTIVE;
+
 import java.util.*;
 
 public class Tree {
@@ -472,6 +474,81 @@ public class Tree {
         if (n == 0)
             return new ArrayList<TreeNode>();
         return genBSTree(1,n);
+    }
+
+    // 98. Validate Binary Search Tree
+    // This is the fastest so far, The idea is to create a limit for each subtree and check if all
+    // the nodes in the subtree follows that limit, for example 1,2,3,4,5  rooted at 3 the left subtree
+    // limit is (-MIN, 2) & (4, MAX)
+    private boolean isValidBSTRec (TreeNode parent, TreeNode node, int min, int max) {
+        if (node == null)
+            return true;
+        // we need to handle special cases when the node value is equal to MAX or MIN then the
+        // comparision fails so we need to check the parent node to make sure the limit condition
+        // are met we check if the nodes value is bigger than parent
+        if (parent != null) {
+            if (parent.val == node.val)
+                return false;
+            else if (parent.val > node.val && parent.right == node)
+                return false;
+            else if (parent.val < node.val && parent.left == node)
+                return false;
+        }
+        if (node.val >= min && node.val <= max)
+            return isValidBSTRec(node,node.left, min, node.val -1) &&
+                    isValidBSTRec(node,node.right , node.val + 1, max);
+        else
+            return false;
+    }
+
+    public boolean isValidBSTV2(TreeNode root) {
+        return isValidBSTRec(null, root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    // this is little slow
+    public boolean isValidBST(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        ArrayList<Integer> alist = new ArrayList<>();
+        TreeNode node = root;
+        while (!stack.empty() || node != null) {
+            if(node !=null) {
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack.pop();
+                alist.add(node.val);
+                node = node.right;
+            }
+        }
+        for (int i = 1; i<alist.size(); i++) {
+            if(alist.get(i-1) >= alist.get(i))
+                return false;
+        }
+        return true;
+    }
+    // this is slow too the idea is to iteratively inorder traverese the tree ,
+    // while traversing if we found a node that has smaller value than the prev
+    // node in inorder traversal then this is not a BST as inorder traversal gives
+    // you node ascending sorted
+    public boolean isValidBSTV3(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        ArrayList<Integer> alist = new ArrayList<>();
+        TreeNode node = root;
+        double lastVal = -Double.MAX_VALUE;
+        boolean isFirst = true;
+        while (!stack.empty() || node != null) {
+            if(node != null) {
+                stack.push(node);
+                node = node.left;
+                continue;
+            }
+            node = stack.pop();
+            if (node.val <= lastVal)
+                return false;
+            lastVal = node.val;
+            node = node.right;
+
+        }
+        return true;
     }
 
 
