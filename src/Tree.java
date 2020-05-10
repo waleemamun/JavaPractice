@@ -432,6 +432,47 @@ public class Tree {
         }
         return rList;
     }
+    // LeetCode :: 95. Unique Binary Search Trees II
+    // The Problems requires ust generate all BST possible for 1 - n. So we actually have to generate those tree.
+    // The idea is to go by each node from 1 to n as root and create a tree. So for each node as root we need to
+    // build a left subtree & a right subtree and then add the left subtree & right subtree as to the root.
+    // We use two lists to store the left subtrees & right subtrees, Then for root we take one node from left subtree
+    // & one node from leftSubtree. Finally return the list
+    private List<TreeNode> genBSTree (int start, int end) {
+        List<TreeNode> rList = new ArrayList<>();
+        if (start > end) {
+            rList.add(null);
+            return rList;
+        }
+        if (start == end) {
+            rList.add( new TreeNode(start));
+            return rList;
+        }
+        for (int i = start; i <= end; i++) {
+            // left subtree list holds all the possible left subtrees
+            List<TreeNode> leftSubTreeList = genBSTree(start, i -1);
+            // right subtree list holds all the possible right subtrees
+            List<TreeNode> rightSubTreeList = genBSTree(i+1, end);
+            for (TreeNode leftSubTree : leftSubTreeList) {
+                for (TreeNode rightSubTree : rightSubTreeList) {
+                    // for this root pick a left subtree & right subtree and the to the list
+                    // we need to add root to the list multiple time with multiple options of
+                    // left & right subtree, we will have total pf leftSubtree.size * rightSubtree.size
+                    // for example (1,2)  3 (4,5) ; for root 3 there are 4 distinct trees with 3 as root
+                    TreeNode root  = new TreeNode(i);
+                    root.left = leftSubTree;
+                    root.right= rightSubTree;
+                    rList.add(root);
+                }
+            }
+        }
+        return rList;
+    }
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0)
+            return new ArrayList<TreeNode>();
+        return genBSTree(1,n);
+    }
 
 
 
