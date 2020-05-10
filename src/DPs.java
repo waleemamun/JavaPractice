@@ -327,6 +327,8 @@ public class DPs {
 
     public int numTrees(int n) {
         int [] bstCount = new int[n+1];
+        // the base case for zero node is 1
+        // we could have init bstCount[1] too but thus would be handled in the loop hence no need
         bstCount[0] = 1;
 
         for (int i = 1; i <=n; i++){
