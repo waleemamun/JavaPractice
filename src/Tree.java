@@ -747,7 +747,8 @@ public class Tree {
         }
         return rList;
     }
-    // 104. Maximum Depth of Binary Tree
+
+    // LeetCode :: 104. Maximum Depth of Binary Tree
     // Get the max height of the tree recursively
     public int maxDepth(TreeNode root) {
         // null nodes are not counted
@@ -757,6 +758,79 @@ public class Tree {
         return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
 
     }
+
+    // LeetCode :: 105. Construct Binary Tree from Preorder and Inorder Traversal
+    // Remember to use hashMap whenever you only do lookup in an unsorted array never
+    // do O(n) search unless the search is done just once
+    // The idea to solve the problem is to add root nodes from the preorder array and found that node
+    // position in inorder array, when we found such a position the left side will give the left subtree
+    // & right side will give right sub tree. So now we can recursively look to solve the problem in
+    // right & left subtree. One thing to remember is the boundary in the inorder array is different
+    // from preorder array on the preorder array fro right subtree we need to jump from current
+    // position + the length of left subtree so the calc is (end - start + 1 + prestart + 1)
+    // Check the version 1 its very interesting little complicated
+    HashMap<Integer,Integer> inorderMap = new HashMap<>();
+    public TreeNode buildTreeV2(int[] preorder, int[] inorder) {
+        if(preorder.length == 0 || inorder.length == 0 || preorder.length != inorder.length)
+            return null;
+        int preStart = 0;
+        // build a hasmap as this lookup will be done  multiple times in the recursion so
+        // building a hashmap makes the algo run surprisingly fast
+        for (int i = 0; i<inorder.length; i++) {
+            inorderMap.put(inorder[i],i);
+        }
+        int r = inorderMap.get(preorder[preStart]);
+        int start = 0, end = r-1;
+        TreeNode root = new TreeNode(preorder[preStart]);
+        root.left = buildTreefromInPreOrder(preorder, inorder,start, end,
+                                    preStart +1);
+        root.right = buildTreefromInPreOrder(preorder, inorder, r + 1,
+                                inorder.length -1, end - start + preStart + 2);
+        return root;
+    }
+    private TreeNode buildTreefromInPreOrder (int []preorder, int []inorder,int start, int end, int pStart) {
+        if (start > end || pStart >= preorder.length)
+            return null;
+        if(start == end) {
+            TreeNode node = new TreeNode(preorder[pStart]);
+            return node;
+        }
+
+        int r = inorderMap.get(preorder[pStart]);
+
+        TreeNode node = new TreeNode(preorder[pStart]);
+        int s = start, e = r -1;
+        node.left = buildTreefromInPreOrder(preorder, inorder,s, e, pStart +1);
+        node.right = buildTreefromInPreOrder(preorder, inorder,r+1, end, e-s+pStart+2);
+        return node;
+
+    }
+    // This is a very nice solution, We build the tree in preorder
+    // note that we add nodes from a preorder array from 0 to n order, hence we can have a pointer in preOrder array
+    // that gives us preorder node in every step, another pointer we use in inorder array to know the boundary for
+    // left subtree
+    int inIdx = 0;
+    int preIdx = 0;
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return buildTreeHelper(preorder,inorder, Integer.MIN_VALUE);
+    }
+    private  TreeNode buildTreeHelper (int[] preorder, int[] inorder, int stop) {
+        if (preIdx >= preorder.length)
+            return null;
+        // we reached the parent node stop, this is the boundary for left subtree & right subtree
+        // this right subtree boundary for example pre: [1 2 4 6] in: [4 2 6 1] when we reach node 6 after node 2
+        // in inroder the
+        System.out.println(preorder[preIdx] +" " +stop + " " +inIdx);
+        if (inorder[inIdx] == stop) {
+            inIdx++;
+            return null;
+        }
+        TreeNode node = new TreeNode(preorder[preIdx++]);
+        node.left = buildTreeHelper(preorder,inorder, node.val);
+        node.right = buildTreeHelper(preorder, inorder, stop);
+        return node;
+    }
+
 
 
 
