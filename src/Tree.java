@@ -174,16 +174,21 @@ public class Tree {
         LinkedList<TreeNode> list  = new LinkedList();
         list.add(root);
         listArray.add(level,list);
-
+        System.out.println(root.val);
         while (true) {
             list = new LinkedList<>();
             for (int i = 0; i < listArray.get(level).size(); i++) {
                 TreeNode node = (TreeNode) listArray.get(level).get(i);
-                if (node.left != null)
+                if (node.left != null) {
                     list.add(node.left);
-                if (node.right != null)
+                    System.out.print(node.left.val +" ");
+                }
+                if (node.right != null) {
                     list.add(node.right);
+                    System.out.print(node.right.val +" ");
+                }
             }
+            System.out.println();
             if (list.size() == 0) {
                 break;
             }
@@ -281,7 +286,7 @@ public class Tree {
 
     // LeetCode :: 94. Binary Tree Inorder Traversal
     // The basic idea is to use a stack to do the traversal, We dont need a complicated stack push pop.
-    // Just consider the inroder traversal order we need to keep pushing to stack when there is a left child
+    // Just consider the inorder traversal order we need to keep pushing to stack when there is a left child
     // if there is no more left child we pop & push the right child in a iterative manner
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> rList = new ArrayList<>();
@@ -339,7 +344,7 @@ public class Tree {
             node = stack.pop();
             rList.add(node.data);
             // node lets put the right child on the stack first then the left child so that we visit right subtree after
-            // we have visited the left subtree, because we are suing stack we use
+            // we have visited the left subtree, because we are using stack we use
             // this reverse order of right child before left child
             if (node.right != null)
                 stack.push(node.right);
@@ -387,10 +392,10 @@ public class Tree {
     // LeetCode :: 590. N-ary Tree Postorder Traversal
     // The nary post order traversal is easy because we have the list of node children.
     // At each step we take a node and put its children into the stack, and put the node in a list.
-    // The children are popped from the stack in LIFO so the rightmost child will get pooped first,
+    // The children are popped from the stack in LIFO so the rightmost child will get popped first,
     // so we will in next iteration process the right child's subtree this allow as us to visit the
     // subtrees of children from right to left. We add node in the list in the same order so to get our
-    // result we just need to revere the fina list
+    // result we just need to revere the final list
     public List<Integer> postorder(Node root) {
         List<Integer> rList = new ArrayList<>();
         if (root == null)
@@ -436,11 +441,11 @@ public class Tree {
         return rList;
     }
     // LeetCode :: 95. Unique Binary Search Trees II
-    // The Problems requires ust generate all BST possible for 1 - n. So we actually have to generate those tree.
+    // The Problems requires us to generate all BST possible for 1 to n. So we actually have to generate those tree.
     // The idea is to go by each node from 1 to n as root and create a tree. So for each node as root we need to
     // build a left subtree & a right subtree and then add the left subtree & right subtree as to the root.
     // We use two lists to store the left subtrees & right subtrees, Then for root we take one node from left subtree
-    // & one node from leftSubtree. Finally return the list
+    // & one node from rightSubtree. Finally return the list
     private List<TreeNode> genBSTree (int start, int end) {
         List<TreeNode> rList = new ArrayList<>();
         if (start > end) {
@@ -526,7 +531,7 @@ public class Tree {
         }
         return true;
     }
-    // this is slow too the idea is to iteratively inorder traverese the tree ,
+    // this is slow too the idea is to iteratively inorder traverse the tree ,
     // while traversing if we found a node that has smaller value than the prev
     // node in inorder traversal then this is not a BST as inorder traversal gives
     // you node ascending sorted
@@ -620,6 +625,84 @@ public class Tree {
         }
 
         return true;
+    }
+
+    // LeetCode :: 100. Same Tree
+    public boolean isSameTreeV2(TreeNode p, TreeNode q) {
+        if ( p !=null && q!= null ) {
+            if (p.val == q.val)
+                return isSameTree(p.left,q.left) && isSameTree(p.right,q.right);
+            else
+                return false;
+        } else if (p == null && q == null){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        Queue <TreeNode> queue = new LinkedList<>();
+        queue.add(p);
+        queue.add(q);
+        while (!queue.isEmpty()){
+            TreeNode p1 = queue.poll();
+            TreeNode q1 = queue.poll();
+            if(p1 == null & q1 == null)
+                continue;
+            if(p1 == null || q1 == null)
+                return false;
+            if(p1.val != q1.val)
+                return false;
+            queue.add(p1.left);
+            queue.add(q1.left);
+            queue.add(p1.right);
+            queue.add(q1.right);
+        }
+        return true;
+    }
+    // LeetCode :: 102. Binary Tree Level Order Traversal
+    // The idea is to use 2D list of TreeNodes so that we can save the nodes per level
+    // We start with the root node in the 2d list first and then in the loop we remove all the node
+    // from current level and add the children in the next level , we increase the level to before the
+    // iteration so the next time we process the next level nodes
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> rList  = new ArrayList<>();
+        if (root == null)
+            return rList;
+        List<List<TreeNode>> nodeList = new ArrayList<>();
+        ArrayList<TreeNode> clist = new ArrayList<>();
+        ArrayList<Integer>  tempList = new ArrayList<>();
+        int level = 0;
+        // store the root
+        clist.add(root);
+        tempList.add(root.val);
+        nodeList.add(level,clist);
+        rList.add(level,tempList);
+
+        while (true) {
+
+            clist = new ArrayList<>();
+            tempList = new ArrayList<>();
+            // get the parent nodes at this level and add the children to next level
+            for (TreeNode t: nodeList.get(level)) {
+                if (t.left != null) {
+                    clist.add(t.left);
+                    tempList.add(t.left.val);
+                }
+                if (t.right != null){
+                    clist.add(t.right);
+                    tempList.add(t.right.val);
+                }
+
+            }
+            // no more children left so we are done 
+            if (tempList.size() == 0)
+                break;
+            level++;
+            nodeList.add(level, clist);
+            rList.add(level, tempList);
+        }
+        return rList;
     }
 
 
