@@ -222,7 +222,8 @@ public class Main {
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
         tr1.setRoot(treeNode);
         tr1.levelOrderTraversalAdd2List();
-        System.out.println(tr1.levelOrder(treeNode));
+        System.out.println("Depth " + tr1.maxDepth(treeNode));
+
 
 
 

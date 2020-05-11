@@ -680,7 +680,6 @@ public class Tree {
         rList.add(level,tempList);
 
         while (true) {
-
             clist = new ArrayList<>();
             tempList = new ArrayList<>();
             // get the parent nodes at this level and add the children to next level
@@ -695,7 +694,7 @@ public class Tree {
                 }
 
             }
-            // no more children left so we are done 
+            // no more children left so we are done
             if (tempList.size() == 0)
                 break;
             level++;
@@ -705,6 +704,59 @@ public class Tree {
         return rList;
     }
 
+    // 103. Binary Tree Zigzag Level Order Traversal
+    // Same idea as levelOrder traversal only difference is to add or print
+    // the list of nodes in reverse order when the level is Odd. That ways alternative levels will be reversed
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> rList  = new ArrayList<>();
+        if (root == null)
+            return rList;
+        List<List<TreeNode>> nodeList = new ArrayList<>();
+        ArrayList<TreeNode> clist = new ArrayList<>();
+        ArrayList<Integer>  tempList = new ArrayList<>();
+        int level = 0;
+        // store the root
+        clist.add(root);
+        tempList.add(root.val);
+        nodeList.add(level,clist);
+        rList.add(level,tempList);
+
+        while (true) {
+            clist = new ArrayList<>();
+            tempList = new ArrayList<>();
+            // get the parent nodes at this level and add the children to next level
+            for (TreeNode t: nodeList.get(level)) {
+                if (t.left != null) {
+                    clist.add(t.left);
+                    tempList.add(t.left.val);
+                }
+                if (t.right != null){
+                    clist.add(t.right);
+                    tempList.add(t.right.val);
+                }
+
+            }
+            // no more children left so we are done
+            if (tempList.size() == 0)
+                break;
+            level++;
+            nodeList.add(level, clist);
+            if (level % 2 != 0)
+                Collections.reverse(tempList);
+            rList.add(level, tempList);
+        }
+        return rList;
+    }
+    // 104. Maximum Depth of Binary Tree
+    // Get the max height of the tree recursively
+    public int maxDepth(TreeNode root) {
+        // null nodes are not counted
+        if (root == null)
+            return 0;
+        // return 1 + the max of left & right child
+        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+
+    }
 
 
 
