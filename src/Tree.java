@@ -1,5 +1,6 @@
 import org.omg.PortableInterceptor.INACTIVE;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.*;
 
 public class Tree {
@@ -550,6 +551,80 @@ public class Tree {
         }
         return true;
     }
+    // 101. Symmetric Tree check the version 2 its more neat
+    private boolean isSymmetricRec (TreeNode p, TreeNode q) {
+        if( p == null || q == null){
+            if(p == null && q == null)
+                return true;
+            return false;
+        }
+        if(p.val == q.val)
+            return isSymmetricRec(p.left,q.right) && isSymmetricRec(p.right, q.left);
+        return false;
+    }
+
+
+    public boolean isSymmetric(TreeNode root) {
+        if (root == null)
+            return true;
+        if (root.left != null && root.right!= null)
+            return isSymmetricRec(root.left, root.right);
+        return false;
+    }
+    // The idea is to check if left subtree & right substree are symmetric by comparing the mirror of two trees
+    public boolean isSymmetricV2(TreeNode root) {
+        if (root == null)
+            return true;
+        return isSymmetricRecV2(root.left, root.right);
+    }
+    // The function below actually checks if the nodes in two trees are mirrored
+    // returns true if mirrored
+    private boolean isSymmetricRecV2 (TreeNode p, TreeNode q) {
+        if (p == null && q == null)
+            return true;
+        if (p== null || q == null)
+            return false;
+        return ((p.val == q.val)) &&
+                isSymmetricRecV2(p.left,q.right) &&
+                isSymmetricRecV2(p.right, q.left);
+    }
+    // This is the iterative version of symmetric tree problem
+    // The idea is to use a queue to detect the symmetry
+    // We add nodes in queue in such a way that two consequtive nodes are mirrored,
+    // if the two consequtive nodes are not equal then we dont have a solution,
+    // so how to add two consequtive mirrored nodes in the queue, the trick is when
+    // we add node q's child we add them  in the reverse order of  node p's child
+    public boolean isSymmetricIter(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        // add root twice as we need two nodes to start the comparision
+        // we could have added left & right child of root that would have worked too
+        queue.add(root);
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode p = queue.poll();
+            TreeNode q = queue.poll();
+            if (p == null && q == null)
+                continue;
+            if (p == null || q == null)
+                return false;
+            if (p.val != q.val)
+                return false;
+            // add q's child it the reverse order of p's child,
+            // Note this works if we have any number of child cause
+            // we are traversing the tree in level order so we will visit all the nodes
+            // in a level before going to the next level
+            queue.add(p.left);
+            queue.add(q.right);
+            queue.add(p.right);
+            queue.add(q.left);
+        }
+
+        return true;
+    }
+
+
+
+
 
 
 
