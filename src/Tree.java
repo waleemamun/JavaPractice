@@ -703,6 +703,28 @@ public class Tree {
         }
         return rList;
     }
+    // level order traversal in recursive manner its little faster , does not require as much as memory
+    //
+    public List<List<Integer>> levelOrderRec(TreeNode root) {
+        List<List<Integer>> rList = new ArrayList<>();
+        if (root == null)
+            return rList;
+        levelOrderRecHelper(rList, 1, root);
+        return rList;
+    }
+    private void levelOrderRecHelper(List<List<Integer>> rList, int level, TreeNode node){
+        if( node == null)
+            return;
+        // if the list is not initialized, init it
+        if (rList.size() < level ) {
+            rList.add(new ArrayList<>());
+        }
+        // get the list at this level and add the node , remember levels are 0 based indexed
+        List<Integer> ls = rList.get(level-1);
+        ls.add(node.val);
+        levelOrderRecHelper(rList, level + 1, node.left);
+        levelOrderRecHelper(rList, level + 1, node.right);
+    }
 
     // 103. Binary Tree Zigzag Level Order Traversal
     // Same idea as levelOrder traversal only difference is to add or print
@@ -872,6 +894,62 @@ public class Tree {
         node.right = buildTreefromInPostOrder(postder, inorder, r+1, end, pStart -1);
         node.left = buildTreefromInPostOrder(postder,inorder, start, r-1, pStart -len -1);
         return node;
+    }
+    // LeetCode :: 107. Binary Tree Level Order Traversal II
+    // The idea is to recursively call to add nodes per level.
+    // We start with empty list at each level we increase the list size
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> rList = new ArrayList<>();
+        if (root == null)
+            return rList;
+        levelOrderBottomRec(rList, 0, root);
+        return rList;
+    }
+
+    private void levelOrderBottomRec(List<List<Integer>> rList, int level, TreeNode node){
+        if( node == null)
+            return;
+        // increase the list size for this level
+        if (rList.size() <= level) {
+            // when increasing list size we have add each list to index zero this is very
+            // important to create the bottom up because if we add new list at zero,
+            // the previous first list becomes the second list and so on. So even the we add
+            // item in the list in level order they move down
+            rList.add(0, new ArrayList<>());
+
+        }
+        levelOrderBottomRec(rList, level + 1, node.left);
+        levelOrderBottomRec(rList, level + 1, node.right);
+        // add the node to the list in revrese order so for level 2
+        // if list size is 3 the node wiil be added to list 0
+        List<Integer> ls = rList.get(rList.size() - 1 - level);
+        ls.add(node.val);
+
+
+    }
+    // This is the iterative approach that uses a single queue,
+    // first we start with a queue size 1 adding root to it, Then we get the current queue size and remove exactly
+    // that number of node from the queue and add their children to the queue , next iteration use the new queue
+    // size to get the new parent
+    public List<List<Integer>> levelOrderBottomIter(TreeNode root) {
+
+        List<List<Integer>> list = new LinkedList<List<Integer>>();
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        if(root==null)return list;
+        queue.add(root);
+        while(queue.size()>0){
+
+            int size = queue.size();
+            List<Integer> nlist = new LinkedList<Integer>();
+            for(int i=0;i<size;i++){
+                TreeNode curr = queue.poll();
+                if(curr.left!=null)queue.add(curr.left);
+                if(curr.right!=null)queue.add(curr.right);
+                nlist.add(curr.val);
+            }
+            list.add(0,nlist);
+        }
+        return list;
     }
 
 
