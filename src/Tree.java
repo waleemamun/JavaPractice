@@ -826,8 +826,51 @@ public class Tree {
             return null;
         }
         TreeNode node = new TreeNode(preorder[preIdx++]);
+        System.out.println("ND=" + node.val);
         node.left = buildTreeHelper(preorder,inorder, node.val);
         node.right = buildTreeHelper(preorder, inorder, stop);
+        return node;
+    }
+    // LeetCode :: 106. Construct Binary Tree from Inorder and Postorder Traversal
+    // This can be solved the same as problem 105 above (where inoreder & preorder was given)
+    // The diff is for post order we have to traverse the post order array from right to left and
+    // add right sub tree & then left subtree, (the order we create left / right sub tree does not matter )
+    public TreeNode buildTreePostOrder(int[] inorder, int[] postorder) {
+
+        if(postorder.length == 0 || inorder.length == 0 || postorder.length != inorder.length)
+            return null;
+        int postStart = postorder.length -1;
+        // build a hasmap as this lookup will be done  multiple times in the recursion so
+        // building a hashmap makes the algo run surprisingly fast
+        for (int i = 0; i<inorder.length; i++) {
+            inorderMap.put(inorder[i],i);
+        }
+        int r = inorderMap.get(postorder[postStart]);
+        int start = r+1, end = postorder.length -1;
+        int len = end -start +1;
+        TreeNode root = new TreeNode(postorder[postStart]);
+        root.right = buildTreefromInPostOrder(postorder, inorder, r + 1,
+                inorder.length -1, postStart-1 );
+        root.left = buildTreefromInPostOrder(postorder, inorder, 0, r-1, postStart - len -1);
+        return root;
+    }
+
+    private TreeNode buildTreefromInPostOrder (int []postder, int []inorder,int start, int end, int pStart) {
+
+        if (start > end || pStart < 0)
+            return null;
+        if (start == end) {
+            TreeNode node = new TreeNode(postder[pStart]);
+            return node;
+        }
+        System.out.println(postder[pStart]);
+        int r = inorderMap.get(postder[pStart]);
+        TreeNode node = new TreeNode(postder[pStart]);
+        int len = end - r;
+        // we could have created the left sub tree before the right sub tree it does not matter
+        // what matters is the calc of the pstart
+        node.right = buildTreefromInPostOrder(postder, inorder, r+1, end, pStart -1);
+        node.left = buildTreefromInPostOrder(postder,inorder, start, r-1, pStart -len -1);
         return node;
     }
 
