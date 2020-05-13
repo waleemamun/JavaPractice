@@ -947,9 +947,67 @@ public class Tree {
                 if(curr.right!=null)queue.add(curr.right);
                 nlist.add(curr.val);
             }
+            // adding to the head of the list so that it works like stack
+            // Note : When we add & get items from list item 0 it becomes a stack
             list.add(0,nlist);
         }
         return list;
+    }
+    // LeetCode :: 110. Balanced Binary Tree
+    // Check the version 2 thats better this one visit node unnecessarily
+    private  int getHeight (TreeNode node) {
+        if (node == null) return 0;
+        return 1 + Math.max(getHeight(node.left), getHeight(node.right));
+    }
+
+    public boolean isBalanced(TreeNode root) {
+        if (root == null)
+            return true;
+        int leftH = getHeight(root.left);
+        int rightH = getHeight(root.right);
+        return Math.abs(rightH - leftH) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+    }
+    // This is a better solution. The idea is to get the height of the left & right subtree
+    // if they differ by more than 1 we fail. We  use the getHeighV2 function to not only calc the heigh
+    // but check the diff of left & right subtree height
+    public boolean isBalancedV2(TreeNode root) {
+        if(getHeighV2(root) == -1)
+            return false;
+        else
+            return true;
+    }
+    // Check the height of the left & right subtree recursively,
+    // if at any  point the left & right subtree's height differ by more than 1 we return & propagate -1;
+    // Note: at each node we can make some decision based on its left & right subtree, as the we have
+    // recursively solved for left & right subtree and as the whole tree needs to hold the same property.
+    // this idea can be leveraged in other problems
+    private  int getHeighV2 (TreeNode node) {
+        // null node no height
+        if (node == null) return 0;
+        // get left sub tree height
+        int left = getHeighV2(node.left);
+        // if the left subtree's children are not balanced ie height differ by more
+        // than 1 return & propagate-1 we dont need to check any further
+        if (left == -1) return -1;
+        // same as left subtree
+        int right = getHeighV2(node.right);
+        if (right == -1) return -1;
+        // height differ by more than 1 return -1
+        if (Math.abs(right - left) > 1)
+            return -1;
+        else
+            return 1 +  Math.max(left,right);
+    }
+    // LeetCode :: 111. Minimum Depth of Binary Tree
+    public int minDepth(TreeNode root) {
+        if (root == null) return 0;
+        int left = minDepth(root.left);
+        int right = minDepth(root.right);
+        if (left == 0)
+            return 1 + right;
+        if (right == 0)
+            return 1 + left;
+        return 1 + Math.min(left,right);
     }
 
 
