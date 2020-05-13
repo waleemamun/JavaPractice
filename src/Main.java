@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {2,1,7,3,5};
+        int [] arr =  {1,2,3,4,5,6,7,8,9};
         int [] arr1 = {1,2,3,7,5};
 
         int [][] arr2d = {
@@ -220,9 +220,9 @@ public class Main {
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
-        TreeNode root = tr1.buildTreeV2(arr1,arr);
-        System.out.println(" tree " + tr1.levelOrder(root));
-        System.out.println(" tree " + tr1.levelOrderBottom(root));
+        System.out.println(" tree " + tr1.levelOrder(treeNode));
+        System.out.println(" res " + tr1.hasPathSum(treeNode, 20));
+
 
 
 

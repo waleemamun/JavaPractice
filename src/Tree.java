@@ -999,6 +999,7 @@ public class Tree {
             return 1 +  Math.max(left,right);
     }
     // LeetCode :: 111. Minimum Depth of Binary Tree
+    // Calc the minimum depth from the root to leaf so the min depth will not be zero
     public int minDepth(TreeNode root) {
         if (root == null) return 0;
         int left = minDepth(root.left);
@@ -1009,7 +1010,20 @@ public class Tree {
             return 1 + left;
         return 1 + Math.min(left,right);
     }
-
+    // LeetCode :: 112. Path Sum
+    // The idea is to check if there is path fom root to leaf recursively
+    public boolean hasPathSum(TreeNode root, int sum) {
+        // we reached the end but did not sum that matches root--> leaf
+        if (root == null)
+            return false;
+        // check if this target value has reached & this is a leaf node
+        if (( sum - root.val == 0) && root.left == null && root.right == null)
+            return true;
+        // check for the sum path in left & right sub tree
+        // only need to find once such path hence we used an OR condition
+        return hasPathSum(root.left, sum - root.val) ||
+                hasPathSum(root.right, sum - root.val);
+    }
 
 
 
