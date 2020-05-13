@@ -1,3 +1,4 @@
+import javafx.util.Pair;
 import org.omg.PortableInterceptor.INACTIVE;
 
 import java.awt.image.AreaAveragingScaleFilter;
@@ -19,6 +20,13 @@ public class Tree {
 
     public void setRoot(TreeNode root) {
         this.root = root;
+    }
+    public void printRight (TreeNode root) {
+        while (root != null) {
+            System.out.print(" " + root.val);
+            root = root.right;
+        }
+        System.out.println();
     }
 
     public void createBinaryTree (int arr[]) {
@@ -1024,6 +1032,89 @@ public class Tree {
         return hasPathSum(root.left, sum - root.val) ||
                 hasPathSum(root.right, sum - root.val);
     }
+    // LeetCode :: 113. Path Sum II
+    public List<List<Integer>> pathSum (TreeNode root, int sum) {
+        List<List<Integer>> rlist = new ArrayList<>();
+        pathSumHelper(root, sum, rlist, new ArrayList<>());
+        return rlist;
+    }
+    private void pathSumHelper (TreeNode root, int sum,
+                                List<List<Integer>> rlist,
+                                ArrayList<Integer> path) {
+        if (root == null)
+            return;
+        // check if this target value has reached & this is a leaf node
+        path.add(root.val);
+        if (( sum - root.val == 0) && root.left == null && root.right == null) {
+            rlist.add(new ArrayList<>(path));
+        }
+
+        pathSumHelper(root.left, sum - root.val, rlist, path);
+        pathSumHelper(root.right, sum - root.val, rlist, path);
+        path.remove(path.size() -1);
+    }
+
+    // LeetCode :: 114. Flatten Binary Tree to Linked List
+    // The idea is to traverse the tree in revrese post order (right subtree , left subtree , node)
+    // for each node after traversing the right subtree we store it & traverse the left subtree & store it
+    // now if there is no left subtree, this node's right child can directly point to right subtree,
+    // otherwise we find the last node in left subtree make its right pointer point to right subtree
+    // finally  make the left subtree its right child
+    public TreeNode flattenRec (TreeNode node){
+        if (node == null)
+            return null;
+        // get the flattened right & left subtree
+        TreeNode rstree = flattenRec(node.right);
+        TreeNode lstree = flattenRec(node.left);
+        // if left side is null then make the right side point to the right subtree
+        // we can remove the if condition check the version 2
+        if (lstree == null) {
+            node.right = rstree;
+        } else {
+            // left subtree is not empty find the right most child in left subtree
+            TreeNode walk = lstree;
+            while (walk.right != null)
+                walk = walk.right;
+            // right most child of left subtree points right subtree
+            walk.right = rstree;
+            // right child point to left subtree
+            node.right = lstree;
+            // make left node null
+            node.left = null;
+
+        }
+        return node;
+    }
+    // same login making the code concise, but the not sure if its easier to read
+    public TreeNode flattenRecV2 (TreeNode node){
+        if (node == null)
+            return null;
+        // get the flattened right subtree
+        node.right = flattenRecV2(node.right);
+        // get the flattened left subtree
+        node.left = flattenRecV2(node.left);
+        if (node.left != null) {
+            // left subtree is not empty find the right most child in left subtree
+            TreeNode walk = node.left;
+            while (walk.right != null)
+                walk = walk.right;
+            // right most child of left subtree points right subtree
+            walk.right = node.right;
+            // right child point to left subtree
+            node.right = node.left;
+        }
+        // make left node null
+        node.left = null;
+        return node;
+
+    }
+    public void flatten(TreeNode root) {
+        flattenRecV2(root);
+    }
+
+
+
+
 
 
 

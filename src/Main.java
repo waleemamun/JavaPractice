@@ -221,7 +221,9 @@ public class Main {
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
         System.out.println(" tree " + tr1.levelOrder(treeNode));
-        System.out.println(" res " + tr1.hasPathSum(treeNode, 20));
+        tr1.flatten(treeNode);
+        tr1.printRight(treeNode);
+
 
 
 
