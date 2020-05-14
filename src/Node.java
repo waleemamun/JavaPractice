@@ -7,7 +7,9 @@ public class Node {
     public List<Node> children;
 
     public Node() {}
-
+    Node left;
+    Node right;
+    Node next;
     public Node(int _val) {
         val = _val;
     }

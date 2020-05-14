@@ -1112,6 +1112,96 @@ public class Tree {
         flattenRecV2(root);
     }
 
+    // LeetCode :: 116. Populating Next Right Pointers in Each Node
+    // This one use level order check the next one its way better
+    public Node connectV2(Node root) {
+        if (root == null)
+            return root;
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while (queue.size()>0) {
+            int size = queue.size();
+            Node lastNode = null;
+            for (int i = 0 ; i < size; i++){
+                Node node = queue.poll();
+                if (lastNode != null)
+                    node.next = lastNode;
+                lastNode = node;
+                if (node.right != null)
+                    queue.add(node.right);
+                if (node.left != null)
+                    queue.add(node.left);
+            }
+        }
+        return root;
+    }
+    // We are given the next pointer so lets make use of that next pointer. The prev level will connect the siblings
+    // left to right. so when we process the current level its siblings are connected or it is root of tree. So we can
+    // use the idea of connected siblings and connect the next level
+    public Node connect(Node root) {
+        Node node = root;
+        if (root == null)
+            return root;
+        while (node != null && node.left != null) {
+            Node cur = node;
+            while (cur!= null) {
+                // make the left child point to the right child
+                cur.left.next = cur.right;
+                // let the right child point to the left child of its sibling using next pointer
+                if (cur.next != null)
+                    cur.right.next = cur.next.left;
+
+                cur = cur.next;
+            }
+            node = node.left;
+        }
+        return root;
+    }
+
+    // Leetcode :: 117. Populating Next Right Pointers in Each Node II
+    public Node connect2(Node root) {
+        Node node = root;
+        if (root == null)
+            return root;
+        while (node != null &&
+                (node.left != null ||
+                 node.right != null ||
+                 node.next != null)) {
+            Node cur = node;
+            while (cur!= null) {
+                // make the left child point to the right child
+                Node moveRight = cur.next;
+                while (moveRight != null &&
+                        moveRight.left == null && moveRight.right == null)
+                    moveRight = moveRight.next;
+                if (cur.left != null) {
+                    if (cur.right != null)
+                        cur.left.next = cur.right;
+                    else if (moveRight != null && moveRight.left != null)
+                        cur.left.next = moveRight.left;
+                    else if (moveRight != null && moveRight.right != null)
+                        cur.left.next = moveRight.right;
+
+                }
+                if (cur.right != null) {
+                    if (moveRight != null && moveRight.left != null)
+                        cur.right.next = moveRight.left;
+                    else if (moveRight != null && moveRight.right != null)
+                        cur.right.next = moveRight.right;
+
+                }
+                cur = moveRight;
+            }
+            if(node.left != null)
+                node = node.left;
+            else if (node.right != null)
+                node = node.right;
+            else
+                node = node.next;
+        }
+        return root;
+    }
+
 
 
 
