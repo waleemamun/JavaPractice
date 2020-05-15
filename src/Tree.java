@@ -1229,6 +1229,33 @@ public class Tree {
         // and  not a forked path cause if we return both left & right child + node it will contain a forked path
         return Math.max(leftMax,rightMax) + node.val;
     }
+    // LeetCode :: 235. Lowest Common Ancestor of a Binary Search Tree
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q)
+            return root;
+        if (p == null) return q;
+        if (q == null) return p;
+        if( p.val <= root.val && q.val <= root.val) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else if (p.val > root.val && q.val > root.val) {
+            return lowestCommonAncestor(root.right, p, q);
+        } else
+            return root;
+    }
+    public TreeNode lowestCommonAncestorV2(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode node = root;
+        while (node != null) {
+            if (p == node || q == node)
+                break;
+            if (p.val <= node.val && q.val <= node.val)
+                node = node.left;
+            else if (p.val > node.val && q.val > node.val)
+                node = node.right;
+            else
+                break;
+        }
+        return node;
+    }
 
 
 
