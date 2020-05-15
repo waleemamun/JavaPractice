@@ -1230,19 +1230,21 @@ public class Tree {
         return Math.max(leftMax,rightMax) + node.val;
     }
     // LeetCode :: 235. Lowest Common Ancestor of a Binary Search Tree
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    public TreeNode lowestCommonAncestorBST(TreeNode root, TreeNode p, TreeNode q) {
         if (root == null || root == p || root == q)
             return root;
         if (p == null) return q;
         if (q == null) return p;
         if( p.val <= root.val && q.val <= root.val) {
-            return lowestCommonAncestor(root.left, p, q);
+            return lowestCommonAncestorBST(root.left, p, q);
         } else if (p.val > root.val && q.val > root.val) {
-            return lowestCommonAncestor(root.right, p, q);
+            return lowestCommonAncestorBST(root.right, p, q);
         } else
             return root;
     }
-    public TreeNode lowestCommonAncestorV2(TreeNode root, TreeNode p, TreeNode q) {
+    // This is the iterative approach to find a lowest ancestor in BST
+    // if both p & q are on left go left if both p & q are on right go right
+    public TreeNode lowestCommonAncestorBSTV2(TreeNode root, TreeNode p, TreeNode q) {
         TreeNode node = root;
         while (node != null) {
             if (p == node || q == node)
@@ -1257,7 +1259,43 @@ public class Tree {
         return node;
     }
 
+    // LeetCode :: 236. Lowest Common Ancestor of a Binary Tree
+    // We need to find the lowest common ancestor of two node in a btree.
+    // The idea is not to look for one node in lefts subtree and another in right subtree rather
+    // we need to search both node in left & right subtree if both appears on left side & right side
+    // it means one of them is in left & one of them in right subtree we dont need to know which one is
+    // in left and which one is in right and this node is the LCA so save it in global variable. If both
+    // are in left tree OR right tree we recurse to find an ancestor for which search says both are in
+    // left AND right subtree
+    private TreeNode savedLCA = null;
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q )
+            return root;
+        if (p == null) return q;
+        if (q == null) return p;
+        lcaRec(root,p,q);
+        return savedLCA;
+    }
 
+    public boolean lcaRec(TreeNode node, TreeNode p, TreeNode q) {
+        if(node == null)
+            return false;
+        // search both in left side if we found one or both in left lets mark it true
+        int left = lcaRec(node.left, p,q) ? 1:0;
+        // search both in left side if we found one or both in right lets mark it true
+        int right = lcaRec(node.right, p,q) ? 1:0;
+        // one of the node or both node found lets mark mid to 1
+        int mid = (node == p) || (node == q) ? 1:0;
+        // if this is >= 2 it means either p & q are on left & right
+        // side this node or this node is either p or q and the left
+        // or right subtree of this node has the other node hence this
+        // node is the LCA save it in global array
+        if (left + right + mid >= 2)
+            savedLCA = node;
+        // return true if this node is equal to p or q or one of
+        // its subtree have seen p or q
+        return (left + right + mid) > 0;
+    }
 
 
 
