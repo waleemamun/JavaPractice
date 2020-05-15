@@ -46,7 +46,7 @@ public class Tree {
         }
         int mid = (low + high)/2;
         TreeNode node = new TreeNode(arr[mid]);
-        System.out.println("Creating node "+ node.data + "[" + low +"," + high + "] " + mid);
+        //System.out.println("Creating node "+ node.data + "[" + low +"," + high + "] " + mid);
         node.left = createBSTree(low, mid-1, arr);
         node.right = createBSTree(mid+1, high, arr);
         return node;
@@ -1200,6 +1200,34 @@ public class Tree {
                 node = node.next;
         }
         return root;
+    }
+
+    // LeetCode :: 124. Binary Tree Maximum Path Sum (Hard)
+    // We have to calc the max path sum, and the path can include both left path and right path with its parent added.
+    // So basically we go from down to up and then up to down to see find the max path for a subtree, then we only
+    // return the max of left subtree's or right sub tree's max path + the current node's val so whe we return we on
+    // return a path from this node to left subtree or right subtree. But to get total max path we need to save the
+    // path in global variable so that if we encounter a max path in some subtree its saved
+    private int maxTreePathSum = Integer.MIN_VALUE;
+    public int maxPathSum(TreeNode root) {
+        maxTreePathSum = Integer.MIN_VALUE;
+        maxPathSumRec(root);
+        return maxTreePathSum;
+    }
+
+    private int maxPathSumRec(TreeNode node) {
+        if (node == null)
+            return 0;
+        // get the maxPath from left subtree if the path is negative we dont consider the path, so assign zero
+        int leftMax = Math.max(0, maxPathSumRec(node.left));
+        // get the maxPath from right subtree if the path is negative we dont consider the path, so assign zero
+        int rightMax = Math.max(0, maxPathSumRec(node.right));
+        // store the current maxPath into the global maxPath if its greater than global maxPath, Note that
+        // here we need to use both left & right subtree + node.val cause a path can be like this
+        maxTreePathSum = Math.max(maxTreePathSum, leftMax + rightMax + node.val);
+        // The trick is to return only the left or right child + node.val so that a single path is return
+        // and  not a forked path cause if we return both left & right child + node it will contain a forked path
+        return Math.max(leftMax,rightMax) + node.val;
     }
 
 

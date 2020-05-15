@@ -221,8 +221,8 @@ public class Main {
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
         System.out.println(" tree " + tr1.levelOrder(treeNode));
-        tr1.flatten(treeNode);
-        tr1.printRight(treeNode);
+        System.out.println("max Sum = " + tr1.maxPathSum(treeNode));
+
 
 
 
