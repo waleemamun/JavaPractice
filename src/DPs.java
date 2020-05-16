@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class DPs {
 
     // LeetCode:: 44 WildCard Matching (Hard)
@@ -341,6 +344,43 @@ public class DPs {
         }
         return bstCount[n];
     }
+
+    // LeetCOde :: 120. Triangle
+    // The idea is to use a bottom Up DP approach
+    // We can start with the bottom layer as path then on each layer we check each item we check minimum
+    // path length and store it in current path. As the for the bottom layer there is nothing to calc so for other layer
+    // the dp eqn is path[k-1][i] = min(path[k][i] + path[k][i+1]) + triangle[k][i] (for k = size - 2 to zero )
+    // look how we are using  a 2d array to store all the path info but we can optimize this and use single array with
+    // the optimised eqn  path[i] = min(path[i] + path[i+1]) + triangle[k][i] (we are overwriting the path array)
+    // We could have used a top-down approach but in that case we needed to do another O(n) search at the end to
+    // find the smallest in path array also we will need a 2D array to solve the overwriting problem
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle.size() == 0)
+            return 0;
+        List <Integer> ls = triangle.get(triangle.size()-1);
+        int []path = new int[ls.size()];
+        // set up the initial path array with the last layer of triangle
+        for (int i = 0 ; i<ls.size(); i++)
+            path[i] = ls.get(i);
+        // we can start with size -2 as for the last layer does not change path is the layer itself
+        int k = triangle.size() - 2;
+        // calc the path len in a bottom up approach
+        while (k >= 0) {
+            List<Integer> list = triangle.get(k);
+            for (int i = 0; i < list.size(); i++) {
+                // Note actual dp eqn path[k-1][i] = min(path[k][i] + path[k][i+1]) + triangle[k][i]
+                // optimized dp eqn path[i] = min(path[i] + path[i+1]) + triangle[k][i]
+                path[i] = Math.min(path[i],path[i+1]) + list.get(i);
+            }
+            k--;
+        }
+        // we calc the path in a bottom up manner hence path[0] will have
+        // the result as at the top there us one element
+        return path[0];
+    }
+
+
+
 
 
 

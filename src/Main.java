@@ -221,10 +221,8 @@ public class Main {
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
 
-        LinkList ls2 = ls1.createList(arr);
-        ls2.printList();
-        TreeNode tNnode = tr1.sortedListToBST(ls2);
-        System.out.println(tr1.levelOrder(tNnode));
+        System.out.println(sv1.generate(0));
+
 
 
 

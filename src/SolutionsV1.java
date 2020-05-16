@@ -1191,6 +1191,29 @@ public class SolutionsV1 {
         }
     }
 
+    // LeetCode :: 118. Pascal's Triangle
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> rList = new ArrayList<>();
+        if (numRows == 0)
+            return rList;
+        ArrayList <Integer> tempList = new ArrayList<>();
+        tempList.add(1);
+        rList.add(tempList);
+        for (int i = 1 ; i< numRows; i++) {
+            tempList = new ArrayList<>();
+            for ( int j = 0; j <= rList.get(i-1).size(); j++) {
+                if (j == 0 || j == rList.size())
+                    tempList.add(1);
+                else
+                    tempList.add(rList.get(i-1).get(j-1) + rList.get(i-1).get(j));
+            }
+            rList.add(tempList);
+        }
+
+        return rList;
+    }
+
+
 
 
 
