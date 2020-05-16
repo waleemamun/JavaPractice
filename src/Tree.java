@@ -1297,8 +1297,61 @@ public class Tree {
         return (left + right + mid) > 0;
     }
 
+    // LeetCode :: 230. Kth Smallest Element in a BST
+    // The idea is to ise the inorder traverse property of a BST as inorder traversal will give sorted
+    // output for a BST so is we use iterative inorder traversal for a BST the kth item will be the result
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode node = root;
+        while (!stack.empty() || node !=null) {
+            if (node != null) {
+                stack.push(node);
+                node = node.left;
+            } else {
+                node = stack.pop();
+                k--;
+                if (k == 0)
+                    break;
+                node = node.right;
+            }
+        }
+        return node.val;
+    }
 
-
+    //LeetCode :: 109. Convert Sorted List to Binary Search Tree
+    // The idea is to find the mid node of the list and create a TreeNode from that then recursively create
+    // the left subtree by using the node from start to mid node & create the right subtree by using the node
+    // from mid.next node to end node
+    public TreeNode sortedListToBST(LinkList head) {
+        TreeNode root = null;
+        if (head == null)
+            return root;
+        root = sortedListToBSTRec(head, null);
+        return root;
+    }
+    // create the current node & recursively create the left & right subtree
+    private TreeNode sortedListToBSTRec(LinkList start, LinkList end) {
+        if (start == end)
+            return null;
+        if (start.next == end) {
+            TreeNode node = new TreeNode(start.data);
+            return node;
+        }
+        LinkList slow = start;
+        LinkList fast = start.next;
+        // find the mid node using slow & fast pointers
+        while (fast!= end && fast.next != end) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        // slow points to the mid node of the current linked list create the Treenode using that
+        TreeNode node = new TreeNode(slow.data);
+        // create the left subtree using list frome the left of mid (slow)
+        node.left = sortedListToBSTRec(start,slow);
+        // create the right subtree using the  list from right of mid
+        node.right = sortedListToBSTRec(slow.next, end);
+        return node;
+    }
 
 
 
