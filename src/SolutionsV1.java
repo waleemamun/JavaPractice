@@ -1218,7 +1218,7 @@ public class SolutionsV1 {
     // Basically while scanning the array we have to find maxdiff so we need to keep track of current low
     // and if we see any val lower than current low we i[date the low, we also calc the diff for each item
     // with low and update the max diff
-    public int maxProfit(int[] prices) {
+    public int maxProfitSingle(int[] prices) {
         if (prices.length == 0)
             return 0;
         int low = prices[0];
@@ -1230,6 +1230,49 @@ public class SolutionsV1 {
         }
         return maxDiff;
     }
+
+    // LeetCode :: 122. Best Time to Buy and Sell Stock II
+    // check the next implementation
+    public int maxProfitMultuple(int[] prices) {
+
+        if (prices.length == 0)
+            return 0;
+        int low = prices[0];
+        int maxDiff = 0;
+        int sumDiff = 0;
+        boolean isUp = false;
+        for (int i = 1; i < prices.length; i++) {
+            int diff = prices[i] - low;
+            if (maxDiff <= diff) {
+                maxDiff = diff;
+                isUp = true;
+            } else {
+                low = prices[i];
+                if (isUp == true ){
+                    sumDiff+= maxDiff;
+                    isUp = false;
+                    maxDiff = 0;
+                }
+
+            }
+        }
+        sumDiff += maxDiff;
+        return sumDiff;
+    }
+    // same complexity but concise & easier to read more neat
+    // for max profit  if the price increases at ith day compared
+    // to i -1 th  day we can just sum them up. So if we want total
+    // positive sum in an array we could use this approach of summing
+    // up the positive increments
+    public int maxProfit(int[] prices) {
+        int sumDiff = 0;
+        for (int i =1; i<prices.length; i++){
+            if (prices[i] > prices[i-1])
+                sumDiff+= prices[i] - prices[i-1];
+        }
+        return sumDiff;
+    }
+
 
 
 

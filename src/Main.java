@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8,9};
+        int [] arr =  {0,0,0,-5,-7};
         int [] arr1 = {1,2};
 
         int [][] arr2d = {
@@ -221,7 +221,7 @@ public class Main {
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
 
-        System.out.println(sv1.generate(3));
+        System.out.println(" " + sv1.maxProfit(arr));
 
 
 
