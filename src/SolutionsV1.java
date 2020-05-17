@@ -1190,6 +1190,42 @@ public class SolutionsV1 {
             pos--;
         }
     }
+    public int secondLargest (int nums[]) {
+        int high = Integer.MIN_VALUE;
+        int secondHigh = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++){
+            if (nums[i] > high) {
+                secondHigh = high;
+                high = nums[i];
+            } else if (nums[i] < high){
+                secondHigh = Math.max(secondHigh, nums[i]);
+            }
+        }
+        return secondHigh;
+    }
+
+    // LeetCode :: 414. Third Maximum Number
+    public int thirdMax(int[] nums) {
+        double high = -Double.MAX_VALUE;
+        double secondHigh = -Double.MAX_VALUE;
+        double thirdHigh = -Double.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++){
+
+            if (nums[i] > high) {
+                thirdHigh = secondHigh;
+                secondHigh = high;
+                high = nums[i];
+            } else if (nums[i] < high && nums[i] > secondHigh){
+                thirdHigh = secondHigh;
+                secondHigh = nums[i];
+            } else if (nums[i] < secondHigh) {
+                thirdHigh = Math.max(thirdHigh, nums[i]);
+            }
+        }
+        if (thirdHigh == -Double.MAX_VALUE)
+            return (int)high;
+        return (int)thirdHigh;
+    }
 
     // LeetCode :: 118. Pascal's Triangle
     public List<List<Integer>> generate(int numRows) {
@@ -1264,7 +1300,7 @@ public class SolutionsV1 {
     // to i -1 th  day we can just sum them up. So if we want total
     // positive sum in an array we could use this approach of summing
     // up the positive increments
-    public int maxProfit(int[] prices) {
+    public int maxProfitMultiple(int[] prices) {
         int sumDiff = 0;
         for (int i =1; i<prices.length; i++){
             if (prices[i] > prices[i-1])
@@ -1272,7 +1308,36 @@ public class SolutionsV1 {
         }
         return sumDiff;
     }
-
+    // LeetCode :: 123. Best Time to Buy and Sell Stock III (Hard)
+    // First assume that we have no money, so oneBuy means that we have to borrow money from others,
+    // we want to borrow less so that we have to make our balance as max as we can(because this is negative).
+    // oneBuyOneSell means we decide to sell the stock, after selling it we have price[i] money and we have to give back
+    // the money we owed, so we have prices[i] + oneBuy, we want to make this max.
+    // twoBuy means we already buy & sale once now buy 2nd time hence so the 2ndBuy will be OneBuyOneSell - price[i]
+    // cause we can use some profit from the oneBuyOneSell.
+    // twoBuyTwoSell means we want to sell stock2, we can have price[i] money after selling it, and we have
+    // twoBuy money left before, so twoBuyTwoSell = twoBuy + prices[i]
+    public int maxProfit(int[] prices) {
+        int oneBuy = Integer.MIN_VALUE;
+        int oneBuyOneSell = 0; // one buy and sell should never be negative we dont want negative profit
+        int twoBuy = Integer.MIN_VALUE;
+        int twoBuyTwoSell = 0; // 2nd buy & sale should never be negative as we dont want negative profit
+        for(int i = 0; i < prices.length; i++){
+            // we set prices to negative, so the calculation of profit will be convenient,
+            // negative max means positive low
+            oneBuy = Math.max(oneBuy, -prices[i]);
+            // we already buy the stock so we sale only if it maximizes the profit,
+            // we store max to get max profit
+            oneBuyOneSell = Math.max(oneBuyOneSell, prices[i] + oneBuy);
+            // we can buy the second only after first is sold,
+            // use the profit from first buy & sale
+            twoBuy = Math.max(twoBuy, oneBuyOneSell - prices[i]);
+            // we bought twice so lets sale only if maximizes profit,
+            // we store max to get max profit
+            twoBuyTwoSell = Math.max(twoBuyTwoSell, twoBuy + prices[i]);
+        }
+        return Math.max(oneBuyOneSell, twoBuyTwoSell);
+    }
 
 
 
