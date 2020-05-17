@@ -1213,6 +1213,24 @@ public class SolutionsV1 {
         return rList;
     }
 
+    //LeetCode :: 121. Best Time to Buy and Sell Stock
+    // This is the same as maxDiffInArrayLeft2Right in Solutions
+    // Basically while scanning the array we have to find maxdiff so we need to keep track of current low
+    // and if we see any val lower than current low we i[date the low, we also calc the diff for each item
+    // with low and update the max diff
+    public int maxProfit(int[] prices) {
+        if (prices.length == 0)
+            return 0;
+        int low = prices[0];
+        int maxDiff = 0;
+        for (int i = 1 ; i < prices.length; i++) {
+            int diff = prices[i] - low;
+            maxDiff = Math.max(maxDiff, diff);
+            low = Math.min(low, prices[i]);
+        }
+        return maxDiff;
+    }
+
 
 
 

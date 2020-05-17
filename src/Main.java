@@ -221,7 +221,7 @@ public class Main {
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
 
-        System.out.println(sv1.generate(0));
+        System.out.println(sv1.generate(3));
 
 
 
