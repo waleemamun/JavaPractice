@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Utilities {
 
@@ -68,6 +69,15 @@ public class Utilities {
             entry++;
         }
         return entry;
+    }
+    public static void sortStringList (ArrayList<String> strList) {
+        strList.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
     }
 
     // split the string by the delim, if you have repeated delim that will be skipped
@@ -218,6 +228,52 @@ public class Utilities {
         lcsStr.reverse();
         return lcsStr.toString();
     }
+
+    public static int partition (int nums[], int left, int right) {
+        int pivot = left + (int)(Math.random() % (right -left +1));
+        int pivotVal = nums[pivot];
+        nums[pivot] = nums[right];
+        nums[right] = pivotVal;
+        int i = left;
+        int j = left;
+        while (i <= right) {
+            if (nums[i] < pivotVal) {
+                int temp = nums[j];
+                nums[j] = nums[i];
+                nums[i] = temp;
+                j++;
+            }
+            i++;
+        }
+        nums[right] = nums[j];
+        nums[j] = pivotVal;
+
+        return j;
+    }
+
+    public static int quickSelect (int []nums, int left, int right, int k) {
+        if (left == right)
+            return nums[left];
+        int pivotIndex = partition(nums, left, right);
+        if (k == pivotIndex)
+            return nums[k];
+        else if (k < pivotIndex)
+            return quickSelect(nums, left, pivotIndex -1, k);
+        else
+            return quickSelect(nums, pivotIndex+1, right, k);
+    }
+
+    public static int quickSelectKthSmallest (int []nums, int k) {
+        return quickSelect(nums, 0, nums.length-1, k-1);
+    }
+
+    public static int quickSelectKthLargest (int []nums, int k) {
+        int item = nums.length - k;
+        // we pass item here as the k-1 th smallest item because for kth smallest we pass k-1
+        // so item = nums.length - k + 1 and item -1 == nums.length - k
+        return quickSelect(nums, 0, nums.length-1, item);
+    }
+
 
 
 

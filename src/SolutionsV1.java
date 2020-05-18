@@ -1339,6 +1339,42 @@ public class SolutionsV1 {
         return Math.max(oneBuyOneSell, twoBuyTwoSell);
     }
 
+    // LeetCode :: 215. Kth Largest Element in an Array
+    public int findKthLargest(int[] nums, int k) {
+        int item = nums.length - k;
+        // we pass item here as the k-1 th smallest item because for kth smallest we pass k-1
+        // so item = nums.length - k + 1 and item -1 == nums.length - k
+        return Utilities.quickSelect(nums, 0, nums.length-1, item);
+    }
+
+    // LeetCode :: 128. Longest Consecutive Sequence (Hard)
+    // The idea is to use a hashset to store all the numbers so that we can do a O(1) lookup,
+    // we start with a number from nums array and check if the next number exist in the array using the hasset
+    // if yes we increase the length. The hashset makes the lookup O(1), we also use another optimization;
+    // if the prev number is already  in the array then we must have accounted for the current number already
+    // so no need to process this number
+    public int longestConsecutive(int[] nums) {
+        HashSet<Integer> hashSet = new HashSet<>();
+        // create the hashset
+        for (int i = 0; i <nums.length; i++)
+            hashSet.add(nums[i]);
+        int maxLen = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int current = nums[i];
+            int len = 0;
+            // if the prev number is the hashset then we have accounted for this number already
+            if (!hashSet.contains(current -1)){
+                // lookup if the next numbers exist in the array/hashSet
+                while (hashSet.contains(current)) {
+                    current++;
+                    len++;
+                }
+            }
+            // update the max len
+            maxLen = Math.max(maxLen, len);
+        }
+        return maxLen;
+    }
 
 
 

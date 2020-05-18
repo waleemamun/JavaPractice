@@ -191,8 +191,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {3,3,5,0,0,3,1,4};
-        int [] arr1 = {1,2};
+        int [] arr =  {100, 4, 200, 1, 3, 2,5, 300,6, 400, 7};
+        int [] arr1 = {3,2,3,1,2,4,5,5,6};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -209,7 +209,7 @@ public class Main {
                 {'A','D','E','E'}
         };
 
-        String [] words = {"My","momma","always","said,","\"Life","was","like","a","box","of","chocolates.","You","never","know","what","you're","gonna","get."};
+        String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.","you","never","know","what","you're","gonna","get."};
         String word1 = "ADOBECODEBANC";
         String word2 = "DEC";
         String str = "1234";
@@ -220,8 +220,9 @@ public class Main {
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
+        System.out.println("max Len = " + sv1.longestConsecutive(arr));
 
-        System.out.println("high " + sv1.maxProfit(arr));
+
 
 
 
