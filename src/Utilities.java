@@ -99,6 +99,10 @@ public class Utilities {
 
     }
 
+    // This compute the Longest Common Substring Size. remember this is for substring not sub sequence
+    // So the DP eqn  lcs[i][j] = lcs[i-1][j-1] + 1 (if str1[i] == str2[j]) otherwise lcs[i][j] = 0
+    // cause we are interested in substring so the substring has to appear in both string hence if
+    // not math its should be zero
     public static int getLongestCommonSubstrSize(String str1, String str2) {
         int n = str1.length();
         int m = str2.length();
