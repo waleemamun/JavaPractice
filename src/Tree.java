@@ -1353,7 +1353,32 @@ public class Tree {
         return node;
     }
 
+    // LeetCode :: 129. Sum Root to Leaf Numbers
+    // The idea is to do a pre-order traversal to get calc the root to leaf path digit
+    // we use a global var to update the sum of all path when we reach the leaf node
+    private int totTreePathSum;
+    public int sumNumbers(TreeNode root) {
+        if (root == null)
+            return 0;
 
+        sumNumberRec(root, 0);
+        return totTreePathSum;
+    }
+
+    private void sumNumberRec(TreeNode node, int sum) {
+        // node need to process null nodes
+        if (node != null) {
+            // leaf node update the global variable sum of all path
+            if (node.left == null && node.right == null) {
+                totTreePathSum+= sum + node.val;
+                return;
+            }
+            // calc the digit at this node & pre-order traverse the whole tree
+            sum = (sum + node.val) * 10;
+            sumNumberRec(node.left, sum);
+            sumNumberRec(node.right, sum);
+        }
+    }
 
 
 
