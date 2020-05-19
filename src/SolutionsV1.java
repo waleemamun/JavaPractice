@@ -1376,6 +1376,50 @@ public class SolutionsV1 {
         return maxLen;
     }
 
+    // LeetCode :: 130. Surrounded Regions
+    private void solveRec(char [][] board, int row, int col) {
+        if( row == board.length || col == board[0].length
+                || row < 0 || col < 0 ||
+                board[row][col] != 'O')
+            return;
+        board[row][col] = 'B';
+
+        solveRec(board,row -1, col);
+        solveRec(board,row +1, col);
+        solveRec(board,row , col-1);
+        solveRec(board,row , col+1);
+    }
+    public void solve(char[][] board) {
+        if (board.length == 0)
+            return;
+        int numRows = board.length;
+        int numCols = board[0].length;
+        // mark the border O in column
+        for (int i = 0; i<numRows; i++) {
+            if (board[i][0] == 'O')
+                solveRec(board,i,0);
+            if (board[i][numCols -1] == 'O')
+                solveRec(board,i,numCols -1);
+
+        }
+        // mark the border O in rows
+        for (int i = 0; i<numCols; i++) {
+            if (board[0][i] == 'O')
+                solveRec(board,0,i);
+            if (board[numRows -1][i] == 'O')
+                solveRec(board,numRows -1,i);
+        }
+        // mark the Os to Xs & Bs to Os
+        for (int i = 0; i<numRows; i++) {
+            for (int j = 0; j<numCols; j++) {
+                if (board[i][j] == 'O')
+                    board[i][j] = 'X';
+                else if (board[i][j] == 'B')
+                    board[i][j] = 'O';
+            }
+        }
+    }
+
 
 
 

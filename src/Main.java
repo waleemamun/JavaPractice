@@ -204,9 +204,9 @@ public class Main {
 
         };
         char [][] board = {
-                {'A','B','C','E'},
-                {'S','F','C','S'},
-                {'A','D','E','E'}
+                {'O','O','O'},
+                {'O','O','O'},
+                {'O','O','O'}
         };
 
         String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.","you","never","know","what","you're","gonna","get."};
@@ -220,8 +220,12 @@ public class Main {
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
-        System.out.println("max Len = " + sv1.longestConsecutive(arr));
-
+        sv1.solve(board);
+        for (int i=0;i<board.length;i++) {
+            for (int j=0; j<board.length; j++)
+                System.out.print(board[i][j] + " ");
+            System.out.println();
+        }
 
 
 
