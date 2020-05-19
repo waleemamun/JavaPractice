@@ -5,6 +5,7 @@ public class Node {
     int min;
 
     public List<Node> children;
+    public List<Node> neighbors;
 
     public Node() {}
     Node left;
