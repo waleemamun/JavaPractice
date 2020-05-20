@@ -1420,6 +1420,49 @@ public class SolutionsV1 {
         }
     }
 
+    // LeetCode :: 134. Gas Station
+    // This is an interesting problem, the main catch here is there exist only one solution
+    // So first we check if there is a solution exist or not if the total sum of the diff of
+    // gas[i] & cost[i] is less negative then there is no solution. If its positive there
+    // exist only one solution. TO find the solution index we just start checking positive
+    // sum from index 0 if at any index the sum becomes negative then we can discard
+    // all index prior to the negative sum index also we can discard this negative sum
+    // index and start our search from the nex index this brings the solution to O(n).
+    // We dont need any kind of circular search in the array.
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+
+        int sum = 0;
+        int max = 0;
+        //check the sum of the diff if the sum is negative no solution
+        for (int i = 0; i<gas.length; i++) {
+            sum+= gas[i] - cost[i];
+        }
+        // negative sum no solution
+        if (sum < 0)
+            return -1;
+        // so we have a positive sum of diff there exist only 1 solution
+        sum = 0; // reuse sum
+        int j = 0;
+        int firstPositive = -1;
+        // starting from index zero search the start of continuous
+        // positive index till the end of the array
+        while (j < gas.length) {
+            sum+= gas[j] - cost[j];
+            // sum is positive record this index & move forward to check
+            // if all the next items are positive
+            if (sum >= 0) {
+                if (firstPositive == -1)
+                    firstPositive = j;
+            }
+            else { // sum is negative, so discard everything up to this point
+                firstPositive = -1;
+                sum = 0;
+            }
+            j++;
+        }
+        return firstPositive;
+    }
+
 
 
 
