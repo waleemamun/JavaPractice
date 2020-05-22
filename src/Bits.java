@@ -209,4 +209,64 @@ public class Bits {
         return rList;
     }
 
+    // LeetCode :: 136. Single Number
+    // Find the only single number in array where all other numbers exactly twice
+    // We can use the property of xor to find the single number we xor all the entries
+    // in the array the final result will our single number as xor of a number with
+    // itself makes it zero so the number that is not repeated remains at the end
+    public int singleNumberI(int[] nums) {
+        int single = 0;
+        for (int i = 0; i <nums.length; i++){
+            single ^= nums[i];
+        }
+        return single;
+    }
+
+    // LeetCode :: 137. Single Number II
+    // The
+    public int singleNumberv2(int[] nums) {
+        int single = 0;
+        for (int i = 0; i<32; i++) {
+            int sum = 0;
+            for (int j = 0; j <nums.length; j++){
+                if ((nums[j] & (1<<i)) != 0) {
+                    sum++;
+                }
+
+            }
+            if (sum % 3 == 1) {
+                single |= (1<<i);
+            }
+        }
+        return single;
+    }
+    // Best solution
+
+    public int singleNumber(int[] nums) {
+        int x1 = 0, x2 = 0, mask = 0;
+
+        for (int i : nums) {
+            x2 ^= x1 & i;
+            x1 ^= i;
+            mask = ~(x1 & x2);
+            x2 &= mask;
+            x1 &= mask;
+        }
+
+        return x1;  // Since p = 1, in binary form p = '01', then p1 = 1, so we should return x1.
+        // If p = 2, in binary form p = '10', then p2 = 1, and we should return x2.
+        // Or alternatively we can simply return (x1 | x2).
+    }
+
+    // Adnan-Aziz 1.1
+    // Check parity return 1 if odd numbers of 1 in a number
+    public int checkParity (int x){
+        int result = 0;
+        while (x!=0) {
+            result ^= 1; // odd number 1 set it even number of 1 unset it due to xor
+            x &= x -1; // drop the last 1 bit
+        }
+        return result;
+    }
+
 }

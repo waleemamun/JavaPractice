@@ -191,7 +191,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5};
+        int [] arr =  {4,3,2,2,4,3,4,5,3,2};
         int [] arr1 = {3,4,5,1,2};
 
         int [][] arr2d = {
@@ -220,7 +220,7 @@ public class Main {
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
-        System.out.println(" res " + sv1.canCompleteCircuit(arr,arr1));
+        System.out.println(" res " + bt1.checkParity(15));
 
 
 
