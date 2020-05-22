@@ -80,7 +80,7 @@ public class SolutionsV1 {
     // Leetcode :: 54 Spiral Matrix
     // The answer will be all the elements in clockwise order from the first-outer layer,
     // followed by the elements from the second-outer layer, and so on.
-    public List<Integer> spiralOrder(int[][] matrix) {
+    public List<Integer> spiralOrderV2(int[][] matrix) {
         List ans = new ArrayList();
         if (matrix.length == 0)
             return ans;
@@ -104,6 +104,38 @@ public class SolutionsV1 {
         }
         return ans;
 
+    }
+
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> spList = new ArrayList<>();
+        if (matrix.length == 0)
+            return spList;
+
+        int R = matrix.length;
+        int C = matrix[0].length;
+        int i = 1;
+        boolean [][]visited = new boolean[R][C];
+        int []rowDir = {0, 1, 0, -1};
+        int []colDir = {1, 0, -1, 0};
+        int r = 0, c = 0;
+        int idx = 0;
+        int nextR = 0;
+        int nextC = 0;
+        while (i <= R*C) {
+            spList.add(matrix[r][c]);
+            visited[r][c] = true;
+            nextR = r + rowDir[idx];
+            nextC = c + colDir[idx];
+            if (nextR < 0 || nextR >= R || nextC < 0 || nextC >= C || visited[nextR][nextC]){
+                idx = (idx+1) % 4;
+                nextR = r + rowDir[idx];
+                nextC = c + colDir[idx];
+            }
+            r = nextR;
+            c = nextC;
+            i++;
+        }
+        return spList;
     }
 
     // Leetcode :: 55. Jump Game
@@ -773,6 +805,33 @@ public class SolutionsV1 {
             System.out.print( nums[i] + " ");
         System.out.println();
 
+    }
+    // sort color using the dutch national flag problem with using
+    // the qsort pivot-partitioning approach. The idea is to use two pointer small & large
+    // small puts the values smaller than pivot in proper position & large does the same for lareger values
+    public void sortColorsV2(int[] nums) {
+        int small = 0;
+        int equal = 0;
+        int large = nums.length -1;
+        int pivot = 1;
+        // the condition needs to equal <=  larger instead of equal < large to handle edge cases like 2 0 1
+        while (equal <= large) {
+            if(nums[equal] < pivot) {
+                int temp = nums[equal];
+                nums[equal] = nums[small];
+                nums[small] = temp;
+                small++;
+                equal++;
+            } else if (nums[equal] > pivot) {
+                int temp = nums[equal];
+                nums[equal] = nums[large];
+                nums[large] = temp;
+                large--;
+            } else {
+                equal++;
+            }
+
+        }
     }
 
     // LeetCode :: 209. Minimum Size Subarray Sum

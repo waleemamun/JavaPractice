@@ -2,6 +2,7 @@ import org.omg.PortableInterceptor.INACTIVE;
 import sun.awt.image.ImageWatched;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -192,7 +193,7 @@ public class Main {
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
         int [] arr =  {4,3,2,2,4,3,4,5,3,2};
-        int [] arr1 = {3,4,5,1,2};
+        int [] arr1 = {2,0,1};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -220,7 +221,8 @@ public class Main {
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
-        System.out.println(" res " + bt1.checkParity(15));
+        sv1.sortColorsV2(arr1);
+        System.out.println(" res " + Arrays.toString(arr1));
 
 
 

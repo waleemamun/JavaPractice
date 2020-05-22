@@ -258,13 +258,38 @@ public class Bits {
         // Or alternatively we can simply return (x1 | x2).
     }
 
-    // Adnan-Aziz 1.1
+    // Adnan-Aziz 5.1
     // Check parity return 1 if odd numbers of 1 in a number
     public int checkParity (int x){
         int result = 0;
         while (x!=0) {
             result ^= 1; // odd number 1 set it even number of 1 unset it due to xor
             x &= x -1; // drop the last 1 bit
+        }
+        return result;
+    }
+
+    // LeetCode :: 231 Power of Two
+    public boolean isPowerOfTwo(int n) {
+        int x = n&(n-1);
+        return (n>0 && x==0)?true:false;
+    }
+
+    // Adnan-Aziz 5.7 pow(x,y)
+    // use the binary representation of y
+    public double computePower(double x, int y) {
+        double result = 1.0;
+        if (y < 0){
+            x = 1.0/x;
+        }
+        while (y != 0) {
+            // if the bit position is 1 we store in result
+            if((y&1) != 0) {
+                result *= x;
+            }
+            // otherwise we increase x's power for example x^4 becomes x^8
+            x *= x;
+            y >>>= 1;
         }
         return result;
     }
