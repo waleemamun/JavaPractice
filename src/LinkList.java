@@ -5,14 +5,17 @@ import java.util.*;
 public class LinkList {
     int data;
     LinkList next;
+    int val;
 
     public LinkList() {
         int data = 0;
+        val = 0;
         next = null;
     }
 
     public LinkList (int data){
         this.data = data;
+        val = data;
         next = null;
     }
 
@@ -116,7 +119,8 @@ public class LinkList {
         return head;
     }
 
-    // Leetcode 21
+    // Leetcode :: 21  Merge Two Sorted Lists
+    // Check the V2 its the better implementation uses O(1) space
     public LinkList mergeTwoLists(LinkList l1, LinkList l2) {
 
         LinkList head = null;
@@ -164,6 +168,27 @@ public class LinkList {
         }
 
         return head;
+    }
+
+    // lets use the two list to buld the sorted list without using any additional space
+    // Use dummy node which will point to the new list
+    public LinkList mergeTwoListsV2(LinkList l1, LinkList l2){
+        LinkList dummy = new LinkList();
+        LinkList curr = dummy;
+        while (l1 != null && l2 != null){
+            System.out.println(l1.val + " " + l2.val);
+            if (l1.val <= l2.val) {
+                curr.next = l1;
+                l1 = l1.next;
+
+            } else {
+                curr.next = l2;
+                l2 = l2.next;
+            }
+            curr = curr.next;
+        }
+        curr.next = (l1!=null)?l1:l2;
+        return dummy.next;
     }
 
     /* Leetcode 23 Merge K-sorted lists.
@@ -267,7 +292,7 @@ public class LinkList {
 
 
 
-    // 206. Reverse Linked List
+    // LeetCode :: 206. Reverse Linked List
     // reverse a List recursively, This passed.
     // The trick is to handle the first node specially
     private LinkList revListV2 (LinkList nodeC, LinkList nodeN, LinkList head) {
@@ -622,7 +647,7 @@ public class LinkList {
         LinkList nextNode = null;
         LinkList mNode = null;
         int pos = 1;
-        // scan the array to build the stack
+
         while (curr != null) {
             if(pos == m - 1)
                 mPrev = curr;
@@ -655,14 +680,59 @@ public class LinkList {
         return head;
     }
 
+    // LeetCode :: 876. Middle of the Linked List
+    // Consider the scenario for even number of nodes
+    // 1,2,3,4,5,6 here 4 is the middle node not 3
     public LinkList midNode(LinkList head){
         if(head == null || head.next == null)
             return head;
         LinkList slow = head;
-        LinkList fast = slow.next;
+        LinkList fast = head;
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
+        }
+        return slow;
+
+    }
+    // LeetCode :: 141. Linked List Cycle
+    public boolean hasCycle(LinkList head) {
+        if (head == null || head.next == null)
+            return false;
+        LinkList slow = head;
+        LinkList fast = head;
+
+        while (fast!= null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast)
+                return true;
+        }
+        return false;
+    }
+
+    // Leetcode :: 142. Linked List Cycle II
+    public LinkList detectCycle(LinkList head) {
+        if (head == null || head.next == null)
+            return null;
+        LinkList slow = head;
+        LinkList fast = head;
+        // check if fast & fast.next is not null, checking fast !=null also make sure
+        // that in corner case slow is not null
+        while (fast != null &&
+                fast.next != null ) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast)
+                break;
+        }
+        // no cycle we exited the loop after hitting null
+        if (slow != null && slow != fast)
+            return null;
+        slow = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
         }
         return slow;
     }

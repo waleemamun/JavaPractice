@@ -192,8 +192,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {4,3,2,2,4,3,4,5,3,2};
-        int [] arr1 = {2,0,1};
+        int [] arr =  {1,3,5,7,9};
+        int [] arr1 = {2,4,6};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -217,12 +217,19 @@ public class Main {
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
+        LinkList ls2 = new LinkList();
         DPs dp1 = new DPs();
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
-        sv1.sortColorsV2(arr1);
-        System.out.println(" res " + Arrays.toString(arr1));
+
+        ls1 = ls1.createList(arr);
+        ls2 = ls2.createList(arr1);
+        ls1.printList();
+        ls2.printList();
+        LinkList ls3 = new LinkList();
+        ls3 = ls3.mergeTwoListsV2(ls1,ls2);
+        ls3.printList();
 
 
 
