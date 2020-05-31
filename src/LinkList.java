@@ -737,6 +737,46 @@ public class LinkList {
         return slow;
     }
 
+    public void linleListPractice(){
+        LinkedList <Integer> stack = new LinkedList<>();
+        ArrayList<Integer> aStack = new ArrayList<>();
+        LinkedList<Integer> queue = new LinkedList<>();
+        HashMap <Integer, Integer> map = new HashMap<>();
+        int size = 10;
+        PriorityQueue<String> minHeap = new PriorityQueue<>(size, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.length()- o2.length();
+            }
+        });
+        String [] words = {"walee", "mamun","al","abdullah","mama"};
+        for(String word : words)
+            minHeap.add(word);
+        while (!minHeap.isEmpty()){
+            System.out.println(minHeap.peek());
+            minHeap.poll();
+        }
+        map.remove(1);
+
+        //push
+        stack.addFirst(3);
+        stack.addFirst(2);
+        stack.addFirst(1);
+        //pop
+        int x = stack.poll();
+        System.out.println("pop " + x);
+        //enqueue
+        queue.add(3);
+        queue.add(4);
+        queue.add(5);
+
+        //dequeue
+        x = queue.poll();
+        System.out.println("Dequeue " + x);
+
+
+    }
+
 
 
 }

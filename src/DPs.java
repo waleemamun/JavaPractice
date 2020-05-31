@@ -268,6 +268,7 @@ public class DPs {
 
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j <= n; j++) {
+                // string are 0 index based that's why i-1 j-1 used in chatAt
                 if (word1.charAt(i-1) == word2.charAt(j-1)) {
                     distanceDP[i][j] = distanceDP[i-1][j-1];
                 } else {

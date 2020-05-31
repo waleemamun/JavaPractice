@@ -1,10 +1,7 @@
 import org.omg.PortableInterceptor.INACTIVE;
 import sun.awt.image.ImageWatched;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class Main {
@@ -192,8 +189,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,3,5,7,9};
-        int [] arr1 = {2,4,6};
+        int [] arr =  {2, 4, 7, 1, 5, 3};
+        int [] arr1 = {1, 7, 5, 3, 10, 30, 20, 15, 9};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -211,8 +208,8 @@ public class Main {
         };
 
         String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.","you","never","know","what","you're","gonna","get."};
-        String word1 = "ADOBECODEBANC";
-        String word2 = "DEC";
+        String word1 = "abcdekJ";
+        String word2 = "abcdkmL";
         String str = "1234";
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
@@ -222,14 +219,12 @@ public class Main {
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
+        PhoneIQ p1 = new PhoneIQ();
+        //System.out.println(" Result " + p1.numberOfWays(arr,6));
 
-        ls1 = ls1.createList(arr);
-        ls2 = ls2.createList(arr1);
-        ls1.printList();
-        ls2.printList();
-        LinkList ls3 = new LinkList();
-        ls3 = ls3.mergeTwoListsV2(ls1,ls2);
-        ls3.printList();
+        System.out.println("Res = " + p1.matchingPairs(word1,word2));
+
+
 
 
 

@@ -1206,7 +1206,9 @@ public class SolutionsV1 {
             // update the left array with leftMost for ith position so that for some
             // other i on the right we dont need to recalculate & jump faster
             left[i] = leftMost + 1;
+            System.out.print(left[i] + " ");
         }
+        System.out.println();
         right[heights.length -1] = heights.length -1;
         for (int i = heights.length -2 ; i >= 0; i--){
             int rightMost = i +1;
@@ -1220,6 +1222,7 @@ public class SolutionsV1 {
             // update the right array with rightMost for ith position so that for some
             // other i on the left we dont need to recalculate & jump faster
             right[i] = rightMost -1;
+            System.out.print(right[i] + " ");
         }
         int max = Integer.MIN_VALUE;
         // now find the max are covered using the left & right array to find the
@@ -1230,6 +1233,113 @@ public class SolutionsV1 {
 
         return max;
     }
+
+    public int[] maxContagiousSubArray(int[] heights) {
+
+        int []left = new int [heights.length]; // stores the max leftMost position spanned for each i
+        int []right = new int [heights.length]; // stores the max rightMost position spanned for each i
+        left[0] = 0;
+        for (int i = 1; i < heights.length; i++) {
+            int leftMost = i -1;
+            // lets find such leftMost pos for i so that the leftMost bar >= bar i
+            while (leftMost >= 0 &&
+                    heights[leftMost] <= heights[i]){
+                // note we are using the left arrays values to jump to the right
+                // to find the leftMost this way er can iterate very fast
+                leftMost = left[leftMost]  - 1;
+            }
+            // update the left array with leftMost for ith position so that for some
+            // other i on the right we dont need to recalculate & jump faster
+            left[i] = leftMost + 1;
+            System.out.print(left[i] + " ");
+        }
+        System.out.println();
+        right[heights.length -1] = heights.length -1;
+        for (int i = heights.length -2 ; i >= 0; i--){
+            int rightMost = i +1;
+            // lets find such rightMost pos for i so that the rightMost bar >= bar i
+            while (rightMost < heights.length &&
+                    heights[rightMost] <= heights[i]){
+                // note we are using the right arrays values to jump to the right
+                // to find the rightMost this way er can iterate very fast
+                rightMost = right[rightMost] + 1;
+            }
+            // update the right array with rightMost for ith position so that for some
+            // other i on the left we dont need to recalculate & jump faster
+            right[i] = rightMost -1;
+            System.out.print(right[i] + " ");
+        }
+        int max = Integer.MIN_VALUE;
+        // now find the max are covered using the left & right array to find the
+        // width covered by each position i, height will be the heights[i]
+        int res[] = new int[heights.length];
+        System.out.println();
+        for (int i = 0; i < heights.length; i++){
+            res[i] = right[i] - left[i] +1;
+            System.out.print(res[i] + " ");
+        }
+
+        return res;
+    }
+    // The main function to find the maximum rectangular area under given
+    // histogram with n bars
+    static int getMaxArea(int hist[], int n)
+    {
+        // Create an empty stack. The stack holds indexes of hist[] array
+        // The bars stored in stack are always in increasing order of their
+        // heights.
+        Stack<Integer> s = new Stack<>();
+
+        int max_area = 0; // Initialize max area
+        int tp; // To store top of stack
+        int area_with_top; // To store area with top bar as the smallest bar
+
+        // Run through all bars of given histogram
+        int i = 0;
+        while (i < n)
+        {
+            // If this bar is higher than the bar on top stack, push it to stack
+            if (s.empty() || hist[s.peek()] <= hist[i])
+                s.push(i++);
+
+                // If this bar is lower than top of stack, then calculate area of rectangle
+                // with stack top as the smallest (or minimum height) bar. 'i' is
+                // 'right index' for the top and element before top in stack is 'left index'
+            else
+            {
+                tp = s.peek(); // store the top index
+                s.pop(); // pop the top
+
+                // Calculate the area with hist[tp] stack as smallest bar
+
+                area_with_top = hist[tp] * (s.empty() ? i : i - s.peek() - 1);
+                if(!s.empty())
+                    System.out.println(tp + " " +  (i - s.peek() - 1) + " area " + area_with_top + " " +s.size());
+
+                // update max area, if needed
+                if (max_area < area_with_top)
+                    max_area = area_with_top;
+            }
+        }
+
+        // Now pop the remaining bars from stack and calculate area with every
+        // popped bar as the smallest bar
+        while (s.empty() == false)
+        {
+            tp = s.peek();
+            s.pop();
+            area_with_top = hist[tp] * (s.empty() ? i : i - s.peek() - 1);
+            if(!s.empty())
+                System.out.println(tp + " " +  (i - s.peek() - 1) + " area " + area_with_top + " " +s.size());
+            if (max_area < area_with_top)
+                max_area = area_with_top;
+        }
+
+        return max_area;
+
+    }
+
+
 
 
     // LeetCode :; 88. Merge Sorted Array
@@ -1523,7 +1633,80 @@ public class SolutionsV1 {
         return firstPositive;
     }
 
+    // LeetCode ::  480. Sliding Window Median (Hard)
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        double [] result = new double[nums.length -k +1];
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
 
+        for (int i = 0; i<nums.length; i++) {
+            if (minHeap.size() <= maxHeap.size()) {
+                maxHeap.add(nums[i]);
+                minHeap.add(maxHeap.poll());
+            } else {
+                minHeap.add(nums[i]);
+                maxHeap.add(minHeap.poll());
+            }
+            if(minHeap.size() + maxHeap.size() == k) {
+                double median;
+                if(minHeap.size() == maxHeap.size())
+                    median = (minHeap.peek()+maxHeap.peek())/2.0;
+                else
+                    median = minHeap.peek();
+                int start = i -k+1;
+                result[start] = median;
+                // we need to remove the start element of this K block of numbers as the sliding
+                // window needs to move to the right
+                if (!minHeap.remove(nums[start])) {
+                    maxHeap.remove(nums[start]);
+                }
+
+            }
+        }
+
+        return result;
+    }
+
+    // LeetCode :: 848. Shifting Letters
+    // Check the solution v2
+    public String shiftingLetters(String S, int[] shifts) {
+        long[] lShifts = new long[shifts.length];
+        if (shifts.length == 0)
+            return "";
+        lShifts[shifts.length - 1] = shifts[shifts.length - 1];
+        for (int i = shifts.length - 2; i >= 0; i--) {
+            lShifts[i] = shifts[i];
+            lShifts[i] = lShifts[i] + lShifts[i + 1];
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (i = 0; i < S.length() && i < shifts.length; i++) {
+            long rotate = lShifts[i] % 26l;
+            sb.append((char) (((S.charAt(i) - 'a' + rotate) % 26) + 'a'));
+        }
+
+        return sb.toString();
+
+
+    }
+
+    // faster solution no need calc the cumulative count we can traverse
+    // from the right and use a single var to calc cumulative shift
+    private char getTheChar(char c, int shift) {
+        return (char)(((c-'a'+shift)%26)+'a');
+    }
+    public String shiftingLettersV2(String S, int[] shifts) {
+        char[] ans = S.toCharArray();
+        int prevStep = 0;
+
+        for(int i = ans.length-1; i >= 0; i--) {
+            prevStep += (shifts[i]%26);
+            ans[i] = getTheChar(ans[i],prevStep);
+        }
+
+        return new String(ans);
+    }
 
 
 

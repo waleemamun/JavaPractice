@@ -1596,6 +1596,39 @@ public class Recursions {
         return output;
     }
 
+    // Adnan Aziz 12.2 :: Search a Sorted Array for entry equal to index no duplicate in the array
+    public int searchNetryEqualToIndx(int []nums) {
+        int low = 0;
+        int high = nums.length-1;
+        int result = -1;
+
+        while (low <= high) {
+            int mid = low + (high-low)/2;
+            if (nums[mid] == mid){
+                result = mid;
+                break;
+            } else if (nums[mid] > mid ){
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+
+        }
+        return result;
+    }
+
+    public int searchEntryEqualToIndxWithDup(int []nums, int low, int high) {
+        if (low > high)
+            return -1;
+        int mid = low + (high-low)/2;
+        if (nums[mid] == mid)
+            return mid;
+        int left = searchEntryEqualToIndxWithDup(nums, low, Math.min(nums[mid],mid-1));
+        if (left >= 0)
+            return left;
+        return searchEntryEqualToIndxWithDup(nums, Math.max(mid+1,nums[mid]),high);
+    }
+
 
 
 

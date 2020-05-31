@@ -903,6 +903,44 @@ public class Tree {
         node.left = buildTreefromInPostOrder(postder,inorder, start, r-1, pStart -len -1);
         return node;
     }
+    // This version is easy to read but little slower as for psotorder we reverse the array to make the calc easier
+    public TreeNode buildTreePostOrderV2(int[] inorder, int[] postorder) {
+        if(postorder.length == 0 || inorder.length == 0 || postorder.length != inorder.length)
+            return null;
+        // build a hasmap as this lookup will be done  multiple times in the recursion so
+        // building a hashmap makes the algo run surprisingly fast
+        int left = 0, right = postorder.length -1;
+        for (int i = 0; i<inorder.length; i++) {
+            inorderMap.put(inorder[i],i);
+            // reverse the post order array this way we can deal with th postorder traversal the
+            // same way we can handle inorder, we dont need to go into the complexity of negative calc
+            if (left < right) {
+                int temp = postorder[left];
+                postorder[left] = postorder[right];
+                postorder[right] = temp;
+                left++;
+                right--;
+            }
+        }
+        return buildTreePostOrderV2Rec(inorder,postorder, 0, inorder.length-1, 0, postorder.length -1);
+    }
+    private TreeNode buildTreePostOrderV2Rec(int[] inorder, int[] postorder, int inorderSt,
+                                             int inorderEnd, int postorderSt, int postorderEn) {
+        if (inorderEnd < inorderSt || postorderEn < postorderSt)
+            return null;
+        int inOrderRootIdx = inorderMap.get(postorder[postorderSt]);
+        // for post oder we cal the right sub tree size as the right sub tree appears after root node
+        // for indorder case we just need to calc left subtree size instead using inOrderRootIdx - inorderSt
+        int rightSubtreeSize = inorderEnd - inOrderRootIdx ;
+        TreeNode root = new TreeNode(postorder[postorderSt]);
+        //System.out.println(root.val + " " + rightSubtreeSize + " " + inorderEnd +" " + inOrderRootIdx);
+        root.right = buildTreePostOrderV2Rec(inorder, postorder, inOrderRootIdx +1 ,
+                inorderEnd , postorderSt + 1,
+                postorderSt + rightSubtreeSize);
+        root.left = buildTreePostOrderV2Rec(inorder, postorder, inorderSt,
+                inOrderRootIdx -1, postorderSt + 1 + rightSubtreeSize , postorderEn);
+        return root;
+    }
     // LeetCode :: 107. Binary Tree Level Order Traversal II
     // The idea is to recursively call to add nodes per level.
     // We start with empty list at each level we increase the list size
@@ -1378,6 +1416,41 @@ public class Tree {
             sumNumberRec(node.left, sum);
             sumNumberRec(node.right, sum);
         }
+    }
+
+    // Adnan Aziz 10.11 inorder in O(1) space given parent pointer
+    public List<Integer> inOrderTraversalWithParent(TreeNode root) {
+        TreeNode curr = root;
+        TreeNode parent = null;
+        TreeNode prev = null;
+        TreeNode next = null;
+        List <Integer> traverseList = new ArrayList<>();
+        while (curr != null) {
+            if(prev == curr.parent) {
+                if (curr.left != null){
+                    next = curr.left;
+                } else {
+                    traverseList.add(curr.data);
+                    if(curr.right == null)
+                        next = curr.parent;
+                    else
+                        next = curr.right;
+                }
+            } else if (prev == curr.left) {
+                traverseList.add(curr.data);
+                if(curr.right == null)
+                    next = curr.parent;
+                else
+                    next = curr.right;
+            } else {
+                curr = curr.parent;
+            }
+            prev = curr;
+            curr = next;
+
+        }
+        return traverseList;
+
     }
 
 

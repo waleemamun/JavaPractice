@@ -1,3 +1,5 @@
+import org.omg.CORBA.MARSHAL;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -272,6 +274,25 @@ public class Utilities {
         // we pass item here as the k-1 th smallest item because for kth smallest we pass k-1
         // so item = nums.length - k + 1 and item -1 == nums.length - k
         return quickSelect(nums, 0, nums.length-1, item);
+    }
+
+    public static double medianOfUnsortedArray(int []nums) {
+        int low = 0;
+        int high = nums.length-1;
+        int mid = low + (high-low)/2;
+        double res = 0.0;
+        System.out.println(mid);
+        res = quickSelectKthSmallest(nums,mid +1);
+        if(nums.length % 2 == 0) {
+            int min = Integer.MAX_VALUE;
+            for (int i = mid+1 ;i <nums.length;i++) {
+                min = Math.min(min, nums[i]);
+
+            }
+            System.out.println(res+" "+ min);
+            res = (res+min)/2.0;
+        }
+        return res;
     }
 
 
