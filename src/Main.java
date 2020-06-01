@@ -189,7 +189,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {2, 4, 7, 1, 5, 3};
+        int [] arr =  {1,2,3,4,5,2,1,0,6};
         int [] arr1 = {1, 7, 5, 3, 10, 30, 20, 15, 9};
 
         int [][] arr2d = {
@@ -222,7 +222,9 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
 
-        System.out.println("Res = " + p1.matchingPairs(word1,word2));
+
+        int [] res = p1.findMaxProduct(arr);
+        System.out.println("result " + Arrays.toString(res));
 
 
 

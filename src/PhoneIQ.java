@@ -314,7 +314,38 @@ public class PhoneIQ {
         return true;
     }
 
+    int[] findMaxProduct(int[] arr) {
+        // Write your code here
+        int []result = new int[arr.length];
+        if (arr.length < 3) {
+            Arrays.fill(result, -1);
+            return result;
+        }
+        result[0] = result[1] = -1;
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        // pre-processing
+        minHeap.add(arr[0]);
+        minHeap.add(arr[1]);
+        minHeap.add(arr[2]);
+        result[2] = arr[0] * arr[1] * arr[2];
+        for (int i = 3; i< arr.length; i++) {
 
+            if (minHeap.peek() < arr[i]) {
+                minHeap.remove();
+                minHeap.add(arr[i]);
+            }
+            Iterator<Integer> itr = minHeap.iterator();
+            int prod = 1;
+            while (itr.hasNext() ) {
+                prod*= itr.next();
+            }
+            result[i] = prod;
+
+        }
+
+        return result;
+
+    }
 
 
     }
