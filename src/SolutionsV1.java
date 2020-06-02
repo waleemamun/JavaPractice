@@ -1708,6 +1708,54 @@ public class SolutionsV1 {
         return new String(ans);
     }
 
+    // Adnan Aziz 14.1
+    public  ArrayList<Integer> intersectTwoSortedArrays(int []nums1, int []nums2) {
+        int i = 0;
+        int j = 0;
+        ArrayList<Integer> resList = new ArrayList<>();
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] > nums2[j]) {
+                j++;
+            } else if (nums1[i] < nums2[j]){
+                i++;
+            } else {
+                if (resList.size() == 0)
+                    resList.add(nums1[i]);
+                else if(resList.get(resList.size()-1) != nums1[i]) {
+                    resList.add(nums1[i]);
+                }
+                i++;
+                j++;
+            }
+        }
+        return resList;
+    }
+    public  ArrayList<Integer> mergeTwoSortedArrays(int []nums1, int []nums2){
+        int i = 0;
+        int j = 0;
+        ArrayList<Integer> resList = new ArrayList<>();
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] < nums2[j]) {
+                resList.add(nums1[i]);
+                i++;
+            } else {
+                resList.add(nums2[j]);
+                j++;
+            }
+
+        }
+        if (i == j)
+            return resList;
+        if (i == nums1.length) {
+            while(j<nums1.length) resList.add(nums1[j++]);
+        } else if (j == nums2.length) {
+            while(i < nums1.length) resList.add(nums1[i++]);
+        }
+
+        return resList;
+    }
+
+
 
 
 

@@ -189,8 +189,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,2,1,0,6};
-        int [] arr1 = {1, 7, 5, 3, 10, 30, 20, 15, 9};
+        int [] arr =  {1,2,3,3,3,3,3,3,4,6};
+        int [] arr1 = {3,3,4,4,4,5,5,6};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -221,10 +221,10 @@ public class Main {
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
+        CodeArray c1  =new CodeArray();
 
+        System.out.println("res list " + sv1.mergeTwoSortedArrays(arr1,arr));
 
-        int [] res = p1.findMaxProduct(arr);
-        System.out.println("result " + Arrays.toString(res));
 
 
 

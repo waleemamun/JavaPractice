@@ -347,5 +347,40 @@ public class PhoneIQ {
 
     }
 
+    // Longest subarray not having more than K distinct elements
+    public int kDistinctMinSubArr(String s, int k) {
+        HashMap <Character,Integer> map= new HashMap<Character,Integer>();
+        int maxLen = 0;
+        int left = 0;
+        int right = 0;
+        int disticCount = 0;
+        while (right < s.length()) {
+            int idx = map.getOrDefault(s.charAt(right), 0);
+            if( idx == 0)
+                disticCount++;
+            map.put(s.charAt(right),idx+1);
+            if (disticCount == k) {
+                while (left < right) {
+                    int count = map.get(s.charAt(left));
+                    if (count > 1)
+                        map.put(s.charAt(left), count -1);
+                    else  {
+                        disticCount--;
+                        break;
+                    }
+                    left++;
+                }
+                System.out.println(left + " - " + right + " max "+ (right-left +1));
+                maxLen = Math.max(maxLen, right - left +1);
+                left++;
+            }
+            right++;
+        }
+        return maxLen;
+
+    }
+
+
+
 
     }

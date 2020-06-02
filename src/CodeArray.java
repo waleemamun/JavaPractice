@@ -137,19 +137,16 @@ public class CodeArray {
 
     public int lengthOfLongestSubstringV1(String s) {
         HashMap <Character,Integer> map= new HashMap<Character,Integer>();
-        int n = s.length();
-        int j = 0;
-        int max_len = 0;
-        int i = 0;
-        for (i = 0; j<n; j++) {
-            // as we use hashmap we need this check for null value check
-            if (map.containsKey(s.charAt(j))) {
-                i = Math.max(map.get(s.charAt(j)),i);
-            }
-            max_len = Math.max(max_len,j-i+1);
-            map.put(s.charAt(j),j+1);
+        int maxLen = 0;
+        int left = 0;
+        int right = 0;
+        while (right < s.length()) {
+            left = Math.max(left, map.getOrDefault(s.charAt(right),-2) + 1);
+            map.put(s.charAt(right),right);
+            maxLen = Math.max(maxLen, right - left + 1);
+            right++;
         }
-        return max_len;
+        return maxLen;
 
     }
 
