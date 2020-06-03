@@ -712,7 +712,8 @@ public class Tree {
         return rList;
     }
     // level order traversal in recursive manner its little faster , does not require as much as memory
-    //
+    // this is basically using a preorder traversal but using a list of list to store the nodes in level
+    // order traversal manner
     public List<List<Integer>> levelOrderRec(TreeNode root) {
         List<List<Integer>> rList = new ArrayList<>();
         if (root == null)

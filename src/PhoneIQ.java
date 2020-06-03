@@ -380,6 +380,108 @@ public class PhoneIQ {
 
     }
 
+    // count the number of node in a tree that are visible from the left side so
+    // if we are looking at the tree from left count the  number of nodes. This is basically asking to check the
+    // 1st node left to right in a level order more easily its asking for the number of level in a tree or
+    // the height of the tree so the answer is simple just get the height of the tree
+    int visibleNodes(TreeNode root) {
+        // Write your code here
+        if (root == null)
+            return 0;
+        return 1 + Math.max(visibleNodes(root.left), visibleNodes(root.right));
+    }
+
+    // listing the left nodes visible from the left side requires level order traversal
+    // and storing in a list the first node on each level
+    ArrayList<Integer> listLeftVisibleNodeId(TreeNode root) {
+        ArrayList<Integer> nodeList = new ArrayList<>();
+        if (root == null)
+            return nodeList;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()){
+            int size = queue.size();
+            for (int i = 0; i < size; i++){
+                TreeNode node = queue.poll();
+                if (i == 0)
+                    nodeList.add(node.val);
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+            }
+        }
+        return nodeList;
+    }
+
+    class Query {
+        int v;
+        char c;
+        Query(int v, char c) {
+            this.v = v;
+            this.c = c;
+        }
+    }
+
+
+    private HashMap<Integer, HashMap<Character,Integer>> map = new HashMap<>();
+    private String buildMap (Node node, String traverseString) {
+        if (node == null)
+            return "";
+        StringBuilder sb = new StringBuilder();
+
+        for (Node n : node.children) {
+            sb.append(buildMap(n,traverseString));
+        }
+        sb.append(traverseString.charAt(node.val -1));
+        HashMap<Character, Integer> tempMap = new HashMap<>();
+        for (int i = 0; i < sb.length(); i++) {
+            int count = tempMap.getOrDefault(sb.charAt(i),0);
+            tempMap.put(sb.charAt(i), count +1);
+        }
+        map.put(node.val,tempMap);
+        return sb.toString();
+    }
+    // Given a N ary tree where each node is repsented by 1 to N & a string which is 1-based indexed
+    // each node in tree points to each char in string given a set if node, char pair find the number
+    // of char rooted at that node
+    // WE need to use preprocessing to solve this
+    int[] countOfNodes(Node root, ArrayList<Query> queries, String s) {
+        // Write your code here
+        int []res = new int[queries.size()];
+
+        //build the map
+        buildMap(root, s);
+        int j = 0;
+        for (Query q : queries) {
+            HashMap<Character,Integer> freqMap = map.getOrDefault(q.v, null);
+            if (freqMap != null)
+                res [j++] = freqMap.getOrDefault(q.c, -1);
+        }
+        return res;
+    }
+
+    boolean balancedSplitExists(int[] arr) {
+        // Write your code here
+        Arrays.sort(arr);
+        int leftSum = 0;
+        int rightSum =0;
+        for (int i = 0; i < arr.length; i++) {
+            leftSum+= arr[i];
+        }
+        for (int i = arr.length -1 ; i>0; i--) {
+            leftSum -= arr[i];
+            rightSum += arr[i];
+            if (leftSum == rightSum && arr[i] != arr[i-1])
+                return true;
+        }
+        return false;
+    }
+
+
+
+
+
 
 
 

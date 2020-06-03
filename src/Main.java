@@ -189,7 +189,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,3,3,3,3,3,4,6};
+        int [] arr =  {7,3,3,2,4,3};
         int [] arr1 = {3,3,4,4,4,5,5,6};
 
         int [][] arr2d = {
@@ -222,8 +222,9 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
+        System.out.println(tr1.levelOrder(treeNode));
+        System.out.println(" Split possible: " + p1.balancedSplitExists(arr));
 
-        System.out.println("res list " + sv1.mergeTwoSortedArrays(arr1,arr));
 
 
 
