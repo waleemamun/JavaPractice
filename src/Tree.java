@@ -1575,6 +1575,15 @@ public class Tree {
         return root;
     }
     public TreeNode buildBSTFromPostOrder( int []postOrder){
+        int left = 0;
+        int right = postOrder.length -1;
+        while (left <right) {
+            int temp = postOrder[left];
+            postOrder[left] = postOrder[right];
+            postOrder[right] = temp;
+            left++;
+            right--;
+        }
         return buildBSTFromPostOrderRec(postOrder, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     }
