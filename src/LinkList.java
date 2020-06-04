@@ -176,7 +176,7 @@ public class LinkList {
         LinkList dummy = new LinkList();
         LinkList curr = dummy;
         while (l1 != null && l2 != null){
-            System.out.println(l1.val + " " + l2.val);
+
             if (l1.val <= l2.val) {
                 curr.next = l1;
                 l1 = l1.next;
@@ -776,6 +776,42 @@ public class LinkList {
 
 
     }
+
+    // Adnan Aziz 14.9 sort a linked list
+    // We need to use a merge sort. First we split the list into two halves and
+    // recursively sort the left & right half then merge the two sorted halves
+    private LinkList mergeSortList(LinkList l1) {
+
+        if (l1 == null || l1.next == null)
+            return l1;
+        LinkList slow = l1;
+        LinkList fast = l1;
+        LinkList preSlow = null;
+        while (fast!=null && fast.next != null) {
+            fast = fast.next.next;
+            preSlow = slow;
+            slow = slow.next;
+        }
+        // make the first list end point to null & return a pointer to the middle of the list
+        if (preSlow != null)
+            preSlow.next = null;
+        // recursive sort the left half of the list
+        LinkList ls1= mergeSortList(l1);
+        // recursive sort the right half of the list
+        LinkList ls2 = mergeSortList(slow);
+        // merge the left & right sorted list to a single merge list
+        LinkList mergeList = mergeTwoListsV2(ls1,ls2);
+
+        return mergeList;
+    }
+
+    // LeetCode :: 148. Sort List
+    // look at the mergeSortList as done for Adnan Aziz 14.9
+    public LinkList sortList(LinkList head) {
+        return mergeSortList(head);
+    }
+
+
 
 
 

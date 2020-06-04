@@ -189,8 +189,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {7,3,3,2,4,3};
-        int [] arr1 = {3,3,4,4,4,5,5,6};
+        int [] arr =  {5,2,1,3,4,7,6,8,9};
+        int [] arr1 = {5,2,1,3,4,7,6,8,9};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -223,7 +223,9 @@ public class Main {
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
         System.out.println(tr1.levelOrder(treeNode));
-        System.out.println(" Split possible: " + p1.balancedSplitExists(arr));
+
+        //TreeNode preRoot = tr1.buildBSTFromPreOrder(arr1);
+        //System.out.println(tr1.levelOrder(preRoot));
 
 
 

@@ -1454,6 +1454,131 @@ public class Tree {
 
     }
 
+    // Adnan Aziz Find next node greater than the given a pointer to a node in BST
+    private TreeNode successorNodeRec(int val, TreeNode node, TreeNode leftAncestor) {
+        if (node == null)
+            return node;
+        if (val == node.val) {
+            return leftAncestor;
+        } else if (val < node.val) {
+            leftAncestor = node;
+            return successorNodeRec(val,node.left,leftAncestor);
+        } else{
+            return successorNodeRec(val, node.right, leftAncestor);
+        }
+    }
+    // Check V2 for iterative check v3 for iterative & concise
+    public TreeNode successorNode (TreeNode node, TreeNode root) {
+        // if the righ subtree is not empty then the lowest node on the right subtree is our result
+        if (node.right != null) {
+            TreeNode rightChild = node.right;
+            while (rightChild.left != null)
+                rightChild = rightChild.left;
+            return rightChild;
+        }
+        // right subtree is empty we need to find the successor in its ancestor.
+        // The lowest ancestor for which this node exist in left subtree is the node we want
+        TreeNode ancestor = successorNodeRec(node.val, root, null);
+        return ancestor;
+    }
+
+    public TreeNode successorNodeV2 (TreeNode node, TreeNode root) {
+        if (root == null || node == null)
+            return null;
+        TreeNode curr = root;
+        TreeNode leftAncestor = null;
+        while (curr != null && curr.val != node.val) {
+            if(node.val < curr.val) {
+                leftAncestor = curr;
+                curr = curr.left;
+            } else {
+                curr = curr.right;
+            }
+        }
+        if (curr == null)
+            return null;
+        if (curr.right ==null)
+            return leftAncestor;
+        curr = curr.right;
+        while (curr.left!= null)
+            curr = curr.left;
+
+        return curr;
+    }
+    // This is more concise all of them have same run time O(h)
+    public TreeNode successorNodeV3 (TreeNode node, TreeNode root) {
+        if (root == null || node == null)
+            return null;
+        TreeNode curr = root;
+        TreeNode leftAncestor = null;
+        while (curr != null) {
+            if(node.val < curr.val) {
+                leftAncestor = curr;
+                curr= curr.left;
+            } else {
+                curr = curr.right;
+            }
+        }
+        return leftAncestor;
+    }
+
+    public TreeNode predecessorNodeV2(TreeNode node, TreeNode root){
+        if (root == null || node == null)
+            return null;
+        TreeNode curr = root;
+        TreeNode rightAncestor = null;
+        while (curr != null && curr.val != node.val) {
+            if (node.val > curr.val) {
+                rightAncestor = curr;
+                curr = curr.right;
+            } else {
+                curr = curr.left;
+            }
+        }
+        return rightAncestor;
+    }
+
+    private int rootIdx = 0;
+
+    private TreeNode buildBSTFromPreOrderRec(int []preorder, int lower , int upper) {
+        if(rootIdx >= preorder.length)
+            return null;
+        int rootVal = preorder[rootIdx];
+        if (rootVal < lower || rootVal > upper)
+            return null;
+        // now increase the pointer to preorder sequence, we should not increase it earlier as
+        // we dont want to process any value beyond the loewr/upper bound
+        rootIdx++;
+        TreeNode root = new TreeNode(rootVal);
+        root.left = buildBSTFromPreOrderRec(preorder, lower, rootVal);
+        root.right = buildBSTFromPreOrderRec(preorder, rootVal,upper);
+        return root;
+    }
+    // build the BST tree from PreOrder Traversal
+    public TreeNode buildBSTFromPreOrder( int []preorder){
+        return buildBSTFromPreOrderRec(preorder, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+    }
+    // build the BST tree from PostOrder Traversal
+    private TreeNode buildBSTFromPostOrderRec(int []postOrder, int lower , int upper) {
+        if(rootIdx >= postOrder.length)
+            return null;
+        int rootVal = postOrder[rootIdx];
+        if (rootVal < lower || rootVal > upper)
+            return null;
+        // now increase the pointer to preorder sequence, we should not increase it earlier as
+        // we dont want to process any value beyond the loewr/upper bound
+        rootIdx++;
+        TreeNode root = new TreeNode(rootVal);
+        root.right = buildBSTFromPostOrderRec(postOrder, rootVal,upper);
+        root.left = buildBSTFromPostOrderRec(postOrder, lower, rootVal);
+        return root;
+    }
+    public TreeNode buildBSTFromPostOrder( int []postOrder){
+        return buildBSTFromPostOrderRec(postOrder, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+    }
+
 
 
 
