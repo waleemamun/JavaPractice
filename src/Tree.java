@@ -466,7 +466,7 @@ public class Tree {
         }
         for (int i = start; i <= end; i++) {
             // left subtree list holds all the possible left subtrees
-            List<TreeNode> leftSubTreeList = genBSTree(start, i -1);
+            List<TreeNode> leftSubTreeList = genBSTree(start, i - 1);
             // right subtree list holds all the possible right subtrees
             List<TreeNode> rightSubTreeList = genBSTree(i+1, end);
             for (TreeNode leftSubTree : leftSubTreeList) {

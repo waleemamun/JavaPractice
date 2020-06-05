@@ -190,7 +190,7 @@ public class Main {
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
         int [] arr =  {5,2,1,3,4,7,6,8,9};
-        int [] arr1 = {5,2,1,3,4,7,6,8,9};
+        int [] arr1 = {1,2,3,4,5};
 
         int [][] arr2d = {
                 {10, 11, 15, 16, 17},
@@ -208,7 +208,7 @@ public class Main {
         };
 
         String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.","you","never","know","what","you're","gonna","get."};
-        String word1 = "abcdekJ";
+        String word1 = "abcba";
         String word2 = "abcdkmL";
         String str = "1234";
         SolutionsV1 sv1 = new SolutionsV1();
@@ -222,10 +222,11 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println(tr1.levelOrder(treeNode));
+        //System.out.println(tr1.levelOrder(treeNode));
 
         //TreeNode preRoot = tr1.buildBSTFromPreOrder(arr1);
         //System.out.println(tr1.levelOrder(preRoot));
+        System.out.println(r1.generateParenthesis(3));
 
 
 

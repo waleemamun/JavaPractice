@@ -1,7 +1,40 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+
 public class DPs {
+
+    /***
+     * Notes: Donot confuse divide & conquer with DP. If we divide a problem into two halves and solve
+     * the problem in halves its actually divide & conquer.
+     * For DP we need overlapping sub problems, & combinning the subproblem creates a solution to the orginal problem
+     * DP can be solved using top down memoization approach or bottom UP approach
+     *
+     ***/
+
+    //Leetcode :: 53  Maximum SubArray
+    // if the value of the ith position is greater than the sum of the left side + the current val
+    // the we can just discard the left side of the array.
+    // We keep track of the max sum on each update of current sum which gurantees that we wend up with max SUm
+    // This is also a DP problem notice in here we based our solution of ith element based on the solution of i-1
+    // element hence using overlapping sub problems
+    public int maxSubArray(int[] nums) {
+
+        int maxSum = nums[0];
+        int currSum = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            currSum += nums[i];
+            // the current number is actually greater than the cumulative sum so discard everything
+            // on the left and update the current sum to current value as its bigger
+            if (nums[i] > currSum) {
+                currSum = nums[i];
+            }
+            maxSum = Math.max(maxSum, currSum);
+        }
+        return maxSum;
+    }
 
     // LeetCode:: 44 WildCard Matching (Hard)
     // The Solution we will be using is  DP solution to the problem
@@ -328,6 +361,7 @@ public class DPs {
     // 2 ways --> (1,2)3()<--- 1 ways, so if we know for 0 to n-1 how many trees we can use that to calc nth tree
     // by iterative selecting each item from 1 to n as a root an calc there bstCount and the combined sum would be
     // bstCount[n] = sum1Ton-1( bstCount[j-1] * bstCount[n-j])
+    // this is actually the catalan numbers we can use the same code to count the number of n pair valid parenthesis
 
     public int numTrees(int n) {
         int [] bstCount = new int[n+1];
@@ -378,6 +412,76 @@ public class DPs {
         // we calc the path in a bottom up manner hence path[0] will have
         // the result as at the top there us one element
         return path[0];
+    }
+
+    // LeetCode :: 377. Combination Sum IV
+    // This is the same as climb  number of ways problem check climbStairs method in this file
+    // The DP eqn is to calc number of ways to reach a target give a set of numbers
+    // like climb stairs here also we can reach ways[i] by combining the ways[i-2], ways[i-5], ways[i-10] and so on ...
+    // given that the set numbers is [2, 5, 10, .....]. Try to look  at this in this way when we reach ways[i-5]
+    // we can ways[i-5] + 5 to get to ways[i] similarly for the rest of nums in the set so the DP
+    // equation DP[i] = DP[i] + DP(i - nums[j]) for all j in set of nums
+    public int combinationSum4(int[] nums, int target) {
+        int []ways = new int[target + 1];
+        ways[0] = 1;
+        for (int i = 1; i < ways.length; i++) {
+            for (int j = 0; j < nums.length;j++) {
+                // we don't want to process if the current value is smaller the nums[j]
+                if (i >= nums[j]) {
+                    ways[i]+= ways[i -nums[j]];
+                }
+            }
+        }
+        return ways[target];
+    }
+
+    // LeetCode :: 518. Coin Change 2 ; find number of ways the set of coins can add up to the target
+    // Coin change problem; use DP approach to solve this check the version2 we discuss both this & v2 there
+    public int change(int amount, int[] coins) {
+        int [][]ways = new int [coins.length+1][amount + 1];
+        for (int i=0; i<= coins.length; i++) {
+            ways[i][0] = 1;
+        }
+        for (int i = 1; i <= coins.length; i++) {
+            for (int j = 1; j <= amount; j++) {
+                if(j >= coins[i-1]) {
+                    ways[i][j] =  ways[i-1][j] + ways[i][j-coins[i-1]];
+                } else {
+                    ways[i][j] = ways[i-1][j];
+                }
+            }
+        }
+        return ways[coins.length][amount];
+    }
+    // The idea is very similar to the problem of "377. Combination Sum IV" in this file
+    // We calc ways[i] given a coin set for example [2,5,10 ....] by combining the ways[i-2], ways[i-5], ways[i-10]
+    // and so on ...! Try to look  at this in this way when we reach ways[i-5]
+    // we can ways[i-5] + 5 to get to ways[i] similarly for the rest of the coins.
+    // equation DP[i] = DP[i] + DP(i - nums[j]) for all j in set of coins
+    // Now we come to our 1st observation comparing it to version 1 in the method 'int change(int amount, int[] coins)'
+    // in this file we used a 2D array notice the  2D array is not needed as at each step for in version we use
+    // ways[i][j] =  ways[i-1][j] + ways[i][j-coins[i-1]] but we never used anything past i-1 position so we are
+    // interested only in the  last value hence the following equation is good ways[i] on the right of equal
+    // operator holds the last value :) !!!
+    // ways[i]  = ways[i] + ways[j-coins[i]]
+    // Now we come to our 2nd observation where the method 'combinationSum4' calc uses similar approach in that api
+    // we dont look for a combination rather look for permutation of ways we can combine the sum. But in this 'changeV2'
+    // function when counting coins set we are more interested in combination
+    // The reasons is  the inner & outer loops. In this case we process for each coin how many ways to get amount so
+    // outer loops accounts for coins and when we look up the last value ways[i-1][j] we are looking up coins[i-1]
+    // how many ways
+    // But in case of earlier 'combinationSum4' the outer loops is ways so we are checking for each target how many
+    // ways coin can be used in this case ways[i-1][j] refers to all the ways i-1 the entry is handled now to handle
+    // ith entry we check for each coin to increase the result. Hence we get the permutation
+    public int changeV2(int amount, int[] coins) {
+        int []ways = new int[amount+1];
+        ways[0]=1;
+        for (int cn : coins) {
+            for (int i = cn; i<= amount; i++) {
+                ways[i]+= ways[i - cn];
+            }
+        }
+        return ways[amount];
     }
 
 
