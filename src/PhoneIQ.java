@@ -542,6 +542,128 @@ public class PhoneIQ {
         return result;
     }
 
+    public LinkList revertList (LinkList startNode, LinkList endNode) {
+
+        LinkList curr = startNode;
+        LinkList reverseNode = curr.next;
+        // we already saved the startNode & its next node in curr & reverseNode,
+        // so its safe to make startNode next point to the endNode next
+        startNode.next = endNode.next;
+        // scan the list and reverse it
+        while (curr != endNode && reverseNode!= null) {
+            LinkList nextNode = reverseNode.next;
+            reverseNode.next = curr;
+            curr = reverseNode;
+            reverseNode = nextNode;
+        }
+        // the last node is the first node now
+        return endNode;
+    }
+
+    public LinkList reverseConsecutiveEvenNodes(LinkList head) {
+        LinkList curr = head;
+        LinkList prev = null;
+        LinkList start = null;
+        LinkList end = null;
+        LinkList lastPrev = null;
+        while (curr != null) {
+            if ((curr.val % 2) != 0) {
+                prev = curr;
+                // we found an even consecutive list in the last iteration
+                if (start != null && start != end){
+                    LinkList tempHead = revertList(start,end);
+                    if (lastPrev != null)
+                        lastPrev.next = tempHead;
+                    else
+                        head = tempHead;
+                    curr = start;
+                    start = null;
+                }
+            } else {
+                // even node
+                if (start == null) {
+                    lastPrev = prev;
+                    start = curr;
+                }
+                end = curr;
+            }
+            curr = curr.next;
+        }
+        if (start!=null && end.next == null) {
+            LinkList tempHead = revertList(start, end);
+            if (prev != null)
+                prev.next = tempHead;
+            else
+                head = tempHead;
+        }
+        return head;
+    }
+    // this version is simpler as we use two loops but note the its still O(n) because after completing
+    // the inner loop  update curr pointer base on the 2nd loop iteration this will do a 2n iteration
+    // which is same as O(n)
+    public LinkList reverseConsecutiveEvenNodesSimple(LinkList head){
+         if (head == null || head.next == null)
+             return head;
+        LinkList curr = head;
+        LinkList prev = null;
+        while (curr != null) {
+            // odd entry found save it as prevNode
+            if ((curr.val % 2) != 0) {
+                prev = curr;
+                curr = curr.next;
+            } else {
+                // even entry
+                LinkList start = curr;
+                while (curr.next != null && (curr.next.val %2) == 0)
+                    curr = curr.next;
+                LinkList nextNode = curr.next;
+                LinkList tempHead = revertList(start,curr);
+                if (prev !=null)
+                    prev.next = tempHead;
+                else
+                    head = tempHead;
+                curr = nextNode;
+            }
+        }
+        return head;
+
+    }
+
+    // This is also O(n) with actual n iteration
+    public LinkList reverseConsecutiveEvenNodesSimpleV2(LinkList head){
+        if (head == null || head.next == null)
+            return head;
+        LinkList curr = head;
+        LinkList prev = null;
+        while (curr != null) {
+            // odd entry found save it as prevNode
+            if ((curr.val % 2) != 0) {
+                prev = curr;
+
+            } else {
+                // even entry
+                LinkList start = curr;
+                LinkList reverseNode = curr.next;
+
+                while (reverseNode!= null && (reverseNode.val %2) == 0){
+                    LinkList nextNode = reverseNode.next;
+                    reverseNode.next = curr;
+                    curr = reverseNode;
+                    reverseNode = nextNode;
+                }
+                start.next = reverseNode;
+                if (prev != null)
+                    prev.next = curr;
+                else
+                    head = curr;
+                curr = start;
+            }
+            curr = curr.next;
+        }
+        return head;
+
+    }
+
 
 
 

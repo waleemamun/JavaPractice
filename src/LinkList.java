@@ -65,6 +65,13 @@ public class LinkList {
         System.out.println("null");
     }
 
+    public LinkList getNode(int val) {
+        LinkList ls = this;
+        while(ls != null && ls.val != val)
+            ls = ls.next;
+        return ls;
+    }
+
     // Remove duplicate from a unsorted LIst in O(n) time with O(n) space
     // We use two pointers one (prev) to point to the unique  elem so far &
     // another running pointer (ls) to move through the list

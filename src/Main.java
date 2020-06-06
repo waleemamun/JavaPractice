@@ -1,4 +1,5 @@
 import org.omg.PortableInterceptor.INACTIVE;
+import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import sun.awt.image.ImageWatched;
 
 import java.util.*;
@@ -189,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {5,2,1,3,4,7,6,8,9};
+        int [] arr =  {2, 18, 24, 3, 5, 7, 9, 6, 12,1,3};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -222,7 +223,12 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println(" Median " + Arrays.toString(p1.findMedian(arr1)));
+
+        ls2 = ls1.createList(arr);
+        ls2.printList();
+        LinkList ls3 = p1.reverseConsecutiveEvenNodesSimpleV2(ls2);
+        ls3.printList();
+
 
 
 
