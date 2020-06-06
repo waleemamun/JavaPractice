@@ -664,6 +664,24 @@ public class PhoneIQ {
 
     }
 
+    // Slow Sums : Greedy approach chose the two largest element add their sum as the penalty
+    int getTotalTime(int[] arr) {
+        // Write your code here
+        int penalty = 0;
+        LinkedList<Integer> arrList = new LinkedList<>();
+        for (int n : arr) {
+            arrList.add(n);
+        }
+        Collections.sort(arrList,Collections.reverseOrder());
+        while (arrList.size() != 1) {
+            int sum = arrList.remove(0);
+            sum+= arrList.remove(0);
+            arrList.addFirst(sum);
+            penalty += sum;
+        }
+        return penalty;
+    }
+
 
 
 

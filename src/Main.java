@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {2, 18, 24, 3, 5, 7, 9, 6, 12,1,3};
+        int [] arr =  {2, 3, 9, 8, 4};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -224,10 +224,7 @@ public class Main {
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
 
-        ls2 = ls1.createList(arr);
-        ls2.printList();
-        LinkList ls3 = p1.reverseConsecutiveEvenNodesSimpleV2(ls2);
-        ls3.printList();
+        System.out.println("Penalty = " +p1.getTotalTime(arr));
 
 
 
