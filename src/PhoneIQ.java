@@ -478,6 +478,71 @@ public class PhoneIQ {
         return false;
     }
 
+    // Encrypt String abcxbca to xbacbca
+    public String findEncryptedWord(String s) {
+        // Write your code here
+        int start = 0;
+        int end = s.length()-1;
+        StringBuilder sb = new StringBuilder();
+        encryptWordRec(sb, s, start, end);
+        return sb.toString();
+    }
+
+    private void encryptWordRec(StringBuilder sb, String str, int start, int end) {
+        if (start > end)
+            return;
+        int mid = start + (end-start)/2;
+        sb.append(str.charAt(mid));
+        encryptWordRec(sb, str, start, mid-1);
+        encryptWordRec(sb, str, mid+1, end);
+    }
+
+    // Magical Candy Bag
+    int maxCandies(int[] arr, int k) {
+        // Write your code here
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        for (Integer n : arr) {
+            maxHeap.add(n);
+        }
+        int sum = 0;
+        while(!maxHeap.isEmpty() && k > 0) {
+            int candyCount = maxHeap.remove();
+            sum += candyCount;
+            candyCount /= 2;
+            maxHeap.add(candyCount);
+            k--;
+        }
+        return sum;
+    }
+
+    // Median Stream, get the rolling median of an Array get median for all entries in an Unsorted Array
+    // So we need to get the median for 1 element then 2 elements then 3 elements then 4 elements and so on ...
+    // This does not require K median for a sliding window. We manage a min & max heap and as we scan the array
+    // left to right we update the heap and calculate median
+    int[] findMedian(int[] arr) {
+        // Write your code here
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        int [] result = new int[arr.length];
+        int j=0;
+        for (Integer n : arr) {
+            if(minHeap.size() <= maxHeap.size()) {
+                maxHeap.add(n);
+                minHeap.add(maxHeap.remove());
+            } else {
+                minHeap.add(n);
+                maxHeap.add(minHeap.remove());
+            }
+            if ((minHeap.size() + maxHeap.size()) % 2 == 0) {
+                result[j++] = (minHeap.peek() + maxHeap.peek())/2;
+            } else {
+                result[j++] =  minHeap.peek();
+            }
+        }
+        return result;
+    }
+
+
 
 
 

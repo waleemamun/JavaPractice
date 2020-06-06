@@ -281,6 +281,7 @@ public class DPs {
 
 
     // Leetcode :: 72 Edit Distance (Hard)
+    // This is also know as the THE LEVENSHTEIN DISTANCE PROBLEM
     // This requires a DP solution. The DP solution is  if the the current character from word1 & word2
     // is same then we dont need to anything so we get the dp value from the previous distanceDP
     // as if this matching characters were not there. If the chars do not match then there are three options
@@ -361,7 +362,7 @@ public class DPs {
     // 2 ways --> (1,2)3()<--- 1 ways, so if we know for 0 to n-1 how many trees we can use that to calc nth tree
     // by iterative selecting each item from 1 to n as a root an calc there bstCount and the combined sum would be
     // bstCount[n] = sum1Ton-1( bstCount[j-1] * bstCount[n-j])
-    // this is actually the catalan numbers we can use the same code to count the number of n pair valid parenthesis
+    // This is actually the catalan numbers we can use the same code to count the number of n pair valid parenthesis
 
     public int numTrees(int n) {
         int [] bstCount = new int[n+1];
@@ -482,6 +483,22 @@ public class DPs {
             }
         }
         return ways[amount];
+    }
+
+    // The DP eqn for NCK = n-1Ck-1 + n-1Ck we use DP to get nck so that overflow does not happen
+    private int nckMemoisation(int n, int k, int dp[][]) {
+        if (n==0 || k==0)
+            return 1;
+        if(dp[n][k] == 0) {
+            int x = nckMemoisation(n-1,k-1,dp); // n-1Ck-1
+            int y = nckMemoisation(n-1,k,dp);      // n-1Ck
+            dp[n][k] = x + y;
+        }
+        return dp[n][k];
+    }
+
+    public int nck (int n, int k){
+        return nckMemoisation(n,k, new int[n+1][k+1]);
     }
 
 

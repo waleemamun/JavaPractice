@@ -1656,7 +1656,8 @@ public class SolutionsV1 {
                 int start = i -k+1;
                 result[start] = median;
                 // we need to remove the start element of this K block of numbers as the sliding
-                // window needs to move to the right
+                // window needs to move to the right, in the next iteration we add the next item in the
+                // sliding window so remove the first/start item of the sliding window
                 if (!minHeap.remove(nums[start])) {
                     maxHeap.remove(nums[start]);
                 }
