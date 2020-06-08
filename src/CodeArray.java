@@ -135,6 +135,8 @@ public class CodeArray {
 
     }
 
+    // LeetCode :: 3 Longest Substring Without Repeating Characters
+    // Use Sliding window to solve the problem, This solution is easy to read
     public int lengthOfLongestSubstringV1(String s) {
         HashMap <Character,Integer> map= new HashMap<Character,Integer>();
         int maxLen = 0;
@@ -178,7 +180,8 @@ public class CodeArray {
         public int lastPos;
     }
 
-    // Leetcode 4 ******* Hard Problem ******
+    // Leetcode :: 4. Median of Two Sorted Arrays (Hard)
+    // Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).
     public double findMedianSortedArraysV2(int[] nums1, int[] nums2) {
 
 
@@ -276,6 +279,7 @@ public class CodeArray {
     }
     // from each position i and i + 1 we have to get the palindrome len considering i or i+1 as middle
     // get the max len palindrome and then if its getter than prev max len update the maxlen and the indices
+    // The reason behind choosing i & i+1 is considering even & odd len palindrom
     public String longestPalindrome(String s) {
         int maxLen = Integer.MIN_VALUE;
         int start = 0;
@@ -289,7 +293,8 @@ public class CodeArray {
         }
 
         for (int i = 0; i < s.length(); i++) {
-            len1 = palindromeLen(s, i, i);
+            len1 = palindromeLen(s, i, i); // odd len palindrome  at i
+            // even len palindrome at i so we consider i to left & i+1 to right
             len2 = palindromeLen(s, i, i+1);
             len = Math.max(len1,len2);
             if (len > maxLen) {

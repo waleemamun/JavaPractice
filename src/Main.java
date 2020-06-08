@@ -224,8 +224,7 @@ public class Main {
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
 
-        System.out.println("Penalty = " +p1.getTotalTime(arr));
-        System.out.println(" majority " + AdnanAziz.majoritySearch("babacaa"));
+        ScratchPad.linleListPractice();
 
 
 

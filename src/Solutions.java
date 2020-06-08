@@ -170,7 +170,7 @@ public class Solutions {
     return number;
     }
 
-    //LeetCode 8
+    //LeetCode 9 Palindrome Number
 
     public boolean isPalindrome(int x) {
         if (x < 0)
@@ -412,7 +412,7 @@ public class Solutions {
     }
 
     // The solution for letterCombinations Problem
-    // Leetcode 17
+    // Leetcode :: 17. Letter Combinations of a Phone Number
     Map<String, String> phone = new HashMap<String, String>() {{
         put("2", "abc");
         put("3", "def");
@@ -504,7 +504,7 @@ public class Solutions {
 
         return results;
     }
-    // Leetcode 18
+    // Leetcode :: 18 fourSum or K Sum
     public List <List<Integer>> fourSum(int[] nums, int target) {
 
         // Sort the array
