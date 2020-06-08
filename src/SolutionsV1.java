@@ -1209,7 +1209,9 @@ public class SolutionsV1 {
             System.out.print(left[i] + " ");
         }
         System.out.println();
+        // keep the rightmost index on to the rightmost entry
         right[heights.length -1] = heights.length -1;
+        // now build the right array
         for (int i = heights.length -2 ; i >= 0; i--){
             int rightMost = i +1;
             // lets find such rightMost pos for i so that the rightMost bar >= bar i
@@ -1234,6 +1236,8 @@ public class SolutionsV1 {
         return max;
     }
 
+    // FB practice question: contigious subArray starting or ending at at index,
+    // find the total count  of such subarray per index
     public int[] maxContagiousSubArray(int[] heights) {
 
         int []left = new int [heights.length]; // stores the max leftMost position spanned for each i
@@ -1241,7 +1245,7 @@ public class SolutionsV1 {
         left[0] = 0;
         for (int i = 1; i < heights.length; i++) {
             int leftMost = i -1;
-            // lets find such leftMost pos for i so that the leftMost bar >= bar i
+            // lets find such leftMost pos for i so that the leftMost bar <= bar i
             while (leftMost >= 0 &&
                     heights[leftMost] <= heights[i]){
                 // note we are using the left arrays values to jump to the right

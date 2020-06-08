@@ -298,7 +298,7 @@ public class Solutions {
     // Easy to read
     // Idea is same use two pointers left & right, each time calculate the area covered
     // left right sides , to calc area we use the height of Min(height[left],height[right])
-    // next we move the left or right pointer based on the height,
+    // next we move the left or right pointer based on the height (min height),
     // we always move the shorter as we plan to maximaize
     public int maxAreav2(int []height) {
         int maxAr = Integer.MIN_VALUE; // the max area covered by the rectangle
@@ -323,9 +323,9 @@ public class Solutions {
     // 3. in the sorted fine two items that adds up to -targetx
     public List<List<Integer>> threeSum(int[] nums) {
         List <List<Integer>> results = new ArrayList();
-        List <List<Integer>> resultUn = new ArrayList();
+
         if (nums.length <= 2)
-            return resultUn;
+            return results;
 
         // sort the inputs
         Arrays.sort(nums);

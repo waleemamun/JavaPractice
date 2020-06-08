@@ -225,6 +225,7 @@ public class Main {
         CodeArray c1  =new CodeArray();
 
         System.out.println("Penalty = " +p1.getTotalTime(arr));
+        System.out.println(" majority " + AdnanAziz.majoritySearch("babacaa"));
 
 
 
