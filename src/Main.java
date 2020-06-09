@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {9,8,4,5,1,2,3,6,7,0};
+        int [] arr =  {4,5,6,7,0,1,2};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -225,7 +225,8 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println(" Result = " + sv1.reverseWords(word1));
+        System.out.println(" Result = " + sv1.findMin(arr));
+
 
 
 

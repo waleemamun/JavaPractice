@@ -1850,6 +1850,80 @@ public class SolutionsV1 {
         return sb.toString();
     }
 
+    // LeetCode :: 152. Maximum Product Subarray
+    // The idea is if there is even number of negative numbers we include them all. if there are odd number negative
+    // number we have to give one up, so which one to give up we can only give up the first or the last thats why we
+    // need two passes in one pass we give up last and in another pass we give up the first. Consider you have a zero
+    // in the middle it will reset the the max product so zero will actually partition the array in smaller sub arrays
+    // which could have odd/even neagative number but they are handled in the same way in two passes.
+    // We will store the max on each subarray even if they are separated using zeros
+    public int maxProduct(int[] nums) {
+        int curProd = 1;
+        int maxProd = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            curProd *= nums[i];
+            maxProd = Math.max(maxProd, curProd);
+            if (curProd == 0)
+                curProd = 1;
+        }
+        curProd =1;
+        for (int i = nums.length -1; i>=0; i--) {
+            curProd*= nums[i];
+            maxProd = Math.max(maxProd, curProd);
+            if (curProd == 0)
+                curProd =1;
+        }
+
+        return maxProd;
+
+    }
+    // This is another interesting solution  interesting here we just need one pass
+    // we save imax & imin for for upto A[i], when A[i] is negative we swap them so on even
+    // number of negative numbers we store the total product including the last negatives
+    // Try an example by hand
+    int maxProductV2(int A[], int n) {
+        // store the result that is the max we have found so far
+        int r = A[0];
+
+        // imax/imin stores the max/min product of
+        // subarray that ends with the current number A[i]
+        for (int i = 1, imax = r, imin = r; i < n; i++) {
+            // multiplied by a negative makes big number smaller, small number bigger
+            // so we redefine the extremums by swapping them
+            if (A[i] < 0) {
+                int temp = imax;
+                imax = imin;
+                imin = temp;
+            }
+
+            // max/min product for the current number is either the current number itself
+            // or the max/min by the previous number times the current one
+            imax = Math.max(A[i], imax * A[i]);
+            imin = Math.min(A[i], imin * A[i]);
+
+            // the newly computed max value is a candidate for our global result
+            r = Math.max(r, imax);
+        }
+        return r;
+    }
+
+    // LeetCode :: 153. Find Minimum in Rotated Sorted Array
+    // This use the same approach of searching in rotated array, we need to find the split index or the rotation
+    // point using a modified binary search. The rotation point is the lowest index
+    public int findMin(int[] nums) {
+        int low = 0;
+        int high = nums.length-1;
+        while (low < high) {
+            int mid = low + (high -low)/2;
+            if (nums[mid] > nums[high]) {
+                low = mid +1;
+            } else {
+                high = mid;
+            }
+        }
+        return nums[low];
+    }
 
 
 
