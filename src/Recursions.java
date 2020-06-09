@@ -292,7 +292,7 @@ public class Recursions {
         reverserArray(nums, low, lowStart);
     }
 
-    // 33. Search in Rotated Sorted Array
+    // LeetCode :: 33. Search in Rotated Sorted Array
     public int search(int[] nums, int target) {
         return rotatedBinSearch(nums,0, nums.length -1, target);
     }
@@ -345,7 +345,7 @@ public class Recursions {
             else
                 high = mid;
         }
-        int splitIdx = high;
+        int splitIdx = high; // we could have assigned low to splitIdx too, as the loop breaks at (low == high)
         System.out.println("SplitIdx = " + splitIdx);
         low = 0;
         high = nums.length - 1;
@@ -355,6 +355,8 @@ public class Recursions {
             // calculate the actual mid using the spiltIdx
             // we dont need to translate the low or high as
             // our goal is ot get mid so we translate mid
+            // also in the calculation of mid  =(low+high)/2 both side of the equation
+            // requires translation in other word it cancels out from both side of the equation
             realMid = (mid + splitIdx) % nums.length;
             if (nums[realMid] == target)
                 return realMid;
@@ -369,6 +371,7 @@ public class Recursions {
 
 
     // LeetCode 34:: Find First and Last Position of Element in Sorted Array
+    // Check the V2 its easy to read
     public int[] searchRange(int[] nums, int target) {
         int [] range = {-1,-1};
         binarySearchRng(nums, 0, nums.length-1, target, range);
@@ -418,6 +421,42 @@ public class Recursions {
         }
 
     }
+    // LeetCode 34 :: Search Range (This is easy to read)
+    // returns leftmost (or rightmost) index at which `target` should be
+    // inserted in sorted array `nums` via binary search.
+    private int extremeInsertionIndex(int[] nums, int target, boolean left) {
+        int lo = 0;
+        int hi = nums.length;
+
+        while (lo < hi) {
+            int mid = (lo + hi) / 2;
+            if (nums[mid] > target || (left && target == nums[mid])) {
+                hi = mid;
+            }
+            else {
+                lo = mid+1;
+            }
+        }
+
+        return lo;
+    }
+
+    public int[] searchRangeV2(int[] nums, int target) {
+        int[] targetRange = {-1, -1};
+
+        int leftIdx = extremeInsertionIndex(nums, target, true);
+
+        // assert that `leftIdx` is within the array bounds and that `target`
+        // is actually in `nums`.
+        if (leftIdx == nums.length || nums[leftIdx] != target) {
+            return targetRange;
+        }
+
+        targetRange[0] = leftIdx;
+        targetRange[1] = extremeInsertionIndex(nums, target, false)-1;
+
+        return targetRange;
+    }
 
     // 35. Search Insert Position
     // The idea is to do binary search to find the entry, if found return index, if not found (low > high)
@@ -435,6 +474,10 @@ public class Recursions {
         // low will point to the index where we want to insert the 'not found' the entry.
         // Even in corner cases where low == 0 high = -1 we are trying to found
         // the entry which ise smaller then the lowest item in array. Same goes for low == nums.length.
+        // Why return low ?
+        // Cause think about the basic idea of insertion, we insert at a point & right shift everything by one
+        // so the value the becomes bigger between low & high is our answer and at the following recursion break
+        // low is always greater than high. Hence low is the right choice
         if (low > high) {
             return low;
         }
@@ -1596,7 +1639,8 @@ public class Recursions {
         return output;
     }
 
-    // Adnan Aziz 12.2 :: Search a Sorted Array for entry equal to index no duplicate in the array
+    // Adnan Aziz 12.2 :: Search a Sorted Array for entry equal to index
+    // no duplicate in the array. The reason its same to basic binary search is the asumption of no duplicate
     public int searchNetryEqualToIndx(int []nums) {
         int low = 0;
         int high = nums.length-1;

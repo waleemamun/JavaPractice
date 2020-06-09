@@ -1760,6 +1760,96 @@ public class SolutionsV1 {
         return resList;
     }
 
+    // LeetCode ::150. Evaluate Reverse Polish Notation
+    // The idea is to push operands in stack until we get a operator,
+    // then we remove two item from the top of the stack use the operator to perform the operation
+    // and put the result in stack we never put the operator in stack
+    public int evalRPN(String[] tokens) {
+        int rightOprnd =0;
+        int leftOprnd = 0;
+        LinkedList<Integer> stack = new LinkedList<>();
+        for (String tk : tokens) {
+            int result = 0;
+            if (tk.equals("+")) {
+                rightOprnd = stack.pop();
+                leftOprnd = stack.pop();
+                result = leftOprnd + rightOprnd;
+            }
+            else if (tk.equals("-")) {
+                rightOprnd = stack.pop();
+                leftOprnd = stack.pop();
+                result = leftOprnd - rightOprnd;
+            }
+            else if (tk.equals("*")) {
+                rightOprnd = stack.pop();
+                leftOprnd = stack.pop();
+                result = leftOprnd*rightOprnd;
+            }
+            else if (tk.equals("/")) {
+                rightOprnd = stack.pop();
+                leftOprnd = stack.pop();
+                result = leftOprnd/rightOprnd;
+            }
+            else {
+                result = Integer.parseInt(tk);
+            }
+            stack.push(result);
+
+        }
+        return stack.isEmpty() ? 0 :stack.peek();
+
+    }
+
+    //LeetCode :: 151. Reverse Words in a String
+    private void revreseCharArray(char str[], int start, int end) {
+        while (start < end) {
+            char ch = str[start];
+            str[start] = str[end];
+            str[end] = ch;
+            start++;
+            end--;
+        }
+    }
+    private void reverseStringBuilder (StringBuilder sb, int start, int end) {
+        while (start < end) {
+            char ch = sb.charAt(start);
+            sb.setCharAt(start, sb.charAt(end));
+            sb.setCharAt(end, ch);
+            start++;
+            end--;
+        }
+    }
+    public String reverseWords(String s) {
+
+        StringBuilder sb = new StringBuilder();
+        int end = s.length() -1;
+        int start = 0;
+        while (start < s.length() && s.charAt(start) ==' ')
+            start++;
+        while (end >=0 && s.charAt(end) == ' ')
+            end--;
+        for (int i = end; i>= start; i--) {
+            if (s.charAt(i) != ' ')
+                sb.append(s.charAt(i));
+            else {
+                if (i - 1>= start && s.charAt(i-1) != s.charAt(i)) {
+                    sb.append(' ');
+                }
+            }
+        }
+
+        int right = 0;
+        int left = 0;
+        while (right < sb.length()) {
+            while (right < sb.length() && sb.charAt(right) != ' ')
+                right++;
+            reverseStringBuilder(sb, left, right -1);
+            right++;
+            left = right;
+        }
+        return sb.toString();
+    }
+
 
 
 

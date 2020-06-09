@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {2, 3, 9, 8, 4};
+        int [] arr =  {9,8,4,5,1,2,3,6,7,0};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -208,8 +208,10 @@ public class Main {
                 {'O','O','O'}
         };
 
-        String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.","you","never","know","what","you're","gonna","get."};
-        String word1 = "abcd";
+        String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.",
+                "you","never","know","what","you're","gonna","get."};
+        String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
+        String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
         String str = "1234";
         SolutionsV1 sv1 = new SolutionsV1();
@@ -223,8 +225,8 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
+        System.out.println(" Result = " + sv1.reverseWords(word1));
 
-        ScratchPad.linleListPractice();
 
 
 

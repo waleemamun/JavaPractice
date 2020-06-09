@@ -107,6 +107,7 @@ public class ScratchPad {
         LinkedList<String> stringStack = new LinkedList<>();
         for (String word: words){
             stringStack.addFirst(word);
+
         }
         while(!stringStack.isEmpty()) {
             System.out.print(" " + stringStack.pop());
@@ -129,6 +130,16 @@ public class ScratchPad {
         char [] abc = {'m', 'a','m','u','n'};
         String myStr = new String(abc);
         System.out.println(myStr);
+
+        HashSet<String> set = new HashSet<>();
+        for (String word: words) {
+            set.add(word);
+        }
+        Iterator<String> setitr = set.iterator();
+        while (setitr.hasNext()) {
+            System.out.print(setitr.next());
+        }
+        System.out.println();
 
 
 
