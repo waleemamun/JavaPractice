@@ -1715,6 +1715,35 @@ public class Recursions {
     }
 
 
+    //LeetCode :: 200. Number of Islands
+    private void numIslandsRec(char[][] grid, int count, int r, int c) {
+        if(r < 0 || c < 0 ||
+                r >= grid.length ||
+                c >= grid[0].length ||
+                grid[r][c]!='1')
+            return;
+
+        grid[r][c] = (char)('A' + count);
+        numIslandsRec(grid, count, r+1, c);
+        numIslandsRec(grid, count, r-1, c);
+        numIslandsRec(grid, count, r, c+1);
+        numIslandsRec(grid, count, r, c-1);
+    }
+    public int numIslands(char[][] grid) {
+        int count = 0;
+        for (int i = 0; i<grid.length;i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                if(grid[i][j] == '1') {
+                    count++;
+                    numIslandsRec(grid,count, i,j);
+                }
+
+            }
+        }
+        return count;
+    }
+
+
 
 
 
