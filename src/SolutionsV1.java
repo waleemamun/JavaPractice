@@ -1979,6 +1979,55 @@ public class SolutionsV1 {
         return number.toString();
     }
 
+    // LeetCode :: 187. Repeated DNA Sequences
+    public List<String> findRepeatedDnaSequences(String s) {
+        HashMap<String,Integer> dnaMap = new HashMap<>();
+        List<String> resList = new ArrayList<>();
+        for (int i = 0; i <= s.length() - 10; i++) {
+            String subStr = s.substring(i,i+10);
+            int count = dnaMap.getOrDefault(subStr, 0);
+            if (count == 1)
+                resList.add(subStr);
+            dnaMap.put(subStr,count +1);
+        }
+        return resList;
+    }
+
+    private int nextHash (int []hashCode, int i, char []str, int len) {
+        int oldHash = hashCode[i+len-2];
+        int oldChar = str[i-1] -'A' +1;
+        int newChar = (str[i+len -1] -'A' + 1);
+        int newHash = (oldHash - oldChar)/3 ;
+        newHash += newChar * (int)Math.pow(3,len -1);
+        return newHash;
+    }
+    // Using Rolling Hash the Prime is P = 3 if we want to increase
+    // the prime we need to change the hashcode array to long otherwise overflow will happen
+    public List<String> findRepeatedDnaSequencesV2(String s) {
+        List<String> resList = new ArrayList<>();
+        if (s.length() < 10)
+            return resList;
+        char[]str = s.toCharArray();
+        int [] hashCode = new int [str.length];
+        HashMap<Integer,Integer> dnaMap = new HashMap<>();
+
+        hashCode[0] = str[0] -'A' +1;
+        for (int i = 1; i< 10;i++){
+            hashCode[i] += (str[i] -'A' + 1)* (int) Math.pow(3, i) + hashCode[i-1];
+        }
+
+        dnaMap.put(hashCode[9],1);
+        for (int i = 1; i <= s.length() - 10; i++) {
+            int newHash = nextHash(hashCode,i,str,10);
+            hashCode[i+10-1] = newHash;
+            int count = dnaMap.getOrDefault(newHash, 0);
+            if (count == 1)
+                resList.add(s.substring(i, i+10));
+            dnaMap.put(newHash, count +1);
+        }
+        return resList;
+    }
+
 
 
 

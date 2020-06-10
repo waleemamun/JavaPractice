@@ -293,5 +293,30 @@ public class Bits {
         }
         return result;
     }
+    //LeetCode :: 201. Bitwise AND of Numbers Range
+    // Check V2 that is the Better Solution
+    // We need to find the pattern here Look closely at 1100 & 1111
+    // The idea here is consecutive odd & even creates a zero in last bit position
+    // The pattern is while the two numbers are not equal they very in last bit postion so get rid of the
+    // last bit position until they are same (1100,1111) -> (110,111) -> (11,11)< same so stop>
+    public int rangeBitwiseAnd(int m, int n) {
+        int zerBitCount = 0;
+        while (m != n) {
+            zerBitCount++;
+            m >>=1;
+            n >>=1;
+        }
+        return m << zerBitCount;
+    }
+
+    // The idea is to use the basic logic of n = n & (n-1) this sets the last bit of n to zero
+    // We can use this idea and start from the highest number and start dropping last bit from
+    // the highest number until the highest become smaller than lowest
+    public int rangeBitwiseAndV2(int m, int n) {
+        while (n>m) {
+            n&=(n-1);
+        }
+        return m & n;
+    }
 
 }

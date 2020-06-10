@@ -213,7 +213,7 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "1.0.1";
+        String str1 = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         String str2 = "1.0.0.0.0.1";
         SolutionsV1 sv1 = new SolutionsV1();
         Recursions r1 = new Recursions();
@@ -226,8 +226,8 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println(tr1.levelOrder(treeNode));
-        System.out.println(tr1.rightSideView(treeNode));
+
+        System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
 
 
 
