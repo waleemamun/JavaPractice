@@ -225,7 +225,7 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println(" Result = " + sv1.findMin(arr));
+        System.out.println(" Result = " + r1.findMin(arr));
 
 
 

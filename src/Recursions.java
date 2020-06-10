@@ -1673,6 +1673,47 @@ public class Recursions {
         return searchEntryEqualToIndxWithDup(nums, Math.max(mid+1,nums[mid]),high);
     }
 
+    // LeetCode :: 153. Find Minimum in Rotated Sorted Array
+    // This use the same approach of searching in rotated array, we need to find the split index or the rotation
+    // point using a modified binary search. The rotation point is the lowest index
+    public int findMin(int[] nums) {
+        int low = 0;
+        int high = nums.length-1;
+        while (low < high) {
+            int mid = low + (high -low)/2;
+            if (nums[mid] > nums[high]) {
+                low = mid +1;
+            } else {
+                high = mid;
+            }
+        }
+        return nums[low];
+    }
+
+    // LeetCode :: 154. Find Minimum in Rotated Sorted Array II (Hard)
+    // This is use the same approach as searching in a rotated array, We need to find the rotation index.
+    // The one trick her is the array can contains duplicate numbers. So if an array contains duplicate after
+    // finding a nums[mid] that is equal to nums[high] we dont know whether the rotation is on the left or
+    // right of mid so we just decrease the upper bound and search again
+    public int findMinWithDup(int[] nums) {
+        int low = 0;
+        int high = nums.length-1;
+        while (low < high) {
+            int mid = low + (high-low)/2;
+            if (nums[mid] > nums[high]) {
+                low = mid+1;
+            } else if (nums[mid] < nums[high]) {
+                high = mid;
+            } else {
+                // when nums[mid] == nums[high], we dont know which side of the
+                // mid rotation will end up so we just reduce the upper bound by
+                // one expecting the nums[high-1] may be smaller tha nums[mid]
+                high--;
+            }
+        }
+        return nums[low];
+    }
+
 
 
 
