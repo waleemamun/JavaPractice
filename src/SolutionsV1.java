@@ -1908,6 +1908,77 @@ public class SolutionsV1 {
         return r;
     }
 
+    // LeetCode :: 165. Compare Version Numbers
+    // Use the  str.split("\\.") to split the strings in to tokens then just compare them
+    //
+    public int compareVersion(String version1, String version2){
+        // if one of them is empty we can just return as below
+        if (version1.length()== 0 || version2.length()== 0)
+            return version1.length() - version2.length();
+        // split the version strings
+        String [] vs1 = version1.split("\\.");
+        String [] vs2 = version2.split("\\.");
+        int i = 0;
+        int x1 =0, x2 =0;
+
+        while (i < vs1.length || i < vs2.length) {
+            // if we reach the end of vs1 or vs2 we just  get zero value
+            // for those index as the other string may still have values
+            x1 = i < vs1.length ? Integer.parseInt(vs1[i]) :0;
+            x2 = i <vs2.length ?Integer.parseInt(vs2[i]) :0;
+            if (x1 < x2)
+                return -1;
+            else if (x1 > x2)
+                return 1;
+            i++;
+        }
+        return 0;
+    }
+
+    // LeetCode :: 166. Fraction to Recurring Decimal
+    public String fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0)
+            return "0";
+
+        if (denominator == 0)
+            return "NaN";
+
+        StringBuilder number = new StringBuilder();
+
+        long numr = Math.abs((long)numerator);
+        long  denom = Math.abs((long)denominator);
+        if (numr  < 0 ^ denom < 0)
+            number.append("-");
+
+
+        int decimal = numerator/denominator;
+        number.append(decimal);
+
+        if (numr% denom == 0)
+            return number.toString();
+
+        number.append(".");
+
+        long remainder = (long) (numr % denom);
+        HashMap<Long, Integer> map = new HashMap<>();
+
+        while (remainder > 0) {
+            int idx = map.getOrDefault(remainder, -1);
+            if (idx != -1) {
+                number.insert(idx, "(");
+                number.append(")");
+                break;
+            }
+            System.out.println(remainder +" "+ denom);
+            map.put(remainder,number.length());
+            remainder *= 10;
+            number.append(remainder/denom);
+            remainder %=denom;
+        }
+
+        return number.toString();
+    }
+
 
 
 

@@ -1588,6 +1588,47 @@ public class Tree {
 
     }
 
+    // LeetCode :: 199. Binary Tree Right Side View
+    // The idea is to find the right nodes in levelorder Traversal
+    public List<Integer> rightSideViewV2(TreeNode root) {
+        List<Integer> resList = new ArrayList<>();
+        if (root == null)
+            return resList;
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.poll();
+                if (i == 0)
+                    resList.add(node.val);
+                if (node.right != null)
+                    queue.add(node.right);
+                if (node.left != null)
+                    queue.add(node.left);
+            }
+        }
+        return resList;
+    }
+    // The idea is to traverse the node in root right left  and add the first rightmost child
+    public void rightSideViewRec (TreeNode node, int height, List<Integer> nodeList) {
+        if (node == null)
+            return;
+        if (height == nodeList.size()) {
+            nodeList.add(node.val);
+        }
+        rightSideViewRec(node.right, height +1, nodeList);
+        rightSideViewRec(node.left, height +1, nodeList);
+
+    }
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> nodeList = new ArrayList<>();
+        if (root == null)
+            return nodeList;
+        rightSideViewRec(root, 0, nodeList);
+        return nodeList;
+    }
+
 
 
 
