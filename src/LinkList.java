@@ -780,6 +780,42 @@ public class LinkList {
         return mergeSortList(head);
     }
 
+    // LeetCode :: 160. Intersection of Two Linked Lists
+    public LinkList getIntersectionNode(LinkList headA, LinkList headB) {
+        LinkList lsA = headA;
+        LinkList lsB = headB;
+        int lenA = 0;
+        int lenB = 0;
+        while (lsA != null) {
+            lenA++;
+            lsA = lsA.next;
+        }
+        while (lsB != null){
+            lenB++;
+            lsB = lsB.next;
+        }
+        lsA = headA;
+        lsB = headB;
+        int diff = Math.abs(lenA -lenB);
+        if (lenA > lenB) {
+            while (diff != 0) {
+                lsA =lsA.next;
+                diff--;
+            }
+        } else  {
+            while (diff != 0) {
+                lsB = lsB.next;
+                diff--;
+            }
+        }
+        while (lsA!=lsB) {
+            lsA = lsA.next;
+            lsB = lsB.next;
+        }
+        return lsA;
+
+    }
+
 
 
 
