@@ -190,22 +190,23 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {10,15,18,24};
+        int [] arr =  {1,2,2,2,4,14,19,20,2,7,8,9};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
-                {10, 11, 15, 16, 17},
-                {20, 21, 23, 26, 29},
-                {30, 31, 35, 36, 37},
-                {40, 41, 44, 46, 48},
-                {50, 51, 55, 56, 57}
+                {1, 0, 1, 0, 0},
+                {1, 0, 1, 1, 1},
+                {1, 1, 1, 1, 1},
+                {1, 0, 0, 1, 0}
+
 
 
         };
         char [][] board = {
-                {'O','O','O'},
-                {'O','O','O'},
-                {'O','O','O'}
+                {'1','1','1','1'},
+                {'1','1','1','1'},
+                {'1','1','1','1'},
+                {'0','0','0','1'}
         };
 
         String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.",
@@ -228,8 +229,9 @@ public class Main {
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
 
-        System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
-        System.out.print(sv2.containsNearbyAlmostDuplicate(arr,3,3));
+        //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
+        System.out.print(" Res " +r1.maximalSquare(board));
+
 
 
 

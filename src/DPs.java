@@ -619,6 +619,50 @@ public class DPs {
         return last;
     }
 
+    // LeetCode :: 221. Maximal Square
+    // The idea is to recursively calculate the square size we  start from 0,0 and recursively find all
+    // size of square at (0,0) and move forward to next position. Consider how can you build a 2*2 square using a
+    // 1 size square, by going along the border of 1 square considering this 1 size square as the top left point
+    // of 2*2 square. So at each point we consider the minimum of its three adjacent (i,j+1 i+1,j & i+1,j+1) squares
+    // the current sqaure length will min + 1 if this square has '1' in it. We recursively solve this for the
+    // whole array. As we are trying to recursively solve it for the whole array we repeat the same computation
+    // of calculating same square multiple time for example the square rooted at (4,4) needs to calculated for
+    // (0,0), (0,1), (1,1), (1,2) and so on... These are non overlapping sub problem. So we can use DP. T
+    // his easier option is to go by top Down memoization approach. Hence we introduce the dp array in the code
+    private int maximalSquareRec(char[][] matrix, int i, int j, int dp[][]){
+        if (i < 0 || j <0 ||
+                i >= matrix.length ||
+                j >= matrix[0].length ||
+                matrix[i][j]=='0') {
+            return 0;
+        }
+        if (dp[i][j] != -1)
+            return dp[i][j];
+        // pick the min of the three adjacent block right down and bottom right (i+1,j+1)
+        int min1 = Math.min(maximalSquareRec(matrix, i,j+1,dp) ,maximalSquareRec(matrix, i+1,j,dp));
+        dp[i][j] = Math.min(min1, maximalSquareRec(matrix,i+1,j+1,dp)) + 1;
+        return dp[i][j];
+    }
+    public int maximalSquare(char[][] matrix) {
+        if (matrix.length == 0)
+            return 0;
+        int [][]dpSquare = new int[matrix.length][matrix[0].length];
+        int max =0;
+        // init dp array to -1/invalid values as zero is valid result for this problem
+        // if we init to zero we giveup the dp benefit and waste time recalc
+        for (int i = 0; i<matrix.length;i++) {
+            for (int j =0 ; j<matrix[0].length; j++) {
+                dpSquare[i][j] = -1;
+            }
+        }
+        for (int i = 0; i<matrix.length;i++) {
+            for (int j =0 ; j<matrix[0].length; j++) {
+                max = Math.max(max, maximalSquareRec(matrix, i,j,dpSquare));
+            }
+        }
+        return max * max;
+    }
+
 
 
 

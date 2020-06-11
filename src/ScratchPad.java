@@ -140,6 +140,19 @@ public class ScratchPad {
             System.out.print(setitr.next());
         }
         System.out.println();
+        TreeSet <Integer> sortedSet = new TreeSet<>();
+        int nums [] = {1,2,6,18,19,0};
+        for (int n: nums){
+            sortedSet.add(n);
+        }
+        Integer floor = sortedSet.floor(5);
+        Integer ceil = sortedSet.ceiling(7);
+
+        if (floor != null)
+            System.out.println("Floor = " + floor);
+        if (ceil != null) {
+            System.out.println("Ceil " + ceil);
+        }
 
 
 

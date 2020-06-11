@@ -26,13 +26,14 @@ public class SolutionsV2 {
             // search for values at most t less than current value of nums[ind]
             Integer ceil = values.ceiling(nums[ind] - t);
             // check if found value in the range if yes return true
+            System.out.println(nums[ind] +" "+ t + " "+ k);
             if ((floor != null && floor >= nums[ind])
                     || (ceil != null && ceil <= nums[ind])) {
                 return true;
             }
             // add the current value to the TreeSet
             values.add(nums[ind]);
-            // The sliding window boundary has reached remove the leftmost item 
+            // The sliding window boundary has reached remove the leftmost item
             if (ind >= k) {
                 values.remove(nums[ind - k]);
             }
@@ -41,8 +42,41 @@ public class SolutionsV2 {
         return false;
 
     }
+
+    // same idea as above just rewritten in easy to read format
+    public boolean containsNearbyAlmostDuplicateV2(int[] nums, int k, int t) {
+        if (k <= 0) {
+            return false;
+        }
+        TreeSet<Long> sortedSet = new TreeSet<>();
+        int right = 0;
+        while (right < nums.length) {
+            // search for values at most t greater than current value of
+            Long floor = sortedSet.floor((long)nums[right] + t);
+            // search for values at most t less than current value of
+            Long ceil = sortedSet.ceiling((long)nums[right] - t);
+            // check if found value in the range if yes return true
+            if ((floor != null && floor >= nums[right]) ||
+                    (ceil != null && ceil <= nums[right])) {
+                return true;
+            }
+            sortedSet.add((long)nums[right]);
+            System.out.println(nums[right] +" "+ sortedSet.size());
+            // we have discovered k items so to move forward remove
+            // the last item as we include the next item
+            // The sliding window boundary has reached remove the leftmost item
+            // leftmost item can be identified by right - k index
+            if (right >= k)
+                sortedSet.remove((long)nums[right -k]);
+            right++;
+        }
+        return false;
+    }
     // LeetCode :: 219. Contains Duplicate II
-    // using a sliding window without Set 2 pass O(n) solution
+    // ******* This is a wrong solution **********
+    // It will fail test cases like [1,2,2,2,4,14,19,20,2,7,8,] k = 4
+    // We Cannot solve this problem without a "HashSet"
+    // Check the version 2 solution which use a hashset to solve this
     public boolean containsNearbyDuplicate(int[] nums, int k) {
         boolean isFound = false;
         if (k ==0)
@@ -77,4 +111,16 @@ public class SolutionsV2 {
         }
         return false;
     }
+    // LeetCode :: 217. Contains Duplicate
+    public boolean containsDuplicate(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int n:nums){
+            if(set.contains(n))
+                return true;
+            set.add(n);
+        }
+        return false;
+    }
+
+
 }
