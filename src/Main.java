@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8,9};
+        int [] arr =  {10,15,18,24};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -216,6 +216,7 @@ public class Main {
         String str1 = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
         String str2 = "1.0.0.0.0.1";
         SolutionsV1 sv1 = new SolutionsV1();
+        SolutionsV2 sv2 = new SolutionsV2();
         Recursions r1 = new Recursions();
         LinkList ls1 = new LinkList();
         LinkList ls2 = new LinkList();
@@ -228,6 +229,8 @@ public class Main {
         CodeArray c1  =new CodeArray();
 
         System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
+        System.out.print(sv2.containsNearbyAlmostDuplicate(arr,3,3));
+
 
 
 

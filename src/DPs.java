@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -499,6 +500,123 @@ public class DPs {
 
     public int nck (int n, int k){
         return nckMemoisation(n,k, new int[n+1][k+1]);
+    }
+
+    // LeetCode :: 213. House Robber II
+    // This uses the same logic as House Robber problem below,
+    // here we are using the optimized DP approach used in fibonacci.
+    // The optimised approach can be used when we just need to keep the
+    // last 2 values for the current ith position.
+    // This solution also uses the exact same DP equation : The dp equation is dp[i] = max(dp[i-1],dp[i-2] + p(i)).
+    // The optimised approach is a very generic approach to similar DP problems where we just need to uses the last
+    // n values for the n+1 th  value, in that case  we will need n last variables
+    public int robCircular(int[] nums) {
+        int lastLast = 0;
+        int last = 0;
+        int max = 0;
+        for (int i =0;i <nums.length-1 ;i++) {
+            int tmp = last;
+            last = Math.max(lastLast + nums[i], last);
+            lastLast = tmp;
+        }
+        max = last;
+        last = 0;
+        lastLast = 0;
+        for (int i =1; i <nums.length; i++) {
+            int tmp = last;
+            last = Math.max(lastLast + nums[i], last);
+            lastLast = tmp;
+        }
+        max = Math.max(last, max);
+        return max;
+
+    }
+
+
+    // LeetCode :: 198. House Robber
+    // The dp equation is dp[i] = max(dp[i-1],dp[i-2] + p(i))
+    // At each step we make a decision whether to use
+    // the last value (i-1)th dp or this value P(i) + lastLast (i-2)th DP value
+    public int rob(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        int []dp = new int[nums.length +1];
+        dp [0] = 0;
+        dp [1] = nums[0];
+        for (int i = 2; i<dp.length; i++) {
+            dp[i] = Math.max(dp[i-1], dp[i-2] +nums[i-1]);
+        }
+        return dp[nums.length];
+    }
+
+    // optimizing to remove the requirement of O(n) space this is O(1) space solution,
+    // this uses the following idea of Fibonacci check the fibonacci implementation below,
+    // its a very nice technique that is commonly used to solve dp problem
+    public int rob2(int[] nums) {
+        if (nums.length == 0)
+            return 0;
+        int last = 0;
+        int lastLast = 0;
+        int max = 0;
+        for (int i = 0; i<nums.length; i++) {
+            int temp = last;
+            last = Math.max(last, lastLast + nums[i]);
+            lastLast = temp;
+        }
+        return last;
+    }
+
+    // optimizing the fibonacci to O(1) space
+    public int fibonacci (int n) {
+        int last =1;
+        int lastLast = 1;
+        for (int i = 2; i <= n; i++) {
+            int tmp = last;
+            last = lastLast + last;
+            lastLast =tmp;
+        }
+        return last;
+    }
+
+    // LeetCode :: 337. House Robber III
+    public int robTree(TreeNode root) {
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        int max = 0;
+        int last = 0;
+        int lastLast = 0;
+        int lastLevelSum = 0;
+        LinkedList<Integer> parentNodeList = new LinkedList<>();
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            int nodeSum = 0;
+            LinkedList<Integer> tempList = new LinkedList<>();
+            for (int i = 0; i < size;i++) {
+                TreeNode node = queue.poll();
+                tempList.addFirst(node.val);
+                nodeSum+= node.val;
+                if (node.left != null)
+                    queue.add(node.left);
+                if(node.right!=null)
+                    queue.add(node.right);
+
+            }
+            int tmp = last;
+            if (parentNodeList.size() == 0) {
+                parentNodeList.addAll(tempList);
+
+            } else {
+                if(parentNodeList.size() == 2) {
+                    nodeSum = Math.max(nodeSum + parentNodeList.remove(), nodeSum + parentNodeList.remove());
+                }
+                parentNodeList.addAll(tempList);
+            }
+            last = Math.max(lastLast + nodeSum, last);
+            lastLast = tmp;
+            lastLevelSum = nodeSum;
+
+        }
+        return last;
     }
 
 

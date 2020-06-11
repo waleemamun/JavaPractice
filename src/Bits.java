@@ -311,11 +311,13 @@ public class Bits {
 
     // The idea is to use the basic logic of n = n & (n-1) this sets the last bit of n to zero
     // We can use this idea and start from the highest number and start dropping last bit from
-    // the highest number until the highest become smaller than lowest
+    // the highest number until the highest become smaller than or equal to lowest
     public int rangeBitwiseAndV2(int m, int n) {
-        while (n>m) {
+        while (n > m) {
             n&=(n-1);
         }
+        // now we have dropped as many bits as possible from the higher value n,
+        // so now m & n will give the actual number as n is already less than m.
         return m & n;
     }
 
