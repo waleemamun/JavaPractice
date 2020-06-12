@@ -1629,6 +1629,38 @@ public class Tree {
         return nodeList;
     }
 
+    // LeetCode :: 222. Count Complete Tree Nodes
+    // This is a very interesting solution because its a complete binary tree we can discard visiting
+    // half the node on each iteration.
+    // if the height of the tree  is h, then if h-1 is equal to height of the
+    // right subtree then left sub tree must be a full tree so the count of node for left subtree
+    // will be 2^h - 1 so we can discard visiting the left subtree. so the left subtree + root node count will be
+    // 2^h -1 + 1 = 2^h = 1<<h
+    // if the height of root h -1 != height o right subtree it means the left subtree is not full so we traverse the
+    // left subtree discarding th right subtree because the right sub tree is full with
+    // 2^(h -1) -1 +1(for root) == 2^(h -1)nodes
+    private int getCompleteBSTheight (TreeNode root){
+        if (root == null)
+            return -1;
+        int height = -1;
+        while(root !=null) {
+            root = root.left;
+            height++;
+        }
+        return height;
+    }
+
+    public int countNodes(TreeNode root) {
+        int height = getCompleteBSTheight(root);
+        if (height < 0)
+            return 0;
+        if(height -1 == getCompleteBSTheight(root.right)) {
+            return (1 << height) + countNodes(root.right);
+        } else
+            return  (1 << (height -1)) + countNodes(root.left);
+
+    }
+
 
 
 

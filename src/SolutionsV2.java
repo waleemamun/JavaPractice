@@ -1,6 +1,4 @@
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class SolutionsV2 {
 
@@ -120,6 +118,80 @@ public class SolutionsV2 {
             set.add(n);
         }
         return false;
+    }
+
+    // LeetCode :: 227. Basic Calculator II (not submitted)
+    // this works only if the signs are + - * /
+    // if more operator like brackets & power are introduced we have to use
+    // infix to postfix conversion using stack, then use postfix to generate solution
+    public int calculate(String s) {
+        if (s == null) return 0;
+        s = s.trim().replaceAll(" +", "");
+        int length = s.length();
+
+        int res = 0;
+        long preVal = 0; // initial preVal is 0
+        char sign = '+'; // initial sign is +
+        int i = 0;
+        while (i < length) {
+            long curVal = 0;
+            while (i < length && (int)s.charAt(i) <= 57 && (int)s.charAt(i) >= 48) { // int
+                curVal = curVal*10 + (s.charAt(i) - '0');
+                i++;
+            }
+            if (sign == '+') {
+                res += preVal;  // update res
+                preVal = curVal;
+            } else if (sign == '-') {
+                res += preVal;  // update res
+                preVal = -curVal;
+            } else if (sign == '*') {
+                preVal = preVal * curVal; // not update res, combine preVal & curVal and keep loop
+            } else if (sign == '/') {
+                preVal = preVal / curVal; // not update res, combine preVal & curVal and keep loop
+            }
+            if (i < length) { // getting new sign
+                sign = s.charAt(i);
+                i++;
+            }
+        }
+        res += preVal;
+        return res;
+    }
+
+    // LeetCode :: 228. Summary Ranges
+
+    public List<String> summaryRanges(int[] nums) {
+        List<String> strList = new ArrayList<>();
+        if (nums.length == 0)
+            return strList;
+        StringBuilder sb = new StringBuilder();
+        sb.append(nums[0]);
+        int lastVal = nums[0];
+        for (int i =1; i< nums.length; i++) {
+            if (nums[i] == (nums[i-1] +1)) {
+                lastVal = nums[i];
+            } else {
+                if ( Integer.parseInt(sb.toString()) > lastVal || lastVal == nums[0]){
+                    strList.add(sb.toString());
+                }
+                else {
+                    sb.append("->");
+                    sb.append(lastVal);
+                    strList.add(sb.toString());
+                }
+                sb = new StringBuilder();
+                sb.append(nums[i]);
+            }
+        }
+        if ( Integer.parseInt(sb.toString()) > lastVal || lastVal == nums[0])
+            strList.add(sb.toString());
+        else {
+            sb.append("->");
+            sb.append(lastVal);
+            strList.add(sb.toString());
+        }
+        return strList;
     }
 
 
