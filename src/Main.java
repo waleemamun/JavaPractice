@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {0};
+        int [] arr =  {1,2,3,4,5};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -230,7 +230,7 @@ public class Main {
         CodeArray c1  =new CodeArray();
 
         //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
-        System.out.println(sv2.summaryRanges(arr));
+        System.out.println(Arrays.toString(sv2.productExceptSelf(arr)));
 
 
 

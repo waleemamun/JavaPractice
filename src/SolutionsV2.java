@@ -194,5 +194,105 @@ public class SolutionsV2 {
         return strList;
     }
 
+    // LeetCode :: 229. Majority Element II
+    // This uses the same majority Algorithm used in the AdnanAziz (one majority item covering more than half the array)
+    // Known as the Boyer-Moore Majority Vote Algorithm
+    // Here a modified version of the alog is used with two majority items
+    // Here we have two majority candidate we select two candidates in the first pass and in the second pass verify
+    // if they are actual majority
+    // Check out this explanation here :
+    // https://leetcode.com/problems/majority-element-ii/discuss/63537/My-understanding-of-Boyer-Moore-Majority-Vote
+    public List<Integer> majorityElementTwoMajority(int[] nums) {
+        List<Integer> elemList = new ArrayList<>();
+        int candidate1 = 0;
+        int candidate2 = 0;
+        int count1 = 0;
+        int count2 = 0;
+
+        for (int n : nums) {
+            if(candidate1 == n) {
+                count1++;
+            } else if (candidate2 == n) {
+                count2++;
+            } else if(count1 == 0) {
+                candidate1 = n;
+                count1 = 1;
+            } else if(count2 == 0) {
+                candidate2 = n;
+                count2 = 1;
+            } else {
+                count1--;
+                count2--;
+            }
+        }
+        // verify if our candidates are majority
+        count1 =0;
+        count2 =0;
+        for (int n: nums) {
+            if (candidate1 == n){
+                count1++;
+            } else if (candidate2 == n){
+                count2++;
+            }
+
+        }
+        if (count1 > nums.length/3)
+            elemList.add(candidate1);
+        if (count2 > nums.length/3)
+            elemList.add(candidate2);
+        return elemList;
+
+    }
+
+    // LeetCode :: 169. Majority Element
+    public int majorityElement(int[] nums) {
+        int candidate = 0;
+        int count = 0;
+        for (int n : nums) {
+            if (candidate == n) {
+                count++;
+            } else if (count == 0) {
+                candidate = n;
+                count = 1;
+            } else {
+                count--;
+            }
+        }
+        count = 0;
+        for (int n : nums) {
+            if (candidate ==n)
+                count++;
+        }
+        if (count > nums.length/2)
+            return candidate;
+        else
+            return Integer.MIN_VALUE;
+
+    }
+
+    // Leetcode :: 238. Product of Array Except Self
+    // create a prefix & suffix array prefix array hold the product of all prefix for pos i & suffix array
+    // does it for suffixes.  for example 1,2,3,4, 5
+    // prefix   1  1  2 6 24
+    // orig     1  2  3 4  5
+    // suffix 120 60 20 5  1
+    // so we need to build both the suffix & prefix array and then multiply output(i) = prefix(i) * suffix(i)
+    // But if we look closely we can reuse output array first as our prefix array & then as our suffix array
+    // This clever trick would make this O(1) space
+    public int[] productExceptSelf(int[] nums) {
+        int []output = new int[nums.length];
+        output[0] = 1;
+        for (int i =1 ; i < nums.length ; i++) {
+            output[i] = output[i-1] * nums[i-1];
+        }
+        int lastProd = 1;
+        for (int i = nums.length -2; i>=0 ; i--){
+            int tmp = lastProd * nums[i+1];
+            output[i] *= tmp;
+            lastProd = tmp;
+        }
+        return output;
+    }
+
 
 }

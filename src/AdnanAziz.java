@@ -30,6 +30,8 @@ public class AdnanAziz {
     // find that in O(n) time & O(1) space
     // To solve focus on the majority is greater than half of the elements so in a corner case this would be for example
     // abacada , in all other case the at least two majority element will be consecutive for example abacdaa
+    // This use the  Boyer-Moore Majority Vote Algorithm.
+    // Check here : https://gregable.com/2013/10/majority-vote-algorithm-find-majority.html
     public static char majoritySearch(String str) {
         char candidate = '\0';
         int candidateCount = 0;
