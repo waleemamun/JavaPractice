@@ -294,5 +294,25 @@ public class SolutionsV2 {
         return output;
     }
 
+    //LeetCode :: 242. Valid Anagram
+    public boolean isAnagram(String s, String t) {
+        if(s.length() != t.length())
+            return false;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (Character c: s.toCharArray()){
+            int count = map.getOrDefault(c, 0);
+            map.put(c,count+1);
+        }
+        for (Character c: t.toCharArray()) {
+            int count = map.getOrDefault(c, -10);
+            if (count <= 0)
+                return false;
+            map.put(c, count -1);
+        }
+        return true;
+    }
+
+
+
 
 }

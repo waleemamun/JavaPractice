@@ -1758,6 +1758,7 @@ public class Recursions {
             return searchMatRec(matrix, target, i, j-1);
         }
     }
+
     public boolean searchMatrix(int[][] matrix, int target) {
         if (matrix.length == 0)
             return false;

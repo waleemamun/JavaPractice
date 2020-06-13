@@ -321,4 +321,31 @@ public class Bits {
         return m & n;
     }
 
+    //LeetCode :: 260. Single Number III
+    // each number appear twice & two numbers appear once. We need to find the two unique numbers
+    public int[] singleNumberTwoUnique(int[] nums) {
+        int []uniqeNum = {0,0};
+        int xorAll = 0;
+        // xor all numbers to get xor of two unique numbers
+        for (int n: nums) {
+            xorAll ^= n;
+        }
+        // this gets the last set bit,
+        xorAll &= -xorAll;
+        // Now xorAll has 1 bit set and that bit is set in one unique number
+        // and unset in another unique number. So we group all the numbers from
+        // the array in to two groups based on the 1 set bit of xorAll. Note that
+        // the duplicate numbers will fall into the same groups so XORing them will
+        // cancel the duplicates on each group and at the end we end up with only
+        // the unique numbers in the two groups
+        for (int n: nums) {
+            if ((xorAll & n) == 0) { // that bit is not set for this grp
+                uniqeNum[0] ^= n;
+            } else                   // that bit is set for this grp
+                uniqeNum[1] ^= n;
+        }
+
+        return uniqeNum;
+    }
+
 }
