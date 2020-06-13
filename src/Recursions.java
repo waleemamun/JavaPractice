@@ -1743,9 +1743,44 @@ public class Recursions {
         return count;
     }
 
+    // LeetCode :: 240. Search a 2D Matrix II
+    // The idea is to start with the Top Right corner and move to left if the target is smaller
+    // than the value at matrix [i][j] if the target is bigger we go down
+    // check the iterative version below its faster
+    private boolean searchMatRec( int [][]matrix, int target, int i, int j) {
+        if (j < 0 || i < 0 || i >= matrix.length || j >= matrix[0].length)
+            return false;
+        if (matrix[i][j] == target)
+            return true;
+        else if(target > matrix[i][j]){
+            return searchMatRec(matrix, target,i +1,j);
+        } else {
+            return searchMatRec(matrix, target, i, j-1);
+        }
+    }
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if (matrix.length == 0)
+            return false;
+        return searchMatRec(matrix, target, 0, matrix[0].length);
+    }
 
-
-
+    // Same idea just using iterative solution vs recursive
+    public boolean searchMatrixIter(int[][] matrix, int target) {
+        if (matrix.length == 0)
+            return false;
+        int i = 0;
+        int j = matrix[0].length - 1;
+        while( i< matrix.length || j>=0) {
+            if(matrix[i][j] == target)
+                return true;
+            else if(target > matrix[i][j]) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+        return false;
+    }
 
 
 
