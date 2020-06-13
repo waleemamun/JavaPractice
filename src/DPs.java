@@ -663,6 +663,43 @@ public class DPs {
         return max * max;
     }
 
+    // LeetCode :: 264. Ugly Number II
+    // The idea is to cal the multiple of 2 3 5 with the lowest ugly numbers and pick the min of
+    // three as the new ugly number. One thing to remember is to move along the lowest boundary so
+    // on every iteration we pick the lowest last numbers multiply by to 2 , 3 ,5
+    // for example  for 1 we get  2,3 ,5 we pick 2. Next options are 3x1 and 5x1 and 2x2
+    // next 5x1, 2x2 ,3x2 next 3x2 2x4 5x2 and so on .....
+    public int nthUglyNumber(int n) {
+        int [] uglyNumber = new int[n+1];
+        // calc the first ugly number
+        uglyNumber[0] = 1;
+        int nextMult2 = uglyNumber[0] * 2;
+        int nextMult3 = uglyNumber[0] * 3;
+        int nextMult5 = uglyNumber[0] * 5;
+        int idx2 = 0;
+        int idx3 = 0;
+        int idx5 = 0;
+        // here we calc upto n -1 cause we started with 0 based index so n-1th
+        // number is actually the nth ugly number
+        for (int i = 1; i < n; i++) {
+            // get the smallest of the three possible ugly number calculated in previous step
+            // and choose the minimum the minimum will be the new ugly number
+            int nextNum = Math.min(Math.min(nextMult2, nextMult3), nextMult5);
+            // update the ith ugly number
+            uglyNumber[i] = nextNum;
+            // calc the next 3 possible ugly numbers
+            if (nextNum == nextMult2) {
+                nextMult2 = uglyNumber[++idx2] * 2;
+            }
+            if (nextNum == nextMult3) {
+                nextMult3 = uglyNumber[++idx3] * 3;
+            }
+            if (nextNum == nextMult5) {
+                nextMult5 = uglyNumber[++idx5] * 5;
+            }
+        }
+        return uglyNumber[n];
+    }
 
 
 

@@ -372,6 +372,7 @@ public class SolutionsV2 {
     }
 
     // LeetCode :: 567. Permutation in String
+    // Using the same generic sliding window as the previous problem check 'findAnagrams'
     public boolean checkInclusion(String s1, String s2) {
         if (s1.length() ==0 || s2.length() ==0)
             return false;
@@ -399,7 +400,6 @@ public class SolutionsV2 {
                     if (count >= 0)
                         totCount++;
                 }
-
                 if (right - left + 1 == s1.length())
                     return true;
                 left++;

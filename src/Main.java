@@ -231,7 +231,8 @@ public class Main {
 
         //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
 
-        System.out.println(p1.kDistinctMinSubArrV2(str1,4));
+        for (int i = 1; i<=15;i++)
+            System.out.println(dp1.nthUglyNumber(i));
 
 
 
