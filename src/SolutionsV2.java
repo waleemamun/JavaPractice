@@ -312,6 +312,102 @@ public class SolutionsV2 {
         return true;
     }
 
+    // LeetCode :: 438. Find All Anagrams in a String
+    // We are given as search string & pattern string we need to find the anagram of pattern in search
+    // We will use a generic sliding window for this.
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> resList = new ArrayList<>();
+        if (s.length() ==0 || p.length() ==0) {
+            return resList;
+        }
+        // Create the frequency for the pattern string
+        HashMap<Character,Integer> map = new HashMap<>();
+        for (int i =0; i< p.length(); i++) {
+            int count = map.getOrDefault(p.charAt(i),0);
+            map.put(p.charAt(i), count+1);
+        }
+        // get the total counter, this indicates we have found desired number of entries in of pattern
+        // in the search string
+        int totCount = p.length();
+        // reset the window counters
+        int left = 0;
+        int right = 0;
+
+        while (right < s.length()) {
+
+            char ch = s.charAt(right);
+            // increase check if we found a char that contains in the pattern
+            if(map.containsKey(ch)) {
+                int count = map.get(ch);
+                map.put(ch, count -1);
+                // found a char in pattern lets check if the char can
+                // be used to lower the totCount condition
+                if(count > 0)
+                    totCount--;
+            }
+            // reached the condition the sliding window contains all the char in pattern now.
+            // Lets try to move the left side of the window to shrink it.
+            while (totCount == 0) {
+                char tempCh = s.charAt(left);
+                if(map.containsKey(tempCh)) {
+                    int count = map.get(tempCh);
+                    map.put(tempCh, count +1);
+                    // we have discard all we can on the left
+                    if (count >= 0) {
+                        totCount++;
+                    }
+                }
+                // update the solution
+                if (right - left +1 == p.length()) {
+                    resList.add(left);
+                }
+                // move to left
+                left++;
+            }
+            // move to right
+            right++;
+        }
+
+        return resList;
+    }
+
+    // LeetCode :: 567. Permutation in String
+    public boolean checkInclusion(String s1, String s2) {
+        if (s1.length() ==0 || s2.length() ==0)
+            return false;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < s1.length(); i++) {
+            int count = map.getOrDefault(s1.charAt(i), 0);
+            map.put(s1.charAt(i), count +1);
+        }
+        int totCount = s1.length();
+        int left = 0;
+        int right = 0;
+        while (right < s2.length()) {
+            char ch = s2.charAt(right);
+            if (map.containsKey(ch)) {
+                int count = map.get(ch);
+                map.put(ch, count -1);
+                if (count > 0)
+                    totCount--;
+            }
+            while(totCount == 0) {
+                char tempCh = s2.charAt(left);
+                if (map.containsKey(tempCh)) {
+                    int count = map.get(tempCh);
+                    map.put(tempCh, count + 1);
+                    if (count >= 0)
+                        totCount++;
+                }
+
+                if (right - left + 1 == s1.length())
+                    return true;
+                left++;
+            }
+            right++;
+        }
+        return false;
+    }
 
 
 

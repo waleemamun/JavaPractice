@@ -214,8 +214,8 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT";
-        String str2 = "1.0.0.0.0.1";
+        String str1 = "bbbbccdeccb";
+        String str2 = "eidboaoo";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
         Recursions r1 = new Recursions();
@@ -230,7 +230,8 @@ public class Main {
         CodeArray c1  =new CodeArray();
 
         //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
-        System.out.println(Arrays.toString(sv2.productExceptSelf(arr)));
+
+        System.out.println(p1.kDistinctMinSubArrV2(str1,4));
 
 
 

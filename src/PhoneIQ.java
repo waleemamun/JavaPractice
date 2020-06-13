@@ -379,6 +379,35 @@ public class PhoneIQ {
         return maxLen;
 
     }
+    // rewriting it same as above
+    public int kDistinctMinSubArrV2(String s, int k) {
+        HashMap<Character,Integer> map = new HashMap<>();
+        int left = 0;
+        int right = 0;
+        int max = Integer.MIN_VALUE;
+        int distictCount = 0;
+        while(right < s.length()) {
+            char ch = s.charAt(right);
+            int count = map.getOrDefault(ch, 0);
+            if (count == 0)
+                distictCount++;
+            map.put(ch,count+1);
+            while (distictCount == k) {
+                char tempCh = s.charAt(left);
+                int cnt = map.get(tempCh);
+                if (cnt == 1) {
+                    distictCount--;
+                    max = Math.max(max, right -left +1);
+                    System.out.println(left);
+                }
+                map.put(tempCh, cnt-1);
+                left++;
+
+            }
+            right++;
+        }
+        return max;
+    }
 
     // count the number of node in a tree that are visible from the left side so
     // if we are looking at the tree from left count the  number of nodes. This is basically asking to check the
