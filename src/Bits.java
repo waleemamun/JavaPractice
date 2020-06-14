@@ -145,7 +145,9 @@ public class Bits {
         // make the number positive
         // we keep track of the +/- and handle it in return
         boolean isNeg = false;
-
+        // can replace the following logic with
+        // if ((x<0) ^ (y<0))
+        // isNeg = true
         if (y < 0) {
             y = -y;
             isNeg = true;
@@ -157,6 +159,7 @@ public class Bits {
             else
                 isNeg = true;
         }
+
         long quotient = 0;
         long reminder = 0;
         int power = 32;

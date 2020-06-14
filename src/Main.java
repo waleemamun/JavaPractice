@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5};
+        int [] arr =  {3,0,6,1,5};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -231,8 +231,7 @@ public class Main {
 
         //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
 
-        for (int i = 1; i<=15;i++)
-            System.out.println(dp1.nthUglyNumber(i));
+        System.out.println(sv2.hIndex(arr));
 
 
 

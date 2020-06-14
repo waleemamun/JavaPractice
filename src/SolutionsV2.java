@@ -409,6 +409,38 @@ public class SolutionsV2 {
         return false;
     }
 
+    // LeetCode :: 274. H-Index
+    // The idea is to use a kind of bucket sort, so we have divide the numbers into buckets.
+    // Each index is a bucket for the array, so any numbers in the array that is between 0 to n-1
+    // falls into those 0 - n-1 bucket for all numbers >= n we have a bucket n+1th. So the hindex
+    // will be distributed over these buckets. Now if sum the total count starting from n+1 bucket
+    // the point where the sum >= bucket index is our solution, because at that point we have exactly
+    // that numbers many number of items greater than the bukcet index.
+    //
+    // Note : The sum (cumulative from the highest bucket) at each bucket index tells us
+    //        how many greater values are present than this number (bucket index).
+    //        
+    public int hIndex(int[] citations) {
+        int hid = 0;
+        int [] bucket  = new int[citations.length +1];
+        for (int i = 0 ; i<citations.length ; i++) {
+            if(citations[i] >= citations.length)
+                bucket[citations.length]++;
+            else
+                bucket[citations[i]]++;
+        }
+
+        int count = 0;
+        for (int i = bucket.length -1; i>=0; i--) {
+                count+= bucket[i];
+                if(count >= i) {
+                    hid = i;
+                    break;
+                }
+        }
+        return hid;
+    }
+
 
 
 }
