@@ -419,7 +419,7 @@ public class SolutionsV2 {
     //
     // Note : The sum (cumulative from the highest bucket) at each bucket index tells us
     //        how many greater values are present than this number (bucket index).
-    //        
+    //
     public int hIndex(int[] citations) {
         int hid = 0;
         int [] bucket  = new int[citations.length +1];
@@ -441,6 +441,109 @@ public class SolutionsV2 {
         return hid;
     }
 
+    //LeetCode :: 415. Add Strings (not submitted)
+    public String addStrings(String num1, String num2) {
+        int sum = 0;
+        int carry = 0;
+        int i = num1.length()-1;
+        int j = num2.length()-1;
+        StringBuilder sb = new StringBuilder();
+        while (i >= 0 || j >= 0) {
+            sum = carry;
+            sum += (i < 0) ? 0: num1.charAt(i) -'0';
+            sum += (j < 0) ? 0: num2.charAt(j) - '0';
+            carry = sum /10;
+            sum %= 10;
+            sb.append(sum);
+            i--;
+            j--;
+        }
+        return sb.reverse().toString();
+    }
+
+    // LeetCode :: 125. Valid Palindrome (not submitted)
+    public boolean isPalindrome(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i<s.length();i++) {
+            char ch = s.charAt(i);
+            if (Character.isDigit(ch) || Character.isLetter(ch)) {
+                sb.append(Character.toLowerCase(ch));
+            }
+        }
+        int l = 0;
+        int r = sb.length() -1;
+        while (l<=r && sb.charAt(l) == sb.charAt(r)) {
+            l++;
+            r--;
+        }
+        if(l > r)
+            return true;
+        else
+            return false;
+
+    }
+
+    //LeetCode :: 953. Verifying an Alien Dictionary (not submitted)
+
+    public boolean isAlienSorted(String[] words, String order) {
+        HashMap<Character, Integer> map = new HashMap<>();
+
+        for (int i =0; i< order.length(); i++) {
+            map.put(order.charAt(i), i);
+        }
+        for (int i =  1; i< words.length; i++) {
+            String first = words[i-1];
+            String last = words[i];
+            int f = 0;
+            int l = 0;
+            while (f < first.length() && l < last.length()) {
+                int diff = map.get(first.charAt(f)) - map.get(last.charAt(l));
+                if (diff == 0){
+                    l++;
+                    f++;
+                } else if (diff > 0)
+                    return false;
+                else
+                    break;
+
+            }
+
+        }
+        return true;
+    }
+
+    // LeetCode :: 986. Interval List Intersections (not submitted)
+    // The idea is to merge the two sorted interval list interval,
+    // Note we dont need to actually merge the to another array but we can use similar idea
+    // to merge and at each iteration find intersection points of the interval add them
+    // to the result array and process the next shorter interval
+    public int[][] intervalIntersection(int[][] A, int[][] B) {
+        int i = 0;
+        int j = 0;
+        List<int[]> resList = new ArrayList<>();
+
+        while(i < A.length && j < B.length) {
+            // get the intersection of the intervals for the low we need
+            // to pick the max and for the high we need to pick the min
+            int low = Math.max(A[i][0], B[j][0]);
+            int high = Math.min((A[i][1]),B[j][1]);
+            // if the low point is smaller or equal to high point then there exist an interval
+            if (low <= high)
+                resList.add(new int[] {low,high});
+            // find the smaller of the two interval based on their endpoint and process
+            // the next item for that array cause the bigger interval can still cover the
+            // next item in the array where the samller interval belongs to
+            if(A[i][1] <= B[j][1])
+                i++;
+            else
+                j++;
+
+        }
+        // interesting way to convert an List of 2D arrays to a 2D array
+        return resList.toArray(new int[resList.size()][]);
+    }
 
 
-}
+
+
+    }

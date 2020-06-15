@@ -711,6 +711,52 @@ public class PhoneIQ {
         return penalty;
     }
 
+    // Similar strings ("face", "eacf") returns true if only 2 positions in the strings are swapped.
+    // Here 'f' and 'e' are swapped in the example
+    public boolean isSimilar (String s1 , String s2) {
+        if(s1.length() != s2.length())
+            return false;
+        int count = 0;
+        char s_1 ='\0';
+        char s_2 = '\0';
+        for (int i = 0; i<s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i)) {
+                count++;
+                s_1 = s2.charAt(i);
+                s_2 = s1.charAt(i);
+
+            }
+        }
+        if (count == 0) return true;
+        if (count == 1) return false;
+        for (int i = 0; i<s1.length(); i++) {
+            if(s1.charAt(i) != s2.charAt(i) && s_1 == s1.charAt(i) &s_2 == s2.charAt(i))
+                return true;
+            else
+                break;
+        }
+        return false;
+
+    }
+    // works for positive arr only only, needs to be verified
+    public boolean checkSubarraySum(int[] nums, int k) {
+        int left = 0;
+        int right = 0;
+        int tempSum = 0;
+        while (right < nums.length) {
+            tempSum+= nums[right];
+            while (tempSum >= k) {
+                if (tempSum == k){
+                    System.out.println(left +" " + right);
+                    return true;
+                }
+                tempSum -= nums[left];
+                left++;
+            }
+            right++;
+        }
+        return false;
+    }
 
 
 

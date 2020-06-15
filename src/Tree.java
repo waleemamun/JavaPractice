@@ -1661,6 +1661,33 @@ public class Tree {
 
     }
 
+    //leetCode ::  Range Sum of BST (Not submitted)
+    int rangeSum= 0;
+    private void rangeSumBSTRec (TreeNode root, int L, int R) {
+        if (root == null)
+            return;
+        if (L <= root.val && root.val <= R)
+            rangeSum += root.val;
+        rangeSumBSTRec(root.right, L, R);
+        rangeSumBSTRec(root.left, L, R);
+    }
+
+    public int rangeSumBSTV2(TreeNode root, int L, int R) {
+        rangeSumBSTRec(root, L,R);
+        return rangeSum;
+    }
+
+    public int rangeSumBST(TreeNode root, int L, int R) {
+        if (root == null)
+            return 0;
+        int left = rangeSumBST(root.left, L, root.val-1);
+        int right = rangeSumBST(root.left, root.val +1, R);
+        int rootVal = left + right;
+        if(L <= root.val && root.val <= R)
+            rootVal+= root.val;
+        return rootVal;
+    }
+
 
 
 

@@ -13,6 +13,52 @@ public class GraphNode {
         adj = new ArrayList<Integer>();
         parent = Integer.MIN_VALUE;
     }
+    public GraphNode () {
+        data = -1;
+        adj = new ArrayList<Integer>();
+        parent = Integer.MIN_VALUE;
+    }
+
+    public HashMap<Integer, HashSet<Integer>> buildGraph(int edges[][]) {
+        HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+        for (int i =0 ; i< edges.length; i++) {
+            HashSet<Integer> adjset = graph.getOrDefault(edges[i][0], new HashSet<Integer>());
+            adjset.add(edges[i][1]);
+            graph.put(edges[i][0], adjset);
+            graph.putIfAbsent(edges[i][1], new HashSet<Integer>());
+        }
+        System.out.println("Graph node Size " + graph.size());
+        return graph;
+    }
+
+    public void dfs(HashMap<Integer, HashSet<Integer>> graph) {
+        int []color = new int [graph.size() +1];
+        Set<Integer> nodeSet = graph.keySet();
+        Iterator itr = nodeSet.iterator();
+        while(itr.hasNext()) {
+            Integer u = (Integer) itr.next();
+            if(color[u] == 0) // white vertex
+                dfsVisit(u, graph, color);
+        }
+    }
+    public void dfsVisit(Integer u,  HashMap<Integer, HashSet<Integer>> graph, int []color){
+        color[u] = 1; // grey vertex
+        HashSet<Integer> adjset = graph.get(u);
+        Iterator itr = adjset.iterator();
+        while(itr.hasNext()) {
+            Integer v = (Integer) itr.next();
+            if(color[v] == 0) { // unexplored
+                dfsVisit(v, graph, color);
+            } else if(color[v] == 1) { // already visited grey vertex
+                System.out.println("LOOP detected!");
+            }
+        }
+        color[u] = 2; // black vertex
+        System.out.println(u);
+
+    }
+
+
 
     // LeetCode :: 127. Word Ladder & Adna Aziz 19.7
     // The most interesting part is how the adjacency was built, for example  hot  create three keys (H*t, *ot,ho*)

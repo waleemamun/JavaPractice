@@ -190,7 +190,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {3,0,6,1,5};
+        int [] arr =  {2,6,5,4,8,2,5,2};
         int [] arr1 = {30,10,50,70,20};
 
         int [][] arr2d = {
@@ -231,7 +231,19 @@ public class Main {
 
         //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
 
-        System.out.println(sv2.hIndex(arr));
+        System.out.println(p1.checkSubarraySum(arr, 16));
+        int [][] edges = {  {1, 2},
+                            {2, 3},
+                            {3, 4},
+                            {4, 5},
+                            {5, 1},
+                            };
+        GraphNode g1 = new GraphNode();
+        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);
+        g1.dfs(graph);
+
+
+
 
 
 
