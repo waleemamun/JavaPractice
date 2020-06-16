@@ -836,6 +836,24 @@ public class Tree {
         return node;
 
     }
+
+    // This is easier to read as we use four indexes (two set of start & end)
+    private TreeNode buildTreePreOrderRecV3(int[] inorder, int[] preorder, int inorderSt,
+                                             int inorderEnd, int preorderSt, int preorderEn) {
+        if (inorderEnd < inorderSt || preorderEn < preorderSt)
+            return null;
+        int inOrderRootIdx = inorderMap.get(preorder[preorderSt]);
+        // for post oder we cal the right sub tree size as the right sub tree appears after root node
+        // for indorder case we just need to calc left subtree size instead using inOrderRootIdx - inorderSt
+        int leftSubtreeSize = inOrderRootIdx - inorderSt;
+        TreeNode root = new TreeNode(preorder[preorderSt]);
+        //System.out.println(root.val + " " + rightSubtreeSize + " " + inorderEnd +" " + inOrderRootIdx);
+        root.left = buildTreePreOrderRecV3(inorder, preorder, inorderSt,
+                inOrderRootIdx -1, preorderSt + 1, preorderSt + leftSubtreeSize);
+        root.right = buildTreePreOrderRecV3(inorder, preorder, inOrderRootIdx +1 ,
+                inorderEnd , preorderSt + leftSubtreeSize +1, preorderEn);
+        return root;
+    }
     // This is a very nice solution, We build the tree in preorder
     // note that we add nodes from a preorder array from 0 to n order, hence we can have a pointer in preOrder array
     // that gives us preorder node in every step, another pointer we use in inorder array to know the boundary for
@@ -925,6 +943,8 @@ public class Tree {
         }
         return buildTreePostOrderV2Rec(inorder,postorder, 0, inorder.length-1, 0, postorder.length -1);
     }
+
+    // This is easier to read as we use four indexes (two set of start & end)
     private TreeNode buildTreePostOrderV2Rec(int[] inorder, int[] postorder, int inorderSt,
                                              int inorderEnd, int postorderSt, int postorderEn) {
         if (inorderEnd < inorderSt || postorderEn < postorderSt)
@@ -945,6 +965,8 @@ public class Tree {
     // LeetCode :: 107. Binary Tree Level Order Traversal II
     // The idea is to recursively call to add nodes per level.
     // We start with empty list at each level we increase the list size
+    // Note : when some normal operation is asked to be done in reverse order we can make use of
+    // adding to the start of a list
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
         List<List<Integer>> rList = new ArrayList<>();
         if (root == null)
@@ -1554,6 +1576,7 @@ public class Tree {
         root.right = buildBSTFromPreOrderRec(preorder, rootVal,upper);
         return root;
     }
+    // Adann Aziz BST
     // build the BST tree from PreOrder Traversal
     public TreeNode buildBSTFromPreOrder( int []preorder){
         return buildBSTFromPreOrderRec(preorder, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -1570,6 +1593,7 @@ public class Tree {
         // we dont want to process any value beyond the loewr/upper bound
         rootIdx++;
         TreeNode root = new TreeNode(rootVal);
+        // we are processing reversed post order traversal hence process right node before left node
         root.right = buildBSTFromPostOrderRec(postOrder, rootVal,upper);
         root.left = buildBSTFromPostOrderRec(postOrder, lower, rootVal);
         return root;
@@ -1577,6 +1601,7 @@ public class Tree {
     public TreeNode buildBSTFromPostOrder( int []postOrder){
         int left = 0;
         int right = postOrder.length -1;
+        // reverse the traversal to handle it easily from left to right
         while (left <right) {
             int temp = postOrder[left];
             postOrder[left] = postOrder[right];
@@ -1584,6 +1609,7 @@ public class Tree {
             left++;
             right--;
         }
+        // recusively resolve the reversed traversal to build the tree
         return buildBSTFromPostOrderRec(postOrder, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     }
@@ -1661,7 +1687,7 @@ public class Tree {
 
     }
 
-    //leetCode ::  Range Sum of BST (Not submitted)
+    //leetCode :: 938 Range Sum of BST (Not submitted)
     int rangeSum= 0;
     private void rangeSumBSTRec (TreeNode root, int L, int R) {
         if (root == null)
@@ -1688,6 +1714,102 @@ public class Tree {
         return rootVal;
     }
 
+    // LeetCode :: 297. Serialize and Deserialize Binary Tree (not submitted)
+    // Encodes a tree to a single string.
+    private void serializeRec(TreeNode root, StringBuilder sb) {
+        if(root == null) {
+            sb.append("X,");
+            return;
+        }
+        sb.append(root.val);
+        sb.append(",");
+        serializeRec(root.left, sb);
+        serializeRec(root.right, sb);
+    }
+
+    public String serialize(TreeNode root) {
+
+        StringBuilder sb = new StringBuilder();
+        serializeRec(root, sb);
+        return sb.toString();
+
+    }
+
+    // Decodes your encoded data to tree.
+    private int desIndex = 0;
+    private TreeNode deserializeRec (List<String> alist) {
+        if (desIndex >= alist.size())
+            return null;
+        if (alist.get(desIndex).compareTo("X") == 0) {
+            desIndex++;
+            return null;
+        }
+        TreeNode node = new TreeNode(Integer.parseInt(alist.get(desIndex)));
+        desIndex++;
+        node.left = deserializeRec(alist);
+        node.right = deserializeRec(alist);
+        return node;
+    }
+
+    public TreeNode deserialize(String data) {
+        List<String> nodeList = new ArrayList<>();
+        nodeList.addAll(Arrays.asList(data.substring(0,data.length()-1).split(",")));
+        System.out.println(nodeList);
+        TreeNode root =  deserializeRec(nodeList);
+        return root;
+    }
+
+    // LeetCode :: 865. Smallest Subtree with all the Deepest Nodes (not submitted)
+    private HashMap<TreeNode, Integer> mapTreeNode = new HashMap<>();
+    // Get Height using memoization
+    private int getHeightOfNode(TreeNode node){
+        if (node == null)
+            return 0;
+        if (mapTreeNode.containsKey(node)){
+            return mapTreeNode.get(node);
+        }
+        int left = getHeightOfNode(node.left);
+        int right = getHeightOfNode(node.right);
+        int height = 1 + Math.max(left, right);
+        mapTreeNode.put(node, height);
+        return height;
+    }
+    public TreeNode subtreeWithAllDeepest(TreeNode root) {
+        if(root == null)
+            return null;
+        int left = getHeightOfNode(root.left);
+        int right = getHeightOfNode(root.right);
+        if ( left == right && left != 0)
+            return root;
+        else if (left > right)
+            return subtreeWithAllDeepest(root.left);
+        else
+            return subtreeWithAllDeepest(root.right);
+    }
+
+    // LeetCode :: 257. Binary Tree Paths
+    private void binaryTreePathsRec(TreeNode root, List<String> pathList, StringBuilder sb) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null) {
+            int idx = sb.toString().length();
+            sb.append(root.val);
+            pathList.add(sb.toString());
+            sb.delete(idx,sb.length());
+            return;
+        }
+        int idx = sb.toString().length();
+        sb.append(root.val);
+        sb.append("->");
+        binaryTreePathsRec(root.left, pathList ,sb);
+        binaryTreePathsRec(root.right, pathList ,sb);
+        sb.delete(idx,sb.length());
+    }
+    public List<String> binaryTreePaths(TreeNode root) {
+        List<String> pathList = new ArrayList<>();
+        binaryTreePathsRec(root, pathList, new StringBuilder());
+        return pathList;
+    }
 
 
 

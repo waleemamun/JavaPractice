@@ -2,6 +2,7 @@ import org.omg.PortableInterceptor.INACTIVE;
 import org.omg.PortableServer.LIFESPAN_POLICY_ID;
 import sun.awt.image.ImageWatched;
 
+import javax.swing.plaf.synth.SynthEditorPaneUI;
 import java.util.*;
 
 
@@ -190,8 +191,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {2,6,5,4,8,2,5,2};
-        int [] arr1 = {30,10,50,70,20};
+        int [] arr =  {1,2,3,4,5,6,7,8,9};
+        int [] arr1 = {5,2,1,3,4,7,6,8,9};
 
         int [][] arr2d = {
                 {1, 0, 1, 0, 0},
@@ -229,18 +230,16 @@ public class Main {
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
 
-        //System.out.println(sv1.findRepeatedDnaSequencesV2(str1));
-
-        System.out.println(p1.checkSubarraySum(arr, 16));
+        System.out.println(tr1.binaryTreePaths(treeNode));
         int [][] edges = {  {1, 2},
                             {2, 3},
                             {3, 4},
                             {4, 5},
                             {5, 1},
                             };
-        GraphNode g1 = new GraphNode();
-        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);
-        g1.dfs(graph);
+//        GraphNode g1 = new GraphNode();
+//        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);
+//        g1.dfs(graph);
 
 
 
