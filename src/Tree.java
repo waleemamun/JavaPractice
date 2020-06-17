@@ -1383,10 +1383,12 @@ public class Tree {
     // The idea is to find the mid node of the list and create a TreeNode from that then recursively create
     // the left subtree by using the node from start to mid node & create the right subtree by using the node
     // from mid.next node to end node
+    // Remember in this case we consider the end node to exclusive & start node to be inclusive so (start,end]
     public TreeNode sortedListToBST(LinkList head) {
         TreeNode root = null;
         if (head == null)
             return root;
+        // end node is exclusive
         root = sortedListToBSTRec(head, null);
         return root;
     }
@@ -1706,8 +1708,8 @@ public class Tree {
     public int rangeSumBST(TreeNode root, int L, int R) {
         if (root == null)
             return 0;
-        int left = rangeSumBST(root.left, L, root.val-1);
-        int right = rangeSumBST(root.left, root.val +1, R);
+        int left = rangeSumBST(root.left, L, R);
+        int right = rangeSumBST(root.right, L, R);
         int rootVal = left + right;
         if(L <= root.val && root.val <= R)
             rootVal+= root.val;
@@ -1715,12 +1717,15 @@ public class Tree {
     }
 
     // LeetCode :: 297. Serialize and Deserialize Binary Tree (not submitted)
+    // PreOrder traversal of the tree node and add X for null to ecnode the string
     // Encodes a tree to a single string.
     private void serializeRec(TreeNode root, StringBuilder sb) {
+        // add X for null
         if(root == null) {
             sb.append("X,");
             return;
         }
+        // add tree node
         sb.append(root.val);
         sb.append(",");
         serializeRec(root.left, sb);
@@ -1750,9 +1755,10 @@ public class Tree {
         node.right = deserializeRec(alist);
         return node;
     }
-
+    // node decode the  preorder traveresal with null presented as X
     public TreeNode deserialize(String data) {
         List<String> nodeList = new ArrayList<>();
+        // create an arraylist from the string
         nodeList.addAll(Arrays.asList(data.substring(0,data.length()-1).split(",")));
         System.out.println(nodeList);
         TreeNode root =  deserializeRec(nodeList);

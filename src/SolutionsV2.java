@@ -420,7 +420,7 @@ public class SolutionsV2 {
     // Note : The sum (cumulative from the highest bucket) at each bucket index tells us
     //        how many greater values are present than this number (bucket index).
     //
-    public int hIndex(int[] citations) {
+    public int hIndexUnSorted(int[] citations) {
         int hid = 0;
         int [] bucket  = new int[citations.length +1];
         for (int i = 0 ; i<citations.length ; i++) {
@@ -439,6 +439,32 @@ public class SolutionsV2 {
                 }
         }
         return hid;
+    }
+
+    //LeetCode :: 275. H-Index II The same problem as above now the array is given as sorted in increasing  order
+    // The idea to use a binary search, when doing the search we have to consider the size of the array from mid
+    // position so if the size of the array from mid position is equal to the value of mid we found our solution
+    // but if the size is bigger we need to move to the right to find a bigger value for h-index, the array is
+    // sorted so on the right there will be one value which is equal to or greater than the desired h-index value.
+    // We move to the left of the array if the len from mid is smaller than the citation[mid] value.
+    public int hIndex(int[] citations) {
+        int high = citations.length -1;
+        int low = 0;
+        int len = citations.length;
+        while (low < high) {
+            int mid = low + (high -low)/2;
+            // at this point we have exactly same number of entries in the array which
+            // are >= citation[mid] so this is our solution for h-index
+            if (citations[mid] == (len - mid))
+                return citations[mid];
+            // len from mid is bigger so we can move to the right, there must exist one such number
+                // between len & mid +1 for which we will found same number of entries in the array
+            else if (citations[mid] < (len - mid))
+                low = mid + 1;
+            else
+                high = mid -1;
+        }
+        return len - low;
     }
 
     //LeetCode :: 415. Add Strings (not submitted)

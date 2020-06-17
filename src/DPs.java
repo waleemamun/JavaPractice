@@ -279,6 +279,21 @@ public class DPs {
         return ways[n];
 
     }
+    // optimized it to match the fibinacci optimization
+    // one interesting point specially for this problem its similar to fibonacci as
+    // we make w(i) = w(i-1) + w(i-2)
+    public int climbStairsOptimized(int n) {
+        int last = 1;
+        int lastLast = 0;
+        for (int i = 0; i <= n; i++) {
+            // the ways at current step is the sum of the last two steps
+            int tmp = last;
+            last = last + lastLast;
+            lastLast = tmp;
+        }
+        return last;
+
+    }
 
 
     // Leetcode :: 72 Edit Distance (Hard)
@@ -439,6 +454,7 @@ public class DPs {
 
     // LeetCode :: 518. Coin Change 2 ; find number of ways the set of coins can add up to the target
     // Coin change problem; use DP approach to solve this check the version2 we discuss both this & v2 there
+    // version 2 is the space optimised version
     public int change(int amount, int[] coins) {
         int [][]ways = new int [coins.length+1][amount + 1];
         for (int i=0; i<= coins.length; i++) {
@@ -455,7 +471,12 @@ public class DPs {
         }
         return ways[coins.length][amount];
     }
-    // The idea is very similar to the problem of "377. Combination Sum IV" in this file
+    // The idea in version 1 is similar to other DP approach we have a set of coins and a certain amount we want to
+    // reach so we create a 2D DP table with rows as coin & col as amount for each coin we want to check how many
+    // ways we can achieve an amount. Finally for all the set of coins we get the total sum in ways[coin.len][amount]
+    // The reason we can use optimised version is we only need to care about the previous row when considering the
+    // current row so this can be space optimised to a one D array.
+    // The version 2 uses space optimised DP
     // We calc ways[i] given a coin set for example [2,5,10 ....] by combining the ways[i-2], ways[i-5], ways[i-10]
     // and so on ...! Try to look  at this in this way when we reach ways[i-5]
     // we can ways[i-5] + 5 to get to ways[i] similarly for the rest of the coins.
@@ -466,15 +487,11 @@ public class DPs {
     // interested only in the  last value hence the following equation is good ways[i] on the right of equal
     // operator holds the last value :) !!!
     // ways[i]  = ways[i] + ways[j-coins[i]]
-    // Now we come to our 2nd observation where the method 'combinationSum4' calc uses similar approach in that api
-    // we dont look for a combination rather look for permutation of ways we can combine the sum. But in this 'changeV2'
-    // function when counting coins set we are more interested in combination
-    // The reasons is  the inner & outer loops. In this case we process for each coin how many ways to get amount so
-    // outer loops accounts for coins and when we look up the last value ways[i-1][j] we are looking up coins[i-1]
-    // how many ways
-    // But in case of earlier 'combinationSum4' the outer loops is ways so we are checking for each target how many
-    // ways coin can be used in this case ways[i-1][j] refers to all the ways i-1 the entry is handled now to handle
-    // ith entry we check for each coin to increase the result. Hence we get the permutation
+    // Now we come to the 2nd observation although this problem looks similar to 'combinationSum4' method in this file
+    // this is not the same notice how the inner/outer loop is reversed in these cases. Its because for this problem
+    // we first count how may ways for coins 1 - i we can achieve our amount, then we add the coin[i+1] to figure out
+    // the number of ways look a the implementation of version and the reason for using the 2d array before space
+    // optimisation
     public int changeV2(int amount, int[] coins) {
         int []ways = new int[amount+1];
         ways[0]=1;
