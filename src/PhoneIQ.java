@@ -758,6 +758,70 @@ public class PhoneIQ {
         return false;
     }
 
+    //LeetCOde :: 56. Merge Intervals
+    private class IntervalComparator implements Comparator<int []> {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            if (o1[0] == o2[0])
+                return o1[1] - o2[1];
+            else
+                return o1[0] - o2[0];
+        }
+    }
+    public int[][] merge(int[][] intervals) {
+        Collections.sort(Arrays.asList(intervals), new IntervalComparator());
+        ArrayList<int[]> mergelist = new ArrayList<>();
+        int []lastInv = intervals[0];
+        for (int i = 1;i<intervals.length;i++) {
+            int []curIntv = intervals[i];
+            if (lastInv[1] < curIntv[1]) {
+                if(lastInv[1] < curIntv[0]) {
+                    mergelist.add(lastInv);
+                    lastInv = curIntv;
+                } else {
+                    lastInv[1] = Math.max(lastInv[1], curIntv[1]);
+                }
+            }
+
+        }
+        mergelist.add(lastInv);
+        return mergelist.toArray(new int[mergelist.size()][]);
+
+    }
+
+    // LeetCode :: 57 Insert Intervals
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        LinkedList<int []> resList = new LinkedList<>();
+        int i = 0;
+        // add everything before this interval
+        while(i < intervals.length && intervals[i][1] < newInterval[0]){
+            resList.add(intervals[i]);
+            i++;
+        }
+        // add the intervals that can be merged with the new inserted intervals
+        // Here we compare the left end of the intervals with the right end of the new intervals.
+        // The right end of the interval could come before the right end of the current interval.
+        // In that case the new interval is covered by the right end of current interval.
+        // Or if the new interval right end of the new interval covers the right end of the
+        // current interval than we have more intervals to cover.
+        while (i < intervals.length && intervals[i][0] <= newInterval[1]) {
+            // we update the left to cover the lower left
+            newInterval[0] = Math.min(newInterval[0],intervals[i][0]);
+            // we update the max to cover the right, but note if the right is update with the
+            // current interval right the next iteration will break as the whole array is sorted
+            newInterval[1] = Math.max(newInterval[1],intervals[i][1]);
+            i++;
+        }
+        // add merged interval to the list
+        resList.add(newInterval);
+        // add rest of the intervals right of the merged intervals
+        while (i < intervals.length)
+            resList.add(intervals[i++]);
+
+        return resList.toArray(new int[resList.size()][]);
+
+    }
+
 
 
 

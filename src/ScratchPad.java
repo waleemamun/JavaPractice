@@ -153,7 +153,7 @@ public class ScratchPad {
         if (ceil != null) {
             System.out.println("Ceil " + ceil);
         }
-
+        int [] nums1 = {9,5,4,3,2,1};
 
 
 

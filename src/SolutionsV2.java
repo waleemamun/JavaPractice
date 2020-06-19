@@ -569,6 +569,54 @@ public class SolutionsV2 {
         return resList.toArray(new int[resList.size()][]);
     }
 
+    // LeetCode :: 289. Game of Life
+    // We want to do it in O(1) space notice that the values are currently 0 & 1 which requires just the first bit
+    // This is an int array so we can easily save the next state in bit position 9 (using bit position 9 makes masking
+    // easier). So if some thing become dead->alive in the next state the bits will be 0000000100000001
+    // if it becomes alive to dead  or dead to dead no need to change anything in the 9 bit positon as
+    // by default its zero
+    // Note here we use the 9 th bit position to store the next state we could have use the 3rd bit position to
+    // with mask = 0x3 newSetbit = 1 << shift & shift = 2
+    public void gameOfLife(int[][] board) {
+        // we use the neighbor array to get the adjacent neighbors this way code is less messy we dont need
+        // to write the 8 adjacent neigbor
+        int []neighbor = {-1,0,1};
+        // 8 bit mask to get the current state
+        int mask = 0xFF;
+        // set the 9th bit position
+        int shift = 8;
+        int newSetbit = 1 << shift;
+        for (int r = 0; r <board.length; r++) {
+            for (int c = 0; c < board[0].length; c++) {
+
+                // get the neighbors
+                int count = 0;
+                for (int i = 0; i <= 2; i++) {
+                    for (int j = 0; j <= 2; j++) {
+                        if (!(neighbor[i] == 0 && neighbor[j] == 0)) {
+                            int  rowX = r + neighbor[i];
+                            int  colX = c + neighbor[j];
+                            if(!(rowX <0 || colX < 0 || rowX >= board.length || colX >= board[0].length)
+                                    && (board[rowX][colX] & mask) == 1) {
+                                count++;
+                            }
+                        }
+                    }
+                }
+                // we only need to update if in the next state some thing becomes alive by default
+                // next state is zero or dead so we only handle alive cases
+                if (count == 3 || (count == 2 && (board[r][c] & mask) == 1))
+                    board[r][c] = board[r][c] | newSetbit;
+
+            }
+        }
+        for (int r = 0; r <board.length; r++) {
+            for (int c = 0; c < board[0].length; c++) {
+                board[r][c] >>>= shift;
+            }
+        }
+
+    }
 
 
 

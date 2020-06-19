@@ -179,6 +179,7 @@ public class SolutionsV1 {
     // The we can just scan the intervals, if the right of the current interval can cover
     // the next interval we can absorb it in current interval. If not the we either update
     // the right if right is in between  the next interval. Other wise we got a new interval
+    // NOTE:: *** Check The Implementation in PhoneIQ.java its more compact *******
     class Intervals {
         int left;
         int right;
@@ -238,6 +239,7 @@ public class SolutionsV1 {
     // when such positions are found then merge the intervals into one interval.
     // This will create three parts in general, leftside of merge interval, merge interval itself,
     // the right side of the merge interval
+    // NOTE:: *** Check The Implementation in PhoneIQ.java its more compact *******
     public int[][] insert(int[][] intervals, int[] newInterval) {
         int left = newInterval[0];
         int right = newInterval[1];

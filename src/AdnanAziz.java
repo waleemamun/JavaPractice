@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class AdnanAziz {
 
@@ -59,7 +59,7 @@ public class AdnanAziz {
             candidate = 0;
         return candidate ;
     }
-
+    // search for the first index of an element in a sorted array
     public static int searchFirsIndexOf(int arr[], int target) {
         int low = 0;
         int high = arr.length -1;
@@ -78,7 +78,7 @@ public class AdnanAziz {
         }
         return result;
     }
-
+    // search for the last index of an element in a sorted array
     public static int searchForLastIdx(int arr[], int target) {
         int low = 0;
         int high = arr.length -1;
@@ -95,6 +95,60 @@ public class AdnanAziz {
             }
         }
         return result;
+    }
+
+    // 11.2 SORT AN K INCREASING-DECREASING ARRAY
+    public static List<Integer> sortKIncreasingDecreasingArray(int nums[]) {
+        List <List<Integer>> ksortedLists = new LinkedList<>();
+        boolean increasing = true;
+        List<Integer> tempList = new LinkedList<>();
+        int start = 0;
+        int i = 0;
+        while (i < nums.length) {
+            if(increasing) {
+                while (i + 1< nums.length && nums[i] <= nums[i+1]){
+                    tempList.add(nums[i]);
+                    i++;
+                }
+                tempList.add(nums[i]);
+                increasing = false;
+            } else {
+                while (i + 1< nums.length && nums[i] > nums[i+1]){
+                    tempList.add(nums[i]);
+                    i++;
+                }
+                tempList.add(nums[i]);
+                Collections.reverse(tempList);
+                increasing = true;
+            }
+            ksortedLists.add(tempList);
+            tempList = new ArrayList<>();
+            i++;
+        }
+        System.out.println(ksortedLists);
+        PriorityQueue<Integer[]> minHeap = new PriorityQueue<>(new Comparator<Integer[]>() {
+            @Override
+            public int compare(Integer[] o1, Integer[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        // init the priority queue with the first items from k sorted list
+        int k = 0;
+        for (List<Integer> lst : ksortedLists) {
+            Integer []item = {lst.remove(0), k++};
+            minHeap.add(item);
+        }
+        ArrayList<Integer> resList = new ArrayList<>();
+        while (!minHeap.isEmpty()) {
+            Integer [] item = minHeap.remove();
+            resList.add(item[0]);
+            if ( ksortedLists.get(item[1]).size()!=0) {
+                item[0] = ksortedLists.get(item[1]).remove(0);
+                minHeap.add(item);
+            }
+
+        }
+        return resList;
     }
 
 }

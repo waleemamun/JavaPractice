@@ -505,6 +505,7 @@ public class DPs {
 
     // The DP eqn for NCK = n-1Ck-1 + n-1Ck we use DP to get nck so that overflow does not happen
     private int nckMemoisation(int n, int k, int dp[][]) {
+        // base case if n = 0  or k = 0 the value will be 1
         if (n==0 || k==0)
             return 1;
         if(dp[n][k] == 0) {
@@ -515,6 +516,8 @@ public class DPs {
         return dp[n][k];
     }
 
+    // Find NCK using DP to avoid overflow, Note we cannot use the mathematical option
+    // here as overflow can happen if we use the eqn
     public int nck (int n, int k){
         return nckMemoisation(n,k, new int[n+1][k+1]);
     }
@@ -644,8 +647,8 @@ public class DPs {
     // the current sqaure length will min + 1 if this square has '1' in it. We recursively solve this for the
     // whole array. As we are trying to recursively solve it for the whole array we repeat the same computation
     // of calculating same square multiple time for example the square rooted at (4,4) needs to calculated for
-    // (0,0), (0,1), (1,1), (1,2) and so on... These are non overlapping sub problem. So we can use DP. T
-    // his easier option is to go by top Down memoization approach. Hence we introduce the dp array in the code
+    // (0,0), (0,1), (1,1), (1,2) and so on... These are non overlapping sub problem. So we can use DP. The
+    // easier option is to go by top Down memoization approach. Hence we introduce the dp array in the code
     private int maximalSquareRec(char[][] matrix, int i, int j, int dp[][]){
         if (i < 0 || j <0 ||
                 i >= matrix.length ||
@@ -715,9 +718,30 @@ public class DPs {
                 nextMult5 = uglyNumber[++idx5] * 5;
             }
         }
-        return uglyNumber[n];
+        return uglyNumber[n-1];
     }
 
+    // LeetCode :: 300. Longest Increasing Subsequence
+    // We have to find the longest increasing sequence they don't have to be contagious. Array can have negative numbers
+    // so if we use a dp table where we store all tge previous seq length before the ith item then we can look back at
+    // the i-1 items and calc the longest sequence for i. Note when checking the i-1 items we take in to consideration
+    // only the items that are samller then the ith item
+    // hence dp eqn dp[i] = max(dp[i-1]) + 1 {when dp[i-1] < dp[i] for 0 to i-1 items}
+    public int lengthOfLIS(int[] nums) {
+        int []seqLen = new int [nums.length];
+        int maxLen = 0;
+
+        for(int i = 0; i < nums.length; i++) {
+            int max = 0;
+            for (int j = 0; j<i; j++) {
+                if (nums[i] > nums[j])
+                    max = Math.max(max, seqLen[j]);
+            }
+            seqLen[i] = max + 1;
+            maxLen = Math.max(maxLen, seqLen[i]);
+        }
+        return maxLen;
+    }
 
 
 
