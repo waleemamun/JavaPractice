@@ -745,5 +745,34 @@ public class SolutionsV2 {
     }
 
 
+    // LeetCode :: 560. Subarray Sum Equals K
+    // This problem is very interesting. We cannot use a sliding window as numbers can be negative.
+    // One observation is if we have cumulative Sum for each i position in nums[i] in sums[i] then
+    // for any j>i the sum between j & i  can be calc using sums[j-i] = sum[j] - sum[i-1]
+    // So now if we have sum array we can look up the diff k between all its element which can be done in O(n^2)
+    // but if we look closer when we have this sum array this problem is looking for a target sum in an array which
+    // is basically the unsorted two sum problem. So we can use this approach of storing all the current sum in a
+    // HashMap, and look up if the (currentSum - k) matches any previously stored sum in the HashTable if so the
+    // we found sum[j-i] == k so update oru result
+    // for example 3 4 3  4  3  and k =7
+    //        sum  3 7 10 14 17
+    // now as we store  (3,1) (7,1) in the hastable when we reach 10, we look 10 -7 == 3  so for 10 there exist
+    // a sum in the array equals to k (7)
+    public int subarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        // WE init map with (0,1) for values that sums to k from index 0,
+        map.put(0,1);
+        int curSum = 0;
+        int result = 0;
+        for (int i=0; i<nums.length; i++) {
+            curSum += nums[i];
+            if (map.containsKey(curSum - k)) {
+                result+= map.get(curSum-k);
+            }
+            map.put(curSum, map.getOrDefault(curSum, 0) +1);
+        }
+        return result;
+    }
+
 
     }

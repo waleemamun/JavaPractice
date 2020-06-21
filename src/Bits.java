@@ -366,4 +366,36 @@ public class Bits {
         return  sb.reverse().toString();
     }
 
+    //leetCode :: 50 pow
+    public double myPow(double x, int n) {
+        if (n == 0)
+            return 1.0;
+        if (x == 1)
+            return 1.0;
+        if (x == -1) {
+            if(n%2 == 0)
+                return 1.0;
+            else
+                return -1.0;
+        }
+        if (n == Integer.MIN_VALUE)
+            return 0;
+
+        double result = 1.0;
+
+        if (n < 0){
+            n = -n;
+            x = 1.0/x;
+        }
+        while (n != 0) {
+            if( (n & 1) != 0){
+                result *= x;
+            }
+            x *=x;
+            n >>>= 1;
+        }
+
+        return result;
+    }
+
 }
