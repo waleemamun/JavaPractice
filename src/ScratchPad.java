@@ -132,9 +132,11 @@ public class ScratchPad {
         System.out.println(myStr);
 
         HashSet<String> set = new HashSet<>();
+
         for (String word: words) {
             set.add(word);
         }
+
         Iterator<String> setitr = set.iterator();
         while (setitr.hasNext()) {
             System.out.print(setitr.next());
@@ -154,6 +156,14 @@ public class ScratchPad {
             System.out.println("Ceil " + ceil);
         }
         int [] nums1 = {9,5,4,3,2,1};
+
+        int rand =0;
+        int count = 20;
+        while (count-- != 0) {
+            rand = 1 + (int) (Math.random() * 6);
+            System.out.print(rand + " ");
+        }
+
 
 
 

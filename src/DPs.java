@@ -743,8 +743,59 @@ public class DPs {
         return maxLen;
     }
 
+    // LeetCode :: 309. Best Time to Buy and Sell Stock with Cooldown
+    // There are three state rest, buy, sell. we start with a rest state from rest we can only go to buy
+    // At buy the next step is to rest or sell. From sell we need to go to rest directly
+    // Based on this the equation is
+    // rest[i] = Max(rest[i-1], sell[i-1])
+    // buy [i] = Max(rest[i-1] - p(i), buy[i-1])
+    // sell[i] = sell[i-1] + p(i)
+    // The following is the optimised dp equation as only need the last step, we optimised the same way fibonacci
+    public int maxProfit(int[] prices) {
+        int buy = Integer.MIN_VALUE;
+        int rest = 0;
+        int sold = 0;
+        for (int i = 0; i < prices.length; i++) {
+            int tempSold = sold;
+            sold = buy + prices[i];
+            buy = Math.max(rest - prices[i], buy);
+            rest = Math.max(rest, tempSold);
+        }
+        return Math.max(sold, rest);
+    }
 
-
+    // LeetCode :: 123. Best Time to Buy and Sell Stock III (Hard)
+    // This is also in SolutionsV1 but here we put it to as this is a DP approach try to think of the DP eqn using the
+    // method above
+    // First assume that we have no money, so oneBuy means that we have to borrow money from others,
+    // we want to borrow less so that we have to make our balance as max as we can(because this is negative).
+    // oneBuyOneSell means we decide to sell the stock, after selling it we have price[i] money and we have to give back
+    // the money we owed, so we have prices[i] + oneBuy, we want to make this max.
+    // twoBuy means we already buy & sale once now buy 2nd time hence so the 2ndBuy will be OneBuyOneSell - price[i]
+    // cause we can use some profit from the oneBuyOneSell.
+    // twoBuyTwoSell means we want to sell stock2, we can have price[i] money after selling it, and we have
+    // twoBuy money left before, so twoBuyTwoSell = twoBuy + prices[i]
+    public int maxProfitTwice(int[] prices) {
+        int oneBuy = Integer.MIN_VALUE;
+        int oneBuyOneSell = 0; // one buy and sell should never be negative we dont want negative profit
+        int twoBuy = Integer.MIN_VALUE;
+        int twoBuyTwoSell = 0; // 2nd buy & sale should never be negative as we dont want negative profit
+        for(int i = 0; i < prices.length; i++){
+            // we set prices to negative, so the calculation of profit will be convenient,
+            // negative max means positive low
+            oneBuy = Math.max(oneBuy, -prices[i]);
+            // we already buy the stock so we sale only if it maximizes the profit,
+            // we store max to get max profit
+            oneBuyOneSell = Math.max(oneBuyOneSell, prices[i] + oneBuy);
+            // we can buy the second only after first is sold,
+            // use the profit from first buy & sale
+            twoBuy = Math.max(twoBuy, oneBuyOneSell - prices[i]);
+            // we bought twice so lets sale only if maximizes profit,
+            // we store max to get max profit
+            twoBuyTwoSell = Math.max(twoBuyTwoSell, twoBuy + prices[i]);
+        }
+        return Math.max(oneBuyOneSell, twoBuyTwoSell);
+    }
 
 
 

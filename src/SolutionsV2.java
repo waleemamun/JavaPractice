@@ -618,6 +618,132 @@ public class SolutionsV2 {
 
     }
 
+    // LeetCode :: 189. Rotate Array
+    // We need to use two interesting trick here first to find how many times to rotate we can use mod to get the
+    // actual rotation. Say 2 rotation makes 1 2 3 4 5 to 4 5 | 1 2 3
+    // Second wwe can use the reversal to solve this problem in an array for 1 2 3 4 5 we reverse it full to
+    // 5 4 3 2 1 then we reverse last 2 (for rotation of 2) so it becomes 5 4 3 | 1 2 then we rotate the 1st part
+    // so we get 3 4 5 | 1 2
+    private void reverseArr(int []nums, int low, int high) {
+        while (low < high) {
+            int tmp = nums[low];
+            nums[low] = nums [high];
+            nums[high] = tmp;
+            low++;
+            high--;
+        }
+    }
+
+    public void rotate(int[] nums, int k) {
+        int rot = k % nums.length;
+        if (rot == 0)
+            return;
+        // reverse the whole array
+        reverseArr(nums, 0, nums.length -1);
+        int low = rot;
+        // reverse the last part
+        reverseArr(nums, low, nums.length -1);
+        // reverse the first part
+        reverseArr(nums, 0, low -1);
+    }
+
+    // LeetCode :: 973. K Closest Points to Origin
+    private class Points{
+        double dst;
+        int x;
+        int y;
+        public Points(double dst, int x , int y) {
+            this.dst = dst;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    private int partitionQSList(ArrayList <Points> P, int left, int right){
+        int pivot = right;
+        double pivotVal = P.get(right).dst;
+        int i =left;
+        int j = left;
+        while (i < right) {
+            if (P.get(i).dst - pivotVal < Double.MIN_VALUE) {
+                Collections.swap(P,j,i);
+                j++;
+            }
+            i++;
+        }
+        Collections.swap(P,j,right);
+        return j;
+
+    }
+    private void qSelectList(ArrayList<Points> P, int K, int start, int end) {
+        int pivot = partitionQSList(P, start, end);
+        if (pivot == K)
+            return;
+        else if (pivot < K)
+            qSelectList(P,K, pivot +1 ,end);
+        if(pivot > K)
+            qSelectList(P,K,start, pivot -1);
+    }
+
+    public int[][] kClosest2(int[][] points, int K) {
+        ArrayList<Points> pointList = new ArrayList<>();
+        int [][]resPoint = new int[K][2];
+        for (int i =0; i<points.length; i++) {
+            double dst =  (Math.sqrt(points[i][0] * points[i][0] + points[i][1]*points[i][1]));
+            Points ps = new Points(dst, points[i][0], points[i][1]);
+            pointList.add(ps);
+        }
+        qSelectList(pointList, K-1, 0, pointList.size() -1);
+        for (int i=0; i < K && i < pointList.size(); i++){
+            resPoint[i][0] = pointList.get(i).x;
+            resPoint[i][1] = pointList.get(i).y;
+        }
+
+        return resPoint;
+    }
+
+    private boolean compareDst (int x1, int y1, int x2, int y2) {
+        double dst1 = Math.sqrt(x1*x1 + y1*y1);
+        double dst2 = Math.sqrt(x2*x2 + y2*y2);
+        if (dst1 < dst2)
+            return true;
+        else
+            return false;
+    }
+    private int partitionQS(int [][]P, int left, int right) {
+        int i = left;
+        int j = left;
+        while (i < right) {
+            if (compareDst(P[i][0],P[i][1],P[right][0],P[right][1])) {
+                int [] temp = P[j];
+                P[j] = P[i];
+                P[i] = temp;
+                j++;
+            }
+            i++;
+
+        }
+        int []temp = P[right];
+        P[right] = P[j];
+        P[j] = temp;
+        return j;
+    }
+    private void qSelect (int [][]points, int K, int start, int end) {
+        int pivot = partitionQS(points, start, end);
+        if (pivot == K)
+            return;
+        else if(pivot < K)
+            qSelect(points, K, pivot +1, end);
+        else
+            qSelect(points, K, start, pivot -1);
+
+
+    }
+    public int[][] kClosest(int[][] points, int K) {
+        qSelect(points,K-1, 0, points.length -1);
+        return Arrays.copyOfRange(points, 0, K);
+    }
+
 
 
     }
