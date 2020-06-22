@@ -1,6 +1,9 @@
 
 
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+
 import java.util.*;
+import java.util.jar.JarEntry;
 
 public class ScratchPad {
 
@@ -16,7 +19,7 @@ public class ScratchPad {
                 return o1.length()- o2.length();
             }
         });
-        String [] words = {"walee", "mamun","al","abdullah","mama","nazeef","sabrina", "mama","la", "la", "land"};
+        String [] words = {"walee", "mamun","al","alm","abdullah","mama","nazeef","sabrina", "mama","la", "la", "land", ".and"};
         for(String word : words)
             minHeap.add(word);
         while (!minHeap.isEmpty()){
@@ -163,12 +166,79 @@ public class ScratchPad {
             rand = 1 + (int) (Math.random() * 6);
             System.out.print(rand + " ");
         }
+        System.out.println();
+        TreeSet<String> treeSet = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                int len1 = o1.length();
+                int len2 = o2.length();
+                int i = 0;
+                System.out.println(o1 + " " +o2);
+                while (i <len1 && i <len2) {
+                    System.out.println(o1.charAt(i) +"  " + o2.charAt(i));
+                    if (o1.charAt(i) == o2.charAt(i) ||
+                            o1.charAt(i) =='.') {
 
+                        i++;
+                    }
+                    else
+                        return o1.charAt(i) - o2.charAt(i);
+                }
+                return o1.length() - o2.length();
+            }
+        }) ;
 
+        String [] wordds1 = {"al", "land",".and"};
+        for (String wd : wordds1) {
+            treeSet.add(wd);
+        }
+        System.out.println("Str Tree Set " + treeSet);
+        if (treeSet.contains("l.nd")) {
+            System.out.println("Found");
+        } else {
+            System.out.println("NOT FOUND");
+        }
 
+        String s2 = ".and";
+        String s1 = "land";
+        int j = 0;
+        while (j<s1.length()) {
+            if(s1.charAt(j) == s2.charAt(j)
+              || s2.charAt(j) =='.')
+                j++;
+            else
+                break;
+        }
+        System.out.println("j= "+j);
 
-
-
+        ArrayList<String> strList = new ArrayList<>();
+        stringList(strList, "l.n.d", 0,new StringBuilder());
+        System.out.println(strList);
 
         }
+
+        public static void stringList (ArrayList<String> strList, String s, int index, StringBuilder sb) {
+            if(index == s.length()){
+                strList.add(sb.toString());
+                sb.deleteCharAt(sb.length()-1);
+                return;
+            }
+            for (int i = index; i<s.length(); i++) {
+
+                if (s.charAt(i) != '.')
+                    sb.append(s.charAt(i));
+                else
+                {   int idx = sb.length();
+                    for (char ch = 'a'; ch <='z'; ch++){
+
+                        sb.append(ch);
+                        stringList(strList,s,i+1, sb);
+                        strList.add(sb.toString());
+                        sb.delete(idx,sb.length());
+                    }
+                }
+            }
+
+        }
+
 }

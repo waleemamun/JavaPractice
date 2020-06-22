@@ -23,11 +23,13 @@ public class SegmentTree {
         // Allocate memory for segment tree
         // Height of segment tree
         len = nums.length;
+        // The size of the tree array is 2^x -1 where x is the closest power of 2 to len (length of the orig array)
         int x = (int) (Math.ceil(Math.log(len) / Math.log(2)));
 
         //Maximum size of segment tree
         int maxSize = 2 * (int) Math.pow(2, x) - 1;
         tree = new int [maxSize];
+        // Remember to call the build segment tree  with tree index 0
         buildSegTree(nums,0,0,len-1);
         System.out.println("Seg Tree " +Arrays.toString(tree));
     }
@@ -47,7 +49,8 @@ public class SegmentTree {
     private int max (int a, int b) {
         return Math.max(a,b);
     }
-
+    // Remember to call the build segment tree  with tree index 0
+    // WE build the segment tree with root at tree[0]
     private void buildSegTree(int  []arr, int treeIndex, int lo, int hi) {
         if (lo == hi) {                 // leaf node. store value in node.
             tree[treeIndex] = arr[lo];
@@ -58,7 +61,8 @@ public class SegmentTree {
         buildSegTree(arr, 2 * treeIndex + 1, lo, mid);
         buildSegTree(arr, 2 * treeIndex + 2, mid + 1, hi);
 
-        // merge build results
+        // merge build results,
+        // update the intermediate node as the leaf has been completed
         tree[treeIndex] = merge(tree[2 * treeIndex + 1], tree[2 * treeIndex + 2]);
     }
 

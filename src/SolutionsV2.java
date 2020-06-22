@@ -5,13 +5,16 @@ public class SolutionsV2 {
     //LeetCode :: 220. Contains Duplicate III
     // The idea is to use a TreeSet which is a sorted set consider the case [10,15,18,24] k=3 t=3
     // if we use the sliding window and shrink it keeping right fixed we have a problem while shrinking we cover
-    // [15,18,24] and [18,24] but never cover [15,18] as right is fixed. We have to keep right fixed so to solve
+    // [15,18,24] and [18,24] but never cover [15,18] as right is fixed. We cannot use a left shrinking sliding
+    // window here rather use a fixed sliding window of k-Size. WE also have to lookup values in the range of +t & -t
+    // from current val.So the perfect candiate would be a TreeSet. We have to keep right fixed so to solve
     // this we can use a TreeSet store all the value in sliding window in TreeSet (which is a sorted Set) Now we make
     // use of the floor & ceiling method TreeSet.
     // floor​(E e): This method returns the greatest element in this set less than or equal to the given element,
     // or null if there is no such element.
     // ceiling​(E e): This method returns the least element in this set greater than or equal to the given element,
     // or null if there is no such element.
+    // Check the version2 its more easy to read
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
         if (nums == null || nums.length == 0 || k <= 0) {
             return false;
@@ -101,6 +104,8 @@ public class SolutionsV2 {
         return isFound;
     }
     // Using sliding window 1-Pass using a hashSet
+    // The set size can be atmost k+1 where k = j-1 for example
+    // 3-0 = 3 = k so set size atmost is 4 having (0 , 1, 2, 3)
     public boolean containsNearbyDuplicateV2(int[] nums, int k) {
         Set<Integer> set = new HashSet<Integer>();
         for(int i = 0; i < nums.length; i++){
@@ -109,6 +114,7 @@ public class SolutionsV2 {
         }
         return false;
     }
+
     // LeetCode :: 217. Contains Duplicate
     public boolean containsDuplicate(int[] nums) {
         HashSet<Integer> set = new HashSet<>();
@@ -116,6 +122,15 @@ public class SolutionsV2 {
             if(set.contains(n))
                 return true;
             set.add(n);
+        }
+        return false;
+    }
+
+    public boolean containsDuplicateV2(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int n:nums){
+            if(!set.add(n))
+                return true;
         }
         return false;
     }
@@ -772,6 +787,23 @@ public class SolutionsV2 {
             map.put(curSum, map.getOrDefault(curSum, 0) +1);
         }
         return result;
+    }
+
+    // LeetCode :: 283. Move Zeroes
+    public void moveZeroes(int[] nums) {
+        int j =0;
+        while ( j<nums.length && nums[j] != 0)
+            j++;
+        int i = j+1;
+        while (i< nums.length) {
+            if (nums[i]!= 0) {
+                int tmp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = tmp;
+                j++;
+            }
+            i++;
+        }
     }
 
 

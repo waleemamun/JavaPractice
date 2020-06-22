@@ -240,7 +240,9 @@ public class Main {
         int []newInterval = {7,23};
 
         //System.out.println(Arrays.deepToString(sv2.kClosest(edges, 2)));
-        ScratchPad.linleListPractice();
+        int []nums = {0,0,0,0,1,2,3};
+        sv2.moveZeroes(nums);
+        System.out.println(Arrays.toString(nums));
 
 
 //        GraphNode g1 = new GraphNode();

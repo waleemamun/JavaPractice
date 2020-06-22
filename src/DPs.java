@@ -743,7 +743,7 @@ public class DPs {
         return maxLen;
     }
 
-    // LeetCode :: 309. Best Time to Buy and Sell Stock with Cooldown
+    // LeetCode :: 309. Best Time to Buy and Sell Stock with Cooldown (not submitted)
     // There are three state rest, buy, sell. we start with a rest state from rest we can only go to buy
     // At buy the next step is to rest or sell. From sell we need to go to rest directly
     // Based on this the equation is
@@ -751,10 +751,10 @@ public class DPs {
     // buy [i] = Max(rest[i-1] - p(i), buy[i-1])
     // sell[i] = sell[i-1] + p(i)
     // The following is the optimised dp equation as only need the last step, we optimised the same way fibonacci
-    public int maxProfit(int[] prices) {
+    public int maxProfitCoolDown(int[] prices) {
         int buy = Integer.MIN_VALUE;
-        int rest = 0;
-        int sold = 0;
+        int rest = 0; // rest value should never less than zero so making sure mis is zero
+        int sold = 0; // sold value should never be less than zero, so making sure the min is zero
         for (int i = 0; i < prices.length; i++) {
             int tempSold = sold;
             sold = buy + prices[i];
@@ -775,28 +775,73 @@ public class DPs {
     // cause we can use some profit from the oneBuyOneSell.
     // twoBuyTwoSell means we want to sell stock2, we can have price[i] money after selling it, and we have
     // twoBuy money left before, so twoBuyTwoSell = twoBuy + prices[i]
+    // WE can think of this also as the one before with mupltiple state here we have 4 states, oneBuy, onSell,
+    // twoBuy, twoSell. We can use the similar DP approach as above in 'maxProfitCoolDown'. The DP equations will be
+    // oneBuy[i] = Max(oneBuy[i-1], -p(i))
+    // oneSell[i] = Max(oneSell[i-1], oneBuy[i-1] + p(i))
+    // twoBuy[i] = Max(twoBuy[i-1], oneSell[i-1] - p(i))
+    // twoSell[i] = Max(twoSell[i-1], twoBuy[i-1] + p(i))
+    // If we look closer we only care about the last val so we can use the optimised DP
+    // Below we are going the reverse order two hold last val properly in each variable, Note we could have gone same
+    // order but this make more sense as we want to hold the last val
     public int maxProfitTwice(int[] prices) {
         int oneBuy = Integer.MIN_VALUE;
         int oneBuyOneSell = 0; // one buy and sell should never be negative we dont want negative profit
         int twoBuy = Integer.MIN_VALUE;
         int twoBuyTwoSell = 0; // 2nd buy & sale should never be negative as we dont want negative profit
         for(int i = 0; i < prices.length; i++){
-            // we set prices to negative, so the calculation of profit will be convenient,
-            // negative max means positive low
-            oneBuy = Math.max(oneBuy, -prices[i]);
-            // we already buy the stock so we sale only if it maximizes the profit,
-            // we store max to get max profit
-            oneBuyOneSell = Math.max(oneBuyOneSell, prices[i] + oneBuy);
-            // we can buy the second only after first is sold,
-            // use the profit from first buy & sale
-            twoBuy = Math.max(twoBuy, oneBuyOneSell - prices[i]);
             // we bought twice so lets sale only if maximizes profit,
             // we store max to get max profit
             twoBuyTwoSell = Math.max(twoBuyTwoSell, twoBuy + prices[i]);
+            // we can buy the second only after first is sold,
+            // use the profit from first buy & sale
+            twoBuy = Math.max(twoBuy, oneBuyOneSell - prices[i]);
+            // we already buy the stock so we sale only if it maximizes the profit,
+            // we store max to get max profit
+            oneBuyOneSell = Math.max(oneBuyOneSell, prices[i] + oneBuy);
+            // we set prices to negative, so the calculation of profit will be convenient,
+            // negative max means positive low
+            oneBuy = Math.max(oneBuy, -prices[i]);
         }
         return Math.max(oneBuyOneSell, twoBuyTwoSell);
     }
 
+    // LeetCode :: 188. Best Time to Buy and Sell Stock IV (not Submitted)
+    // The idea is to use the state machine DP as above
+    // Here we have two state that can occur k times
+    // buy & sell, in case of two buy two sell there were two (buy & sale) states but here we have K
+    // (buy & sale states)
+    // so for two state the optimised eqn is
+    // sell = Max(sell, buy + p(i))
+    // buy = Max(buy, prevSell - p(i))
+    // Now we extend the above equations to k times
+    // so the eqn becomes
+    // buy[i] = Max(buy[i], sell[i-1] - p(i)) #for (i =1 to K)
+    // sell[i] = Max(sell[i], buy[i] + p(i))  #for (i =1 to K)
+    // the max result is propagated to the kth item so final result is sell[k]
+    public int maxProfit(int k, int[] prices) {
+        // if k >= n/2, then you can make maximum number of transactions
+        // the its easy we can only pick the increasing values buy & sale.
+        if (k >= prices.length / 2) {
+            int profit = 0;
+            for (int i = 1; i < prices.length; i++)
+                if (prices[i] > prices[i - 1]) profit += prices[i] - prices[i - 1];
+            return profit;
+        }
+        // now lets handle the sceanario when K is less than the len/2
+        // we based our solution on the idea of state machine
+        int[] buy = new int[k + 1];
+        int[] sell = new int[k + 1];
+        Arrays.fill(buy, Integer.MIN_VALUE);
+
+        for (int price : prices) {
+            for (int i = 1; i <= k; i++) {
+                buy[i] = Math.max(buy[i], sell[i - 1] - price);
+                sell[i] = Math.max(sell[i], buy[i] + price);
+            }
+        }
+        return sell[k];
+    }
 
 
 
