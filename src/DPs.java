@@ -843,6 +843,36 @@ public class DPs {
         return sell[k];
     }
 
+    // LeetCode :: 375. Guess Number Higher or Lower II
+    // The idea is to pick each number as the first guess and determine the cost associate for choosing the as the guess
+    // We recursive pick each number as guess and update the cost for choosing it. Then pick the min as our solution.
+    // For example for 1 2 3 we pick 1 as guess find the cost then pick 2 as guess and find the cost and then pick 2 as
+    // guess and find the cost we keep track of the min.
+    // Note when there is only one item that is if our range is (1,1) or (2,2) or (3,3) there is only one choice and we
+    // pick the correct number in the first try so cost will be zero
+    // As we are using recursion we can also use a memoization technique here caching the repeated recursion in a table
+    // thus using DP to solve the issue.
+    private int getMoneyAmountRec(int [][]dp , int start, int end) {
+        // if start & end is same then only one item & we can pick it with zero cost
+        if (start >= end)
+            return 0;
+        if (dp[start][end] != 0)
+            return dp[start][end];
+        int result = Integer.MAX_VALUE;
+        for (int i = start; i<=end; i++) {
+            // recursively check the cost for selecting i as guess
+            int tmp = i + Math.max(getMoneyAmountRec(dp,start, i-1), getMoneyAmountRec(dp,i+1, end));
+            result = Math.min(result, tmp);
+        }
+        dp[start][end] = result;
+        return result;
+    }
+    public int getMoneyAmount(int n) {
+        int [][]dp = new int[n+1][n+1];
+        return getMoneyAmountRec(dp, 1, n);
+    }
+
+
 
 
 }

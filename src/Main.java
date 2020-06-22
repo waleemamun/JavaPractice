@@ -214,8 +214,8 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "bbbbccdeccb";
-        String str2 = "eidboaoo";
+        String str1 = "cba";
+        String str2 = "abcdc";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
         Recursions r1 = new Recursions();
@@ -240,10 +240,7 @@ public class Main {
         int []newInterval = {7,23};
 
         //System.out.println(Arrays.deepToString(sv2.kClosest(edges, 2)));
-        int []nums = {0,0,0,0,1,2,3};
-        sv2.moveZeroes(nums);
-        System.out.println(Arrays.toString(nums));
-
+        System.out.println("order " + sv2.customSortString(str1,str2));
 
 //        GraphNode g1 = new GraphNode();
 //        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);

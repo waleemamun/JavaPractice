@@ -355,6 +355,7 @@ public class SolutionsV1 {
     }
 
     // LeetCode :: 65 Valid Number (Hard)
+    // Check the version 2 its more clean
     private boolean isDigit(char ch) {
         if (ch >='0' && ch <= '9')
             return true;
@@ -438,6 +439,47 @@ public class SolutionsV1 {
             }
         }
         return true;
+    }
+
+    public boolean isNumberV2(String s) {
+        boolean numSeen = false;
+        boolean eSeen = false;
+        boolean pointSeen = false;
+        // trim the trailing and beginning whitespaces
+        s = s.trim();
+        int i = 0;
+
+        while(i < s.length()) {
+            char c = s.charAt(i);
+
+            if (Character.isDigit(c)) {
+                // number observed lets store this info
+                numSeen = true;
+            } else if (c == 'e') {
+                // if e seen more than once or number not seen before e its and invalid e
+                if (eSeen || !numSeen)
+                    return false;
+                eSeen = true;
+                // we are doing this because we need to see atleast one number after 'e' to get a
+                // valid string so when we exit the loop if numseen is false we observed something like
+                // '1234e' which is not valid, a valid would be '1234e5'
+                numSeen = false;
+            } else if (c == '.'){
+                // seen multiple dot or 'e' before .
+                if (pointSeen || eSeen)
+                    return false;
+                pointSeen = true;
+            } else if (c == '+' || c== '-') {
+                // +/- is valid at the begining or just after valid e
+                if (i != 0 && s.charAt(i-1) != 'e')
+                    return false;
+            } else {
+                // seen anything else is invalid
+                return false;
+            }
+            i++;
+        }
+        return numSeen;
     }
 
     // LeetCode 66 plus one

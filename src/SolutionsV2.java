@@ -806,5 +806,38 @@ public class SolutionsV2 {
         }
     }
 
+    // LeetCode :: 791. Custom Sort String
+    // The idea is to create a map of the String T and then construct a new string following the order of S.
+    // To follow the order of S we scan S from left to right pick each item from S and get the count from the T map
+    // and add them in the new String. Finally we add the remaining char In T which does not appear in S in
+    // normal/natural sorted order
+    public String customSortString(String S, String T) {
+        int []map = new int[26];
+        // build the map
+        for (int i = 0; i < T.length(); i++) {
+            char ch = T.charAt(i);
+            map[ch-'a']++;
+        }
+        // Add the char using the S order
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < S.length(); i++) {
+            char ch = S.charAt(i);
+            // add all the char in T using for this char in S.
+            while(map[ch-'a'] != 0) {
+                sb.append(ch);
+                map[ch-'a']--;
+            }
+        }
+        // Add rest of the char in T not appearing in S
+        for (int i = 0; i < 26; i++) {
+            while(map[i]!=0) {
+                char ch = (char)('a' + i);
+                sb.append(ch);
+                map[i]--;
+            }
+        }
+        return sb.toString();
+    }
+
 
     }
