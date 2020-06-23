@@ -231,16 +231,21 @@ public class Main {
 
 
         int [][] edges = {
-                            {3, 3},
-                            {5, -1},
-                            {-2, 4},
-                            {7, 7},
-                            {8, 8},
+                            {1, 4},
+                            {2, 7},
+                            {3, 5},
+                            {4, 10},
+                            {9, 12},
+                            {16, 20},
+                            {18,20},
+                            {21,23},
+                            {27,28},
+                            {22,28},
                             };
         int []newInterval = {7,23};
 
         //System.out.println(Arrays.deepToString(sv2.kClosest(edges, 2)));
-        System.out.println("order " + sv2.customSortString(str1,str2));
+        System.out.println(Arrays.deepToString(p1.mergeAndInterSect(edges)));
 
 //        GraphNode g1 = new GraphNode();
 //        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);

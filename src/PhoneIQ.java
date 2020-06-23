@@ -779,12 +779,62 @@ public class PhoneIQ {
                     mergelist.add(lastInv);
                     lastInv = curIntv;
                 } else {
-                    lastInv[1] = Math.max(lastInv[1], curIntv[1]);
+                    lastInv[1] = curIntv[1];
                 }
             }
 
         }
         mergelist.add(lastInv);
+        return mergelist.toArray(new int[mergelist.size()][]);
+
+    }
+
+    // We need ot find the intersect & union of sorted intervals (if the intervals are not sorted we sort
+    // them according to start time)
+    // The merge part is similar to the method above 'merge'
+    // For the current intersect interval we use the last merged intervals & current interval to find the
+    // current intersection interval. Now we need to check if we can use the last intersect interval & current
+    // intersect interval to merge them to a bigger intersect interval
+    public int[][] mergeAndInterSect(int[][] intervals) {
+        Collections.sort(Arrays.asList(intervals), new IntervalComparator());
+        ArrayList<int[]> mergelist = new ArrayList<>();
+        ArrayList<int[]> interSectlist = new ArrayList<>();
+        int []lastInv = intervals[0];
+        int []lastInterSect = {0,0};
+        for (int i = 1;i<intervals.length;i++) {
+            int []curIntv = intervals[i];
+            // intersection case
+            if(lastInv[1] >= curIntv[0]) { // intersecting intervals
+                // as these are overlapping get the intersection
+                // use the last merged interval to get the intersection
+                int []intersect = {Math.max(curIntv[0], lastInv[0]), Math.min(curIntv[1],lastInv[1])};
+                if (lastInterSect[1] < intersect[0]) { // intersection are disjoint add the last one to intersect list
+                    if(intersect[0] != intersect[1]){
+                        interSectlist.add(lastInterSect);
+                        lastInterSect = intersect;
+                    }
+                } else {                               // intersections are overlapping, lets merge the last & current
+                    lastInterSect[0] = Math.min(lastInterSect[0],intersect[0]);
+                    lastInterSect[1] = Math.max(lastInterSect[1],intersect[1]);
+                }
+            }
+            // merge/union case
+            if (lastInv[1] < curIntv[1]) {
+                if(lastInv[1] < curIntv[0]) { // disjoint
+                    mergelist.add(lastInv);
+                    lastInv = curIntv;
+                } else {                      // overlapping
+                    // merge the overlapping list (Union)
+                    lastInv[1] = curIntv[1];
+                }
+            }
+
+        }
+        mergelist.add(lastInv);
+        interSectlist.remove(0);
+        interSectlist.add(lastInterSect);
+        int [][]iList = interSectlist.toArray(new int [interSectlist.size()][]);
+        System.out.println(Arrays.deepToString(iList));
         return mergelist.toArray(new int[mergelist.size()][]);
 
     }
