@@ -107,6 +107,7 @@ public class DataStructProblem {
         }
     }
     // another implementation of the Calendar-I problem above
+    // This uses the a TreeMap with start interval as the key and value is the end interval
     class MyCalendarI {
         TreeMap<Integer, Integer> calendar;
 
@@ -115,8 +116,13 @@ public class DataStructProblem {
         }
 
         public boolean book(int start, int end) {
-            Integer prev = calendar.floorKey(start),
-                    next = calendar.ceilingKey(start);
+            // get the start interval that is smaller or equal to this newInteraval start
+            Integer prev = calendar.floorKey(start);
+            // get the start interval that is just bigger or equal to this newInteraval start
+            Integer next = calendar.ceilingKey(start);
+            // now if the new interval start is greater than its prev intervals's end
+            // and the newInterval's end is smaller than the start of its next bigger
+            // start interval then add it to list otherwise return false;
             if ((prev == null || calendar.get(prev) <= start) &&
                     (next == null || end <= next)) {
                 calendar.put(start, end);
