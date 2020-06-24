@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8};
+        int [] arr =  {1,2,3};
         int [] arr1 = {5,2,1,3,4,7,6,8,9};
 
         int [][] arr2d = {
@@ -245,7 +245,7 @@ public class Main {
         int []newInterval = {7,23};
 
         //System.out.println(Arrays.deepToString(sv2.kClosest(edges, 2)));
-        System.out.println(Arrays.deepToString(p1.mergeAndInterSect(edges)));
+        ScratchPad.linleListPractice();
 
 //        GraphNode g1 = new GraphNode();
 //        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);

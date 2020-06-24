@@ -173,9 +173,9 @@ public class ScratchPad {
                 int len1 = o1.length();
                 int len2 = o2.length();
                 int i = 0;
-                System.out.println(o1 + " " +o2);
+
                 while (i <len1 && i <len2) {
-                    System.out.println(o1.charAt(i) +"  " + o2.charAt(i));
+
                     if (o1.charAt(i) == o2.charAt(i) ||
                             o1.charAt(i) =='.') {
 
@@ -209,13 +209,45 @@ public class ScratchPad {
             else
                 break;
         }
-        System.out.println("j= "+j);
 
-        ArrayList<String> strList = new ArrayList<>();
-        stringList(strList, "l.n.d", 0,new StringBuilder());
-        System.out.println(strList);
+        TreeSet<int []> calendarSet = new TreeSet<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
 
+                if((o2[0] <= o1[0] && o1[1] < o2[1]) ||
+                        (o2[0] <= o1[0] && o1[0] < o2[1]) ||
+                        (o2[0] < o1[1] && o1[1] < o2[1]))
+                    return 0;
+                else if(o1[1] <= o2[0])
+                    return -1;
+                else if (o1[0] >= o2[1])
+                    return 1;
+                else return 0;
+            }
+        });
+
+        int [][] edges = {
+                {1, 4},
+                {5, 8},
+                {3, 5},
+                {9, 10},
+                {9, 12},
+                {12, 14},
+                {14,16},
+                {16,18},
+                {18,28},
+                {22,28},
+                {10,15},
+                {8,9}
+        };
+        for (int []e : edges) {
+            calendarSet.add(e);
         }
+
+        System.out.println(" cal Set " + Arrays.deepToString(calendarSet.toArray()));
+
+    }
+
 
         public static void stringList (ArrayList<String> strList, String s, int index, StringBuilder sb) {
             if(index == s.length()){
@@ -240,5 +272,6 @@ public class ScratchPad {
             }
 
         }
+
 
 }

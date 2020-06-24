@@ -72,4 +72,59 @@ public class DataStructProblem {
  * boolean param_2 = obj.remove(val);
  * int param_3 = obj.getRandom();
  */
+
+    // 729. My Calendar I
+    // The idea is to use a TreeSet to have a Balanced tree, When adding an interval the TreeSet comparator will check
+    // if this value falls into any of the interval if not then add it ot the treeSet
+    // if yes then dont add anything and return false
+    class MyCalendar {
+        TreeSet<int []> calendarSet;
+        public MyCalendar() {
+            calendarSet = new TreeSet<>(new Comparator<int[]>() {
+                @Override
+                // This checks if the new interval  o1 is completely or partially with an interval or not
+                public int compare(int[] o1, int[] o2) {
+
+                    if((o2[0] <= o1[0] && o1[1] < o2[1]) ||       // newInterval o1 completely within o2
+                            (o2[0] <= o1[0] && o1[0] < o2[1]) ||  // o1[0] i.e. newInterval start within o2
+                            (o2[0] < o1[1] && o1[1] < o2[1]))     // o1[1] i.e. newInterval end within o2
+                        return 0;
+                    else if(o1[1] <= o2[0])                       // o1[1] i.e. newInterval end smaller than o2 start
+                        return -1;
+                    else if (o1[0] >= o2[1])                      // o1[0] i.e. newInterval start bigger than o2 start
+                        return 1;
+                    else return 0;
+                }
+            });
+
+
+        }
+
+        public boolean book(int start, int end) {
+            int [] interval= {start,end};
+            return calendarSet.add(interval);
+
+        }
+    }
+    // another implementation of the Calendar-I problem above
+    class MyCalendarI {
+        TreeMap<Integer, Integer> calendar;
+
+        MyCalendarI() {
+            calendar = new TreeMap();
+        }
+
+        public boolean book(int start, int end) {
+            Integer prev = calendar.floorKey(start),
+                    next = calendar.ceilingKey(start);
+            if ((prev == null || calendar.get(prev) <= start) &&
+                    (next == null || end <= next)) {
+                calendar.put(start, end);
+                return true;
+            }
+            return false;
+        }
+    }
+
+
 }

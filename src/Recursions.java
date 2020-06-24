@@ -424,6 +424,7 @@ public class Recursions {
     // LeetCode 34 :: Search Range (This is easy to read)
     // returns leftmost (or rightmost) index at which `target` should be
     // inserted in sorted array `nums` via binary search.
+    // check the next one
     private int extremeInsertionIndex(int[] nums, int target, boolean left) {
         int lo = 0;
         int hi = nums.length;
@@ -456,6 +457,51 @@ public class Recursions {
         targetRange[1] = extremeInsertionIndex(nums, target, false)-1;
 
         return targetRange;
+    }
+    // LeetCode 34 :: Search Range (This is very easy to read :))
+    // search for the first index of an element in a sorted array
+    public  int searchFirsIndexOf(int arr[], int target) {
+        int low = 0;
+        int high = arr.length -1;
+
+        int result = -1;
+        while (low <= high) {
+            int mid = low + (high-low)/2;
+            if (target == arr[mid]) {
+                result = mid;
+                high = mid -1;
+            } else if (target < arr[mid]) {
+                high = mid-1;
+            } else {
+                low = mid+1;
+            }
+        }
+        return result;
+    }
+    // search for the last index of an element in a sorted array
+    public  int searchForLastIdx(int arr[], int target) {
+        int low = 0;
+        int high = arr.length -1;
+        int result = -1;
+        while (low <= high) {
+            int mid = low + (high -low)/2;
+            if (arr[mid] == target) {
+                result = mid;
+                low = mid+1;
+            } else if ( target < arr[mid]) {
+                high = mid -1;
+            } else {
+                low = mid +1;
+            }
+        }
+        return result;
+    }
+    public int[] searchRange3(int[] nums, int target) {
+        int leftIdx = searchFirsIndexOf(nums,target);
+        int rightIdx = searchForLastIdx(nums,target);
+        int []range = {leftIdx,rightIdx};
+        return range;
+
     }
 
     // 35. Search Insert Position
@@ -1110,6 +1156,25 @@ public class Recursions {
                 permutateBacktrackV2(nums, tempList, rList);
                 tempList.remove(tempList.size() - 1);
             }
+        }
+
+    }
+    // More space but faster
+    private void permutateBacktrackV3(int[] nums,
+                                      ArrayList<Integer> tempList,
+                                      List<List<Integer>> rList, boolean []map) {
+        if(tempList.size() == nums.length){
+            rList.add(new ArrayList<>(tempList));
+            return;
+        }
+        for(int i = 0; i<nums.length;i++) {
+            if (map[i])
+                continue;
+            tempList.add(nums[i]);
+            map[i] = true;
+            permutateBacktrackV3(nums,tempList,rList,map);
+            tempList.remove(tempList.size()-1);
+            map[i] = false;
         }
 
     }
