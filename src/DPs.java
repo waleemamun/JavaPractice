@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import org.omg.PortableInterceptor.INACTIVE;
+
+import java.util.*;
 
 
 public class DPs {
@@ -749,7 +748,7 @@ public class DPs {
     // Based on this the equation is
     // rest[i] = Max(rest[i-1], sell[i-1])
     // buy [i] = Max(rest[i-1] - p(i), buy[i-1])
-    // sell[i] = sell[i-1] + p(i)
+    // sell[i] = buy[i-1] + p(i)
     // The following is the optimised dp equation as only need the last step, we optimised the same way fibonacci
     public int maxProfitCoolDown(int[] prices) {
         int buy = Integer.MIN_VALUE;
@@ -870,6 +869,146 @@ public class DPs {
     public int getMoneyAmount(int n) {
         int [][]dp = new int[n+1][n+1];
         return getMoneyAmountRec(dp, 1, n);
+    }
+
+    // Leetcode 718 :: Maximum Length of Repeated Subarray (DP) same as longest common substring
+    public int findLength(int[] A, int[] B) {
+        int result = 0;
+        int m = A.length;
+        int n = B.length;
+        int [][]lcs = new int [n+1][m+1];
+
+        // init the lcs array the 1st row & columns should be zero
+        for (int i = 0; i<=n; i++)
+            lcs[i][0] = 0;
+        for (int i = 0; i <= m; i++)
+            lcs[0][i] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= m; j++) {
+
+                // to determine longest common substring, if the current char from str1 & str2 matches
+                // then we increments the size by 1, by adding 1 with the previous substring
+                // so the DP solution is Lcs (i,j) = lcs(i-1, j-1) + 1  if the char at i & j position matches
+                // otherwise lcs(i,j) = 0
+                // For this we dont need to consider any other position for example (i-1,j) or(i,j-1)
+                // cause the substring length at (i,j) is important
+                if (A[i-1] == B[j-1]) {
+                    lcs[i][j] = lcs[i-1][j-1] + 1;
+                    result = Math.max(result,lcs[i][j]);
+                }
+                else
+                    lcs[i][j] = 0;
+            }
+        }
+
+        return result;
+    }
+
+    // this uses rolling hash & robin karp algo
+    public int findLengthV2(int[] A, int[] B) {
+        int la = A.length;
+        int lb = B.length;
+
+        int p = 119;
+        int len = Math.max(la, lb)+1;
+        int[] ps = new int[len];
+        ps[0] = 1;
+        for(int i = 1; i < len; i++) {
+            ps[i] = ps[i-1]*p;
+        }
+
+        int[] hashA = new int[la+1];
+        for(int i = 1; i <= la; i++) {
+            hashA[i] = hashA[i-1] + A[i-1] * ps[i];
+        }
+
+        int[] hashB = new int[lb+1];
+        for(int i = 1; i <= lb; i++) {
+            hashB[i] = hashB[i-1] + B[i-1]*ps[i];
+        }
+
+        int lo = 1;
+        int hi = Math.min(la, lb);
+        while(lo <= hi) {
+            int mid = lo + (hi-lo)/2;
+            HashSet<Integer> set = new HashSet<>();
+            for(int i = 1; i+mid-1 <= la; i++) {
+                int hashVal = (hashA[i+mid-1]-hashA[i-1])*ps[len-mid-i+1];
+                set.add(hashVal);
+            }
+            boolean found = false;
+            for(int i = 1; i+mid-1 <= lb; i++) {
+                int hashVal = (hashB[i+mid-1]-hashB[i-1])*ps[len-mid-i+1];
+                if(set.contains(hashVal)) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(found) {
+                lo = mid+1;
+            } else {
+                hi = mid-1;
+            }
+        }
+
+        return hi;
+    }
+
+    //LeetCode :: 329. Longest Increasing Path in a Matrix
+
+    private int longestIncreasingPathRectSum (int [][]memo , int matrix[][], int i, int j, int lastVal) {
+        if (i < 0 || j < 0 ||
+                i >= matrix.length ||
+                j >= matrix[0].length ||
+                matrix[i][j] <= lastVal) {
+            return 0;
+        }
+        if (memo[i][j] != 0)
+            return memo[i][j];
+        int up = longestIncreasingPathRectSum(memo, matrix, i-1,j, matrix[i][j]);
+        int down = longestIncreasingPathRectSum(memo, matrix, i+1,j, matrix[i][j]);
+        int left = longestIncreasingPathRectSum(memo, matrix, i,j-1, matrix[i][j]);
+        int right = longestIncreasingPathRectSum(memo, matrix, i,j+1, matrix[i][j]);
+        int max1 = Math.max(left, right);
+        int max2 = Math.max(up,down);
+        memo[i][j] = Math.max(max1,max2) + matrix[i][j];
+        return memo[i][j];
+
+    }
+
+    private int longestIncreasingPathCount (int [][]memo , int matrix[][], int i, int j, int lastVal) {
+        if (i < 0 || j < 0 ||
+                i >= matrix.length ||
+                j >= matrix[0].length ||
+                matrix[i][j] <= lastVal) {
+            return 0;
+        }
+        if (memo[i][j] != 0)
+            return memo[i][j];
+        int up = longestIncreasingPathCount(memo, matrix, i-1,j, matrix[i][j]);
+        int down = longestIncreasingPathCount(memo, matrix, i+1,j, matrix[i][j]);
+        int left = longestIncreasingPathCount(memo, matrix, i,j-1, matrix[i][j]);
+        int right = longestIncreasingPathCount(memo, matrix, i,j+1, matrix[i][j]);
+        int max1 = Math.max(left, right);
+        int max2 = Math.max(up,down);
+        memo[i][j] = Math.max(max1,max2) + 1;
+        return memo[i][j];
+
+    }
+    public int longestIncreasingPath(int[][] matrix) {
+        int [][] memo = new int [matrix.length][matrix[0].length];
+        for (int i =0 ; i< matrix.length; i++)
+            Arrays.fill(memo[i],0);
+        int longestPath = Integer.MIN_VALUE;
+        for (int i=0; i< matrix.length; i++) {
+            for (int j =0; j<matrix[0].length; j++) {
+                longestPath = Math.max(longestPath, longestIncreasingPathCount(memo, matrix, i,j, Integer.MIN_VALUE));
+                //System.out.println(Arrays.deepToString(memo));
+            }
+        }
+        return longestPath;
     }
 
 

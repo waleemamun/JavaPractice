@@ -1848,6 +1848,20 @@ public class Recursions {
         return false;
     }
 
+    // LeetCode :: 680. Valid Palindrome II
+    private boolean validPalindromeRec(String s, int i , int j, int skip) {
+        if(i >= j)
+            return true;
+        if (s.charAt(i) == s.charAt(j))
+            return validPalindromeRec(s, i+1, j-1 , skip);
+        else
+            return skip > 0 && (validPalindromeRec(s, i+1, j, skip-1) ||
+                    validPalindromeRec(s, i,j-1, skip -1));
+    }
+    public boolean validPalindrome(String s) {
+        return validPalindromeRec(s, 0, s.length()-1, 1);
+    }
+
 
 
 

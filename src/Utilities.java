@@ -283,6 +283,10 @@ public class Utilities {
         double res = 0.0;
         System.out.println(mid);
         res = quickSelectKthSmallest(nums,mid +1);
+        // we have even number of items in the array so median is avg  of mid & mid+1
+        // So after qselect we have the mid now we want mid+1, note that all the item
+        // in the right is bigger than than mid so the smallest item of the right array
+        // is mid+1 in a sorted array
         if(nums.length % 2 == 0) {
             int min = Integer.MAX_VALUE;
             for (int i = mid+1 ;i <nums.length;i++) {

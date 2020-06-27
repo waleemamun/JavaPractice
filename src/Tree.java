@@ -1,7 +1,4 @@
-import javafx.util.Pair;
-import org.omg.PortableInterceptor.INACTIVE;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.*;
 
 public class Tree {
@@ -371,7 +368,7 @@ public class Tree {
     public List<Integer> postorderTraversal(TreeNode root) {
         List<Integer> rList = new ArrayList<>();
         Stack<TreeNode> stack = new Stack<>();
-        TreeNode lastNode = null;
+        TreeNode lastPoppedNode = null;
         TreeNode node = root;
         int count = 0;
 
@@ -383,9 +380,9 @@ public class Tree {
                 node = stack.peek();
                 // check if right subtree has been visited, if yes lets visit current node
                 if (node.right == null ||
-                        node.right == lastNode) {
-                    lastNode = stack.pop();
-                    rList.add(lastNode.data);
+                        node.right == lastPoppedNode) {
+                    lastPoppedNode = stack.pop();
+                    rList.add(lastPoppedNode.data);
                     // this node has been visited, lets make it null so that we can process
                     // the next node from the stack
                     node = null;
@@ -398,6 +395,8 @@ public class Tree {
         return rList;
     }
     // LeetCode :: 590. N-ary Tree Postorder Traversal
+    // Post order traversal can be achieved by traversing root right subtree & left sub tree
+    // then reversing the whole traversal
     // The nary post order traversal is easy because we have the list of node children.
     // At each step we take a node and put its children into the stack, and put the node in a list.
     // The children are popped from the stack in LIFO so the rightmost child will get popped first,
@@ -1785,13 +1784,41 @@ public class Tree {
             return null;
         int left = getHeightOfNode(root.left);
         int right = getHeightOfNode(root.right);
-        if ( left == right && left != 0)
+        if (left == right)
             return root;
         else if (left > right)
             return subtreeWithAllDeepest(root.left);
         else
             return subtreeWithAllDeepest(root.right);
     }
+    public class NodeDeptth {
+        int depth;
+        TreeNode node;
+        public NodeDeptth(int h, TreeNode n){
+            depth = h;
+            node = n;
+        }
+    }
+
+    // here note how we depend on the height to get the result node in such scenario
+    // we can use the a new object to hold the height and the node and return both as a object
+    public TreeNode subtreeWithAllDeepestV2(TreeNode root) {
+        return subtreeWithAllDeepestRecV2(root).node;
+    }
+    public NodeDeptth subtreeWithAllDeepestRecV2(TreeNode root){
+        if(root == null) return new NodeDeptth(0,null);
+        NodeDeptth leftTree = subtreeWithAllDeepestRecV2(root.left);
+        NodeDeptth rightTree = subtreeWithAllDeepestRecV2(root.right);
+        if (leftTree.depth > rightTree.depth)
+            return new NodeDeptth(leftTree.depth + 1, leftTree.node);
+        else if (leftTree.depth < rightTree.depth)
+            return new NodeDeptth(rightTree.depth + 1, rightTree.node);
+        else
+            return new NodeDeptth(leftTree.depth + 1, root);
+    }
+
+
+
 
     // LeetCode :: 257. Binary Tree Paths
     private void binaryTreePathsRec(TreeNode root, List<String> pathList, StringBuilder sb) {
@@ -1815,6 +1842,29 @@ public class Tree {
         List<String> pathList = new ArrayList<>();
         binaryTreePathsRec(root, pathList, new StringBuilder());
         return pathList;
+    }
+    private int closetDiff;
+    private int closestNode;
+    private void findClosestInBSTRec (TreeNode root, int target) {
+        if (root == null)
+            return;
+        int diff  = target - root.val;
+        if(closetDiff > Math.abs(diff)) {
+            closetDiff = Math.abs(diff);
+            closestNode = root.val;
+        }
+        if (diff == 0)
+            return;
+        else if (diff < 0)
+            findClosestInBSTRec(root.left, target);
+        else
+            findClosestInBSTRec(root.right, target);
+    }
+    public int findClosesInBST (TreeNode root, int target) {
+        closetDiff = Integer.MAX_VALUE;
+        closestNode = Integer.MAX_VALUE;
+        findClosestInBSTRec(root, target);
+        return closestNode;
     }
 
 

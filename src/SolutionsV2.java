@@ -482,7 +482,7 @@ public class SolutionsV2 {
         return len - low;
     }
 
-    //LeetCode :: 415. Add Strings (not submitted)
+    // LeetCode :: 415. Add Strings (not submitted)
     public String addStrings(String num1, String num2) {
         int sum = 0;
         int carry = 0;
@@ -499,6 +499,31 @@ public class SolutionsV2 {
             i--;
             j--;
         }
+        if (carry != 0)
+            sb.append(carry);
+        return sb.reverse().toString();
+    }
+
+    // LeetCode :: 67. Add Binary
+    public String addBinary(String a, String b) {
+        int i = a.length() - 1;
+        int j = b.length() - 1;
+        int carry = 0;
+        int sum = 0;
+        StringBuilder sb = new StringBuilder ();
+        while(i >= 0 || j >= 0){
+            sum = carry;
+            sum += i >= 0  ? a.charAt(i) - '0' : 0;
+            sum += j >= 0 ? b.charAt(j) -'0' : 0;
+            carry = sum / 2;
+            sum = sum % 2;
+            sb.append(sum);
+            i--;
+            j--;
+        }
+
+        if (carry != 0)
+            sb.append(carry);
         return sb.reverse().toString();
     }
 
@@ -522,6 +547,28 @@ public class SolutionsV2 {
         else
             return false;
 
+    }
+    public boolean isPalindromeOnePass(String s) {
+        int l = 0;
+        int r = s.length()-1;
+        while (l <= r) {
+            char lch = s.charAt(l);
+            char rch = s.charAt(r);
+            System.out.println(lch +" " + rch);
+            if(!Character.isLetter(lch) && !Character.isDigit(lch))
+                l++;
+            else if (!Character.isLetter(rch) && !Character.isDigit(rch))
+                r--;
+            else {
+                if(Character.toLowerCase(lch) == Character.toLowerCase(rch)) {
+                    l++;
+                    r--;
+                } else
+                    return false;
+            }
+
+        }
+        return true;
     }
 
     //LeetCode :: 953. Verifying an Alien Dictionary (not submitted)
@@ -838,6 +885,68 @@ public class SolutionsV2 {
         }
         return sb.toString();
     }
+
+    // LeetCode :: 1004. Max Consecutive Ones III
+    // Use a sliding window approach one catch is we need to look for K + 1 zeros to stop expanding
+    // the right window hence at the end we need to check if we have covered the last window length
+    public int longestOnes(int[] A, int K) {
+        int desiredCount = K+1;
+        int left = 0;
+        int right = 0;
+        int max = 0;
+        while (right < A.length) {
+            if (A[right] == 0) {
+                if (desiredCount != 0)
+                    desiredCount--;
+            }
+
+            while (desiredCount == 0) {
+                if (A[left] == 0) {
+                    desiredCount++;
+
+                }
+                max = Math.max(max, right -left);
+                left++;
+            }
+            right++;
+        }
+        // check if the last window is covered as we check for k+1 zeros
+        if(desiredCount != 0)
+            max = Math.max(max,right-left);
+        return max;
+
+    }
+
+    // LeetCode :: 636. Exclusive Time of Functions (not Submitted)
+    public int[] exclusiveTime(int n, List<String> logs) {
+        int []res = new int[n];
+        Stack <Integer> fIdStack = new Stack<Integer>();
+        String []str = logs.get(0).split(":");
+        Integer prevTime = Integer.parseInt(str[2]);
+        fIdStack.push(Integer.parseInt(str[0]));
+        int i = 0;
+        while (i < logs.size()) {
+            str = logs.get(i).split(":");
+            Integer fId = Integer.parseInt(str[0]);
+            Integer curTime = Integer.parseInt(str[2]);
+            if (str[1].equals("start")) {
+                if (!fIdStack.empty())
+                    res[fIdStack.peek()] += curTime - prevTime;
+                fIdStack.push(fId);
+                prevTime = curTime;
+
+            } else {
+                res[fIdStack.peek()] += curTime - prevTime + 1;
+                fIdStack.pop();
+                prevTime = curTime + 1;
+
+            }
+        }
+        return res;
+
+    }
+
+
 
 
     }
