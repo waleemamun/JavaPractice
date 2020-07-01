@@ -456,7 +456,7 @@ public class Solutions {
     // KSum Solution
 
     public ArrayList<List<Integer>> kSum(int[] nums, int target, int k, int index) {
-        ArrayList <List<Integer>> results = new ArrayList();
+        ArrayList <List<Integer>> results = new ArrayList<>();
         int kSumLen = nums.length;
         if (k == 2) {
             int start = index;
@@ -980,8 +980,7 @@ public class Solutions {
             }
             if (left == right) {
                 maxLen = Math.max(maxLen, left * 2);
-            }
-            else if (right <= left) {
+            } else if (right < left) {
                 left = right = 0;
             }
 
@@ -1178,10 +1177,10 @@ public class Solutions {
     // LeetCode 41 :: First Missing Positive (Hard)
     // The algo needs to be O(n) time & O(1) space, so we cannot use any kind of special data struct features.
     // We can mark the array and using couple N passes figure out a solution.
-    // First we nove the positive numbers to the left of array.
+    // First we move the positive numbers to the left of array.
     // The idea is to check the presence of consecutive numbers starting from 1 in the array,
     // so we mark the array indexes for example if 1 is present we mark nums[0] if 3 is present we mark num[2]
-    // during marking we just make th number negative
+    // during marking we just make the number negative
 
     public int firstMissingPositive(int[] nums) {
         int missPv = 1;

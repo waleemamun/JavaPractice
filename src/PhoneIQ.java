@@ -454,6 +454,8 @@ public class PhoneIQ {
 
 
     private HashMap<Integer, HashMap<Character,Integer>> map = new HashMap<>();
+    // we are doing a preorder traversal tree to visit the nodes rooted at the tree and find our the chars &
+    // their count rooted at that node
     private String buildMap (Node node, String traverseString) {
         if (node == null)
             return "";
@@ -472,7 +474,7 @@ public class PhoneIQ {
         return sb.toString();
     }
     // Given a N ary tree where each node is repsented by 1 to N & a string which is 1-based indexed
-    // each node in tree points to each char in string given a set if node, char pair find the number
+    // each node in tree points to each char in string, given a set of node, char pair find the number
     // of char rooted at that node
     // WE need to use preprocessing to solve this
     int[] countOfNodes(Node root, ArrayList<Query> queries, String s) {
@@ -507,7 +509,7 @@ public class PhoneIQ {
         return false;
     }
 
-    // Encrypt String abcxbca to xbacbca
+    // Encrypt String abcxcba to xbacbca
     public String findEncryptedWord(String s) {
         // Write your code here
         int start = 0;
@@ -658,7 +660,7 @@ public class PhoneIQ {
 
     }
 
-    // This is also O(n) with actual n iteration
+    // This is also O(n) with actual n iteration 1 - pass
     public LinkList reverseConsecutiveEvenNodesSimpleV2(LinkList head){
         if (head == null || head.next == null)
             return head;

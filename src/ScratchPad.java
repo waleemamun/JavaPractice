@@ -244,7 +244,6 @@ public class ScratchPad {
             calendarSet.add(e);
         }
 
-
         System.out.println(" cal Set " + Arrays.deepToString(calendarSet.toArray()));
 
     }

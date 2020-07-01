@@ -85,14 +85,13 @@ public class DataStructProblem {
                 // This checks if the new interval  o1 is completely or partially with an interval or not
                 public int compare(int[] o1, int[] o2) {
 
-                    if((o2[0] <= o1[0] && o1[1] < o2[1]) ||       // newInterval o1 completely within o2
-                            (o2[0] <= o1[0] && o1[0] < o2[1]) ||  // o1[0] i.e. newInterval start within o2
-                            (o2[0] < o1[1] && o1[1] < o2[1]))     // o1[1] i.e. newInterval end within o2
-                        return 0;
-                    else if(o1[1] <= o2[0])                       // o1[1] i.e. newInterval end smaller than o2 start
+                    if(o1[1] <= o2[0])            // o1[1] i.e. newInterval end smaller than o2 start
                         return -1;
-                    else if (o1[0] >= o2[1])                      // o1[0] i.e. newInterval start bigger than o2 start
+                    else if (o1[0] >= o2[1])      // o1[0] i.e. newInterval start bigger than o2 start
                         return 1;
+                    // newInterval o1 completely within o2
+                    // o1[0] i.e. newInterval start within o2
+                    // o1[1] i.e. newInterval end within o2
                     else return 0;
                 }
             });

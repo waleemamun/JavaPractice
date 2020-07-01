@@ -137,6 +137,7 @@ public class CodeArray {
 
     // LeetCode :: 3 Longest Substring Without Repeating Characters
     // Use Sliding window to solve the problem, This solution is easy to read
+    // this is the best solutions
     public int lengthOfLongestSubstringV1(String s) {
         HashMap <Character,Integer> map= new HashMap<Character,Integer>();
         int maxLen = 0;
@@ -152,7 +153,7 @@ public class CodeArray {
 
     }
 
-    // this is the best solutions
+
     // when solving string problem of this type we use a sliding window technique
     // we start with a minimal sliding window and keep increasing it
     // ie: (abcdefa)ghk <- a is detected twice now abcdef(aghk).

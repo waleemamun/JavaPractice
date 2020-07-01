@@ -402,7 +402,7 @@ public class DPs {
     // path length and store it in current path. As the for the bottom layer there is nothing to calc so for other layer
     // the dp eqn is path[k-1][i] = min(path[k][i] + path[k][i+1]) + triangle[k][i] (for k = size - 2 to zero )
     // look how we are using  a 2d array to store all the path info but we can optimize this and use single array with
-    // the optimised eqn  path[i] = min(path[i] + path[i+1]) + triangle[k][i] (we are overwriting the path array)
+    // the optimised eqn  path[i] = min(path[i] + path[i+1]) + triangle[k-1][i] (we are overwriting the path array)
     // We could have used a top-down approach but in that case we needed to do another O(n) search at the end to
     // find the smallest in path array also we will need a 2D array to solve the overwriting problem
     public int minimumTotal(List<List<Integer>> triangle) {
@@ -419,7 +419,7 @@ public class DPs {
         while (k >= 0) {
             List<Integer> list = triangle.get(k);
             for (int i = 0; i < list.size(); i++) {
-                // Note actual dp eqn path[k-1][i] = min(path[k][i] + path[k][i+1]) + triangle[k][i]
+                // Note actual dp eqn path[k-1][i] = min(path[k][i] + path[k][i+1]) + triangle[k-1][i]
                 // optimized dp eqn path[i] = min(path[i] + path[i+1]) + triangle[k][i]
                 path[i] = Math.min(path[i],path[i+1]) + list.get(i);
             }
@@ -737,6 +737,8 @@ public class DPs {
                     max = Math.max(max, seqLen[j]);
             }
             seqLen[i] = max + 1;
+            // we need to store the max for the whole seqlen Array in a separate variable cause
+            // its possible that the nth seqlen is not the max seqlen
             maxLen = Math.max(maxLen, seqLen[i]);
         }
         return maxLen;
