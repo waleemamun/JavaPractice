@@ -131,5 +131,69 @@ public class DataStructProblem {
         }
     }
 
+    // 208. Implement Trie (Prefix Tree)
+    class TrieNode {
+        Character val;
+        HashMap<Character, TrieNode> children;
+        boolean hasWord;
+        public TrieNode (Character ch){
+            val = ch;
+            children = new HashMap<>();
+            hasWord = false;
+        }
+
+    }
+    class Trie {
+        TrieNode root;
+        /** Initialize your data structure here. */
+        public Trie() {
+            root = new TrieNode('.');
+
+        }
+
+        /** Inserts a word into the trie. */
+        public void insert(String word) {
+            int i = 0;
+            TrieNode node = root;
+            while (i < word.length()) {
+                node.children.putIfAbsent(word.charAt(i), new TrieNode(word.charAt(i)));
+                node = node.children.get(word.charAt(i));
+                if (i == word.length() -1)
+                    node.hasWord = true;
+                i++;
+            }
+        }
+
+        /** Returns if the word is in the trie. */
+        public boolean search(String word) {
+            int i = 0;
+            TrieNode node = root;
+            while (i < word.length()) {
+                node = node.children.getOrDefault(word.charAt(i), null);
+                if (node == null)
+                    return false;
+                if (node.hasWord && i == word.length() -1)
+                    return true;
+                i++;
+            }
+            return false;
+        }
+
+        /** Returns if there is any word in the trie that starts with the given prefix. */
+        public boolean startsWith(String prefix) {
+            int i = 0;
+            TrieNode node = root;
+            while (i < prefix.length()) {
+                node = node.children.getOrDefault(prefix.charAt(i), null);
+                if (node == null)
+                    return false;
+                if (node.hasWord && i == prefix.length() -1)
+                    return true;
+                i++;
+            }
+            return i==prefix.length();
+        }
+    }
+
 
 }

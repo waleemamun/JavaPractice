@@ -135,44 +135,6 @@ public class SolutionsV2 {
         return false;
     }
 
-    // LeetCode :: 227. Basic Calculator II (not submitted)
-    // this works only if the signs are + - * /
-    // if more operator like brackets & power are introduced we have to use
-    // infix to postfix conversion using stack, then use postfix to generate solution
-    public int calculate(String s) {
-        if (s == null) return 0;
-        s = s.trim().replaceAll(" +", "");
-        int length = s.length();
-
-        int res = 0;
-        long preVal = 0; // initial preVal is 0
-        char sign = '+'; // initial sign is +
-        int i = 0;
-        while (i < length) {
-            long curVal = 0;
-            while (i < length && (int)s.charAt(i) <= 57 && (int)s.charAt(i) >= 48) { // int
-                curVal = curVal*10 + (s.charAt(i) - '0');
-                i++;
-            }
-            if (sign == '+') {
-                res += preVal;  // update res
-                preVal = curVal;
-            } else if (sign == '-') {
-                res += preVal;  // update res
-                preVal = -curVal;
-            } else if (sign == '*') {
-                preVal = preVal * curVal; // not update res, combine preVal & curVal and keep loop
-            } else if (sign == '/') {
-                preVal = preVal / curVal; // not update res, combine preVal & curVal and keep loop
-            }
-            if (i < length) { // getting new sign
-                sign = s.charAt(i);
-                i++;
-            }
-        }
-        res += preVal;
-        return res;
-    }
 
     // LeetCode :: 228. Summary Ranges
 
@@ -482,7 +444,7 @@ public class SolutionsV2 {
         return len - low;
     }
 
-    // LeetCode :: 415. Add Strings (not submitted)
+    // LeetCode :: 415. Add Strings
     public String addStrings(String num1, String num2) {
         int sum = 0;
         int carry = 0;
@@ -571,7 +533,7 @@ public class SolutionsV2 {
         return true;
     }
 
-    //LeetCode :: 953. Verifying an Alien Dictionary (not submitted)
+    //LeetCode :: 953. Verifying an Alien Dictionary
 
     public boolean isAlienSorted(String[] words, String order) {
         HashMap<Character, Integer> map = new HashMap<>();
@@ -595,6 +557,8 @@ public class SolutionsV2 {
                     break;
 
             }
+            if (first.length() > last.length())
+                return false;
 
         }
         return true;
@@ -943,6 +907,85 @@ public class SolutionsV2 {
             }
         }
         return res;
+
+    }
+
+    // LeetCode :: 227. Basic Calculator II (not submitted)
+    // this works only if the signs are + - * /
+    // if more operator like brackets & power are introduced we have to use
+    // infix to postfix conversion using stack, then use postfix to generate solution
+    // The version 1 is a stack implementation this version 2 is optimising the stack
+    // implementation as we need store cumulative sum for + & - but got * & / we need to
+    // keep calculating the sum
+    public int calculateV2(String s) {
+        if (s == null) return 0;
+        s = s.trim().replaceAll(" +", "");
+        int length = s.length();
+
+        int res = 0;
+        long preVal = 0; // initial preVal is 0
+        char sign = '+'; // initial sign is +
+        int i = 0;
+        while (i < length) {
+            long curVal = 0;
+            while (i < length && (int)s.charAt(i) <= 57 && (int)s.charAt(i) >= 48) { // int
+                curVal = curVal*10 + (s.charAt(i) - '0');
+                i++;
+            }
+            if (sign == '+') {
+                res += preVal;  // update res
+                preVal = curVal;
+            } else if (sign == '-') {
+                res += preVal;  // update res
+                preVal = -curVal;
+            } else if (sign == '*') {
+                preVal = preVal * curVal; // not update res, combine preVal & curVal and keep loop
+            } else if (sign == '/') {
+                preVal = preVal / curVal; // not update res, combine preVal & curVal and keep loop
+            }
+            if (i < length) { // getting new sign
+                sign = s.charAt(i);
+                i++;
+            }
+        }
+        res += preVal;
+        return res;
+    }
+
+    public int calculate(String s) {
+        if (s.length() ==0)
+            return 0;
+
+        int i = 0;
+        int sum = 0;
+        int val = 0;
+        char sign = '+';
+        Stack <Integer>  stack = new Stack<>();
+        while (i < s.length()) {
+
+            if (Character.isDigit(s.charAt(i))) {
+                val = val*10 + s.charAt(i) -'0';
+            }
+            if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != ' ' || i == s.length()-1) {
+                if (sign == '+') {
+                    stack.push(val);
+                } else if (sign == '-') {
+                    stack.push(-val);
+                } else if (sign == '*') {
+                    stack.push(stack.pop()*val);
+                } else if (sign == '/'){
+                    stack.push(stack.pop()/val);
+                }
+                val = 0;
+                sign = s.charAt(i);
+
+            }
+            i++;
+        }
+        while (!stack.empty()){
+            sum+= stack.pop();
+        }
+        return sum;
 
     }
 
