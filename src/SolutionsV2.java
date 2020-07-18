@@ -989,6 +989,42 @@ public class SolutionsV2 {
 
     }
 
+    // 205. Isomorphic Strings
+    public boolean isIsomorphicv2(String s, String t) {
+        HashMap<Character,Character> map1 = new HashMap<>();
+        HashMap<Character,Character> map2 = new HashMap<>();
+        int i = 0;
+        while (i < s.length()){
+            Character ch1 = map1.putIfAbsent(s.charAt(i),t.charAt(i));
+            Character ch2 = map2.putIfAbsent(t.charAt(i),s.charAt(i));
+            if ((ch1 != null && ch1 != t.charAt(i))
+                    || (ch2!=null && ch2 != s.charAt(i)))
+                return false;
+            i++;
+        }
+        return true;
+    }
+    // The use of primitive type to create the character map improves the runtime performance significantly
+    // although the Big O remains same
+    public boolean isIsomorphic(String s, String t) {
+        char [] map1 = new char[128];
+        char [] map2 = new char[128];
+        int i = 0;
+        while (i < s.length()){
+            char ch1 = s.charAt(i);
+            char ch2 = t.charAt(i);
+            if (map1[ch1] == 0)
+                map1[ch1] = ch2;
+            if (map2[ch2] == 0)
+                map2[ch2] = ch1;
+            if (map1[ch1] != ch2 || map2[ch2] != ch1)
+                return false;
+            i++;
+
+
+        }
+        return true;
+    }
 
 
 
