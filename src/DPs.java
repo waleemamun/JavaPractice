@@ -1,3 +1,4 @@
+import javafx.util.Pair;
 import org.omg.PortableInterceptor.INACTIVE;
 
 import java.util.*;
@@ -1011,6 +1012,112 @@ public class DPs {
             }
         }
         return longestPath;
+    }
+
+    // 241. Different Ways to Add Parentheses
+    // This is the same as Catalan number generation or all possible binary tree generation
+    // We scan through the string to find  a operator, once we get the operator we split the string in two halves and
+    // recursively compute the result for left & right half. Next we merge the result from left & right halves to a
+    // new list. We make use of memoization using a hashmap of input string & list of integer. We are sacrificing
+    // memory for faster performance
+    // Note we could use the same technique for binary tree generation problem, we could use memoization
+    // to make it faster
+    public List<Integer> diffWaysToCompute(String input) {
+        HashMap<String, List<Integer>> memoParetheses = new HashMap<>();
+        return diffWaysToComputeRec(input,  memoParetheses);
+
+    }
+    private List<Integer> diffWaysToComputeRec(String input,
+                                               HashMap<String, List<Integer>> memoParetheses) {
+        List <Integer> resList = new ArrayList<>();
+        // check if the result is already calculated in the memoization table if yes return the result
+        if (memoParetheses.containsKey(input))
+            return memoParetheses.get(input);
+        // we have not found the result in memoization table lets proceed with our algo
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            // found an operator split the string in two halves and recursively solve both halves
+            // note we need to store the result list for both halves as we will need the me to
+            // merge to create the new list for this input string
+            if(ch == '+' || ch == '-' || ch == '*') {
+                // left half from the operator
+                List<Integer> leftList = diffWaysToComputeRec(input.substring(0,i), memoParetheses);
+                // right half from the operator
+                List<Integer> rightList = diffWaysToComputeRec(input.substring(i+1), memoParetheses);
+                // merge the results
+                for (int left : leftList) {
+                    for (int right : rightList) {
+                        int res  = 0;
+                        if (ch == '+')
+                            res = left + right;
+                        else if (ch == '-')
+                            res = left - right;
+                        else
+                            res = left * right;
+                        resList.add(res);
+                    }
+                }
+            }
+        }
+        // our reslist is empty this is a base case we got a input string that only have digits and no operator
+        // so lets just convert the String to Integer and return it as the result list
+        if (resList.isEmpty()) {
+            resList.add(Integer.parseInt(input));
+        }
+        // update the memoization table before returning from the func
+        memoParetheses.put(input, resList);
+        return resList;
+    }
+
+    // *****(This memoization becomes very slow) ********
+    // LeetCode :: 95. Unique Binary Search Trees II
+    // The Problems requires us to generate all BST possible for 1 to n. So we actually have to generate those tree.
+    // The idea is to go by each node from 1 to n as root and create a tree. So for each node as root we need to
+    // build a left subtree & a right subtree and then add the left subtree & right subtree as to the root.
+    // We use two lists to store the left subtrees & right subtrees, Then for root we take one node from left subtree
+    // & one node from rightSubtree. Finally return the list
+    private List<TreeNode> genBSTree (int start, int end,
+                                      HashMap<Pair<Integer, Integer>, List<TreeNode>> mapTreeNode) {
+        List<TreeNode> rList = new ArrayList<>();
+        if (start > end) {
+            rList.add(null);
+            return rList;
+        }
+        if (mapTreeNode.containsKey(new Pair<>(start, end))) {
+            return mapTreeNode.get(new Pair<>(start, end));
+        }
+        if (start == end) {
+            rList.add( new TreeNode(start));
+            mapTreeNode.put(new Pair<>(start, end), rList);
+            return rList;
+        }
+
+        for (int i = start; i <= end; i++) {
+            // left subtree list holds all the possible left subtrees
+            List<TreeNode> leftSubTreeList = genBSTree(start, i - 1, mapTreeNode);
+            // right subtree list holds all the possible right subtrees
+            List<TreeNode> rightSubTreeList = genBSTree(i+1, end, mapTreeNode);
+            for (TreeNode leftSubTree : leftSubTreeList) {
+                for (TreeNode rightSubTree : rightSubTreeList) {
+                    // for this root pick a left subtree & right subtree and the to the list
+                    // we need to add root to the list multiple time with multiple options of
+                    // left & right subtree, we will have total pf leftSubtree.size * rightSubtree.size
+                    // for example (1,2)  3 (4,5) ; for root 3 there are 4 distinct trees with 3 as root
+                    TreeNode root  = new TreeNode(i);
+                    root.left = leftSubTree;
+                    root.right= rightSubTree;
+                    rList.add(root);
+                }
+            }
+        }
+        mapTreeNode.put(new Pair<>(start,end),rList);
+        return rList;
+    }
+    public List<TreeNode> generateTrees(int n) {
+        HashMap<Pair<Integer, Integer>, List<TreeNode>> mapTreeNode  = new HashMap<>();
+        if (n == 0)
+            return new ArrayList<TreeNode>();
+        return genBSTree(1,n, mapTreeNode);
     }
 
 

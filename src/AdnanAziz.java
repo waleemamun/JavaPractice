@@ -1,3 +1,5 @@
+import org.omg.CORBA.MARSHAL;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -167,6 +169,50 @@ public class AdnanAziz {
         for (int i = n - 1; i > 0; --i)
             tree[i] = tree[i * 2] + tree[i * 2 + 1];
         System.out.println(Arrays.toString(tree));
+    }
+
+    // Adnan Aziz 14.4 RENDER A CALENDAR
+    // We are using a slightly different approach
+    // We first get a minStart & maxStart event, create a map that can contain all the event for example
+    // in case of calendar it would be all the hours or minutes of a day.
+    // Now for each start time we store a +1 and end time we store -1 in the map
+    // Next we walk through the map (from min to max event start time) and get a running sum,
+    // the max running sum is out result and also the peakTime
+    // The runtime for the problem is O(T + E); T == time in a day (min(1440) or hour (24)) & E = num of events
+    //
+    // NOTE : *** A same type of problem would be finding the maximum population year given the
+    // list of life span of a population. We can use the exactly same approach described here
+    // the event time map  will years and population life span is the intervals array,
+    // we will find the min & max birth year, then map the birth & death years to the map as we have done for events
+    public static int findMaxSimultaneousEvents(int [][] intervals){
+        int minStart = Integer.MAX_VALUE;
+        int maxStart = Integer.MIN_VALUE;
+        // get min max start time
+        for (int i = 0; i <intervals.length; i++) {
+            minStart = Math.min(minStart, intervals[i][0]);
+            maxStart = Math.max(maxStart, intervals[i][0]);
+        }
+        // create the mapping array this works as a hashmap
+        int [] map = new int[maxStart +1];
+        // we walk through intervals & map the start time & end time
+        // we will do +1 for start & -1 for end time
+        for (int inv[] :intervals) {
+            map[inv[0]]++;
+            map[inv[1]]--;
+        }
+        int sum = 0;
+        int maxEvent = Integer.MIN_VALUE;
+        int peakTime = 0;
+        // now we walk through the map and calc the running sum for each time.
+        // We store the max concurrent event & peak time
+        for (int i = minStart; i <= maxStart; i++) {
+            sum+= map[i];
+            if (maxEvent < sum) {
+                maxEvent = sum;
+                peakTime = i;
+            }
+        }
+        return maxEvent;
     }
 
 }
