@@ -1078,14 +1078,19 @@ public class SolutionsV2 {
     // item from the the queue while removing the smaller item we calc the distance between new item
     // and the popped item. This queue is a double ended queue and we pop item from the end not the
     // beginning
+    // LinkedList performs better
+    // Note : A nice read for Monotonic queue: https://medium.com/@gregsh9.5/monotonic-queue-notes-980a019d5793
+    // https://medium.com/algorithms-and-leetcode/monotonic-queue-explained-with-leetcode-problems-7db7c530c1d6
     public int[] dailyTemperatures(int[] T) {
         int []result = new int[T.length];
         Deque<Integer> deque = new LinkedList<>();
         for (int i = 0; i<T.length; i++) {
+            // remove item from tail of the queue
             while (!deque.isEmpty() && T[deque.peekLast()] < T[i]) {
                 result[deque.peekLast()] = i - deque.peekLast();
                 deque.removeLast();
             }
+            // add to the end of queue
             deque.add(i);
         }
         return result;
@@ -1112,6 +1117,59 @@ public class SolutionsV2 {
 
     }
 
+    // LeetCode :: 496. Next Greater Element I
+    // Using decreasing monotonic queue, adding only index to the Double Ended Queue
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        if (nums2.length ==0) {
+            Arrays.fill(nums1, -1);
+            return nums1;
+        }
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int [] nearestElem = new int[nums2.length];
+        Deque <Integer> deque = new LinkedList<>();
+        for (int i = 0; i< nums2.length; i++) {
+            map.put(nums2[i],i);
+            nearestElem[i] =-1;
+        }
+        for (int i = 0; i < nums2.length; i++) {
+            while (!deque.isEmpty() && nums2[deque.peekLast()] < nums2[i]) {
+                nearestElem[deque.removeLast()] = nums2[i];
+            }
+            deque.addLast(i);
+        }
+        for (int i = 0; i< nums1.length; i++) {
+            nums1[i] = nearestElem[map.get(nums1[i])];
+        }
+        return nums1;
+    }
+    // This uses the nearestElement algo as used in largestRectangleArea
+    // It looks like montonic queue's performance is little slower than this approach
+    // but monotonic queue & its runtime may be easy to explain
+    public int[] nextGreaterElementV2(int[] nums1, int[] nums2) {
+        if (nums2.length ==0) {
+            Arrays.fill(nums1, -1);
+            return nums1;
+        }
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int [] nearestElem = new int[nums2.length];
+        for (int i = nums2.length -1; i>=0; i--) {
+            map.put(nums2[i],i);
+            int j = i+1;
+            while (j < nums2.length && nums2[j] < nums2[i]) {
+                j = nearestElem[j];
+            }
+            nearestElem[i] = j;
+        }
+
+        for (int i = 0; i< nums1.length; i++) {
+            int idx = map.get(nums1[i]);
+            if (nearestElem[idx] != nums2.length)
+                nums1[i] = nums2[nearestElem[idx]];
+            else
+                nums1[i] = -1;
+        }
+        return nums1;
+    }
 
 
 

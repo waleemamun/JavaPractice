@@ -1230,6 +1230,8 @@ public class SolutionsV1 {
     // We only update left & right of i if the left & right bars are taller or equals bar i
     // Then we can calculate the area covered by the rectangle using (height[i] *  right[i] -left[i] +1).
     // We can iterate faster in left & right array if we iterate using the values of left & right array.
+    // This can also be solved by monotonic queue. But this one performs better than monotonic queue although
+    // both having the same runtime. In interview it may be easy to explain monotonic queue and its runtime
     public int largestRectangleArea(int[] heights) {
         // validate input
         if(heights == null || heights.length == 0) {
@@ -1278,6 +1280,33 @@ public class SolutionsV1 {
         }
 
         return max;
+    }
+    // This time we solved this using the monotonic Queue,
+    // Note the it can also be solved using monotonic stack
+    // Monotonic queue will also give amortized O(n) runtime
+    public int largestRectangleAreaMonotonicQue(int[] heights) {
+        if (heights.length == 0)
+            return 0;
+        int maxArea = Integer.MIN_VALUE;
+        Deque<Integer> deque = new LinkedList<>();
+        for (int i = 0; i<heights.length; i++) {
+            while(!deque.isEmpty() && heights[i] < heights[deque.peekLast()]) {
+                int rightBoundIdx = deque.removeLast();
+                int leftBoundIdx = deque.isEmpty() ? -1: deque.peekLast();
+                int width = i - leftBoundIdx -1;
+                int area =  width * heights[rightBoundIdx];
+                maxArea = Math.max(maxArea, area);
+            }
+            deque.addLast(i);
+        }
+        while (!deque.isEmpty()) {
+            int rightBoundIdx = deque.removeLast();
+            int leftBoundIdx = deque.isEmpty() ? -1: deque.peekLast();
+            int width = heights.length - leftBoundIdx -1;
+            int area =  width * heights[rightBoundIdx];
+            maxArea = Math.max(maxArea, area);
+        }
+        return maxArea;
     }
 
     // FB practice question: contigious subArray starting or ending at at index,
