@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {0,0,1,1,0,0,1,1,1,0,1,1,0,0,0,1,1,1,1};
+        int [] arr =  {5,8,10,7,9,4,12,1,14,5,5,4};
         int [] arr1 = {5,2,1,3,4,7,6,8,9};
 
         int [][] arr2d = {
@@ -227,7 +227,7 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println(" ways " + dp1.diffWaysToCompute(str1));
+        System.out.println("Res " + Arrays.toString(sv2.maxSlidingWindow(arr,3)));
 
 
 

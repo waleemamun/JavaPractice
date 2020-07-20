@@ -131,11 +131,13 @@ public class DataStructProblem {
         }
     }
 
-    // 208. Implement Trie (Prefix Tree)
+    // LeetCode ::208. Implement Trie (Prefix Tree)
+    // Implement a trie data structure with capability to check if a word exist or startwith
+    // we assume the root node with value "."
     class TrieNode {
-        Character val;
-        HashMap<Character, TrieNode> children;
-        boolean hasWord;
+        Character val;                         // node val
+        HashMap<Character, TrieNode> children; // Children nodes
+        boolean hasWord; // indicates the wors is present in trie
         public TrieNode (Character ch){
             val = ch;
             children = new HashMap<>();
@@ -170,8 +172,10 @@ public class DataStructProblem {
             TrieNode node = root;
             while (i < word.length()) {
                 node = node.children.getOrDefault(word.charAt(i), null);
+                // char noy found in trie word does not exist
                 if (node == null)
                     return false;
+                // we found the word
                 if (node.hasWord && i == word.length() -1)
                     return true;
                 i++;
@@ -185,13 +189,55 @@ public class DataStructProblem {
             TrieNode node = root;
             while (i < prefix.length()) {
                 node = node.children.getOrDefault(prefix.charAt(i), null);
+                // char noy found in trie word does not exist
                 if (node == null)
                     return false;
+                // we found the word
                 if (node.hasWord && i == prefix.length() -1)
                     return true;
                 i++;
             }
+            // the word is not found but the prefix exist
             return i==prefix.length();
+        }
+    }
+
+    //LeetCode :: 284. Peeking Iterator
+    // Simply store the  current value in the top. All calls to peek will return top
+    // We update top during initialization once and then top is update in next call we
+    // return the top value and update top with the nextValue
+    class PeekingIterator implements Iterator<Integer> {
+        Iterator<Integer> peekingIterator;
+        Integer top = null;
+        public PeekingIterator(Iterator<Integer> iterator) {
+            // initialize any member here.
+            peekingIterator = iterator;
+            if (peekingIterator.hasNext())
+                top = peekingIterator.next();
+        }
+
+        // Returns the next element in the iteration without advancing the iterator.
+        public Integer peek() {
+            return top;
+
+        }
+
+        // hasNext() and next() should behave the same as in the Iterator interface.
+        // Override them if needed.
+        @Override
+        public Integer next() {
+            Integer res = top;
+            if (peekingIterator.hasNext())
+                top = peekingIterator.next();
+            else
+                top = null;
+            return res;
+
+        }
+
+        @Override
+        public boolean hasNext() {
+            return peekingIterator.hasNext();
         }
     }
 

@@ -1026,6 +1026,52 @@ public class SolutionsV2 {
         return true;
     }
 
+    // LeetCode :: 239. Sliding Window Maximum (Hard)
+    // This solutions is amortized O(n) as elements are removed and added to the queue only once
+    // We build on the idea that if the newest value is better than the older value in queue we can
+    // discard the older values, as we slide to the right  the older value becomes less important.
+    // The idea is to maintain a Double Ended Queue (Deque) to store the most promising max values
+    // so far. We also need to make sure the queue never gets bigger than K (window size). When we
+    // store values in to the queue we store the most promising max value, so we take the current nums[i]
+    // value and check if its bigger than the last (tail) value of the queue if yes we remove all value < nums[i]
+    // from the tail until the we find a bigger value or the queue is empty. This process ensures that the
+    // front value of the queue is always the maximum. So we can add the front value of the queue as to the
+    // result list for the current window.
+    // Note1 : we actually store the index of the array rather than the actual value, it helps us remove from
+    // the front of the queue when we exceed the window size
+    // Note2: In this case using a LinkedList for deque give better runtime in LeetCode may be because
+    // expanding ArrayDeque is expensive.
+    // Usually ArrayDeque gives better performance
+    // Note3 : This concept is also known as monotonic Queue
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int [] res = new int [nums.length -k +1];
+        // deque holds the most promising max values in the queue so far
+        // Deque <Integer> deque = new ArrayDeque<>(); // not using this but usually ArrayDeque gives better performance
+        Deque <Integer> deque = new LinkedList<>();
+        int j = 0;
+        for (int i = 0; i < nums.length; i++) {
+            // remove from the front of the queue if the queue exceeds the window size
+            // Note this loop will execute not more than once, so we can change the loop
+            // to a if condition
+            while(!deque.isEmpty() && deque.peek() < i -k +1){
+                deque.removeFirst();
+            }
+            // We found a bigger value. Remove from the tail of the queue all smaller values
+            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
+                deque.removeLast();
+            }
+            // add to the end of the queue
+            deque.add(i);
+            // We skipped the first k -2 items now for each increment of i we add the result to the result array
+            // The front of the queue wil have the max item as per our algo so store it in the result
+            // for this window
+            if (i >= k-1)
+                res[j++] = nums[deque.peekFirst()];
+
+        }
+        return res;
+    }
+
 
 
     }
