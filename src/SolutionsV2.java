@@ -1072,6 +1072,49 @@ public class SolutionsV2 {
         return res;
     }
 
+    //LeetCode :: 739. Daily Temperatures
+    // Using the monotonic queue to find the nearest bigger value.
+    // Using a monotonic decreasing queue as we scan through the array a new item removes all smaller
+    // item from the the queue while removing the smaller item we calc the distance between new item
+    // and the popped item. This queue is a double ended queue and we pop item from the end not the
+    // beginning
+    public int[] dailyTemperatures(int[] T) {
+        int []result = new int[T.length];
+        Deque<Integer> deque = new LinkedList<>();
+        for (int i = 0; i<T.length; i++) {
+            while (!deque.isEmpty() && T[deque.peekLast()] < T[i]) {
+                result[deque.peekLast()] = i - deque.peekLast();
+                deque.removeLast();
+            }
+            deque.add(i);
+        }
+        return result;
+
+    }
+
+    // This version is faster run time in leetcode but both this  & prev version uses a amortized O(n)
+    // This uses the similar approach as the longest rectangle histogram problem we find the nearest
+    // bigger item on the right and use that to find our result
+    public int[] dailyTemperaturesV2(int[] T) {
+        int []result = new int[T.length];
+        int []right = new int [T.length];
+
+        for (int i = T.length - 1; i >= 0; i--) {
+            int j = i+1;
+            while (j < T.length && T[j] <= T[i]) {
+                j = right[j];
+            }
+            right[i] = j;
+            result[i] = right[i] == T.length ? 0 : right[i] -i;
+        }
+
+        return result;
+
+    }
+
+
+
+
 
 
     }
