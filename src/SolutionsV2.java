@@ -1171,6 +1171,29 @@ public class SolutionsV2 {
         return nums1;
     }
 
+    // LeetCode :: 456. 132 Pattern
+    // The idea is to use a decreasing monotonic queue.
+    // we start from the right and form a decreasing MQ. Sometime its easier to  build a MQ from right
+    // In this case we need a 1 3 2 pattern so a decreasing MQ from right is a better choice as when we remove lower
+    // values from the  queue the front will have the largest item prev will have the second largest item. The largest
+    // item can thought of as aj at position j 2nd largest ak at pos k so for  any i pos on the left if ai < prev (ak)
+    // we have our solution
+    public boolean find132pattern(int[] nums) {
+
+        Deque <Integer> deque = new LinkedList<>();
+        int prev = Integer.MIN_VALUE;
+        for (int i = nums.length -1; i >= 0; i--) {
+            //  For this decreasing MQ ak is prev & queue front is aj so we check if ai (nums[i]) < ak(prev)
+            if(prev > nums[i])
+                return true;
+            while (!deque.isEmpty() && nums[i] > deque.peekLast()) {
+                prev = deque.removeLast();
+            }
+            deque.addLast(nums[i]);
+        }
+        return false;
+    }
+
 
 
 
