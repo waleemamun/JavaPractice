@@ -241,5 +241,64 @@ public class DataStructProblem {
         }
     }
 
+    // LeetCode :: 304. Range Sum Query 2D - Immutable
+    class NumMatrix {
+        int cache[][] = null;
+
+        public NumMatrix(int[][] matrix, boolean skip) {
+            if (matrix.length == 0) {
+                cache = null;
+                return;
+            }
+            cache = new int [matrix.length][matrix[0].length];
+            cache[0][0] = matrix[0][0];
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j< matrix[0].length; j++){
+                    cache[i][j] = (j == 0? 0: cache[i][j-1]) + matrix[i][j];
+                }
+            }
+            System.out.println(Arrays.deepToString(matrix));
+
+            for (int i = 1; i< matrix.length; i++) {
+                for (int j = matrix[0].length -1; j >= 0; j--) {
+                    cache[i][j] = cache[i-1][j] + (j == 0 ? 0:cache[i][j-1]) + matrix[i][j];
+                }
+            }
+
+            System.out.println(Arrays.deepToString(cache));
+
+        }
+
+        // create the case table building on the same idea of getting a bounded region using region starting from zero
+        // Sum(ABCD) =  Sum(OB)+Sum(OC) + matrix[i][j] - Sum(OA)
+        // Think how you can get you region by subtracting rectangles from the  bottom right rectangle
+        public NumMatrix (int [][] matrix) {
+            if (matrix.length == 0) {
+                cache = null;
+                return;
+            }
+            cache = new int [matrix.length + 1][matrix[0].length + 1];
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix[0].length; j++) {
+                    cache[i+1][j+1] = cache[i+1][j] + cache[i][j+1] + matrix[i][j] - cache[i][j];
+                }
+            }
+
+        }
+
+        public int sumRegion2(int row1, int col1, int row2, int col2) {
+            int x = cache[row2][col2];
+            int y = (col1 == 0 ? 0 : cache[row2][col1-1]);
+            int z = (row1 == 0 ? 0:cache[row1-1][col2]);
+            int a = (row1 == 0 || col1 == 0) ? 0:cache[row1 -1][col1-1];
+            return x- y -z +a;
+        }
+        // This version is faster & easier check the constructor public NumMatrix (int [][] matrix)
+        // Sum(ABCD) = Sum(OD)−Sum(OB)−Sum(OC)+Sum(OA)
+        public int sumRegion(int row1, int col1, int row2, int col2) {
+            return cache[row2+1][col2+1] - cache[row2+1][col1] - cache[row1][col2+1] + cache[row1][col1];
+        }
+    }
+
 
 }

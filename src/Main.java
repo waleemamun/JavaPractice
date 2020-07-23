@@ -196,9 +196,10 @@ public class Main {
         int [] arr1 = {5,2,1,3,4,7,6,8,9};
 
         int [][] arr2d = {
-                {9, 9, 4},
-                {6, 6, 8},
-                {2, 1, 1}
+                {2, 3, 4, 9},
+                {10, 1, 7, 8},
+                {6, 5, 3, 2},
+                {9, -10, 20 ,5}
 
         };
         char [][] board = {
@@ -227,21 +228,22 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
+        //System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
 
 
 
         int [][] edges = {
-                            {1, 4},
-                            {2, 7},
-                            {3, 5},
-                            {4, 10},
-                            {9, 12},
-                            {16, 20},
-                            {18,20},
-                            {21,23},
-                            {27,28},
-                            {22,28},
+                            {1, 2},
+                            {2, 3},
+                            {3, 4},
+                            {4, 5},
+                            {5, 6},
+                            {6, 1},
+                            {1, 7},
+                            {7, 8},
+                            {8, 2},
+                            {9, 10},
+                            {10, 11},
                             };
         int []newInterval = {7,23};
 
@@ -250,8 +252,11 @@ public class Main {
 //        GraphNode g1 = new GraphNode();
 //        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);
 //        g1.dfs(graph);
+//        g1.bfs(graph,11);
 
-
+        DataStructProblem ds1 = new DataStructProblem();
+        DataStructProblem.NumMatrix nm1 = ds1.new NumMatrix(arr2d,false);
+        System.out.println("sum " + nm1.sumRegion2(0,0,2,0));
 
 
 

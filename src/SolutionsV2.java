@@ -989,7 +989,7 @@ public class SolutionsV2 {
 
     }
 
-    // 205. Isomorphic Strings
+    // LeetCode :: 205. Isomorphic Strings
     public boolean isIsomorphicv2(String s, String t) {
         HashMap<Character,Character> map1 = new HashMap<>();
         HashMap<Character,Character> map2 = new HashMap<>();
