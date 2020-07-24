@@ -3,6 +3,7 @@ import org.omg.PortableInterceptor.INACTIVE;
 
 import java.awt.image.AreaAveragingScaleFilter;
 import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.*;
 
 public class Recursions {
@@ -1860,6 +1861,45 @@ public class Recursions {
     }
     public boolean validPalindrome(String s) {
         return validPalindromeRec(s, 0, s.length()-1, 1);
+    }
+
+    // LeetCode :: 306. Additive Number
+    // The idea is to get the last & cur values and add it to get the result and
+    // check if the result matches next sequence. We need to use BigInteger to reduce
+    // the complexity of handling overflow issues. The runtime for the recursion is O(n)
+    // So we can turn into an iterative solution. The total runtime for this problem is
+    // O(n^3 * num.length)
+    private boolean isAdditiveNumberRec(String num, int idx,
+                                        BigInteger last, BigInteger cur) {
+        if (idx >= num.length())
+            return true;
+        if (num.charAt(idx) == '0')
+            return false;
+        BigInteger sum = last.add(cur);
+        int len = sum.toString().length();
+        if (idx + len > num.length())
+            return false;
+
+        BigInteger temp = new BigInteger(num.substring(idx, idx+len));
+        return (temp.equals(sum) && isAdditiveNumberRec(num, idx + len, cur, temp));
+
+    }
+
+    public boolean isAdditiveNumber(String num) {
+        int k = 0;
+        while (k < num.length() && num.charAt(k++)=='0');
+        if (k > 2 && k == num.length()) return true;
+        for (int i = 1; i<num.length(); i++) {
+            for (int j = i+1; j < num.length(); j++) {
+                if (num.charAt(0) == '0' || num.charAt(i) =='0')
+                    continue;
+                BigInteger last = new BigInteger(num.substring(0, i));
+                BigInteger cur = new BigInteger(num.substring(i, j));
+                if (isAdditiveNumberRec(num, j, last, cur))
+                    return true;
+            }
+        }
+        return false;
     }
 
 

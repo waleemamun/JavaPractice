@@ -214,7 +214,7 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "2*3-4*5";
+        String str1 = "00000000000";
         String str2 = "900";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
@@ -254,9 +254,7 @@ public class Main {
 //        g1.dfs(graph);
 //        g1.bfs(graph,11);
 
-        DataStructProblem ds1 = new DataStructProblem();
-        DataStructProblem.NumMatrix nm1 = ds1.new NumMatrix(arr2d,false);
-        System.out.println("sum " + nm1.sumRegion2(0,0,2,0));
+        System.out.println("is Additive " + r1.isAdditiveNumber(str1));
 
 
 
