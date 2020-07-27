@@ -1120,6 +1120,39 @@ public class DPs {
         return genBSTree(1,n, mapTreeNode);
     }
 
+    // LeetCode :: 313. Super Ugly Number
+    // Same logic as Ugly number, just extending the case from 3 primes (2,3, 5) to k primes
+    // we use and indexes array to keep the current point of prime[i] pointing to uglyNumber[i] fror nextMult calc
+    // we aslo keep an array of nextMult[i] to keep the next multiplication of primes [i]
+    private int minOfArr (int []a) {
+        int min = Integer.MAX_VALUE;
+        for (int i : a){
+            if (min > i)
+                min = i;
+        }
+        return min;
+    }
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        int [] indexes = new int [primes.length];
+        int [] nextMult = new int [primes.length];
+        int [] uglyNumber = new int [n];
+        uglyNumber[0] = 1;
+        for (int i =0; i< primes.length; i++) {
+            nextMult[i] = primes[i];
+        }
+        for (int i = 1; i<n; i++) {
+            int nextUglyNum = minOfArr(nextMult);
+            uglyNumber[i] = nextUglyNum;
+            for (int j =0; j<primes.length; j++) {
+                if (nextMult[j] == nextUglyNum) {
+                    nextMult[j] = primes[j] * uglyNumber[++indexes[j]];
+                }
+            }
+
+        }
+        return uglyNumber[n-1];
+
+    }
 
 
 

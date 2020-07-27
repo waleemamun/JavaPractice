@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {73, 74, 75, 71, 69, 72, 76, 73};
+        int [] arr =  {2,3,5};
         int [] arr1 = {5,2,1,3,4,7,6,8,9};
 
         int [][] arr2d = {
@@ -229,32 +229,25 @@ public class Main {
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
         //System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
+        for (int i = 1; i< 20; i++)
+            System.out.println("ugly " + dp1.nthUglyNumber(i) + " super " + dp1.nthSuperUglyNumber(i,arr));
+
 
 
 
         int [][] edges = {
-                            {1, 2},
+                            {0, 3},
+                            {1, 3},
                             {2, 3},
-                            {3, 4},
-                            {4, 5},
-                            {5, 6},
-                            {6, 1},
-                            {1, 7},
-                            {7, 8},
-                            {8, 2},
-                            {9, 10},
-                            {10, 11},
+                            {4, 3},
+                            {5, 4},
                             };
         int []newInterval = {7,23};
 
 
 
-//        GraphNode g1 = new GraphNode();
-//        HashMap<Integer, HashSet<Integer>> graph = g1.buildGraph(edges);
-//        g1.dfs(graph);
-//        g1.bfs(graph,11);
-
-        System.out.println("is Additive " + r1.isAdditiveNumber(str1));
+        GraphNode g1 = new GraphNode();
+        //System.out.println(g1.findMinHeightTrees(6, edges));
 
 
 
