@@ -193,7 +193,7 @@ public class Main {
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
         int [] arr =  {2,3,5};
-        int [] arr1 = {5,2,1,3,4,7,6,8,9};
+        int [] arr1 = {1,2,3,4,5,6,7,8,9};
 
         int [][] arr2d = {
                 {2, 3, 4, 9},
@@ -224,13 +224,13 @@ public class Main {
         DPs dp1 = new DPs();
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
-        TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
+        TreeNode treeNode = tr1.createBSTree(0,arr1.length-1,arr1);
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
         //System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
-        for (int i = 1; i< 20; i++)
-            System.out.println("ugly " + dp1.nthUglyNumber(i) + " super " + dp1.nthSuperUglyNumber(i,arr));
+        System.out.println(" Level Order " + tr1.levelOrder(treeNode));
+        System.out.println(" Vertical Order " + tr1.verticalTraversalLeftToRight(treeNode));
 
 
 

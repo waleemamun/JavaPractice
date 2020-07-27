@@ -1867,6 +1867,117 @@ public class Tree {
         return closestNode;
     }
 
+    // LeetCode 314 :: Given a binary tree, print it vertically. left to right
+    // The idea is to hash the nodes based on their vertical distance from the root. Instead of actual hashmap
+    // we are using a LIst to use asa Hash, as the keys are basically indexes from (-x to +x), we just need to
+    // translate it to (0 to x) this is done by getting the horizontal min/max using the function minMaxVertical
+    // After we traverse the Tree in Preorder and add node to the Hash (implemented using List index)
+    // We have to maintain a special order on the Level if level of a node on the sam vertcial line is samller it
+    // should appear before higher level, so we use the levelList which is a linkedList of level and based on the
+    // levelList we insert our values accordingly in the correct position in result list
+
+    private int minHz;
+    private int maxHz;
+    private void minMaxVertical(TreeNode node, int dist) {
+        if (node == null)
+            return;
+        if (dist > maxHz)
+            maxHz = dist;
+        if (dist < minHz)
+            minHz = dist;
+        minMaxVertical(node.left, dist -1);
+        minMaxVertical(node.right, dist +1);
+
+    }
+
+    private void verticalTraverseL2R (TreeNode node, List<List<Integer>> resList, int dist, int level, List<List<Integer>> levelList) {
+        if (node == null)
+            return;
+        int idx = dist + Math.abs(minHz);
+        int l = 0;
+        // insert in proper order based on the level, note if they are on the same level the
+        // we just ignore and increase the l so its inserted after. This works for same because
+        // we are using a preorder traversal so left node will be visited before right nodes.
+        // So we increase l and right node goes after left node
+        while (l < levelList.get(idx).size() && level >= levelList.get(idx).get(l))
+            l++;
+        levelList.get(idx).add(l,level);
+        resList.get(idx).add(l,node.val);
+        verticalTraverseL2R(node.left, resList, dist -1, level +1, levelList);
+        verticalTraverseL2R(node.right, resList, dist + 1, level + 1, levelList);
+
+    }
+
+    public List<List<Integer>> verticalTraversalLeftToRight(TreeNode root) {
+        List<List<Integer>> resList = new ArrayList<>();
+        List<List<Integer>> levelList = new ArrayList<>();
+        if (root == null)
+            return resList;
+        minHz = Integer.MAX_VALUE;
+        maxHz = Integer.MIN_VALUE;
+        minMaxVertical(root, 0);
+        int totVertical = maxHz - minHz +1;
+        for (int i =0 ; i < totVertical;i++) {
+            resList.add(new LinkedList<>());
+            levelList.add(new LinkedList<>());
+        }
+        verticalTraverseL2R(root, resList,0, 0, levelList);
+        return resList;
+    }
+
+    // LeetCode :: 987. Vertical Order Traversal of a Binary Tree
+    // The idea is to hash the nodes based on their vertical distance from the root. Instead of actual hashmap
+    // we are using a LIst to use asa Hash, as the keys are basically indexes from (-x to +x), we just need to
+    // translate it to (0 to x) this is done by getting the horizontal min/max using the function minMaxVertical
+    // After we traverse the Tree in Preorder and add node to the Hash (implemented using List index)
+    // We have to maintain a special order on the Level if level of a node on the sam vertcial line is samller it
+    // should appear before higher level, so we use the levelList which is a linkedList of level and based on the
+    // levelList we insert our values accordingly in the correct position in result list
+    // If nodes are same level the samller node appears  before bigger node value
+    private void verticalTraverse (TreeNode node, List<List<Integer>> resList, int dist, int level, List<List<Integer>> levelList ) {
+        if (node == null)
+            return;
+        int idx = dist + Math.abs(minHz);
+        int l = 0;
+        // We have to maintain a special order on the Level if level of a node on the same vertical line is smaller it
+        // should appear before higher level, so we use the levelList which is a linkedList of level insert the node
+        // at current level in appropiate level position
+        while (l < levelList.get(idx).size() && level >= levelList.get(idx).get(l)) {
+            int lc = levelList.get(idx).get(l);
+            // If nodes are same level the samller node appears  before bigger node value
+            if (lc == level && node.val  < resList.get(idx).get(l))
+                break;
+            l++;
+        }
+        // insert the the level & the result in proper position
+        levelList.get(idx).add(l,level);
+        resList.get(idx).add(l,node.val);
+        verticalTraverse(node.left, resList, dist -1 ,level +1, levelList);
+        verticalTraverse(node.right, resList, dist + 1, level +1, levelList);
+
+
+    }
+    public List<List<Integer>> verticalTraversal(TreeNode root) {
+        // we need to use arraylist here for faster access & for using the List as hash
+        List<List<Integer>> resList = new ArrayList<>();
+        List<List<Integer>> levelList = new ArrayList<>();
+        if (root == null)
+            return resList;
+        minHz = Integer.MAX_VALUE;
+        maxHz = Integer.MIN_VALUE;
+        minMaxVertical(root, 0);
+        int totVertical = maxHz - minHz +1;
+        for (int i =0 ; i < totVertical;i++) {
+            // the inner list are linkedlist as we want to insert in the middle so its faster to insert
+            // as it will require less shifting cost as insert O(1);
+            resList.add(new LinkedList<>());
+            levelList.add(new LinkedList<>());
+        }
+        verticalTraverse(root, resList, 0 ,0, levelList);
+        return resList;
+
+    }
+
 
 
 
