@@ -1194,6 +1194,22 @@ public class SolutionsV2 {
         return false;
     }
 
+    // LeetCode :: 401. Binary Watch
+    // Simply generate all the time hour * min & then put hour << 6 | min and count the bits for that
+    // if count bits equals the num we have a our result add it to the list.
+    // Note : Dont try to solve it recursively
+    public List<String> readBinaryWatch(int num) {
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 60; j++) {
+                if (Integer.bitCount((int) (i << 6 | j)) == num)
+                    res.add(String.format("%d:%02d",i,j));
+            }
+        }
+        return res;
+    }
+
+
 
 
 

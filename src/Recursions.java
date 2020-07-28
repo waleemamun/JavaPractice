@@ -1902,7 +1902,44 @@ public class Recursions {
         return false;
     }
 
+    // LeetCode :: 216. Combination Sum III
+    // This idea is the same as combination sum we recurse & backtrack to find the solution
+    // The range of number is 1 to 9 so in the for loop we used startIdx to 9
+    // We used a boolean map to keep track of the used items in this recursion to avoid duplication
+    private void combinationSum3Rec(int k, int target, int sum,
+                                    List<List<Integer>> resList,
+                                    ArrayList<Integer> tempList,
+                                    boolean[] used,
+                                    int startIdx) {
+        if (tempList.size() > k)
+            return;
+        // The list can have only k elements if that is the case & our sum is equal to the given target
+        // then we have our solution
+        if (tempList.size() == k && sum == target) {
+            resList.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = startIdx; i <= 9; i++) {
+            // if this number is not used so far in the recursion we can use it
+            // we back track to find a solution
+            if (!used[i]) {
+                tempList.add(i);
+                used[i] = true;
+                // we increase our sum by i for the next recursion
+                combinationSum3Rec(k, target, sum + i, resList, tempList, used, i+1);
+                used[i] = false;
+                tempList.remove(tempList.size() -1);
+            }
 
+        }
+
+    }
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> resList = new ArrayList<>();
+        boolean []used = new boolean[10];
+        combinationSum3Rec(k, n,0,resList, new ArrayList<>(),used, 1);
+        return resList;
+    }
 
 
 
