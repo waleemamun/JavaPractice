@@ -248,6 +248,13 @@ public class Main {
 
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
+        DataStructProblem d1 = new DataStructProblem();
+        DataStructProblem.WordDictionary wd1 = d1.new WordDictionary();
+        wd1.addWord("bad");
+        wd1.addWord("dad");
+        wd1.addWord("cad");
+        System.out.println("Word found " + wd1.search("..."));
+
 
 
 

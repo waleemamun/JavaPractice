@@ -138,10 +138,12 @@ public class DataStructProblem {
         Character val;                         // node val
         HashMap<Character, TrieNode> children; // Children nodes
         boolean hasWord; // indicates the wors is present in trie
+        TrieNode [] mapChild;
         public TrieNode (Character ch){
             val = ch;
             children = new HashMap<>();
             hasWord = false;
+            mapChild = new TrieNode[26];
         }
 
     }
@@ -149,7 +151,7 @@ public class DataStructProblem {
         TrieNode root;
         /** Initialize your data structure here. */
         public Trie() {
-            root = new TrieNode('.');
+            root = new TrieNode('@');
 
         }
 
@@ -297,6 +299,55 @@ public class DataStructProblem {
         // Sum(ABCD) = Sum(OD)−Sum(OB)−Sum(OC)+Sum(OA)
         public int sumRegion(int row1, int col1, int row2, int col2) {
             return cache[row2+1][col2+1] - cache[row2+1][col1] - cache[row1][col2+1] + cache[row1][col1];
+        }
+    }
+
+    // LeetCode :: 211. Add and Search Word - Data structure design
+
+    class WordDictionary {
+        TrieNode root;
+        /** Initialize your data structure here. */
+        public WordDictionary() {
+            root = new TrieNode('@');
+        }
+
+        /** Adds a word into the data structure. */
+        public void addWord(String word) {
+            int i = 0;
+            TrieNode node = root;
+            while(i < word.length()) {
+                char ch = word.charAt(i);
+                if (node.mapChild[ch -'a'] == null)
+                    node.mapChild[ch -'a'] = new TrieNode(ch);
+                node = node.mapChild[ch -'a'];
+                if(i == word.length() -1)
+                    node.hasWord = true;
+                i++;
+            }
+        }
+
+        /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
+        private boolean search (String word, int index, TrieNode node) {
+            if (index == word.length() || node == null)
+                return false;
+            char ch = word.charAt(index);
+            if (ch != '.') {
+                return node.mapChild[ch-'a'] != null && node.mapChild[ch-'a'].hasWord && index == word.length() -1
+                        || (search(word, index+1, node.mapChild[ch-'a']));
+            } else {
+                for (int i = 0; i < 26; i++) {
+                    if (node.mapChild[i] != null && node.mapChild[i].hasWord && index== word.length() -1
+                            || (search(word, index + 1, node.mapChild[i])))
+                        return true;
+                }
+                return false;
+            }
+
+        }
+
+        public boolean search(String word) {
+            int i = 0;
+            return search(word, 0, root);
         }
     }
 
