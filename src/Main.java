@@ -249,7 +249,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        System.out.println("Res " + sv2.readBinaryWatch(4));
+        System.out.println("Res " + sv2.countNumbersWithUniqueDigits(5));
 
 
 

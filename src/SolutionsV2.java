@@ -1209,6 +1209,27 @@ public class SolutionsV2 {
         return res;
     }
 
+    // LeetCode :: 357. Count Numbers with Unique Digits
+    // The idea is to use combinations. How many ways we can generate unique digits for n -digit
+    // There are 10 possible digits 0-9 and the first number cannot be zero so there are 9 ways to get the first digit
+    // the second digit can be created using 9 * 9 (cause out of 10 digits(0 -9) 1 is use by the first position) so
+    // for the third digit ( 9 *9 * 8) so for k digit f(k) = 9 * 9 * 8 * 7 ... * (10 -k + 1) (for all k > 1).
+    // So f(k) gives the count for k digit (for example if k = 3 it gives count for 101 to 999)
+    // So we can use a dp approach to store all the prev f(i) count and to get the  f(k) we simply add the
+    // prev f(i) to f(k)
+    public int countNumbersWithUniqueDigits(int n) {
+        int []uniqueCounts = new int[n +1];
+        uniqueCounts[0] = 1;
+        for (int i = 1; i <= n; i++) {
+            uniqueCounts[i] = 9;
+            for (int k = i; k > 1; k--) {
+                uniqueCounts[i] *= (10 - k +1);
+            }
+            uniqueCounts[i]+= uniqueCounts[i-1];
+        }
+        return uniqueCounts[n];
+    }
+
 
 
 
