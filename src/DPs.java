@@ -480,18 +480,20 @@ public class DPs {
     // We calc ways[i] given a coin set for example [2,5,10 ....] by combining the ways[i-2], ways[i-5], ways[i-10]
     // and so on ...! Try to look  at this in this way when we reach ways[i-5]
     // we can ways[i-5] + 5 to get to ways[i] similarly for the rest of the coins.
+    // At each amount j we have to consider two parts 1st if we dont have coin[i] so w[i-1][j] 2nd if we can use coin[i]
+    // then we need to see how many ways we can get the last item with this coin[i] that is ways[i][j-coin[i]]. So DP
     // equation DP[i] = DP[i] + DP(i - nums[j]) for all j in set of coins
     // Now we come to our 1st observation comparing it to version 1 in the method 'int change(int amount, int[] coins)'
     // in this file we used a 2D array notice the  2D array is not needed as at each step for in version we use
     // ways[i][j] =  ways[i-1][j] + ways[i][j-coins[i-1]] but we never used anything past i-1 position so we are
-    // interested only in the  last value hence the following equation is good ways[i] on the right of equal
+    // interested only in the  last value hence the following equation is good. ways[i] on the right of equal
     // operator holds the last value :) !!!
     // ways[i]  = ways[i] + ways[j-coins[i]]
     // Now we come to the 2nd observation although this problem looks similar to 'combinationSum4' method in this file
     // this is not the same notice how the inner/outer loop is reversed in these cases. Its because for this problem
     // we first count how may ways for coins 1 - i we can achieve our amount, then we add the coin[i+1] to figure out
-    // the number of ways look a the implementation of version and the reason for using the 2d array before space
-    // optimisation
+    // the number of ways. Look at the implementation of version 1 and the reason for using the 2d array before space
+    // optimisation.
     public int changeV2(int amount, int[] coins) {
         int []ways = new int[amount+1];
         ways[0]=1;
@@ -502,6 +504,104 @@ public class DPs {
         }
         return ways[amount];
     }
+
+    //LeetCode :: 322. Coin Change
+    // All the version have same O(coins * amount)
+    // The coin change problem to find the minimum possible coin combination to reach the amount
+    // The idea is very similar to the above problem here we need to find minumum ways
+    // At every step we have few  options if the value of coin is bigger than the amount we use the previous coins value
+    // for this amount. Otherwise we check if we dont take this coin so ways[i-1][j] is a better choice or if we take
+    // this coin ways[i-1][j - coin[i-1]] + 1 is a better choice (minimum).
+    // So based on that our Dp eqn ways[i][j] = Math.min (ways[i-1][j], ways[i][j-coins[i]) +1)
+    // Here we are using -1 to denote no result so we set the firs row to -1
+    // we set first column to 0 as this would give a value 1 for ways[2][2], ways[4]4], ways[5][5] when coins are 2,4,5
+    // Now lets look at the problem carefully and inspect if we really need a 2D array or not, We use only the value of
+    // ways[i-1] in each iterration so we dont need the whole 2D array and we can use the below space optimised
+    // coinChangeSpaceOptimised version
+    public int coinChange(int[] coins, int amount) {
+        int [][]ways = new int[coins.length +1][amount+1];
+
+        for (int i = 0; i< ways[0].length; i++)
+            ways[0][i] = -1;
+        for (int i = 0; i<ways.length; i++ )
+            ways[i][0] = 0;
+
+        for (int i = 1; i < ways.length; i++) {
+            for(int j = 1; j < ways[0].length; j++) {
+                if (coins[i-1] > j)
+                    ways[i][j] = ways[i-1][j];
+                else {
+                    int x = ways[i][j-coins[i-1]];
+                    int y = ways[i-1][j];
+
+                    if (x == -1 && y == -1)
+                        ways[i][j] = -1;
+                    else if (y == -1)
+                        ways[i][j] =  x+1;
+                    else if (x == -1)
+                        ways[i][j] = y;
+                    else
+                        ways[i][j] = Math.min(x+1,y);
+                }
+            }
+        }
+        System.out.println(Arrays.deepToString(ways));
+        return ways[coins.length][amount];
+    }
+
+    // same idea as above we are using a space optimised version here so reducing the 2D array to 1D array
+    public int coinChangeSpaceOptimised(int[] coins, int amount) {
+        int []ways = new int[amount+1];
+        Arrays.fill(ways, -1);
+        // set the 0th item to zero so we can use it for each coin for example a coin 2 will give output 1 for
+        // amount 2 similarly coin 4 will give 1 for amount 4 and so on ....in  the loop
+        ways[0] = 0;
+
+        for (int cn : coins) {
+            for (int i = 1; i<ways.length; i++) {
+                if (cn <= i) {
+                    int x = ways[i -cn];
+                    int y = ways[i];
+                    if (x == -1 && y == -1)
+                        ways[i] = -1;
+                    else if (y == -1)
+                        ways[i] = x + 1;
+                    else if (x == -1)
+                        ways[i] = y;
+                    else
+                        ways[i] = Math.min(x+1,y);
+                }
+            }
+        }
+
+        return ways[amount];
+    }
+
+    // Here we do another further optimisation by using a Max value to set the dp array,
+    // we feel the dp array with max val which helps to get over multiple if & else condition
+    // in the previous cases. So its be come less clumssy.
+    // Note when dealing with mins in an array its often easier to set the whole array to max
+    public int coinChangeSpaceOptimisedUsingMax(int[] coins, int amount) {
+        int []ways = new int[amount+1];
+        int max = amount  +1;
+        // we are using max to fill the whole array this max the cal easy as we are interested in MIN
+        Arrays.fill(ways, max);
+        // set the 0th item to zero so we can use it for each coin for example a coin 2 will give output 1 for
+        // amount 2 similarly coin 4 will give 1 for amount 4 and so on ....in  the loop
+        ways[0] = 0;
+
+        for (int cn : coins) {
+            for (int i = 1; i<ways.length; i++) {
+                if (cn <= i) {
+                    ways[i] = Math.min(ways[i], ways[i - cn] +1);
+                }
+            }
+        }
+
+        return ways[amount] > amount? -1 : ways[amount];
+    }
+
+
 
     // The DP eqn for NCK = n-1Ck-1 + n-1Ck we use DP to get nck so that overflow does not happen
     private int nckMemoisation(int n, int k, int dp[][]) {

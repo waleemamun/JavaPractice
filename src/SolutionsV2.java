@@ -1230,6 +1230,76 @@ public class SolutionsV2 {
         return uniqueCounts[n];
     }
 
+    // LeetCode :: 324. Wiggle Sort II
+    // This is a very interesting problem the problem becomes difficult due to the requirement of O(1) space.
+    // First we need to use quickSelect to partition the array into two equal half left half contains bigger & right
+    // half contains smaller items, without the o(1) sapce requirement we could have picked one item from left half and
+    // one item from right half and merge it to another array which is easy.
+    // Now for the O(1) space require ment we have to use like a virtual addressing and the dutch national
+    // flag pivoting using the median
+    private int partition(int [] nums, int start, int end) {
+        int pivotVal = nums[end];
+        int i = start;
+        int j = start;
+        while (i< end) {
+            if (nums[i] > pivotVal) {
+                int tmp = nums[j];
+                nums[j] = nums[i];
+                nums[i] = tmp;
+                j++;
+            }
+            i++;
+        }
+        int tmp = nums[j];
+        nums[j] = nums[i];
+        nums[i] = tmp;
+        return j;
+
+    }
+
+    private void quickselectKlargest(int[] nums, int k, int start, int end) {
+        int pivot = partition(nums, start, end);
+        if (pivot == k)
+            return;
+        else if (pivot < k)
+            quickselectKlargest(nums, k, pivot + 1, end);
+        else
+            quickselectKlargest(nums, k , start, pivot -1);
+    }
+    private int convertIndex(int i, int n) {
+        return (2*i + 1) % (n | 1);
+    }
+    private void swapArrIdx (int []nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
+    }
+    public void wiggleSort(int[] nums) {
+        int mid = (nums.length-1)/2 ;
+        quickselectKlargest(nums, mid, 0, nums.length -1);
+        int n = nums.length;
+
+        int left = 0, i = 0, right = n - 1;
+        int median = nums[mid];
+        // dutch national flag pivoting based on the median
+        //   (1) elements smaller than the 'median' are put into the last even slots
+        //   (2) elements larger than the 'median' are put into the first odd slots
+        //   (3) the medians are put into the remaining slots.
+        while (i <= right) {
+            if (nums[convertIndex(i,n)] > median) {
+                swapArrIdx(nums, convertIndex(left++,n), convertIndex(i++,n));
+            }
+            else if (nums[convertIndex(i,n)] < median) {
+                swapArrIdx(nums, convertIndex(right--,n), convertIndex(i,n));
+            }
+            else {
+                i++;
+            }
+        }
+        System.out.println(Arrays.toString(nums));
+
+    }
+
 
 
 
