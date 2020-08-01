@@ -816,6 +816,33 @@ public class LinkList {
 
     }
 
+    // LeetCode :: 328. Odd Even Linked List
+    public LinkList oddEvenList(LinkList head) {
+        if (head == null)
+            return head;
+        LinkList oddHead = new LinkList();
+        LinkList evenHead = new LinkList();
+        LinkList odd = oddHead;
+        LinkList even = evenHead;
+        LinkList curr = head;
+        boolean isOdd = true;
+        while (curr != null) {
+            if (isOdd) {
+                odd.next = curr;
+                odd = curr;
+            } else {
+                even.next = curr;
+                even = curr;
+            }
+            isOdd = !isOdd;
+            curr = curr.next;
+        }
+        even.next = null;
+        odd.next = evenHead.next;
+        return head;
+    }
+
+
 
 
 

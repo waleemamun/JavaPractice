@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {5,10,-5,-10,15,30,-30};
+        int [] arr =  {1,2,3,4,5,6,7};
         int [] arr1 = {1,2,3,4,5,6,7,8,9};
 
         int [][] arr2d = {
@@ -214,7 +214,7 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "00000000000";
+        String str1 = "9,3,4,#,#,1,#,#,2,#,6,#,#";
         String str2 = "900";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
@@ -231,6 +231,7 @@ public class Main {
         //System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
         //System.out.println(" Level Order " + tr1.levelOrder(treeNode));
         //System.out.println(" Vertical Order " + tr1.verticalTraversalLeftToRight(treeNode));
+        System.out.println(" valid " + tr1.isValidSerialization(str1));
 
 
 
@@ -249,7 +250,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        System.out.println("Len = " + sv2.maxSubArrayLen(arr, 15));
+
 
 
 

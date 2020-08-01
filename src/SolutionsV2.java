@@ -820,7 +820,7 @@ public class SolutionsV2 {
                 maxSize = Math.max(maxSize, i - map.get(currSum -k));
             }
             // we use putIfAbsent cause we only update if the runningSum we observed is a new runningSum
-            // if we alread have the same runningSum we want to use the oldest idx cause our goal is to
+            // if we already have the same runningSum we want to use the oldest idx cause our goal is to
             // find the max size subarray
             map.putIfAbsent(currSum,i);
         }

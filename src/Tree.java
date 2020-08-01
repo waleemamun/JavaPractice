@@ -1562,22 +1562,25 @@ public class Tree {
     }
 
     private int rootIdx = 0;
-
+    // The idea is to create the tree in preorder while maintaining a range boundary
+    // we can start with a root node and (-INF to +INF) boundary and as we move lef or right we shrink the boundary
     private TreeNode buildBSTFromPreOrderRec(int []preorder, int lower , int upper) {
         if(rootIdx >= preorder.length)
             return null;
         int rootVal = preorder[rootIdx];
+        // we should not process this entry as child of the current recursion as it violates the boundary
+        // it also means value belongs to some node in the right
         if (rootVal < lower || rootVal > upper)
             return null;
         // now increase the pointer to preorder sequence, we should not increase it earlier as
-        // we dont want to process any value beyond the loewr/upper bound
+        // we dont want to process any value beyond the lower/upper bound
         rootIdx++;
         TreeNode root = new TreeNode(rootVal);
         root.left = buildBSTFromPreOrderRec(preorder, lower, rootVal);
         root.right = buildBSTFromPreOrderRec(preorder, rootVal,upper);
         return root;
     }
-    // Adann Aziz BST
+    // Adnan Aziz BST
     // build the BST tree from PreOrder Traversal
     public TreeNode buildBSTFromPreOrder( int []preorder){
         return buildBSTFromPreOrderRec(preorder, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -1715,7 +1718,7 @@ public class Tree {
         return rootVal;
     }
 
-    // LeetCode :: 297. Serialize and Deserialize Binary Tree (not submitted)
+    // LeetCode :: 297. Serialize and Deserialize Binary Tree
     // PreOrder traversal of the tree node and add X for null to ecnode the string
     // Encodes a tree to a single string.
     private void serializeRec(TreeNode root, StringBuilder sb) {
@@ -1976,6 +1979,57 @@ public class Tree {
         verticalTraverse(root, resList, 0 ,0, levelList);
         return resList;
 
+    }
+
+    // LeetCode :: 331. Verify Preorder Serialization of a Binary Tree
+    // The idea is to do a preorder scanning of the preorder traversal so we start with the first entry in preorder
+    // and recursively called the function twice to process left & right sub trees without actually creating the tree
+    // when we encounter 'X'  we dont need to proceed any more with recursion. The non-leaf entries will call the
+    // recursion enough number of times.
+    int preOrIdx = 0;
+    private boolean isValidSerializationRec (List<String> nodeList) {
+        // if in any recusion we exceed the size it means  this a an invalid preoder cause the recursion should
+        // end with a 'X' entries so if we reach here we know our preorder representation is invalid
+        if(preOrIdx >= nodeList.size()) {
+            return false;
+        }
+        // found x just increase preorder index we dont need to recurse any more, t
+        if (nodeList.get(preOrIdx).equals("#")){
+            preOrIdx++;
+            return true;
+        }
+        preOrIdx++;
+        return isValidSerializationRec(nodeList) &&
+                    isValidSerializationRec(nodeList);
+
+    }
+    public boolean isValidSerialization(String preorder) {
+        List<String> nodeList = new ArrayList<>();
+        nodeList.addAll(Arrays.asList(preorder.split(",")));
+        // we need to also make sure we covered the whole preoder sequence if the recusion ended
+        // before traversing the whole sequence its not valid the condition below checks this
+        return isValidSerializationRec(nodeList) && preOrIdx == nodeList.size();
+    }
+    // This is a really samrt way to solve this. It uses the in & out degrees of the nodes in the tree.
+    // if we specify null node as valid nodes then total difference of out & in degree would be zero for
+    // a valid tree. The null node has zero out degree & 1 in degree all other nodes (except root) has
+    // 1 in & 2 out degree. So we scan the preoder fro each node we decrease diff by 1 for indegree &
+    // if node is not X then we increase out degree by 2 at the end fora valid tree we have diff == 0
+    // if any time during our scan diff is negative that violates the condition for a valid preorder
+    // sequence
+    public boolean isValidSerializationV2(String preorder){
+        String []nodes = preorder.split(",");
+        // we start diff = 1
+        int diff = 1;
+        for (String n: nodes) {
+            diff--;
+            // diff is negative so the preorder is invalid
+            if (diff < 0)
+                return false;
+            if(!n.equals("X"))
+                diff+=2;
+        }
+        return diff == 0;
     }
 
 
