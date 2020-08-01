@@ -801,7 +801,14 @@ public class SolutionsV2 {
     }
 
     // LeetCode :: 325 Maximum Size Subarray Sum Equals k
-
+    // The idea is to use same idea as the one above. We calc a running sum for all the arr index.
+    // for any j>i the sum between j & i  can be calc using the running  sums[j-i] = sum[j] - sum[i-1]
+    // We store the running sum in a map key and value is the index
+    // if the running sum is not present. We have to check if the entry already
+    // exists in the map or not if it exist we dont need to update the index  as we want to keep using the oldest index
+    // Note we have to consider the i-1 postions running sum not i postion. So the subarray size can
+    // be calculated  using j- (i-1). Hence we start with map entry (0,-1)
+    // Consider the example of {5,10,-5,-10,15,30,-30} the result is 7 = (6- (-1))
     public int maxSubArrayLen(int[] nums, int k) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int currSum = 0;
@@ -812,6 +819,9 @@ public class SolutionsV2 {
             if (map.containsKey(currSum -k)) {
                 maxSize = Math.max(maxSize, i - map.get(currSum -k));
             }
+            // we use putIfAbsent cause we only update if the runningSum we observed is a new runningSum
+            // if we alread have the same runningSum we want to use the oldest idx cause our goal is to
+            // find the max size subarray
             map.putIfAbsent(currSum,i);
         }
         return maxSize;
