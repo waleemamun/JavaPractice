@@ -800,6 +800,23 @@ public class SolutionsV2 {
         return result;
     }
 
+    // LeetCode :: 325 Maximum Size Subarray Sum Equals k
+
+    public int maxSubArrayLen(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int currSum = 0;
+        map.put(0,-1);
+        int maxSize = -1;
+        for (int i = 0; i<nums.length; i++) {
+            currSum+= nums[i];
+            if (map.containsKey(currSum -k)) {
+                maxSize = Math.max(maxSize, i - map.get(currSum -k));
+            }
+            map.putIfAbsent(currSum,i);
+        }
+        return maxSize;
+    }
+
     // LeetCode :: 283. Move Zeroes
     public void moveZeroes(int[] nums) {
         int j =0;

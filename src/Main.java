@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {5,3,6,2,1,7,4,8, 9};
+        int [] arr =  {5,10,-5,-10,15,30,-30};
         int [] arr1 = {1,2,3,4,5,6,7,8,9};
 
         int [][] arr2d = {
@@ -249,7 +249,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        sv2.wiggleSort(arr);
+        System.out.println("Len = " + sv2.maxSubArrayLen(arr, 15));
 
 
 
