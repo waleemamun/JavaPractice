@@ -279,5 +279,41 @@ public class GraphNode {
 
     }
 
+    // LeetCode :: 332. Reconstruct Itinerary
+    // This proble is interesting it actually finds the Eulerian Trail in a graph. Note this algo assumes the given
+    // graph consist a valid Eulerian Trail. To find a Eulerian Trail we can use a modified DFS. IN this case when
+    // we visit a node we dont mark them grey /black rather we delete the that we use to visit the graph. So we start
+    // with a src node and start traversing the graph and keep removing visited edges. In this problem the graph is
+    // directed so we need to move just one direction other for undirected need to remove both direction. We keep
+    // visiting an removing edges until all the edges of a node is visited. When all the edges a visited we add this
+    // node to our path. We need to add the node in path in stack order cause that's the way the will be visited
+    // (think about the depth of recursion). This way of visit will give us an Eulerian Path.
+    // Note we used a priority queue/ Min Heap for adjlist because the problem definition ask us to pick the
+    // solution/node in Lexical order so when exploring edges we pick the edge that leads to lexically smaller node
+    private void dfsEuler (HashMap<String, PriorityQueue<String>> graph,
+                           String node, LinkedList<String> eulerPath) {
+        PriorityQueue<String> adjList = graph.get(node);
+        // we need to check null for adjList cause there could exist a node with no out degree, so no adj
+        while (adjList!= null && !adjList.isEmpty()) {
+            dfsEuler(graph, adjList.poll(), eulerPath);
+        }
+        // All the edges are visited lets add this node to path in stack order
+        eulerPath.addFirst(node);
+    }
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        HashMap<String, PriorityQueue<String>> graph = new HashMap<>();
+        LinkedList<String> eulerPath = new LinkedList<>();
+        // Create the directed graph we use a Min Heap for adjList as the
+        // problem requires us to visit node in Lexical order
+        for (List<String> tk : tickets) {
+            graph.putIfAbsent(tk.get(0) , new PriorityQueue<String>());
+            graph.get(tk.get(0)).add(tk.get(1));
+        }
+        // The src is given as JFK, Visit the graph using the modified dfs to find the Eulerian Path
+        dfsEuler(graph, "JFK", eulerPath);
+        return eulerPath;
+    }
+
 
 }
