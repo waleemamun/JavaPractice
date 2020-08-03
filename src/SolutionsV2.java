@@ -1054,6 +1054,7 @@ public class SolutionsV2 {
     }
 
     // LeetCode :: 239. Sliding Window Maximum (Hard)
+    // IN this problem we use the idea of a monotonic queue
     // This solutions is amortized O(n) as elements are removed and added to the queue only once
     // We build on the idea that if the newest value is better than the older value in queue we can
     // discard the older values, as we slide to the right  the older value becomes less important.

@@ -845,6 +845,88 @@ public class DPs {
         return maxLen;
     }
 
+    // This is a better solution to find the longest increasing subsequence its O(nlgn) compared to the O(n^2)
+    // solution above. The idea is little complicated the dp array does not store but the len that we can fill up in
+    // the dp array is actually the result. The dp array is storing the longest seq so far, The dp array is sorted so
+    // we can insert the next item in lgn time. Consider an example where the input is 3, 4, 5, 2, 7 so dp array becomes
+    // [3 4 5] after idx 2 but when we get to idx 3, the value 2 does not contribute to the length of longest seq so
+    // we dont put it at the end of the dp array rather in its proper position which is index 0 so dp array [2, 4, 5]
+    // Next if we get a value greater than 5 the say 7 the dp array length increases as the sub seq len increases
+    // so dp array will be [2 ,4 ,5, 7]
+    public int lengthOfLISV2(int []nums) {
+        int []dp = new int[nums.length];
+        int size = 0;
+        for (int x : nums) {
+            int low = 0;
+            int high = size;
+            while (low < high) {
+                int mid = (low + high)/2;
+                if (dp[mid] < x)
+                    low = mid +1;
+                else
+                    high = mid;
+            }
+            dp[low] = x;
+            if (low == size)
+                size++;
+        }
+        return size;
+    }
+
+    // LeetCode :: 334. Increasing Triplet Subsequence
+    // The idea here is the same as the longest increasing sequence problem. The approach we use is the same as O(nlgn)
+    // But here the dp array size is fixed its 3 so the lgn search becomes O(1) and space requirement is also O(1) so
+    // this is O(n) time  O(1) space solution for special case.
+    // We put the smaller item in dp [0] & dp [1] as soon as we get an item which is greater than d[1] we have our
+    // solution if no item is greater than dp[1] then we return false
+    // Smaller items are put in dp[0] 2nd samller items are in dp[1] anytime we get something smaller
+    // than dp [0] or dp[1] we update them accordingly
+    public boolean increasingTriplet(int[] nums) {
+        int []dp = new int [3];
+        int size = 0;
+        for (int x : nums) {
+            int low = 0;
+            int high = size;
+            while (low < high) {
+                int mid = (low + high)/2;
+                if (dp[mid] < x)
+                    low = mid +1;
+                else
+                    high = mid;
+            }
+            dp[low] = x;
+            if (low == size)
+                size++;
+            if (size == 3) return true;
+
+        }
+        return false;
+
+    }
+
+    // Based on the idea above we further simplyfy this problem as there is only three numbers to consider
+    // if we just keep track of msaller and 2nd smaller using the same idea above and as soon as we get the
+    // item that is bigger than 2nd smaller we have our solution, if no such item then we return false
+    // This is also O(N) time  & O(1) space but performs little better as we have less checks & mem usage
+    public boolean increasingTripletV2(int[] nums) {
+        int smallest = Integer.MAX_VALUE;
+        int secSmalllest = Integer.MAX_VALUE;
+
+        for (int x : nums) {
+            if (x < smallest) {
+                smallest = x;
+            } else if (x > smallest && x <= secSmalllest){
+                secSmalllest = x;
+            } else {
+                return true;
+            }
+
+        }
+        return false;
+
+    }
+
+
     // LeetCode :: 309. Best Time to Buy and Sell Stock with Cooldown (not submitted)
     // There are three state rest, buy, sell. we start with a rest state from rest we can only go to buy
     // At buy the next step is to rest or sell. From sell we need to go to rest directly
