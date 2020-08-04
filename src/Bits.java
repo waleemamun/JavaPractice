@@ -412,4 +412,22 @@ public class Bits {
         return n;
     }
 
+    // LeetCode :: 338. Counting Bits
+    // The idea is to use a combination of DP & bit pattern to solve the problem
+    // Try to write down the bitcount for 1st 15 numbers and check the pattern and see if anything can be built based
+    // on the previous values. The pattern for the first 15 is 0 1 1 2  1 2 2 3  1 2 2 3  2 3 3 4
+    // based on the pattern the DP eqn is dp[i] = dp[i-offset] + 1
+    public int[] countBits(int num) {
+        int []bitCount = new int [num+1];
+        int offset = 1;
+        bitCount[0] = 0;
+        for (int i = 1; i <= num; i++) {
+            if (offset * 2 == i) {
+                offset *= 2;
+            }
+            bitCount[i] = bitCount[i-offset] + 1;
+        }
+        return bitCount;
+    }
+
 }

@@ -244,6 +244,7 @@ public class DataStructProblem {
     }
 
     // LeetCode :: 304. Range Sum Query 2D - Immutable
+    // The idea is to think about the how do get a specific rectangle given all the rectangle from top,left
     class NumMatrix {
         int cache[][] = null;
 
@@ -271,7 +272,7 @@ public class DataStructProblem {
 
         }
 
-        // create the case table building on the same idea of getting a bounded region using region starting from zero
+        // create the cache table building on the same idea of getting a bounded region using region starting from zero
         // Sum(ABCD) =  Sum(OB)+Sum(OC) + matrix[i][j] - Sum(OA)
         // Think how you can get you region by subtracting rectangles from the  bottom right rectangle
         public NumMatrix (int [][] matrix) {
@@ -287,7 +288,9 @@ public class DataStructProblem {
             }
 
         }
-
+        // This uses the more complicated version look at the constructor public NumMatrix(int[][] matrix, boolean skip)
+        // lets not do this as it just makes the cacl complicated I think I was using top right corner here
+        // The better version is below
         public int sumRegion2(int row1, int col1, int row2, int col2) {
             int x = cache[row2][col2];
             int y = (col1 == 0 ? 0 : cache[row2][col1-1]);
@@ -303,7 +306,10 @@ public class DataStructProblem {
     }
 
     // LeetCode :: 211. Add and Search Word - Data structure design
-
+    // The idea is to use Trie to solve this problem. The add is simple, its just regular try implementation.
+    // The search requires to match '.' as any so requires special handling for example b.d will match bad in trie
+    // so for search whenever we get '.' we need to look at all the children of the current node which is equivalent
+    // to skipping '.' so we visit all the children's subtree for the result
     class WordDictionary {
         TrieNode root;
         /** Initialize your data structure here. */
@@ -335,6 +341,7 @@ public class DataStructProblem {
                 return node.mapChild[ch-'a'] != null && node.mapChild[ch-'a'].hasWord && index == word.length() -1
                         || (search(word, index+1, node.mapChild[ch-'a']));
             } else {
+                // found a '.' check all the valid children sub tree for the result
                 for (int i = 0; i < 26; i++) {
                     if (node.mapChild[i] != null && node.mapChild[i].hasWord && index== word.length() -1
                             || (search(word, index + 1, node.mapChild[i])))
@@ -348,6 +355,79 @@ public class DataStructProblem {
         public boolean search(String word) {
             int i = 0;
             return search(word, 0, root);
+        }
+    }
+
+
+    // LeetCode :: 341. Flatten Nested List Iterator
+    // The idea is to use a stack of iterator for the nested Iterators.
+    // For example if NestedInteger is [1, [4, [6, [7]]], 8] then for each inner list we need an iterator so we keep
+    // this iterators at each level in a stack We start with the top level iterator in the stack
+    /**
+     * // This is the interface that allows for creating nested lists.
+     * // You should not implement it, or speculate about its implementation
+     * This is just to know what the NestedInteger interface will look like
+     * */
+     public interface NestedInteger {
+
+          // @return true if this NestedInteger holds a single integer, rather than a nested list.
+          public boolean isInteger();
+
+          // @return the single integer that this NestedInteger holds, if it holds a single integer
+          // Return null if this NestedInteger holds a nested list
+          public Integer getInteger();
+
+          // @return the nested list that this NestedInteger holds, if it holds a nested list
+          // Return null if this NestedInteger holds a single integer
+          public List<NestedInteger> getList();
+     }
+    public class NestedIterator implements Iterator<Integer> {
+        Iterator<NestedInteger> itr;
+        LinkedList <Iterator<NestedInteger>> stack = new LinkedList<>();
+        NestedInteger nint;
+
+        public NestedIterator(List<NestedInteger> nestedList) {
+            itr = nestedList.iterator();
+            // push the top level iterator in stack
+            stack.push(itr);
+        }
+
+        @Override
+        // All the effort for finding the next item is actually done in hasNext and the result
+        // Integer is already stored in nint so we just return the integer
+        public Integer next() {
+            return nint.getInteger();
+        }
+
+        @Override
+        // This function does all the work it checks if the next item exist if yes grab the first item and
+        // put it in nint. We peek at the top of the stack and start readin item using that iterator.
+        // if the top iterator is empty we peek the next iterator from the stack. If the top iterator is pointing to
+        // nonempty list we just push another iterator for the non empty list  to the stack. We keep doing this until
+        // we get to list which has integer item, if no such item is found and we exhaust our stack of iterator
+        // then no item exist in the nested list and we return false
+        public boolean hasNext() {
+            // keep lookling  for nested list iterator in stack
+            while(!stack.isEmpty()){
+                // the top item point to valid entry
+                if(stack.peek().hasNext()){
+                    Iterator<NestedInteger> tempItr = stack.peek();
+                    nint = tempItr.next();
+                    // the item is a single int store it in our nint so the call to 'next' can return this
+                    if (nint.isInteger())
+                        return true;
+                    // we got another nested non empty list lets get an iterator for this and push it to the stack for
+                    // next processing
+                    if(nint.getList().size() != 0) {
+                        stack.push(nint.getList().iterator());
+                    }
+
+                } else {
+                    // no valid entry pop and look for next nested list iterator
+                    stack.pop();
+                }
+            }
+            return false;
         }
     }
 

@@ -250,6 +250,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
+        ScratchPad.linleListPractice();
 
 
 

@@ -33,6 +33,14 @@ public class ScratchPad {
         stack.addFirst(3);
         stack.addFirst(2);
         stack.addFirst(1);
+        System.out.println("bef " + stack.size());
+        Iterator<Integer> sitr = stack.iterator();
+        while(sitr.hasNext()) {
+            System.out.println(sitr.next());
+        }
+        System.out.println("aft " + stack.size());
+        LinkedList <Iterator> stackx = new LinkedList<>();
+
         //pop
         int x = stack.poll();
         System.out.println("pop " + x);
