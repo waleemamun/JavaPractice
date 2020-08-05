@@ -1336,6 +1336,35 @@ public class DPs {
 
     }
 
+    // LeetCode :: 343. Integer Break
+    // The idea is to represent every number as a factor of 2s and/or 3s. For example 7 is (2+2+3) so now (2*2*3) gives
+    // 12 which the largest product from its factors. This factors of 2 & 3 will be greater than any other combination
+    // as we can get that combination using 2s & 3s. So any x+y =z we can make x  or y using factors of 2 hence the
+    // result will be valid using factors of only 2 & 3. We use a dp approach to generate all the products upto n
+    // to get the max product of a integer break we need to look ack at i-2 and i-3 as we are only using 2 & 3 as factors
+    // so the max product will be dp[i] = max(dp[i-2]*2, dp[i-3]*3);
+
+    public int integerBreak(int n) {
+        // we need to handle some special case for 1 to 3
+        if (n <=2)
+            return 1;
+        if (n==3)
+            return 2;
+        // lets handle another special case the result for 2 is 1 and for 3 is 2
+        // but to generate the dp table we need to set dp[2] to 2 
+        int [] dp = new int[n+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+
+        for (int i = 3; i <= n; i++){
+            dp[i] = Math.max(dp[i-2]*2, dp[i-3] * 3);
+        }
+
+        return dp[n];
+    }
+
+
 
 
 

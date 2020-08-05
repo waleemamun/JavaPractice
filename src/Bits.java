@@ -430,4 +430,10 @@ public class Bits {
         return bitCount;
     }
 
+    // Leetcode :: 342. Power of Four
+    // The idea is to first check if its power of two & and the odd bit is the only bit set
+    public boolean isPowerOfFour(int num) {
+        return (num &(num - 1)) == 0 && (num & 0x55555555) !=0;
+    }
+
 }
