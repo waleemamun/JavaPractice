@@ -1351,7 +1351,7 @@ public class DPs {
         if (n==3)
             return 2;
         // lets handle another special case the result for 2 is 1 and for 3 is 2
-        // but to generate the dp table we need to set dp[2] to 2 
+        // but to generate the dp table we need to set dp[2] to 2
         int [] dp = new int[n+1];
         dp[0] = 1;
         dp[1] = 1;
@@ -1364,6 +1364,28 @@ public class DPs {
         return dp[n];
     }
 
+    // space optimised version of the above prolem
+    public int integerBreak2(int n) {
+        // we need to handle some special case for 1 to 3
+        if (n <=2)
+            return 1;
+        if (n==3)
+            return 2;
+        // lets handle another special case the result for 2 is 1 and for 3 is 2
+        // but to generate the dp table we need to set dp[2] to 2
+        int ls3 = 1;
+        int ls2 = 1;
+        int ls1 = 2;
+
+        for (int i = 3; i <= n; i++){
+            int tmp = ls1;
+            ls1 = Math.max(ls2*2, ls3*3);
+            int tmpx = ls2;
+            ls2 = tmp;
+            ls3 =tmpx;
+        }
+        return ls1;
+    }
 
 
 

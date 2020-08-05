@@ -251,7 +251,7 @@ public class Main {
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
 
-        System.out.println(dp1.integerBreak(3));
+        System.out.println(dp1.integerBreak2(10));
 
 
 
