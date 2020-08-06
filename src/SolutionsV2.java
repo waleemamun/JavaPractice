@@ -1,3 +1,5 @@
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.util.*;
 
 public class SolutionsV2 {
@@ -1326,6 +1328,184 @@ public class SolutionsV2 {
         }
         System.out.println(Arrays.toString(nums));
 
+    }
+
+    private boolean isVowel (char ch) {
+
+        switch (ch) {
+            case 'a':
+            case 'e':
+            case 'i':
+            case 'o':
+            case 'u':
+            case 'A':
+            case 'E':
+            case 'I':
+            case 'O':
+            case 'U':
+                return true;
+
+        }
+        return false;
+
+    }
+    // LeetCode :: 345. Reverse Vowels of a String
+    public String reverseVowels(String s) {
+        char []str = s.toCharArray();
+        int l = 0;
+        int r = s.length() -1;
+        while (l < r) {
+            if(!isVowel(str[l])) {
+                l++;
+            } else if (!isVowel(str[r])){
+                r--;
+            } else {
+                char ch = str[l];
+                str[l] = str[r];
+                str[r] = ch;
+                l++;
+                r--;
+            }
+        }
+        return new String(str);
+    }
+
+    // LeetCode :: 347. Top K Frequent Elements
+    // Check all the versions
+    // version2: quick select on the frequency
+    // version3: uses a minHeap of size K so the run time is O(nlogK) which gives better result than version2 may be
+    // due to the input
+    class IntPair {
+        Integer key;
+        Integer val;
+        public IntPair(int x, int y){
+            key = x;
+            val = y;
+        }
+    }
+
+    public int partitionList( ArrayList<IntPair> alist, int start, int end) {
+        int randIdx = (int) (Math.random() * ((end - start +1) + start));
+        IntPair pivotVal = alist.get(randIdx);
+        int i = start;
+        int j = start;
+        while (i < end) {
+            if(alist.get(i).val > pivotVal.val) {
+                Collections.swap(alist, j, i);
+                j++;
+            }
+            i++;
+        }
+        Collections.swap(alist,j,randIdx);
+        return j;
+    }
+
+    public void qSelectArrListTopK(ArrayList <IntPair> aList, int st, int end, int k){
+        int pivotIdx = partitionList(aList, st, end);
+        if (pivotIdx < k)
+            qSelectArrListTopK(aList, pivotIdx + 1, end, k);
+        else if (pivotIdx > k)
+            qSelectArrListTopK(aList, st, pivotIdx - 1, k);
+
+    }
+
+    // The idea is to use quickSelect  on the frequency of the elements. Using quick select we move k largest items
+    // on the left and return the result. This would be average case O(n) but worse is O(n^2)
+    // The slow runtime is probably due to htting the worst case.
+    // Another option is use a Heap of size K instead of q select we would need minheap
+    public int[] topKFrequent2(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        ArrayList<IntPair> mapValList = new ArrayList<>();
+        Iterator maptItr = map.entrySet().iterator();
+        while (maptItr.hasNext()) {
+            Map.Entry<Integer, Integer> entry = (Map.Entry)maptItr.next();
+            mapValList.add(new IntPair(entry.getKey(),entry.getValue()));
+        }
+        qSelectArrListTopK(mapValList, 0, mapValList.size() -1, k-1);
+        int [] res = new int[k];
+        for (int i = 0; i < k; i++) {
+            res[i] = mapValList.get(i).key;
+        }
+
+        return res;
+    }
+
+    public int[] topKFrequent3(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+
+        Iterator maptItr = map.entrySet().iterator();
+        PriorityQueue<IntPair> minHeap = new PriorityQueue<>(k, new Comparator<IntPair>() {
+            @Override
+            public int compare(IntPair o1, IntPair o2) {
+                return o1.val - o2.val;
+            }
+        });
+
+        while (maptItr.hasNext()) {
+            Map.Entry<Integer, Integer> entry = (Map.Entry)maptItr.next();
+            minHeap.add(new IntPair(entry.getKey(), entry.getValue()));
+            if (minHeap.size() > k) {
+                minHeap.remove();
+            }
+        }
+
+        int [] res = new int[k];
+        int i =0;
+        while (!minHeap.isEmpty())
+            res[i++] = minHeap.remove().key;
+        return res;
+    }
+    // The fastest version
+    // The problem describes the following condition
+    // "It's guaranteed that the answer is unique, in other words the set of the top k frequent
+    // elements is unique."
+    // we can make use of that and use a bucket sort to solve this. Buckets are of length 1 so we would need n buckets.
+    // AS there is always a unique solution if the k is split between mupltple buckets it will not cause any issue.
+    // For example if k = 4 and then if we have two items with freq x  then the next freq y cannot be more than 2 as
+    // the results are unique
+    public int[] topKFrequent(int[] nums, int k) {
+        // frequency bucket
+        List<Integer> [] buckets = new List[nums.length +1];
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        // map the frequencies
+        for (int n: nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        // put the frequencies in proper bucket, for each frequency we have one bucket
+        for (int key : map.keySet()) {
+            int frequency = map.get(key);
+            if(buckets[frequency] == null)
+                buckets[frequency] = new ArrayList<Integer>();
+            buckets[frequency].add(key);
+
+        }
+        // scan the bucket from bottom and get the top k items, the bucket stores the actual item
+        ArrayList<Integer> result = new ArrayList<>();
+        int kx = k;
+        for (int i = nums.length; k > 0 && i >= 0; i--) {
+            if (buckets[i] != null) {
+                result.addAll(buckets[i]);
+                k-= buckets[i].size();
+            }
+
+        }
+
+        // The following is done to just convert arraylist of integer to int array
+        int [] res = new int [kx];
+        int j =0;
+        for (int r : result)
+            res[j++] = r;
+        return res;
     }
 
 

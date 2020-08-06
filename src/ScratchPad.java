@@ -252,34 +252,49 @@ public class ScratchPad {
             calendarSet.add(e);
         }
 
+        class MyPair {
+            Integer a;
+            Integer b;
+        }
         System.out.println(" cal Set " + Arrays.deepToString(calendarSet.toArray()));
+        HashMap<Integer, Integer> mapInt = new HashMap<>();
+        int [] arrx = {1,1,1,1,1,2,2,2,2,3,4,5,6};
+        for (int a : arrx) {
+            mapInt.put(a, mapInt.getOrDefault(a,0) + 1);
+        }
+        ArrayList<Integer> mapValList = new ArrayList<>(mapInt.keySet());
+        System.out.println("Map  to List " + mapValList);
+
+
+
+
 
     }
 
 
-        public static void stringList (ArrayList<String> strList, String s, int index, StringBuilder sb) {
-            if(index == s.length()){
-                strList.add(sb.toString());
-                sb.deleteCharAt(sb.length()-1);
-                return;
-            }
-            for (int i = index; i<s.length(); i++) {
+    public static void stringList (ArrayList<String> strList, String s, int index, StringBuilder sb) {
+        if(index == s.length()){
+            strList.add(sb.toString());
+            sb.deleteCharAt(sb.length()-1);
+            return;
+        }
+        for (int i = index; i<s.length(); i++) {
 
-                if (s.charAt(i) != '.')
-                    sb.append(s.charAt(i));
-                else
-                {   int idx = sb.length();
-                    for (char ch = 'a'; ch <='z'; ch++){
+            if (s.charAt(i) != '.')
+                sb.append(s.charAt(i));
+            else
+            {   int idx = sb.length();
+                for (char ch = 'a'; ch <='z'; ch++){
 
-                        sb.append(ch);
-                        stringList(strList,s,i+1, sb);
-                        strList.add(sb.toString());
-                        sb.delete(idx,sb.length());
-                    }
+                    sb.append(ch);
+                    stringList(strList,s,i+1, sb);
+                    strList.add(sb.toString());
+                    sb.delete(idx,sb.length());
                 }
             }
-
         }
+
+    }
 
 
 }

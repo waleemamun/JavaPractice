@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7};
+        int [] arr =  {1};
         int [] arr1 = {1,2,3,4,5,6,7,8,9};
 
         int [][] arr2d = {
@@ -215,7 +215,7 @@ public class Main {
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
         String str1 = "9,3,4,#,#,1,#,#,2,#,6,#,#";
-        String str2 = "900";
+        String str2 = "NAzEeF";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
         Recursions r1 = new Recursions();
@@ -250,8 +250,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-
-        System.out.println(dp1.integerBreak2(10));
+        System.out.println(Arrays.toString(sv2.topKFrequent(arr,1)));
 
 
 
