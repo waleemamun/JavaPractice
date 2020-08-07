@@ -846,7 +846,7 @@ public class DPs {
     }
 
     // This is a better solution to find the longest increasing subsequence its O(nlgn) compared to the O(n^2)
-    // solution above. The idea is little complicated the dp array does not store but the len that we can fill up in
+    // solution above. The idea is little complicated the dp array does not store leg but the len that we can fill up in
     // the dp array is actually the result. The dp array is storing the longest seq so far, The dp array is sorted so
     // we can insert the next item in lgn time. Consider an example where the input is 3, 4, 5, 2, 7 so dp array becomes
     // [3 4 5] after idx 2 but when we get to idx 3, the value 2 does not contribute to the length of longest seq so

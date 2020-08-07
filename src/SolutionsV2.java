@@ -1508,6 +1508,63 @@ public class SolutionsV2 {
         return res;
     }
 
+    // LeetCode :: 349. Intersection of Two Arrays
+    public int[] intersection(int[] nums1, int[] nums2) {
+        HashSet<Integer> set1 = new HashSet<>();
+        HashSet<Integer> set2 = new HashSet<>();
+        for (int n: nums1)
+            set1.add(n);
+        for (int n: nums2)
+            set2.add(n);
+        Iterator <Integer> setItr = set1.iterator();
+
+        int i = 0;
+        int [] res = new int [set1.size() < set2.size()? set1.size(): set2.size()];
+        while(setItr.hasNext()) {
+            int val = setItr.next();
+            if (set2.contains(val)) {
+                res[i++] = val;
+            }
+        }
+        return Arrays.copyOf(res,i);
+    }
+    public int[] intersection2(int[] nums1, int[] nums2) {
+        HashSet<Integer> set1 = new HashSet<>();
+        HashSet<Integer> set2 = new HashSet<>();
+        for (int n: nums1)
+            set1.add(n);
+        for (int n: nums2)
+            set2.add(n);
+        set1.retainAll(set2);
+        int i = 0;
+        int [] res = new int [set1.size()];
+        for(int n : set1) {
+            res[i++] = n;
+        }
+        return res;
+    }
+
+    // LeetCode :: 350. Intersection of Two Arrays II
+    public int[] intersect(int[] nums1, int[] nums2) {
+        HashMap <Integer, Integer> map1 = new HashMap<>();
+        HashMap <Integer, Integer> map2 = new HashMap<>();
+        for (int n : nums1)
+            map1.put(n, map1.getOrDefault(n,0) + 1);
+        for (int n : nums2)
+            map2.put(n, map2.getOrDefault(n,0) + 1);
+        int []res = new int [Math.min(nums1.length, nums2.length)];
+        int i = 0;
+        for (int k : map1.keySet()) {
+            if (map2.containsKey(k)) {
+                int count = Math.min(map2.get(k), map1.get(k));
+                while (count-- > 0)
+                    res[i++] = k;
+
+            }
+        }
+        return Arrays.copyOf(res,i);
+    }
+
 
 
 
