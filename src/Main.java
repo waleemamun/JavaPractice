@@ -209,12 +209,11 @@ public class Main {
                 {'0','0','0','1'}
         };
 
-        String [] words = {"my","momma","always","said,","life","was","like","a","box","of","chocolates.",
-                "you","never","know","what","you're","gonna","get."};
+        String [] words = {"banana", "apple", "orange", "coke", "rum"};
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "9,3,4,#,#,1,#,#,2,#,6,#,#";
+        String str1 = "banene";
         String str2 = "NAzEeF";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
@@ -250,7 +249,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        System.out.println(Arrays.toString(sv2.topKFrequent(arr,1)));
+        System.out.println("One Type: " + p1.oneType(str1, words));
 
 
 

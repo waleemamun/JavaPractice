@@ -875,6 +875,173 @@ public class PhoneIQ {
 
     }
 
+    // Google Phone Interview Question Faulty keyboard
+    // There is a broken keyboard in which space gets typed when you type the letter 'e'. Given an input string which is
+    // the output from the keyboard. A dictionary of possible words is also provided as an input parameter of the
+    // method. Return a list of possible actual input typed by the user.
+    // Example Input: String: "can s r n " Dictionary: ["can", "canes", "serene", "rene", "sam"]
+    // Expected Output: ["can serene", "canes rene"]
+    // The idea is to use backtracking to solve this problem with smart trick we check the valid solution and
+    // create the result when we have processed the whole string. This way the complexity of checking if the current
+    // words is valid or not moves to the end from choosing part of backtracking
+    // For backtracking we have a set of choice (use space or use 'e') we pick one of them and backtrack
+    // For looking up valid results we look up each word in the dictionary if all of them exist we have a result string
+    // with all valid words from the dictionary. We are using a hashtable for dictionary for faster lookup
+    private void faultyKeyboardRec (char []str, int index, HashSet<String> dict,
+                                    List<String> resList) {
+        if (index >= str.length) {
+            String []tokens = new String(str).split("\\s+");
+            System.out.println(Arrays.toString(tokens));
+            int i;
+            String output="";
+            for (i =0; i<tokens.length; i++) {
+                if(!dict.contains(tokens[i]))
+                    break;
+                output+= tokens[i] + " ";
+            }
+            if (i == tokens.length)
+                resList.add(output.trim());
+            return;
+        }
+        faultyKeyboardRec(str,index +1, dict,resList);
+        if (str[index] == ' '){
+            str[index] = 'e';
+            faultyKeyboardRec(str, index +1, dict, resList);
+            str[index] = ' ';
+        }
+
+    }
+    public int getSpaceIdx(char []str, int idx){
+
+        while(idx <str.length && str[idx]!=' ')
+            idx++;
+        return idx;
+    }
+
+    class TrieNode {
+        char ch;
+        TrieNode [] child;
+        boolean isWord;
+        public TrieNode (char c) {
+            ch = c;
+            isWord = false;
+            child = new TrieNode[26];
+        }
+    }
+    class Trie {
+
+        TrieNode root;
+        boolean oneSkipAllowed;
+        public Trie(){
+            root = new TrieNode('@');
+            oneSkipAllowed = false;
+        }
+        public void addWord(String s) {
+            TrieNode node = root;
+            int i = 0;
+            while (i < s.length()) {
+                char ch = s.charAt(i);
+                if (node.child[ch-'a'] == null)
+                    node.child[ch-'a'] = new TrieNode(ch);
+                node = node.child[ch-'a'];
+                if (i==s.length() -1)
+                    node.isWord = true;
+                i++;
+            }
+        }
+        public boolean search(String s){
+            TrieNode node = root;
+            int i = 0;
+            while (i < s.length()) {
+                char ch = s.charAt(i);
+                if(node.child[ch-'a'] == null)
+                    return false;
+                node = node.child[ch -'a'];
+                if (node.isWord && i == s.length()-1)
+                    return true;
+                i++;
+            }
+            return false;
+
+        }
+        public boolean oneSkipSearch(String s) {
+            oneSkipAllowed = true;
+            TrieNode node =root;
+            boolean isFound = skipSearch2(s, 0, node);
+            oneSkipAllowed = false;
+            return isFound;
+        }
+        private boolean skipSearch(String s, int idx, TrieNode node){
+            if (idx >= s.length())
+                return false;
+            char ch = s.charAt(idx);
+            TrieNode currNode = node.child[ch -'a'];
+            if (currNode != null) {
+                return  (idx == s.length() -1 && currNode.isWord) || skipSearch(s, idx+ 1, currNode);
+            } else {
+                if(oneSkipAllowed) {
+                    oneSkipAllowed = false;
+                    for (int i = 0; i<26; i++)
+                        if(node.child[i] !=null && (idx == s.length()-1 || skipSearch(s, idx +1, node.child[i])))
+                            return true;
+                }
+                return false;
+            }
+
+        }
+        private boolean skipSearch2(String s, int idx, TrieNode node){
+            if (idx >= s.length())
+                return false;
+            char ch = s.charAt(idx);
+            if (node == root) {
+                for (int i =0; i<26; i++) {
+                    oneSkipAllowed = true;
+                    if (node.child[i]!= null && skipSearch2(s,idx+1,node.child[i])){
+                        return true;
+                    }
+                }
+                return false;
+
+            } else {
+                TrieNode currNode = node.child[ch -'a'];
+                if (currNode != null) {
+                    return  (idx == s.length() -1 && currNode.isWord) || skipSearch2(s, idx+ 1, currNode);
+                } else {
+                    if(oneSkipAllowed) {
+                        oneSkipAllowed = false;
+                        for (int i = 0; i<26; i++)
+                            if(node.child[i] !=null && (idx == s.length()-1 || skipSearch2(s, idx +1, node.child[i])))
+                                return true;
+                    }
+                    return false;
+                }
+            }
+
+        }
+    }
+    public List<String> faultyKeyboard(String str, String []words) {
+        List<String> resList = new ArrayList<>();
+        HashSet<String> dict = new HashSet<>(Arrays.asList(words));
+
+        faultyKeyboardRec(str.toCharArray(),0, dict, resList);
+        return resList;
+    }
+
+    /**
+     *  Google Phone Interview
+     *  Design a vocabulary class that allows for a maximum of one typo.
+     *  It has one method: given a word, it verifies if the word can be found in the
+     *  vocabulary with at most one character substitution.
+     *
+     * */
+    public boolean oneType (String str, String []words) {
+        Trie trie= new Trie();
+        for (String s: words)
+            trie.addWord(s);
+        return trie.oneSkipSearch(str);
+    }
+
+
 
 
 
