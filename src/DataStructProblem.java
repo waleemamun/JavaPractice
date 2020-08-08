@@ -431,5 +431,151 @@ public class DataStructProblem {
         }
     }
 
+    // LeetCode :: 146. LRU Cache
+    // The idea is to use hashmap to store the key and a doubly linked list reference as value to make the access O(1)
+    // We use a double linked list manage the LRU cache new items are add to the head, when we access an item using get
+    // the recently accessed item needs to move to the head. This items closer to head are recently accessed and the
+    // items closer to tail ar least recently accessed and candidates for removal when the capacity exceeds.
+    // As the capacity exceeds we remove the leas recently used item from tail.
+    // We use a dummy head & a dummy tail to make the code more concise and easy to manage.
+    public class DblLinkList {
+         int val;
+         int key;
+         DblLinkList prev;
+         DblLinkList next;
+         public DblLinkList(int k,int v){
+             val = v;
+             key = k;
+             prev = next = null;
+         }
+    }
+
+    class LRUCacheDList {
+        int currCapcity;
+        DblLinkList head;
+        DblLinkList tail;
+        HashMap<Integer, DblLinkList> cache;
+
+        public LRUCacheDList(int capacity) {
+            currCapcity = capacity;
+            cache = new HashMap<>();
+            head = new DblLinkList(Integer.MIN_VALUE,Integer.MIN_VALUE); // dummy head
+            tail = new DblLinkList(Integer.MIN_VALUE, Integer.MIN_VALUE); // dummy tail
+            head.next = tail;
+            tail.prev = head;
+            head.prev = tail;
+            tail.next = head;
+        }
+
+        // move the current node to the head of the doubly linked list
+        private void moveToHead (DblLinkList node){
+            if (node.next == tail && node.prev == head)
+                return;
+            // remove value from current position
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+            // move value after head
+            node.next = head.next;
+            node.prev = head;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        // add a node after the dummy head of the doubly linked list
+        private void addToHead (DblLinkList node){
+            // insert the new item to head
+            node.next = head.next;
+            node.prev = head;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        // delelte the last node that is the node before the dummy tail from the doubly linked list
+        private  void deleteFromTail() {
+            DblLinkList dlNode = tail.prev;
+            tail.prev = dlNode.prev;
+            dlNode.prev.next = tail;
+            // remove from the hashmap
+            cache.remove(dlNode.key);
+        }
+
+        public int get(int key) {
+            DblLinkList value = cache.get(key);
+            if (value == null)
+                return  -1;
+            if (value.next == tail && value.prev == head)
+                return value.val;
+            // move the recently accessed value to the head
+            moveToHead(value);
+            return value.val;
+
+        }
+
+        public void put(int key, int value) {
+            // get the value if it already exist otherwise create a new one
+            DblLinkList node = cache.getOrDefault(key, null);
+            if (node == null)  {
+                node = new DblLinkList(key, value);
+                // insert the new item to head
+                addToHead(node);
+                // put the entry on hashmap
+                cache.put(key, node);
+            } else {
+                // We already have the node in cache so move the node to the head & update the value
+                moveToHead(node);
+                node.val = value;
+            }
+            // if we exceeded the capacity remove the oldest one,
+            // the oldest one is at the tail so we remove from tail
+            if (cache .size() > currCapcity) {
+                deleteFromTail();
+            }
+
+        }
+    }
+    // This is another way to implement the LRU cache using Java's LinkedHashMap
+    // LinkedHashMap is ordered map and we just need to overwrite the removeEldestEntry
+    // to implement the cache.
+    //
+    // LinkedHashMap :
+    // Hash table and linked list implementation of the Map interface, with predictable iteration order.
+    // This implementation differs from HashMap in that it maintains a doubly-linked list running through all of
+    // its entries. This linked list defines the iteration ordering, which is normally the order in which keys were
+    // inserted into the map (insertion-order). Note that insertion order is not affected if a key is re-inserted
+    // into the map.
+    public class CacheMap extends LinkedHashMap<Integer, Integer> {
+         final int capacity;
+         public CacheMap(int cap){
+             super(cap, 0.75f, true);
+             capacity = cap;
+
+         }
+        @Override
+        // we just override this function if the map size  is greater capacity this overwrite wil delete the LRU item
+        // in the map. This function internally gets called followed by a put or putAll method call
+        protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+             System.out.println("map size " + size() + " capacity "+ capacity);
+             return size() >capacity;
+        }
+
+    }
+
+    class LRUCache {
+        CacheMap cache;
+        int cap;
+        public LRUCache(int capacity) {
+            cap = capacity;
+            cache = new CacheMap(cap);
+        }
+
+        public int get(int key) {
+            return cache.getOrDefault(key , -1);
+        }
+
+        public void put(int key, int value) {
+            cache.put(key,value);
+        }
+    }
+
 
 }

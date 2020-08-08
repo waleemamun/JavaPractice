@@ -235,6 +235,7 @@ public class Main {
 
 
 
+
         int [][] edges = {
                             {0, 3},
                             {1, 3},
@@ -249,7 +250,13 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        System.out.println("One Type: " + p1.oneType(str1, words));
+        DataStructProblem.LRUCache cache = d1.new LRUCache(2);
+        cache.put(1,1);
+        cache.put(2,2);
+        System.out.println("cache " +cache.get(1));
+        cache.put(3,3);
+        System.out.println("cache " + cache.get(2));
+
 
 
 
