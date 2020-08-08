@@ -213,7 +213,7 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "banene";
+        String str1 = "cananw";
         String str2 = "NAzEeF";
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();

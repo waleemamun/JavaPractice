@@ -989,25 +989,34 @@ public class PhoneIQ {
             }
 
         }
+
+        // The idea is to use a modified Trie search. We keep a tracking boolean variable oneSkippedAllowed for tracking
+        // the first skip. This problem creates an unique edge case if the first char is needed to e skipped.
         private boolean skipSearch2(String s, int idx, TrieNode node){
             if (idx >= s.length())
                 return false;
             char ch = s.charAt(idx);
+            // handle the special case first char is needed to be skipped, we have to check all the children of the root
             if (node == root) {
                 for (int i =0; i<26; i++) {
-                    oneSkipAllowed = true;
-                    if (node.child[i]!= null && skipSearch2(s,idx+1,node.child[i])){
-                        return true;
+                    // need to set the boolean to true for all the children of root as the will take different subtrees
+                    if (node.child[i]!= null){
+                        if (i == (ch-'a'))
+                            oneSkipAllowed = true;
+                        if (skipSearch2(s,idx+1,node.child[i]))
+                            return true;
                     }
                 }
                 return false;
 
             } else {
+                // if node is found just process as normal
                 TrieNode currNode = node.child[ch -'a'];
                 if (currNode != null) {
                     return  (idx == s.length() -1 && currNode.isWord) || skipSearch2(s, idx+ 1, currNode);
-                } else {
+                } else { // if node is not found and we still can skip one item
                     if(oneSkipAllowed) {
+                        // set the boolean so that we dont skip it any more
                         oneSkipAllowed = false;
                         for (int i = 0; i<26; i++)
                             if(node.child[i] !=null && (idx == s.length()-1 || skipSearch2(s, idx +1, node.child[i])))
