@@ -1565,6 +1565,67 @@ public class SolutionsV2 {
         return Arrays.copyOf(res,i);
     }
 
+    // LeetCode :: 360 Sort Transformed Array
+    /**
+     * Given a sorted array of integers nums and integer values a, b and c.
+     * Apply a function of the form f(x) = ax2 + bx + c to each element x in the array.
+     * The returned array must be in sorted order.
+     * Expected time complexity: O(n)
+     *
+     * */
+    // Think how the curve will look like it an U if a is positive and upside down U if a is negative.
+    // So we need to make the decision based on value of a. We use two pointers left & right if a is positive
+    // the graph is like u and we can surely compare the max fx by comparing left & right
+    public int[] sortTransformedArray(int[] nums, int a, int b, int c) {
+        int []res = new int[nums.length];
+        int left = 0;
+        int right = nums.length-1;
+        int  k = a > 0 ? nums.length -1 : 0;
+        while (left <= right) {
+            int v1 = fx(nums[left], a,b,c);
+            int v2 = fx(nums[right], a,b,c);
+            if (a > 0) {
+                res[k--] = Math.max(v1,v2);
+                if (v1 > v2)
+                    left++;
+                else
+                    right--;
+            } else {
+                res[k++] = Math.min(v1,v2);
+                if (v1<v2)
+                    left++;
+                else
+                    right--;
+            }
+        }
+        return res;
+    }
+    private int fx(int x , int a,int b, int c){
+        return a*x*x + b*x +c;
+    }
+
+    // LeetCode :: 365. Water and Jug Problem
+    // This is a number theory problem
+    // Bézout's identity (also called Bézout's lemma) is a theorem in the elementary theory of numbers:
+    // let a and b be nonzero integers and let d be their greatest common divisor. Then there exist integers x
+    // and y such that ax+by=d
+    public boolean canMeasureWater(int x, int y, int z) {
+        //limit brought by the statement that water is finallly in one or both buckets
+        if(x + y < z) return false;
+        //case x or y is zero
+        if( x == z || y == z || x + y == z ) return true;
+        int a = Math.min(x,y);
+        int b = Math.max(x,y);
+        int r = b%a;
+        while (r != 0) {
+            b = a;
+            a = r;
+            r = b%a;
+        }
+        return z % a == 0? true:false;
+
+    }
+
 
 
 

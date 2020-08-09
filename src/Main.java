@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1};
+        int [] arr =  {4,8,10,240};
         int [] arr1 = {1,2,3,4,5,6,7,8,9};
 
         int [][] arr2d = {
@@ -250,15 +250,8 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        DataStructProblem.Twitter t1 = d1.new Twitter();
-        t1.postTweet(1,5);
-        System.out.println("1: " + t1.getNewsFeed(1));
-        t1.follow(1,2);
-        t1.postTweet(2,6);
-        System.out.println("2: " +t1.getNewsFeed(2));
-        System.out.println("1: " + t1.getNewsFeed(1));
-        t1.unfollow(1,2);
-        System.out.println("1: " + t1.getNewsFeed(1));
+        System.out.println(dp1.largestDivisibleSubset(arr));
+
 
 
 

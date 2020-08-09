@@ -904,8 +904,8 @@ public class DPs {
 
     }
 
-    // Based on the idea above we further simplyfy this problem as there is only three numbers to consider
-    // if we just keep track of msaller and 2nd smaller using the same idea above and as soon as we get the
+    // Based on the idea above we further simplify this problem as there is only three numbers to consider
+    // if we just keep track of smaller and 2nd smaller using the same idea above and as soon as we get the
     // item that is bigger than 2nd smaller we have our solution, if no such item then we return false
     // This is also O(N) time  & O(1) space but performs little better as we have less checks & mem usage
     public boolean increasingTripletV2(int[] nums) {
@@ -923,6 +923,44 @@ public class DPs {
 
         }
         return false;
+
+    }
+
+    // LeetCode :: 368. Largest Divisible Subset
+    // The idea is to similar approach to LIS. We need to sort the array first then we apply the LIS O(n^2) version to
+    // find the longest divisible subset. While calculating the longest divisible subset we also store the prev item in
+    // the subset in prev array this can ve later use to reconstruct the subset. We need ot sort the input so that we
+    // can only check for divisors bbefore the current item in the array
+    public List<Integer> largestDivisibleSubset(int[] nums) {
+        int []subSetlen = new int[nums.length];
+        int []prev = new int [nums.length];
+        List<Integer> resList = new LinkedList<>();
+        if (nums.length == 0)
+            return resList;
+        Arrays.fill(prev, -1);
+        Arrays.sort(nums);
+        int index = 0;
+        int max = Integer.MIN_VALUE;
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if(nums[i] % nums[j] == 0) {
+                    if (subSetlen[i] < subSetlen[j] +1) {
+                        subSetlen[i] = subSetlen[j] + 1;
+                        prev[i] = j;
+                    }
+                }
+            }
+            if (max < subSetlen[i]) {
+                max = subSetlen[i];
+                index = i;
+            }
+        }
+        
+        while (index != -1) {
+            resList.add(0,nums[index]);
+            index = prev[index];
+        }
+        return resList;
 
     }
 
