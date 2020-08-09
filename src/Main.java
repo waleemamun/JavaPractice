@@ -250,12 +250,16 @@ public class Main {
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        DataStructProblem.LRUCache cache = d1.new LRUCache(2);
-        cache.put(1,1);
-        cache.put(2,2);
-        System.out.println("cache " +cache.get(1));
-        cache.put(3,3);
-        System.out.println("cache " + cache.get(2));
+        DataStructProblem.Twitter t1 = d1.new Twitter();
+        t1.postTweet(1,5);
+        System.out.println("1: " + t1.getNewsFeed(1));
+        t1.follow(1,2);
+        t1.postTweet(2,6);
+        System.out.println("2: " +t1.getNewsFeed(2));
+        System.out.println("1: " + t1.getNewsFeed(1));
+        t1.unfollow(1,2);
+        System.out.println("1: " + t1.getNewsFeed(1));
+
 
 
 

@@ -264,6 +264,7 @@ public class ScratchPad {
         }
         ArrayList<Integer> mapValList = new ArrayList<>(mapInt.keySet());
         System.out.println("Map  to List " + mapValList);
+        System.out.println(" Sub ;ist" +mapValList.subList(0, 5));
 
 
 

@@ -1,3 +1,5 @@
+import jdk.internal.org.objectweb.asm.tree.LdcInsnNode;
+
 import java.util.*;
 
 public class DataStructProblem {
@@ -574,6 +576,130 @@ public class DataStructProblem {
 
         public void put(int key, int value) {
             cache.put(key,value);
+        }
+    }
+    // 355. Design Twitter
+    // The main idea is to use k sorted list merge using max heap to get the top 10 items
+    class Tweet {
+         Integer user;
+         Integer tweet;
+         int time;
+         public Tweet (int u , int tw, int tm){
+             user = u;
+             tweet = tw;
+             time = tm;
+         }
+    }
+    // This class is required for the maxheap. It is used to select the next item from the k sorted list when
+    // the top item was removed. The top removed item points out the next array (listNum) and an index into that
+    // array (idx) to insert/add to the max heap
+    class QueueItem {
+         Tweet tw;
+         int listNum;
+         int idx;
+         public QueueItem(Tweet t, int l, int i) {
+             tw = t;
+             listNum = l;
+             idx = i;
+         }
+    }
+    class Twitter {
+        HashMap<Integer, LinkedList<Tweet>> timeLineMap; // per user timeline
+        HashMap<Integer,HashSet<Integer>> followMap;     // per user followList
+
+        int time;
+        /** Initialize your data structure here. */
+        public Twitter() {
+            time = 0;
+            timeLineMap = new HashMap<>();
+            followMap = new HashMap<>();
+        }
+
+        /** Compose a new tweet. */
+        public void postTweet(int userId, int tweetId) {
+            time++;
+            Tweet tw = new Tweet(userId, tweetId, time);
+            // add tweet to user's own TimeLine
+            timeLineMap.putIfAbsent(userId, new LinkedList<>());
+            timeLineMap.get(userId).addFirst(tw);
+        }
+
+        /** Retrieve the 10 most recent tweet ids in the user's news feed.
+         *  Each item in the news feed must be posted by users who the user followed or by the user herself.
+         *  Tweets must be ordered from most recent to least recent. */
+        // The idea here is to use K sorted list merge to get 10 max items
+        // All the user timelines are time sorted (descending order)
+        // So we first get the followlist from the follow list we form the array of timelIne list of (following user)
+        // these list are sorted so to get the top 10 we use a max heap and use he K sorted list merge option
+        public List<Integer> getNewsFeed(int userId) {
+            LinkedList<Tweet> userTL = timeLineMap.getOrDefault(userId, null);
+            HashSet<Integer> followList = followMap.getOrDefault(userId, null);
+            LinkedList<Integer> newsFeed = new LinkedList<>();
+            if (userTL == null && followList == null)
+                return newsFeed;
+
+            // create min heap create the most recent tweets from the followers
+            PriorityQueue<QueueItem> maxHeap = new PriorityQueue<>(new Comparator<QueueItem>() {
+                @Override
+                public int compare(QueueItem o1, QueueItem o2) {
+                    return o2.tw.time - o1.tw.time;
+                }
+            });
+
+            // From the follower list get the timeline for each follow and add an iterator to the timeLine list
+            if (followList != null) {
+                LinkedList <Tweet> [] listArr = new LinkedList[followList.size()+1];
+                // add the user time line to the k sorted list too so during our merge we can easily merge them
+                listArr[0] = userTL;
+                if (userTL != null)
+                    maxHeap.add(new QueueItem(userTL.get(0), 0, 0));
+                int i = 1;
+                for (Integer u : followList) {
+                    listArr[i] = timeLineMap.getOrDefault(u, null);
+                    if (listArr[i] != null) {
+                        QueueItem qi = new QueueItem(listArr[i].get(0), i, 0);
+                        maxHeap.add(qi);
+                    }
+                    i++;
+                }
+                int count = 10;
+                while(!maxHeap.isEmpty() && count !=0 ){
+                    QueueItem qi = maxHeap.remove();
+                    newsFeed.add(qi.tw.tweet);
+                    if (listArr[qi.listNum].size() > qi.idx +1) {
+                        qi.tw = listArr[qi.listNum].get(qi.idx+1);
+                        qi.idx++;
+                        maxHeap.add(qi);
+                    }
+                    count--;
+                }
+
+            } else {
+                for (Tweet tw : userTL){
+                    newsFeed.add(tw.tweet);
+                    if (newsFeed.size() == 10)
+                        break;
+                }
+            }
+            return newsFeed;
+
+        }
+
+        /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+        public void follow(int followerId, int followeeId) {
+            if (followeeId == followerId)
+                return;
+            followMap.putIfAbsent(followerId, new HashSet<>());
+            followMap.get(followerId).add(followeeId);
+        }
+
+        /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+        public void unfollow(int followerId, int followeeId) {
+            if (followeeId == followerId)
+                return;
+            HashSet<Integer> followList = followMap.getOrDefault(followerId, null);
+            if (followList != null)
+                followList.remove(followeeId);
         }
     }
 
