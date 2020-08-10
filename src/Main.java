@@ -192,8 +192,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1};
-        int [] arr1 = {1,2,3,4,5,6,7,8,9};
+        int [] arr =  {1,2,3,5};
+        int [] arr1 = {5,3,4,2};
 
         int [][] arr2d = {
                 {2, 3, 4, 9},
@@ -243,10 +243,13 @@ public class Main {
         DataStructProblem d1 = new DataStructProblem();
         LinkList ls1 = new LinkList();
 
-        int [][] updates = {{1,3,2},
-                            {2,4,3},
-                            {0,2,-2}};
-        System.out.println(Arrays.toString(sv2.getModifiedArray(5,updates)));
+        int [][] updates = {{1,1,1,1,1},
+                            {1,0,0,0,1},
+                            {1,0,1,0,1},
+                            {1,0,0,0,1},
+                            {1,1,1,1,1}};
+        System.out.println(dp1.canPartition(arr));
+        //System.out.println(dp1.canPartition2(arr));
 
 
 

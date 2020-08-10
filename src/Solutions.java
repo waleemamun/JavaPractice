@@ -50,7 +50,7 @@ public class Solutions {
         return fibonacci(n-1) + fibonacci(n-2);
     }
 
-    // LeetCode problem 6
+    // LeetCode :: 6 ZigZag Conversion
     public String convert(String s, int numRows) {
 
         StringBuilder [] sbArray = new StringBuilder[numRows];

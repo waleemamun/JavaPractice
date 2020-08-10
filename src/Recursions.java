@@ -1941,6 +1941,102 @@ public class Recursions {
         return resList;
     }
 
+    // LeetCode :: 934. Shortest Bridge
+    // Recursion + DFS + BFS
+    // The idea is to do a DFS to color one of the island 2 so that the other Island remain color 1
+    // Then we start from the color 2 island a bfs to island 1 the bfs shortest distant from island 2
+    // to island 1 is the solution. To optimise when we do a dfs to color the island 2 we store the each
+    // item of island 2 in our bfs queue. So next we expand along the breadth when doing BFS
+    class IntPair {
+        Integer x;
+        Integer y;
+        public IntPair (int a, int b){
+            x = a;
+            y = b;
+        }
+    }
+    // do a dfs to color island 2 and also store the island to indicies in queue
+    private void markIsland(int [][]A, int r, int c, Queue <IntPair> queue) {
+        if (r < 0 || c < 0 || r >= A.length || c >= A[0].length || A[r][c] != 1)
+            return;
+        if (A[r][c] == 1) {
+            A[r][c] = 2;
+            queue.add(new IntPair(r,c));
+            markIsland(A, r +1, c, queue);
+            markIsland(A, r -1, c, queue);
+            markIsland(A, r, c-1, queue);
+            markIsland(A, r, c+1, queue);
+        }
+
+    }
+    // just  expand the island 2 we will color(store shortes path len) along the bfs border
+    private int expandIsland(int [][]A, int r, int c, Queue <IntPair> queue) {
+        if (r+1 < A.length) {
+            if (A[r+1][c] == 0) {
+                A[r+1][c] = A[r][c]+1;
+                queue.add(new IntPair(r+1,c));
+            }
+            if (A[r+1][c] == 1)
+                return 1;
+        }
+        if (r -1 >= 0) {
+            if (A[r-1][c] == 0) {
+                A[r-1][c] = A[r][c]+1;
+                queue.add(new IntPair(r-1,c));
+            }
+            if(A[r-1][c] == 1)
+                return 1;
+        }
+        if (c+1 < A[0].length ) {
+            if (A[r][c+1] == 0) {
+                A[r][c+1] = A[r][c]+1;
+                queue.add(new IntPair(r,c+1));
+            }
+            if (A[r][c+1] == 1)
+                return 1;
+        }
+        if (c-1 >= 0) {
+            if (A[r][c-1] == 0) {
+                A[r][c-1] = A[r][c]+1;
+                queue.add(new IntPair(r,c-1));
+            }
+            if (A[r][c-1] == 1)
+                return 1;
+
+        }
+        return 0;
+    }
+
+    public int shortestBridge(int[][] A) {
+        Queue<IntPair> queue = new LinkedList<>();
+        int i = 0;
+        int j = 0;
+        // mark one island to 2, now we have one island marked by 2 & another by 1
+        for (i = 0; i< A.length; i++){
+            for (j = 0; j < A[0].length; j++) {
+                if (A[i][j] == 1) {
+                    markIsland(A,i,j, queue);
+                    break;
+                }
+            }
+            if (j != A[0].length)
+                break;
+        }
+
+        IntPair pair = new IntPair(i,j);
+        // Do a BFS to get the shortest path from Island 2 to Island 1
+        while (!queue.isEmpty()) {
+            pair = queue.remove();
+            if (expandIsland(A, pair.x, pair.y, queue) == 1) {
+                break;
+            }
+        }
+        // the result is shortest path len - 2 (we subtract 1 for each island)
+        return A[pair.x][pair.y] - 2;
+
+
+    }
+
 
 
 

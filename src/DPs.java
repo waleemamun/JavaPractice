@@ -1425,6 +1425,109 @@ public class DPs {
         return ls1;
     }
 
+    // 0 - 1 Knapsack Implementation
+    // itemsVal contains the value of the items i
+    // itemsW contains items i weight
+    // W is the max knapsack wieght,
+    // return : we have to return the maxProfit;
+    // The idea is following at any item  if the item weight is bigger than the current knapsack capacity we cannot use
+    // this item and we get our best DP value(profit) without this item so we look at values V[i-1][w] for wi > w
+    // if the items weight is small enough to fit in knapsack the we have two options to choose from we pick the max
+    // of the two options. First option is not to use this item at all so we get our value without this item so V[i-1][w]
+    // Second option is to use this item so we have to make a space of weight wi in the knapsack so we can check the
+    // price at [w-wi] which is V[i-1][w-wi] and add the price of wi which is vi to it so V[i-1][w-wi] + vi
+    // we look at i-1 pos cause i -1 denotes not including this item
+    // The max of the two options is our result. So the DP equation is as follows
+    // V[i][w] = Max(V[i-1][w] + V[i-1][w-wi] + vi) if wi<=w
+    // V[i][w] = V[i-1][w] if wi > w
+    // Note:  0-1 knapsack wants to find out a subset in an array that adds upto sum number W and with a profit
+    // maximization dictated by the array P(i)
+    public int zeroOneKnapSack (int []itemsVal, int [] itemsW, int W){
+        int[][]Values = new int [itemsVal.length+1][W+1];
+        // set the first row & cols to zero
+        for (int i = 0 ; i<= itemsVal.length; i++)
+            Values[i][0] = 0;
+        for (int i = 0; i<=W; i++)
+            Values[0][i] = 0;
+        for (int i = 1; i<Values.length; i++) {
+            for (int w = 1; w <Values[0].length; w++) {
+                if(itemsW[i -1] <= w) {
+                    // here in the 2nd part , we check if in our weight array there exist an weight = w - items[i-1]
+                    // and if such an weigh exist than we add the profit for that with ith items profit
+                    Values[i][w] = Math.max(Values[i-1][w],
+                                            Values[i-1][ w - itemsW[i-1]] + itemsVal[i-1]); //2nd part
+                } else
+                    Values[i][w] = Values[i-1][w];
+            }
+        }
+        System.out.println(Arrays.deepToString(Values));
+        return Values[itemsVal.length][W];
+    }
+
+    // This is the space optimised version of 0-1 knapsack we can usee this beacause at each iteration of the
+    // inner loop we only depend on the value of last item V[i-1]
+    public int zeroOneKnapSackSpaceOpt (int []itemsVal, int [] itemsW, int W){
+        int []Values = new int [W +1];
+        Values[0] = 0;
+        for (int i = 1; i<=itemsVal.length; i++) {
+            for (int w = 1; w <Values.length; w++) {
+                if(itemsW[i -1] <= w) {
+                    Values[w] = Math.max(Values[w],
+                            Values[ w - itemsW[i-1]] + itemsVal[i-1]);
+                } else
+                    Values[w] = Values[w];
+            }
+            System.out.println(Arrays.toString(Values));
+        }
+        return Values[W];
+
+    }
+
+
+    // LeetCode :: 416. Partition Equal Subset Sum
+    // This is the same as knapsack problem here similar to knapsack we want to select or find a combination from
+    // the array that sums up to a weight (here total sum /2). In knapsack our goal was to maximize profit but here we
+    // just need to check if the combination exist or not
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        // get the total sum
+        for (int n : nums) {
+            sum += n;
+        }
+        // sum is not even so no result
+        if ((sum %2) != 0) {
+            return false;
+        }
+        // for sums to be equal the sum for each subset has to be half of the total sum
+        sum /= 2;
+
+        boolean [][]knps = new boolean[nums.length +1][sum +1];
+        // init the first rows &cols
+        // rows will be false no items but positive sum should be false
+        for (int i = 0 ; i <=sum; i++) {
+            knps[0][i] = false;
+        }
+        // but col needs to be true, any items no sum is also true
+        // knps[0][0] neesd to be true as no item no sum is true
+        for(int i =0; i<=nums.length; i++) {
+            knps[i][0] = true;
+        }
+        // we use the same knapsack dp equation
+        for (int i = 1; i <knps.length; i++) {
+            for (int j = 1; j <sum +1; j++) {
+                // if the item value is lower than sum
+                if (nums[i-1] <=j) {
+                    // think like if we have the value (j - nums[i]) in our nums array
+                    knps[i][j] = knps[i-1][j] || knps[i-1][j-nums[i-1]];
+                } else { // if item is bigger than sum we discard this
+                    knps[i][j] = knps[i-1][j];
+                }
+            }
+        }
+        return knps[nums.length][sum];
+    }
+
+
 
 
 
