@@ -1,11 +1,12 @@
-import sun.awt.image.ImageWatched;
+
 
 import java.util.*;
+
 
 public class LinkList {
     int data;
     LinkList next;
-    int val;
+    public int val;
 
     public LinkList() {
         int data = 0;
@@ -41,8 +42,8 @@ public class LinkList {
         return count;
 
     }
-    public void printList() {
-        LinkList ls = this;
+    public static void printList(LinkList head) {
+        LinkList ls = head;
         int count = 0;
         while(ls!=null) {
             count++;
@@ -841,6 +842,29 @@ public class LinkList {
         odd.next = evenHead.next;
         return head;
     }
+
+    // LeetCode ::  Plus One Linked List
+    private int plusOneHelper(LinkList node){
+        if (node == null)
+            return 1;
+        int sum = node.data + plusOneHelper(node.next);
+        node.data = sum % 10;
+        return sum/10;
+    }
+
+    public LinkList plusOne(LinkList head) {
+        if (head == null)
+            return head;
+        int carry = plusOneHelper(head);
+        if (carry == 1) {
+            LinkList top = new LinkList(1);
+            top.next = head;
+            head = top;
+        }
+        return head;
+    }
+
+
 
 
 

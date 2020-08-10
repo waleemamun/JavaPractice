@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {4,8,10,240};
+        int [] arr =  {1};
         int [] arr1 = {1,2,3,4,5,6,7,8,9};
 
         int [][] arr2d = {
@@ -215,11 +215,18 @@ public class Main {
         String word2 = "abcdkmL";
         String str1 = "cananw";
         String str2 = "NAzEeF";
+        int [][] edges = {
+                {0, 3},
+                {1, 3},
+                {2, 3},
+                {4, 3},
+                {5, 4},
+        };
+        int []newInterval = {7,23};
+
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
         Recursions r1 = new Recursions();
-        LinkList ls1 = new LinkList();
-        LinkList ls2 = new LinkList();
         DPs dp1 = new DPs();
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
@@ -231,26 +238,15 @@ public class Main {
         //System.out.println(" Level Order " + tr1.levelOrder(treeNode));
         //System.out.println(" Vertical Order " + tr1.verticalTraversalLeftToRight(treeNode));
         System.out.println(" valid " + tr1.isValidSerialization(str1));
-
-
-
-
-
-        int [][] edges = {
-                            {0, 3},
-                            {1, 3},
-                            {2, 3},
-                            {4, 3},
-                            {5, 4},
-                            };
-        int []newInterval = {7,23};
-
-
-
         GraphNode g1 = new GraphNode();
         //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
-        System.out.println(dp1.largestDivisibleSubset(arr));
+        LinkList ls1 = new LinkList();
+
+        int [][] updates = {{1,3,2},
+                            {2,4,3},
+                            {0,2,-2}};
+        System.out.println(Arrays.toString(sv2.getModifiedArray(5,updates)));
 
 
 

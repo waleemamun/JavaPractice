@@ -1626,6 +1626,37 @@ public class SolutionsV2 {
 
     }
 
+    // LeetCode :: 370 Range Addition (Locked)
+    // Question: Assume you have an array of length n initialized with all 0's and are given k update operations.
+    // Each operation is represented as a triplet: [startIndex, endIndex, inc] which increments each element of subarray
+    // A[startIndex ... endIndex] (startIndex and endIndex inclusive) with inc.
+    // Example :
+    // Input: length = 5, updates = [[1,3,2],[2,4,3],[0,2,-2]]
+    // Output: [-2,0,3,5,3]
+    //
+    // Solution: The idea is to focus in the start & end index. For each operation we are supposed to update the range
+    // by inc. We need to store the inc in each start index so the increment will propagate for the overlapping index
+    // So after that operation that the current range will +inc so the next item after the range (endIndex +1) needs
+    // to -inc casue we are propagating the sum so endIndex + 1 needs to be decremented by inc.
+    public int[] getModifiedArray(int length, int[][] updates) {
+        int [] result = new int[length];
+        for (int i = 0; i<updates.length; i++) {
+            result[updates[i][0]] += updates[i][2];
+            // decrement the (endIndex + 1) by inc if we cross the len boundary we dont need to to do this
+            if (updates[i][1] < length -1) {
+                result[updates[i][1] + 1] -= updates[i][2];
+            }
+        }
+        int sum =0;
+        for (int i = 0; i<result.length; i++) {
+            sum += result[i];
+            result[i] = sum;
+        }
+        return result;
+    }
+
+
+
 
 
 
