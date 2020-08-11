@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,5};
+        int [] arr =  {1,2,3,4,5,6,7,8,9};
         int [] arr1 = {5,3,4,2};
 
         int [][] arr2d = {
@@ -209,7 +209,7 @@ public class Main {
                 {'0','0','0','1'}
         };
 
-        String [] words = {"banana", "apple", "orange", "coke", "rum"};
+        String [] words = {"wrt","wrf","er","ett","rftt"};
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
@@ -230,12 +230,12 @@ public class Main {
         DPs dp1 = new DPs();
         Bits bt1 = new Bits();
         Tree tr1 = new Tree();
-        TreeNode treeNode = tr1.createBSTree(0,arr1.length-1,arr1);
+        TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
         PhoneIQ p1 = new PhoneIQ();
         //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
         //System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
-        //System.out.println(" Level Order " + tr1.levelOrder(treeNode));
+        System.out.println(" Level Order " + tr1.levelOrder(treeNode));
         //System.out.println(" Vertical Order " + tr1.verticalTraversalLeftToRight(treeNode));
         System.out.println(" valid " + tr1.isValidSerialization(str1));
         GraphNode g1 = new GraphNode();
@@ -248,8 +248,9 @@ public class Main {
                             {1,0,1,0,1},
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
-        System.out.println(dp1.canPartition(arr));
-        //System.out.println(dp1.canPartition2(arr));
+
+
+        System.out.println("Alien Order " +g1.alienOrder(words));
 
 
 

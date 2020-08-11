@@ -2032,6 +2032,17 @@ public class Tree {
         return diff == 0;
     }
 
+    // LeetCode 226. Invert Binary Tree
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null)
+            return null;
+        TreeNode tempL = invertTree(root.right);
+        TreeNode tempR = invertTree(root.left);
+        root.left =tempL;
+        root.right = tempR;
+        return root;
+    }
+
 
 
 

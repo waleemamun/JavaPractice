@@ -315,5 +315,123 @@ public class GraphNode {
         return eulerPath;
     }
 
+    //LeetCode :: 269 Alien Dictonary
+    private void dfsAlien(Character u, HashMap<Character,ArrayList<Character>> graph,
+                          int [] colors, StringBuilder sb) {
+        ArrayList<Character> adjList = graph.getOrDefault(u, null);
+        colors[u] = 1;// grey
+        if (adjList != null) {
+            for (Character v : adjList) {
+                // color is white
+                if(colors[v] == 0) {
+                    colors[v] = 1; // grey
+                    dfsAlien(v, graph, colors,sb);
+                }
+            }
+        }
+        colors[u] = 2; // black
+        sb.append(u);
+    }
+
+    public String alienOrder(String []words){
+        HashMap<Character,ArrayList<Character>> graph = new HashMap<>();
+        HashMap<Character, Integer> inDegree = new HashMap<>();
+        // build the graph from the lexical ordering of words
+        for (int j = 1; j <words.length; j++) {
+            String first = words[j-1];
+            String second = words[j];
+            int len = Math.min(first.length(), second.length());
+            int i = 0;
+            while (i< len && first.charAt(i) == second.charAt(i))
+                i++;
+            // add edge to the adjlist
+            graph.putIfAbsent(first.charAt(i), new ArrayList<>());
+            graph.get(first.charAt(i)).add(second.charAt(i));
+            // count the indegree of the graph
+            inDegree.putIfAbsent(first.charAt(i), 0);
+            inDegree.put(second.charAt(i), inDegree.getOrDefault(second.charAt(i), 0) +1);
+        }
+        Character src = '*' ;
+        // get the src node for dfs, the src node has zero indegrees. There will always be a zero indegree node because
+        // the alien alphabet must have a  start
+        for (Map.Entry<Character, Integer> entry : inDegree.entrySet()) {
+            if(entry.getValue() == 0) {
+                src = entry.getKey();
+                break;
+            }
+        }
+        if (src == '*') {
+            System.out.println("No zero Indegree src");
+            return "";
+        }
+        
+        // we can either use bfs or dfs to do topological sort I have implemented both
+        // if you want the fds version uncomment the following lines and comment out the bfs version
+
+        // do dfs + topological sort of the graph to get the order of the alien dictionary
+        //int []colors = new int[128];
+        // StringBuilder sb = new StringBuilder();
+        // dfsAlien(src, graph, colors, sb);
+
+        // do bfs + topo sort
+        String sb = bfsTopologicalSearchAlien(src, graph, inDegree);
+        return sb;
+    }
+
+    // BFS + topological sort
+    /**
+     * ************************** BFS + Topological Sort *******************************************
+     *
+     * The following descrives how to implement a topological sort of a DAG using BFS
+     *
+     * Step-1: Compute in-degree (number of incoming edges) for each of the vertex present in the DAG
+     *         and initialize the count of visited nodes as 0.
+     *
+     * Step-2: Pick all the vertices with in-degree as 0 and add them into a queue (Enqueue operation)
+     *
+     * Step-3: Remove a vertex from the queue (Dequeue operation) and then.
+     *
+     *      Increment count of visited nodes by 1.
+     *      Decrease in-degree by 1 for all its neighboring nodes.
+     *      If in-degree of a neighboring nodes is reduced to zero, then add it to the queue.
+     *
+     * Step 4: Repeat Step 3 until the queue is empty.
+     * Step 5: If count of visited nodes is not equal to the number of nodes in the graph
+     *         then the topological sort is not possible for the given graph.
+     *
+     * */
+    public  String bfsTopologicalSearchAlien (Character src, HashMap<Character,ArrayList<Character>> graph,
+                                          HashMap<Character, Integer> inDegree) {
+        Queue<Character> queue = new LinkedList<>();
+        queue.add(src);
+        StringBuilder sb = new StringBuilder();
+        // we need the total node count assuming graph has all the node so total count is graph/adjlist rep size
+        int totalNodeCount = inDegree.size();
+
+        int visitedNodeCount = 0;
+        while(!queue.isEmpty()) {
+            Character u = queue.remove();
+            // add to topo sort list
+            sb.append(u);
+            // increase the visited node count
+            visitedNodeCount++;
+            // traverse the adjacency
+            ArrayList<Character> adjList = graph.getOrDefault(u, null);
+            if (adjList != null) {
+                for (Character v : adjList) {
+                    // decrease the indegree of the neighbor/adjacency
+                    inDegree.put(v, inDegree.get(v) -1);
+                    // if indegree of a node is zero add it to the queue to process in following iteration
+                    if (inDegree.get(v) == 0){
+                        queue.offer(v);
+                    }
+                }
+            }
+
+
+        }
+        return visitedNodeCount == totalNodeCount ? sb.toString() : "No Topological sort exist for this graph";
+    }
+
 
 }

@@ -1655,7 +1655,55 @@ public class SolutionsV2 {
         return result;
     }
 
+    // LeetCode :: 680. Valid Palindrome II
+    boolean checkValidPalindrome (char []str, int l, int r, boolean skip) {
+        if (l>r)
+            return true;
+        if (str[l] == str[r])
+            return checkValidPalindrome(str, l+1, r-1, skip);
+        else if (str[l] != str[r] && skip)
+            return checkValidPalindrome(str, l+1, r, false)
+                    || checkValidPalindrome(str, l, r-1, false);
+        else
+            return false;
+    }
 
+    public boolean validPalindrome(String s) {
+        char [] str = s.toCharArray();
+        return checkValidPalindrome(str, 0, s.length() -1, true);
+    }
+
+    // LeetCode :: 523. Continuous Subarray Sum
+    // The idea is same as the range sum problem 560, we need to get the running sum and the running_sum % mod for all
+    // elements of the array. We need to pay attention to the mod k (as the problem talks about n*k also all elements in
+    // the array is positive). The mod K will be same say x for two item if the diff between the running sum is x or
+    // multiple of x. if two running sum is a & b then a%k =x and b%k =x then b - a == x or multiple of x.
+    // So we basically use this idea here. We put the running sum % k in hashmap and if we encounters same
+    // running_sum % k then the difference between the running sum of this two positions is k or multiple of k
+    // if the subset len is atleast 2  then our result is true
+    public boolean checkSubarraySum(int[] nums, int k) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int sum = 0;
+        for (int i = 0; i < nums.length;i++) {
+            // running sum
+            sum += nums[i];
+            // if k is non-zero we can get running_sum % k
+            if (k != 0)
+                sum %= k;
+            // at any point running sum is zero we have a solution
+            if (sum == 0 && i >=1)
+                return true;
+            // check if any previous running sum % matches the current if yes & the size of the subset is atleast
+            // 2 we return true
+            int idx = map.getOrDefault(sum, -1);
+            if (idx!= -1 && i -idx >=2)
+                return true;
+            // store the item into map we tend to keep the oldest index so the the subset
+            // size is bigger (i - idx) when we consider later
+            map.putIfAbsent(sum,i);
+        }
+        return false;
+    }
 
 
 
