@@ -364,7 +364,7 @@ public class GraphNode {
             System.out.println("No zero Indegree src");
             return "";
         }
-        
+
         // we can either use bfs or dfs to do topological sort I have implemented both
         // if you want the fds version uncomment the following lines and comment out the bfs version
 
@@ -427,10 +427,59 @@ public class GraphNode {
                     }
                 }
             }
-
-
         }
         return visitedNodeCount == totalNodeCount ? sb.toString() : "No Topological sort exist for this graph";
+    }
+
+
+    // LeetCode :: 207. Course Schedule
+    // The idea is to use a dfs to detect if loop exist in a the course dependency graph
+    // First using the prerequisite we build the course dependency graph
+    // a prerequisite [u,v] means an edge v->u course v needs to be taken before course u
+    // After builiding the graph we can just do a dfs to check for a loop if loop exist
+    // we cannot resolve course prerequisite otherwise yes
+    private boolean dfsVisitCourse(int u , ArrayList<Integer> [] graph, int []color) {
+        ArrayList<Integer> adjList = graph[u];
+        color[u] = 1; // grey
+        if (adjList != null) {
+            for (int v : adjList) {
+                if (color[v] == 1) { // grey vertex
+                    // loop detected so return false course pre-requisite has loop cannot be solved
+                    return false;
+                } else if(color[v] == 0) { // if vertex is white
+                    if(!dfsVisitCourse(v, graph, color))
+                        return false;
+                }
+            }
+        }
+        color[u] = 2; //black
+        return true;
+    }
+
+    private boolean dfsCourses (ArrayList<Integer> [] graph, int numCourse) {
+        int []color = new int[numCourse];
+        // run dfs on all white nodes of the graph
+        for (int u = 0; u < numCourse; u++) {
+            if (color[u] == 0) { // white vertex
+                if(!dfsVisitCourse(u, graph, color))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer> [] graph = new ArrayList[numCourses];
+        // build the graph
+        for (int []edges : prerequisites) {
+            if(graph[edges[1]] == null)
+                graph[edges[1]] = new ArrayList<>();
+            graph[edges[1]].add(edges[0]);
+
+        }
+        // do dfs to detecr if loop exist
+        return  dfsCourses(graph, numCourses);
+
     }
 
 

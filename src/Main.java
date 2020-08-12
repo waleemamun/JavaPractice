@@ -221,6 +221,7 @@ public class Main {
                 {2, 3},
                 {4, 3},
                 {5, 4},
+                {5,0}
         };
         int []newInterval = {7,23};
 
@@ -248,9 +249,10 @@ public class Main {
                             {1,0,1,0,1},
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
+        System.out.println(g1.canFinish(6, edges));
 
 
-        System.out.println("Alien Order " +g1.alienOrder(words));
+
 
 
 
