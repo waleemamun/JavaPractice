@@ -1767,7 +1767,7 @@ public class Tree {
         return root;
     }
 
-    // LeetCode :: 865. Smallest Subtree with all the Deepest Nodes (not submitted)
+    // LeetCode :: 865. Smallest Subtree with all the Deepest Nodes
     private HashMap<TreeNode, Integer> mapTreeNode = new HashMap<>();
     // Get Height using memoization
     private int getHeightOfNode(TreeNode node){
@@ -1809,7 +1809,9 @@ public class Tree {
         return subtreeWithAllDeepestRecV2(root).node;
     }
     public NodeDeptth subtreeWithAllDeepestRecV2(TreeNode root){
-        if(root == null) return new NodeDeptth(0,null);
+        if(root == null)
+            return new NodeDeptth(0,null);
+
         NodeDeptth leftTree = subtreeWithAllDeepestRecV2(root.left);
         NodeDeptth rightTree = subtreeWithAllDeepestRecV2(root.right);
         if (leftTree.depth > rightTree.depth)
@@ -1846,6 +1848,7 @@ public class Tree {
         binaryTreePathsRec(root, pathList, new StringBuilder());
         return pathList;
     }
+
     private int closetDiff;
     private int closestNode;
     private void findClosestInBSTRec (TreeNode root, int target) {

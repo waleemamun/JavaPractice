@@ -884,6 +884,7 @@ public class SolutionsV1 {
     // After the any next addition to the window we discard the low as long as the
     // total sum is still >= s, and we reduce the current currentSum to adjust the window (cur <-> low gives the sum)
     // we keep track of the min window Size.
+    // Here we can use a sliding window because "The array contains all positive numbers"
     public int minSubArrayLen(int s, int[] nums) {
         int low = 0;
         int cur = 0;
@@ -909,6 +910,28 @@ public class SolutionsV1 {
         if(minSize == Integer.MAX_VALUE)
             minSize = 0;
         return minSize;
+    }
+
+    // Same idea here we use sliding window same runtime & space.
+    // But this version is more concise and easy to read.
+    // It is written using the sliding window tempplate
+    public int minSubArrayLen2(int s, int[] nums) {
+        int left =0;
+        int right = 0;
+        int curSum = 0;
+        int minLen = Integer.MAX_VALUE;
+        while (right < nums.length) {
+            curSum+= nums[right];
+            while (curSum >= s) {
+                minLen = Math.min(minLen, right -left +1);
+                curSum -= nums[left];
+                left++;
+            }
+            right++;
+        }
+        if (minLen == Integer.MAX_VALUE)
+            minLen = 0;
+        return minLen;
     }
 
     //LeetCode :: 76. Minimum Window Substring (Hard)
