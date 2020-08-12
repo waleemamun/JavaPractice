@@ -213,7 +213,7 @@ public class Main {
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "cananw";
+        String str1 = "lee(t(c)o)de)";
         String str2 = "NAzEeF";
         int [][] edges = {
                 {0, 3},
@@ -249,7 +249,7 @@ public class Main {
                             {1,0,1,0,1},
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
-        System.out.println(g1.canFinish(6, edges));
+        System.out.println(" Res Str " + sv2.minRemoveToMakeValid2(str1));
 
 
 

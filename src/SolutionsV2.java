@@ -1705,6 +1705,82 @@ public class SolutionsV2 {
         return false;
     }
 
+    // LeetCode :: 1249. Minimum Remove to Make Valid Parentheses
+    // The idea is to mark all mismatch parenthesis with '*' in the first pass. We are using a stack to detect the
+    // mismatch parenthesis, Next we do a second pass to make a valid string discarding the '*'
+    public String minRemoveToMakeValid(String s) {
+        char []str = s.toCharArray();
+        Stack<Integer> stack = new Stack<>();
+        int i =0;
+        while (i<str.length) {
+            if(str[i] == '(')
+                stack.push(i);
+            else if (str[i]==')') {
+                if(!stack.isEmpty())
+                    stack.pop();
+                else
+                    str[i] ='*';
+            }
+            i++;
+        }
+        while (!stack.isEmpty()) {
+            str[stack.pop()] = '*';
+        }
+        i=0;
+        int j = 0;
+        while(i<str.length) {
+            if(str[i]!='*')
+                str[j++] = str[i];
+            i++;
+        }
+
+        return new String(Arrays.copyOf(str,j));
+    }
+
+    // This approach is little quicker but same O(n) runtime for both is & above
+    // This one has O(1) space which is an improvement
+    // The idea is using variable to detect the valid parenthesis and not a stack
+    // when we see '(' we increment & when we see ')' we decrement in th first pass if during the parnethesis value
+    // is zero before decrement it means we have found an invalid parenthesis hence skip processing
+    // First pass is done left to right 2 nd pass is done right to left so we increment for ')' and decrement for '('
+    // Consider parenthesis changes based on which side (left or right) we are reading from.
+    //
+    public String minRemoveToMakeValid2(String s) {
+        char []str = s.toCharArray();
+
+        int parenthesis= 0;
+        int j = -1;
+        // on first scan we detect the invalid ')' and update/remove them from our string array
+        for (int i = 0; i<str.length ; i++) {
+            if(str[i] == '(')
+                parenthesis++;
+            else if (str[i]==')') {
+                if(parenthesis == 0)
+                    continue;
+                else
+                    parenthesis--;
+
+            }
+            str[++j] = str[i];
+        }
+        // reset the parenthesis count
+        parenthesis = 0;
+        // end needs to be adjusted to the new string len
+        int end = j;
+        // on the 2nd pass we scan from right so we remove the invalid '(' from our string array
+        for (int i = end; i>=0; i--) {
+            if(str[i]==')')
+                parenthesis++;
+            else if (str[i]=='('){
+                if (parenthesis ==0)
+                    continue;
+                else
+                    parenthesis--;
+            }
+            str[j--] = str[i];
+        }
+        return new String(Arrays.copyOfRange(str,j+1,end +1));
+    }
 
 
 
