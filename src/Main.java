@@ -209,11 +209,13 @@ public class Main {
                 {'0','0','0','1'}
         };
 
-        String [] words = {"wrt","wrf","er","ett","rftt"};
+
+        String [] words = {"apple", "pen"};
+        List<String> wordList = new ArrayList<>(Arrays.asList(words));
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "lee(t(c)o)de)";
+        String str1 = "applepenappleapple";
         String str2 = "NAzEeF";
         int [][] edges = {
                 {0, 3},
@@ -249,7 +251,7 @@ public class Main {
                             {1,0,1,0,1},
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
-        System.out.println(" Res Str " + sv2.minRemoveToMakeValid2(str1));
+        System.out.println(" Res: " + dp1.wordBreak(str1, wordList));
 
 
 

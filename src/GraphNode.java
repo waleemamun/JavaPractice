@@ -103,9 +103,10 @@ public class GraphNode {
 
 
     // LeetCode :: 127. Word Ladder & Adna Aziz 19.7
+    // check out another version of this below implement in a easy to read way
     // The most interesting part is how the adjacency was built, for example  hot  create three keys (H*t, *ot,ho*)
     // we store (H*t, *ot,ho*) as keys and hot as value for each key; note that *ot will also map to dot
-    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+    public int ladderLength2(String beginWord, String endWord, List<String> wordList) {
 
         // Since all words are of same length.
         int L = beginWord.length();
@@ -480,6 +481,80 @@ public class GraphNode {
         // do dfs to detecr if loop exist
         return  dfsCourses(graph, numCourses);
 
+    }
+
+    // LeetCode :: 127. Word Ladder
+    // The idea is do a BFS on the wordlist we start with beginWord and try to find the endWord using BFS if we find it
+    // the distance would be the shortest as we are using bfs here (all edge have same weight).
+    // The most interesting part is how the adjacency was built, for example  hot  create three keys (H*t, *ot,ho*)
+    // we store (H*t, *ot,ho*) as keys and hot as value for each key; note that *ot will also map to dot
+    class StrPair {
+        String str;
+        Integer len;
+        public StrPair(String s, int l){
+            str = s;
+            len = l;
+        }
+    }
+
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+
+        HashMap<String, ArrayList<String>> graph = new HashMap<>();
+        HashSet<String> visited = new HashSet<>();
+
+        int wordLen = beginWord.length();
+        if (wordList.size() == 0)
+            return 0;
+        // build the graph
+        for (String word : wordList) {
+            char w[] = word.toCharArray();
+            for (int i = 0; i<wordLen; i++) {
+                char ch = w[i];
+                w[i] = '*';
+                String ws = new String(w);
+                graph.putIfAbsent(ws, new ArrayList<>());
+                graph.get(ws).add(word);
+                w[i] = ch;
+            }
+        }
+
+        // do BFS to find the shortest path
+        Queue<StrPair> queue = new LinkedList<>();
+        queue.add(new StrPair(beginWord,1));
+        visited.add(beginWord);
+        int len = 0;
+        while (!queue.isEmpty()) {
+            // remove from queue
+            StrPair u = queue.remove();
+
+            // look up the adj list of u to put the next node in bfs queue
+            char str[] = u.str.toCharArray();
+            // create the posible word keys for example hot has ho*, h*t, *ot three possible keys
+            for (int i =0; i<wordLen; i++) {
+                char ch = str[i];
+                str[i] ='*';
+                // get the adj list
+                ArrayList<String> adjList = graph.getOrDefault(new String(str), null);
+                if (adjList != null) {
+                    for (String v : adjList) {
+                        // found the dest node return the shortest length
+                        if(v.equals(endWord)) {
+                            return u.len+1;
+                        }
+                        // only visit the undiscovered node
+                        if(!visited.contains(v)) {
+                            // add the node to bfs queue
+                            queue.add(new StrPair(v, u.len +1));
+                            // mark this node as visited
+                            visited.add(v);
+                        }
+                    }
+                }
+                str[i] = ch;
+            }
+        }
+
+        return len;
     }
 
 

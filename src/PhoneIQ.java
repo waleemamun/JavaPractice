@@ -911,6 +911,14 @@ public class PhoneIQ {
         }
 
     }
+    public List<String> faultyKeyboard(String str, String []words) {
+        List<String> resList = new ArrayList<>();
+        HashSet<String> dict = new HashSet<>(Arrays.asList(words));
+
+        faultyKeyboardRec(str.toCharArray(),0, dict, resList);
+        return resList;
+    }
+
     public int getSpaceIdx(char []str, int idx){
 
         while(idx <str.length && str[idx]!=' ')
@@ -1028,13 +1036,7 @@ public class PhoneIQ {
 
         }
     }
-    public List<String> faultyKeyboard(String str, String []words) {
-        List<String> resList = new ArrayList<>();
-        HashSet<String> dict = new HashSet<>(Arrays.asList(words));
 
-        faultyKeyboardRec(str.toCharArray(),0, dict, resList);
-        return resList;
-    }
 
     /**
      *  Google Phone Interview

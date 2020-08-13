@@ -1529,6 +1529,106 @@ public class DPs {
 
 
 
+    // LeetCode :: 139. Word Break (this takes 3 ms)
+    // Memoisation used with recursion to cache the failed cases and not try for failed cases
+    // for example str = leetcode  dict = [leet, code] when are depth of recursion last 'e' or 'de' is not in the dictionary
+    // so when ever we reach the len = 6 (leetco) we know from our memo cache that failed len 6 exist in memo cache
+    // so we dont go any further same for len =5 (leetc)  'ode' is not in dict so len 5 goes to memo failed cache
+    // This one performs better as break as soon as we ge the result
+    //
+    private boolean wordBreakRec (HashSet <String> dict, String s,
+                                  int index,
+                                  HashSet <Integer> memoFailedLen){
+        if(index == s.length())
+            return true;
+        for (int i = index+1; i <=s.length(); i++) {
+            if(memoFailedLen.contains(i))
+                continue;
+            // upto i is found in the dictionary
+            if(dict.contains(s.substring(index,i))){
+                // lets check if rest is also in dict
+                if(wordBreakRec(dict, s, i,memoFailedLen))
+                    return true;
+                // 0, i -1 is in dict but at len i we failed to find a solution
+                // lets cache this in the memoization table
+                memoFailedLen.add(i);
+            }
+        }
+        return false;
+
+
+    }
+
+    public boolean wordBreakV2(String s, List<String> wordDict) {
+        HashSet <String> dict = new HashSet<>(wordDict);
+        HashSet <Integer> memoFailedLen = new HashSet<>();
+        return wordBreakRec(dict, s, 0, memoFailedLen);
+
+    }
+
+    // DP (non memo) version of word break ((this takes 6 ms))
+    // Uses the same DP approach of LIS
+    // This one is little slower O(s^3)
+    // We use an approach similar to LIS where for each current char we check previous valid breaks in the string
+    // if we find a previous valid break at position j then we check if the current substr (j,i) is in the dictionary
+    // if yes then we found another valid break at i so update the valid break and keep going on until we reach the end
+    // of our input
+    public boolean wordBreak3(String s, List<String> wordDict) {
+        // denotes if the string is breakable at pos i+1
+        boolean validBreaks[] = new boolean[s.length() +1];
+        HashSet <String> dict = new HashSet<>(wordDict);
+        validBreaks[0] = true;
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j<i; j++) {
+                // check if the previous string & the current sub string is breakable
+                // if so we can say the string is breakable at this poition
+                if (validBreaks[j] && dict.contains(s.substring(j,i))) {
+                    validBreaks[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return validBreaks[s.length()];
+    }
+    // A queue / bfs approach to this problem (This is not a dp solution) its the slowest....
+    // this may not be the best solution
+    /**
+     *     Idea is to try to chop off prefix of s that is in the dict
+     *     enqueue the left-over of each chop off
+     *     if there is a time the left over happens to be in the dict as well
+     *         we know word is breakable, b/c all the previous chops are all in the dict
+     *     otherwise the original world is not breakable.
+     *
+     *     we can use a set to store all the leftovers that we have tried, to avoid enqueue the
+     *     same leftover multiple times.
+     * */
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Queue<String> queue = new LinkedList<>();
+        HashSet <String> dict = new HashSet<>(wordDict);
+        HashSet<String> visited = new HashSet<>();
+        queue.add(s);
+        visited.add(s);
+        while (!queue.isEmpty()) {
+            String rest = queue.remove();
+            if(dict.contains(rest))
+                return true;
+            for(int i = 0; i < rest.length(); i++) {
+                String chop = rest.substring(0,i);
+                String next = rest.substring(i,rest.length());
+                if(!visited.contains(next) && dict.contains(chop)) {
+                    visited.add(next);
+                    queue.offer(next);
+                }
+            }
+        }
+        return false;
+
+    }
+
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 import javafx.geometry.Pos;
 import org.omg.PortableInterceptor.INACTIVE;
+import sun.jvm.hotspot.utilities.Interval;
 
 import java.awt.image.AreaAveragingScaleFilter;
 import java.lang.reflect.Array;
@@ -2033,8 +2034,6 @@ public class Recursions {
         }
         // the result is shortest path len - 2 (we subtract 1 for each island)
         return A[pair.x][pair.y] - 2;
-
-
     }
 
 
