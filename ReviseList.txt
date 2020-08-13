@@ -9,3 +9,4 @@
 76. Minimum Window Substring
 209. Minimum Size Subarray Sum (we can use sliding window because the array is all positive)
 220. Contains Duplicate III (this cannot use sliding window cause array items are not always positive)
+41. First Missing Positive (Hard)
