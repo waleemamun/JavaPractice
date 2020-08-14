@@ -557,5 +557,165 @@ public class GraphNode {
         return len;
     }
 
+    // LeetCode :: 133. Clone Graph
+    // Use either bfs or dfs to construct the graph
+    // this is the bfs approach
+    public Node cloneGraph2(Node node) {
+        if (node == null)
+            return node;
+        Node start = new Node(node.val);
+        Queue<Node> queue = new LinkedList<>();
+        HashMap<Integer,Node> nodeMap = new HashMap<>();
+        queue.add(node);
+        nodeMap.put(node.val, start);
+        while (!queue.isEmpty()) {
+            Node oldNode = queue.poll();
+            List<Node> adjList = oldNode.neighbors;
+            Node newNode = nodeMap.getOrDefault( oldNode.val,null);
+            for (Node n : adjList) {
+                Node adj = nodeMap.getOrDefault(n.val, new Node(n.val));
+                newNode.neighbors.add(adj);
+                if (!nodeMap.containsKey(n.val)) {
+                    nodeMap.put(adj.val,adj);
+                    queue.add(n);
+                }
+            }
+        }
+        return start;
+    }
+    // this is the dfs approach
+    public Node cloneGraph(Node node) {
+        if (node == null)
+            return node;
+        HashMap<Integer,Node> nodeMap = new HashMap<>();
+        return createCloneGraph(node, nodeMap);
+    }
+    private Node createCloneGraph(Node node , HashMap<Integer, Node> map) {
+        if (map.containsKey(node.val))
+            return map.get(node.val);
+        Node newNode = new Node(node.val);
+        map.put(newNode.val, newNode);
+        for (Node n : node.neighbors) {
+            newNode.neighbors.add(createCloneGraph(n,map));
+        }
+        return newNode;
+    }
+
+    // LeetCode :: 138. Copy List with Random Pointer
+    // Lets try a BFS approach to solve this, we uses the same approach as the clone graph problem.
+    // Hear each node only has two neighbors (random, next). We have to maintain a BFS visited nodeList
+    // the visited is implemented using hashmap. We start a bgs traversal from the head node.
+    // Think of this linkedList as graph where very node has two edges (next & random)
+    public Node copyRandomList2(Node head) {
+        if (head == null)
+            return head;
+        HashMap< Node, Node> visited = new HashMap<>();
+        Queue <Node> queue = new LinkedList<>();
+        Node newHead = new Node(head.val);
+        visited.put(head, newHead);
+        queue.add(head);
+
+        while (!queue.isEmpty()) {
+            Node node = queue.remove();
+            Node newNode = visited.get(node);
+            if (node.next != null) {
+                Node next = visited.getOrDefault(node.next , new Node(node.next.val));
+                newNode.next = next;
+                if (!visited.containsKey(node.next)) {
+                    queue.add(node.next);
+                    visited.put(node.next, next);
+                }
+            }
+            if (node.random != null) {
+                Node random = visited.getOrDefault(node.random , new Node(node.random.val));
+                newNode.random = random;
+                if(!visited.containsKey(node.random)) {
+                    queue.add(node.random);
+                    visited.put(node.random, random);
+                }
+            }
+        }
+        return newHead;
+    }
+    // This idea is to do a two pass on the list in the first pass we create the next pointers and in the second
+    // pass we create the random pointer. The trick here is to index the main list from 0 to n-1 and put it in
+    // arraylist so when we need to update random pointer in the old list the random pointer will actually give the
+    // index from which we can extrac the proper node pointed by the random pointer random.
+    // we add the new nodes based on the index of old list
+    public Node copyRandomList3(Node head) {
+        if (head == null)
+            return head;
+        // store the new list node in 0 to n-1 based index
+        ArrayList<Node> nodeList = new ArrayList<>();
+        Node dummy= new Node(-1);
+        Node prev = dummy;
+        Node cur = head;
+
+        int count = 0;
+        // create the next pointers also update the old list value as 0 to n-1
+        while (cur != null) {
+            prev.next = new Node(cur.val);
+            cur.val = count++;
+            cur = cur.next;
+            prev = prev.next;
+            nodeList.add(prev);
+
+        }
+
+        cur = head;
+        prev = dummy.next;
+        // update the randon pointer using the stored nodelist based on the oldlist index
+        // for example if old list node 1's random  points index 3 we get the third node from nodeList
+        while (cur!= null) {
+            Node random = cur.random;
+            if(random != null) {
+                prev.random = nodeList.get(random.val);
+            }
+            cur = cur.next;
+            prev = prev.next;
+        }
+
+        return  dummy.next;
+    }
+
+    // This is O(n) & O(1) algo
+    // this is very interesting the idea is to stich the list & unstich the list
+    // so for example if we have a list 1->2->3->4
+    // after stich we have 1->1'->2->2'->3->3'->4->4'
+    // after that we update random pointer for updated new items it easy as we the random pointer of 1' will
+    // be random.next pointer of 1
+    // after that we unstich and get two list 
+    public Node copyRandomList(Node head) {
+        if (head == null)
+            return head;
+        Node cur = head;
+        while (cur != null) {
+            Node node = new Node(cur.val);
+            node.next = cur.next;
+            cur.next = node;
+            cur = node.next;
+        }
+        cur = head;
+        while (cur != null) {
+            if(cur.random != null) {
+                cur.next.random = cur.random.next;
+            }
+            cur = cur.next.next;
+        }
+        Node dummyHead = new Node(-1);
+        cur = head;
+        Node copy = dummyHead;
+        while (cur != null) {
+            Node next = cur.next.next;
+            copy.next = cur.next;
+            copy = copy.next;
+            cur.next = next;
+            cur = next;
+        }
+
+        return dummyHead.next;
+    }
+
+
 
 }

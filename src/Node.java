@@ -11,8 +11,12 @@ public class Node {
     Node left;
     Node right;
     Node next;
-    public Node(int _val) {
-        val = _val;
+    Node random;
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
     }
 
     public Node(int _val, List<Node> _children) {
