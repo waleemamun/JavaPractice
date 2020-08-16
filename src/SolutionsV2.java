@@ -1782,6 +1782,66 @@ public class SolutionsV2 {
         return new String(Arrays.copyOfRange(str,j+1,end +1));
     }
 
+    // LeetCoed :: 162. Find Peak Element
+    // The problem actually requires to find any peak not the max peak also nums[-1] = -INF & nums[n] = -INF so for
+    // an ascending or descending curve the result would be nums[len-1] or nums[0] respectively.
+    // So based on these observation we can use a binary search on this we focus one finding a mid that is the peak
+    public int findPeakElement(int[] nums) {
+        int low = 0;
+        int high = nums.length-1;
+        int mid = 0;
+        while (low <= high) {
+            mid = low + (high -low)/2;
+            // ascending or descending curve found lets break
+            if (mid == 0 || mid == nums.length -1) {
+                break;
+            } // found the peak mid point to our peak
+            else if (nums[mid] > nums[mid+1] && nums[mid] > nums[mid -1])
+                break;
+            // right of mid is higher so the peak should be on the right of mid lets move to the right
+            else if(nums[mid] < nums[mid+1]) {
+                low = mid +1;
+            } // left of mid is higher so the peak should be on the left of mid lets move to the left
+            else {
+                high = mid -1;
+            }
+        }
+        // one special case when mid is zero but its lower than mid+1 value this could happen for input [1,2]
+        if (nums.length >1 && mid == 0 && nums[mid] < nums[mid+1])
+            return mid+1;
+
+        return mid;
+    }
+
+    // LeetCode :: 163. Missing Ranges
+    public List<String> findMissingRanges(int[] nums, int lower, int upper) {
+        int lowBound = lower;
+        List <String> resList = new ArrayList<>();
+        int i = 0;
+        for (i = 0; i < nums.length && nums[i] < upper; i++) {
+            StringBuilder sb = new StringBuilder();
+            if (lowBound  < nums[i] && nums[i] <upper) {
+                sb.append(lowBound);
+                if(nums[i] - lowBound > 2){
+                    sb.append("->");
+                    sb.append(nums[i]-1);
+                }
+                resList.add(sb.toString());
+            }
+            lowBound = nums[i]+1;
+        }
+        if (nums[i-1] +1 <upper){
+            StringBuilder sb = new StringBuilder();
+            sb.append(lowBound);
+            if(upper - lowBound > 2){
+                sb.append("->");
+                sb.append(upper);
+            }
+            resList.add(sb.toString());
+        }
+        return resList;
+    }
+
 
 
 

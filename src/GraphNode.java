@@ -684,7 +684,7 @@ public class GraphNode {
     // after stich we have 1->1'->2->2'->3->3'->4->4'
     // after that we update random pointer for updated new items it easy as we the random pointer of 1' will
     // be random.next pointer of 1
-    // after that we unstich and get two list 
+    // after that we unstich and get two list
     public Node copyRandomList(Node head) {
         if (head == null)
             return head;

@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8,9};
+        int [] arr =  {0, 1, 3, 50, 75,120};
         int [] arr1 = {5,3,4,2};
 
         int [][] arr2d = {
@@ -251,7 +251,9 @@ public class Main {
                             {1,0,1,0,1},
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
-        System.out.println(" Res: " + dp1.wordBreak(str1, wordList));
+        int val = sv2.findPeakElement(arr);
+        System.out.println("Res " + sv2.findMissingRanges(arr, -5,109));
+
 
 
 
