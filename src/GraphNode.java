@@ -1,4 +1,5 @@
 import javafx.util.Pair;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.xml.ws.spi.http.HttpHandler;
 import java.lang.reflect.Array;
@@ -381,7 +382,8 @@ public class GraphNode {
 
     // BFS + topological sort
     /**
-     * ************************** BFS + Topological Sort *******************************************
+     * ************************** BFS + Topological Sort *********************************************
+     * *********** Note: Its better to use BFS for toposort if the start vertex is not known *********
      *
      * The following descrives how to implement a topological sort of a DAG using BFS
      *
@@ -483,6 +485,58 @@ public class GraphNode {
 
     }
 
+    // LeetCode :: 210. Course Schedule II
+    // The idea is to do a topological sort using BFS. As we dont know which node is the start node for topological sort
+    // its better to use BFS as it will require less memory. First we need to find a vertex with 0 in-degree.
+    // if no such vertex the topo sort not possible. Next using the indegee 0 vertex we as start we do bfs topo sort
+    // if topo sort exist (visite node count == tot node count) we have a topo sort otherwise no
+    //  Note:: Use BFS for TOPO sort dont worry about loop
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        ArrayList<Integer> []graph = new ArrayList[numCourses];
+        int [] indegree = new int [numCourses];
+        for (int [] edges : prerequisites) {
+            if(graph[edges[1]] ==null)
+                graph[edges[1]] = new ArrayList<>();
+            graph[edges[1]].add(edges[0]);
+            indegree[edges[0]]++;
+        }
+        ArrayList<Integer> pList = new ArrayList<>();
+        Queue <Integer> queue = new LinkedList<>();
+        // Do a BFS Topological Sort
+        for (int i =0; i<numCourses; i++) {
+            // get the possible start vertices (vertex with indegree == 0)
+            if(indegree[i] == 0)
+                queue.add(i);
+        }
+
+        if(queue.size() == 0)
+            return new int[0];
+        int visitedNodes = 0;
+        // traverse the graph o find topo sort
+        while (!queue.isEmpty()) {
+            int u = queue.remove();
+            visitedNodes++;
+            pList.add(u);
+            ArrayList<Integer> adjList = graph[u];
+            if(adjList != null) {
+                for (Integer v : adjList) {
+                    indegree[v]--;
+                    if(indegree[v] == 0)
+                        queue.add(v);
+                }
+            }
+        }
+        // for topo sort all nodes need to be visited
+        if(visitedNodes != numCourses)
+            return new int[0];
+        int []pOrder = new int[pList.size()];
+        int i = 0;
+        for (Integer p : pList){
+            pOrder[i++]  = p;
+        }
+
+        return pOrder;
+    }
     // LeetCode :: 127. Word Ladder
     // The idea is do a BFS on the wordlist we start with beginWord and try to find the endWord using BFS if we find it
     // the distance would be the shortest as we are using bfs here (all edge have same weight).

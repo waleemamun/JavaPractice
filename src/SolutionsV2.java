@@ -1814,6 +1814,8 @@ public class SolutionsV2 {
     }
 
     // LeetCode :: 163. Missing Ranges
+    // The idea is to use the lower & upper to find the missing range in s the sorted array we do linear scan  to find
+    // the missing items
     public List<String> findMissingRanges(int[] nums, int lower, int upper) {
         int lowBound = lower;
         List <String> resList = new ArrayList<>();
@@ -1830,6 +1832,7 @@ public class SolutionsV2 {
             }
             lowBound = nums[i]+1;
         }
+        // the last item needs to be checked with uppper
         if (nums[i-1] +1 <upper){
             StringBuilder sb = new StringBuilder();
             sb.append(lowBound);
@@ -1842,6 +1845,66 @@ public class SolutionsV2 {
         return resList;
     }
 
+    // LeetCode :: 179. Largest Number
+    // The idea is to implement a string comparator, we can simple check if merging two string in the form A+B & B+A
+    // and compare the result for example if A = 3 and B = 5 we have 35 & 53. we compare 35 & 53.
+    // another example is A= 121 & B= 12 so 12112 & 12121 needs to compare
+    public String largestNumber2(int[] nums) {
+        if(nums.length == 0)
+            return "";
+        ArrayList<String> numbers = new ArrayList<>(nums.length);
+        int i =0;
+        for (Integer n : nums) {
+            numbers.add(n.toString());
+        }
+        Collections.sort(numbers, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                String str1 = o1+o2;
+                String str2 = o2+o1;
+                return str2.compareTo(str1);
+            }
+
+        });
+        // handle al zero cases
+        if (numbers.get(0).equals("0"))
+            return "0";
+        StringBuilder res = new StringBuilder();
+        for (String n : numbers) {
+            res.append(n);
+        }
+        return res.toString();
+
+    }
+
+    // This  version uses Simple Array vs ArrayList in the previous version
+    // this gives better performance 4ms compared to 5ms in the prev
+    public String largestNumber(int[] nums) {
+        if(nums.length == 0)
+            return "";
+        String[] numbers = new String[nums.length];
+        int i =0;
+        for (Integer n : nums) {
+            numbers[i++] = n.toString();
+        }
+        Arrays.sort(numbers, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                String str1 = o1+o2;
+                String str2 = o2+o1;
+                return str2.compareTo(str1);
+            }
+
+        });
+        // handle al zero cases
+        if (numbers[0].equals("0"))
+            return "0";
+        StringBuilder res = new StringBuilder();
+        for (String n : numbers) {
+            res.append(n);
+        }
+        return res.toString();
+    }
 
 
 

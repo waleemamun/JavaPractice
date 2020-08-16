@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {0, 1, 3, 50, 75,120};
+        int [] arr =  {12,121};
         int [] arr1 = {5,3,4,2};
 
         int [][] arr2d = {
@@ -218,12 +218,12 @@ public class Main {
         String str1 = "applepenappleapple";
         String str2 = "NAzEeF";
         int [][] edges = {
-                {0, 3},
-                {1, 3},
+                {0, 1},
+                {1, 2},
                 {2, 3},
-                {4, 3},
-                {5, 4},
-                {5,0}
+                {3, 4},
+                {4, 5},
+                {5, 0}
         };
         int []newInterval = {7,23};
 
@@ -235,14 +235,8 @@ public class Main {
         Tree tr1 = new Tree();
         TreeNode treeNode = tr1.createBSTree(0,arr.length-1,arr);
         PhoneIQ p1 = new PhoneIQ();
-        //System.out.println(" Result " + p1.numberOfWays(arr,6));
         CodeArray c1  =new CodeArray();
-        //System.out.println("Res " + Arrays.toString(sv2.dailyTemperaturesV2(arr)));
-        System.out.println(" Level Order " + tr1.levelOrder(treeNode));
-        //System.out.println(" Vertical Order " + tr1.verticalTraversalLeftToRight(treeNode));
-        System.out.println(" valid " + tr1.isValidSerialization(str1));
         GraphNode g1 = new GraphNode();
-        //System.out.println(g1.findMinHeightTrees(6, edges));
         DataStructProblem d1 = new DataStructProblem();
         LinkList ls1 = new LinkList();
 
@@ -252,7 +246,8 @@ public class Main {
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
-        System.out.println("Res " + sv2.findMissingRanges(arr, -5,109));
+        System.out.println("Res " + sv2.largestNumber(arr));
+        System.out.println("c list = " +Arrays.toString(g1.findOrder(6,edges)));
 
 
 
