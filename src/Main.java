@@ -246,8 +246,8 @@ public class Main {
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
-        System.out.println("Res " + sv2.largestNumber(arr));
-        System.out.println("c list = " +Arrays.toString(g1.findOrder(6,edges)));
+        dp1.numSquares(16);
+
 
 
 

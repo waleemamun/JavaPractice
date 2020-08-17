@@ -1626,10 +1626,46 @@ public class DPs {
 
     }
 
+    // LeetCode :: 279. Perfect Squares
+    // The idea is to use a DP solution. if number is perfect square the count is 1.
+    // So to minimise for any number j we check all j - perfect square i*i counts so the dp eqn
+    // is dp[j] = Min(dp[j], dp [j - i*i] + 1) in the this term the + 1 is for the perfect square
+    // for example 12 = 8 +4 ; 4 is a perfect square so we add +1 and 8 is not perfect sqr
+    // so dp[12-4] = dp[8]  value is 2 so for dp[12] = dp[4] + dp[8] = 1 +2 = 3
+    public int numSquares2(int n) {
+        int [] sqrCounts = new int[n+1];
+        sqrCounts[0] = 0;
+        for (int j = 1; j <=n; j++) {
+            sqrCounts[j] = Integer.MAX_VALUE;
+            for (int i = 1; i*i <= j; i++) {
+                sqrCounts[j] = Math.min(sqrCounts[j], sqrCounts[j  - i*i] +1);
+            }
+        }
+        System.out.println(Arrays.toString(sqrCounts));
+        return sqrCounts[n];
+    }
+    // Based on Lagrange's Four Square theorem, there
+    // are only 4 possible results: 1, 2, 3, 4.
+    public int numSquares(int n) {
+        // The result is 4 if and only if n can be written in the
+        // form of 4^k*(8*m + 7). Please refer to
+        // Legendre's three-square theorem.
+        while (n % 4 == 0)
+            n /= 4;
+        if (n % 8 == 7)
+            return 4;
+        // Check whether 2 is the result or if its a perfect square
+        for (int a = 0; a * a <= n; ++a) {
+            int b = (int) Math.sqrt(n - a * a);
+            if (a * a + b * b == n)
+                return a == 0 ? 1 : 2; //if a == 0 we have perfect square then result is 1
+        }
+        return 3;
+
+    }
 
 
 
 
 
-
-}
+    }
