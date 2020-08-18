@@ -2046,6 +2046,55 @@ public class Tree {
         return root;
     }
 
+    // Boundary Traversal Of a Binary Tree
+    private void traverseLeft (TreeNode node, List<Integer> left) {
+        if(node == null)
+            return;
+
+        if(node.left != null) {
+            left.add(node.val);
+            traverseLeft(node.left, left);
+        }
+        else if(node.right != null) {
+            left.add(node.val);
+            traverseLeft(node.right, left);
+        }
+    }
+    private void traverseRight (TreeNode node, List<Integer> right) {
+        if(node == null)
+            return;
+
+        if(node.right != null) {
+            right.add(node.val);
+            traverseLeft(node.right, right);
+        }
+        else if(node.left != null) {
+            right.add(node.val);
+            traverseLeft(node.left, right);
+        }
+    }
+
+    public void leafNodes(TreeNode node, List<Integer> leaf) {
+        if(node == null)
+            return;
+        leafNodes(node.left, leaf);
+        if(node.right == null && node.left == null)
+            leaf.add(node.val);
+        leafNodes(node.right, leaf);
+    }
+
+    public List<Integer> boundaryTraversal (TreeNode root) {
+        List<Integer> leafBoundary = new ArrayList<>();
+        List<Integer> leftBoundary = new ArrayList<>();
+        List<Integer> rightBoundary = new ArrayList<>();
+        traverseLeft(root, leftBoundary);
+        traverseRight(root, rightBoundary);
+        leafNodes(root, leafBoundary);
+        rightBoundary.remove(0);
+        leftBoundary.addAll(leafBoundary);
+        leftBoundary.addAll(rightBoundary);
+        return leftBoundary;
+    }
 
 
 
