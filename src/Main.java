@@ -192,8 +192,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8,9};
-        int [] arr1 = {5,3,4,2};
+        int [] arr =  {3, 5, 8, 9, 10, 17, 17, 20};
+        int [] arr1 = {2,5,7,8};
 
         int [][] arr2d = {
                 {2, 3, 4, 9},
@@ -248,8 +248,7 @@ public class Main {
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
         dp1.numSquares(16);
-        System.out.println(tr1.levelOrder(treeNode));
-        System.out.println(tr1.boundaryTraversal(treeNode));
+        System.out.println("price " + dp1.curRod(arr, 8));
 
 
 

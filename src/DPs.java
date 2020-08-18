@@ -1664,6 +1664,30 @@ public class DPs {
 
     }
 
+    // Cutting the rod problem
+    // The idea here is the same as LIS problem we approach this the same we we approach LIS
+    // for each i size rod we check if the whole rode or pieces of it brings more profit.
+    // For pieces of it we compare all 1 to i-1 cuts (we can actually check half of i/2) so for len 5
+    // we check the cut (1,4) (2,3) we dont need to check (3,2) or (4,1) thats why the 2nd loop has
+    // i/2+1 as breaking condition. So after check all the cuts smalller than 5 we check the whole
+    // rod which is 5's price and store the max i our dp array
+    // dp eqn dp[i] = max (dp[i-j] +dp[j]) for all j =1 to j = i-1 (or i/2+1)
+
+    public int curRod (int []nums, int n) {
+        int []dp = new int[n+1];
+        dp[0] = 0;
+        int max = 0;
+        for (int i = 1; i <=n; i++) {
+            for (int j = 1; j< i/2+1; j++) {
+                dp[i] = Math.max(dp[i], dp[i-j] + dp[j]);
+            }
+            dp[i] = Math.max(dp[i], nums[i-1]);
+            max = Math.max(dp[i], max);
+        }
+        return max;
+    }
+
+
 
 
 
