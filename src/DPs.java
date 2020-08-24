@@ -374,7 +374,7 @@ public class DPs {
     // The base case for bstCount[0] = 1 && bstCount[1] == 1 (if 1 node there is only 1 tree possible)
     // Next we need to figure for 1 to n for selecting each of n items as the root how many tree are possible
     // for example lets do it for 3 , if 1 is root then there are 2 trees, 2 is root there is 1 tree, if 3 is
-    // root there is 1 tree so total of 5. Now  1 ways--->()1 (2,3)<--2 ways , 1 ways -->(1)2(3)<-- 1 ways
+    // root there is 2 tree so total of 5. Now  1 ways--->()1 (2,3)<--2 ways , 1 ways -->(1)2(3)<-- 1 ways
     // 2 ways --> (1,2)3()<--- 1 ways, so if we know for 0 to n-1 how many trees we can use that to calc nth tree
     // by iterative selecting each item from 1 to n as a root an calc there bstCount and the combined sum would be
     // bstCount[n] = sum1Ton-1( bstCount[j-1] * bstCount[n-j])
@@ -387,10 +387,8 @@ public class DPs {
         bstCount[0] = 1;
 
         for (int i = 1; i <=n; i++){
-            int max = i;
-            int min = 1;
-            for (int j = 1; j <= max; j++) {
-                bstCount[i] += bstCount[j-min] * bstCount[max-j];
+            for (int j = 1; j <= i; j++) {
+                bstCount[i] += bstCount[j-1] * bstCount[i-j];
             }
 
         }
@@ -507,7 +505,9 @@ public class DPs {
 
     //LeetCode :: 322. Coin Change
     // All the version have same O(coins * amount)
-    // The coin change problem to find the minimum possible coin combination to reach the amount
+    // The coin change problem to find the minimum possible coin combination count to reach the amount
+    // Note: here that we need to get the minimum count of coin not ways ot reach the amount that's
+    // why we have the +1 in the dp eqn
     // The idea is very similar to the above problem here we need to find minumum ways
     // At every step we have few  options if the value of coin is bigger than the amount we use the previous coins value
     // for this amount. Otherwise we check if we dont take this coin so ways[i-1][j] is a better choice or if we take
@@ -580,7 +580,10 @@ public class DPs {
     // Here we do another further optimisation by using a Max value to set the dp array,
     // we feel the dp array with max val which helps to get over multiple if & else condition
     // in the previous cases. So its be come less clumssy.
-    // Note when dealing with mins in an array its often easier to set the whole array to max
+    // Note: when dealing with mins in an array its often easier to set the whole array to max
+    // Note: here that we need to get the minimum count of coin not ways ot reach the amount that's
+    // why we have the +1 in the dp eqn
+    // DP eqn : ways[i] = Min(ways[i], ways[ i- coin[j]] + 1)
     public int coinChangeSpaceOptimisedUsingMax(int[] coins, int amount) {
         int []ways = new int[amount+1];
         int max = amount  +1;
@@ -630,6 +633,8 @@ public class DPs {
     // This solution also uses the exact same DP equation : The dp equation is dp[i] = max(dp[i-1],dp[i-2] + p(i)).
     // The optimised approach is a very generic approach to similar DP problems where we just need to uses the last
     // n values for the n+1 th  value, in that case  we will need n last variables
+    // We need to run the dp calc twice as its an circular array and in the first pass we cal starting i = 0
+    // and 2nd pass we start i = 1 then we compare the max of two passes
     public int robCircular(int[] nums) {
         int lastLast = 0;
         int last = 0;
@@ -747,7 +752,7 @@ public class DPs {
     // the current sqaure length will min + 1 if this square has '1' in it. We recursively solve this for the
     // whole array. As we are trying to recursively solve it for the whole array we repeat the same computation
     // of calculating same square multiple time for example the square rooted at (4,4) needs to calculated for
-    // (0,0), (0,1), (1,1), (1,2) and so on... These are non overlapping sub problem. So we can use DP. The
+    // (0,0), (0,1), (1,1), (1,2) and so on... These are  overlapping sub problem. So we can use DP. The
     // easier option is to go by top Down memoization approach. Hence we introduce the dp array in the code
     private int maximalSquareRec(char[][] matrix, int i, int j, int dp[][]){
         if (i < 0 || j <0 ||
@@ -879,7 +884,7 @@ public class DPs {
     // this is O(n) time  O(1) space solution for special case.
     // We put the smaller item in dp [0] & dp [1] as soon as we get an item which is greater than d[1] we have our
     // solution if no item is greater than dp[1] then we return false
-    // Smaller items are put in dp[0] 2nd samller items are in dp[1] anytime we get something smaller
+    // Smallest items are put in dp[0] 2nd samller items are in dp[1] anytime we get something smaller
     // than dp [0] or dp[1] we update them accordingly
     public boolean increasingTriplet(int[] nums) {
         int []dp = new int [3];
@@ -929,8 +934,8 @@ public class DPs {
     // LeetCode :: 368. Largest Divisible Subset
     // The idea is to similar approach to LIS. We need to sort the array first then we apply the LIS O(n^2) version to
     // find the longest divisible subset. While calculating the longest divisible subset we also store the prev item in
-    // the subset in prev array this can ve later use to reconstruct the subset. We need ot sort the input so that we
-    // can only check for divisors bbefore the current item in the array
+    // the subset in prev array this can be later use to reconstruct the subset. We need ot sort the input so that we
+    // can only check for divisors before the current item in the array.
     public List<Integer> largestDivisibleSubset(int[] nums) {
         int []subSetlen = new int[nums.length];
         int []prev = new int [nums.length];
@@ -950,6 +955,8 @@ public class DPs {
                     }
                 }
             }
+            // store the max items index so that we can use the index to
+            // generate the list of subset using the prev array
             if (max < subSetlen[i]) {
                 max = subSetlen[i];
                 index = i;
@@ -1068,9 +1075,9 @@ public class DPs {
     // LeetCode :: 375. Guess Number Higher or Lower II
     // The idea is to pick each number as the first guess and determine the cost associate for choosing the as the guess
     // We recursive pick each number as guess and update the cost for choosing it. Then pick the min as our solution.
-    // For example for 1 2 3 we pick 1 as guess find the cost then pick 2 as guess and find the cost and then pick 2 as
+    // For example for 1 2 3 we pick 1 as guess find the cost then pick 2 as guess and find the cost and then pick 3 as
     // guess and find the cost we keep track of the min.
-    // Note when there is only one item that is if our range is (1,1) or (2,2) or (3,3) there is only one choice and we
+    // Note when there is only one item that is in our range is (1,1) or (2,2) or (3,3) there is only one choice and we
     // pick the correct number in the first try so cost will be zero
     // As we are using recursion we can also use a memoization technique here caching the repeated recursion in a table
     // thus using DP to solve the issue.
@@ -1179,13 +1186,18 @@ public class DPs {
         return hi;
     }
 
-    //LeetCode :: 329. Longest Increasing Path in a Matrix
+    // LeetCode :: 329. Longest Increasing Path in a Matrix
+    // The idea is calculate all the increasing path and find out the max increasing path using recursion,
+    // But during recursion we can also use memoization to make the process faster. Note we are basically doing a
+    // dfs in the recusive function, we do not visit the already visited node because of property
+    // matrix[i][j] <= lastVal, for example if go from 6 to 9 we wont come back to 6 from 9 because 9>6.
+    // we only travel along the increasing path this way decreasing or equal paths are nevertravelled
 
     private int longestIncreasingPathRectSum (int [][]memo , int matrix[][], int i, int j, int lastVal) {
         if (i < 0 || j < 0 ||
                 i >= matrix.length ||
                 j >= matrix[0].length ||
-                matrix[i][j] <= lastVal) {
+                matrix[i][j] <= lastVal) { // travel increasing path
             return 0;
         }
         if (memo[i][j] != 0)
@@ -1221,10 +1233,12 @@ public class DPs {
 
     }
     public int longestIncreasingPath(int[][] matrix) {
+        if (matrix.length == 0)
+            return 0;
         int [][] memo = new int [matrix.length][matrix[0].length];
         for (int i =0 ; i< matrix.length; i++)
             Arrays.fill(memo[i],0);
-        int longestPath = Integer.MIN_VALUE;
+        int longestPath = 0;
         for (int i=0; i< matrix.length; i++) {
             for (int j =0; j<matrix[0].length; j++) {
                 longestPath = Math.max(longestPath, longestIncreasingPathCount(memo, matrix, i,j, Integer.MIN_VALUE));
@@ -1402,7 +1416,7 @@ public class DPs {
         return dp[n];
     }
 
-    // space optimised version of the above prolem
+    // space optimised version of the above problem
     public int integerBreak2(int n) {
         // we need to handle some special case for 1 to 3
         if (n <=2)
@@ -1678,6 +1692,7 @@ public class DPs {
         dp[0] = 0;
         int max = 0;
         for (int i = 1; i <=n; i++) {
+            // we start with j = 1 cause the lowest length of rod = 1
             for (int j = 1; j< i/2+1; j++) {
                 dp[i] = Math.max(dp[i], dp[i-j] + dp[j]);
             }

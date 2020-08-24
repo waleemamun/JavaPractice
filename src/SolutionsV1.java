@@ -1304,7 +1304,7 @@ public class SolutionsV1 {
 
         return max;
     }
-    // This time we solved this using the monotonic Queue,
+    // This time we solved this using the increasing monotonic Queue,
     // Note the it can also be solved using monotonic stack
     // Monotonic queue will also give amortized O(n) runtime
     public int largestRectangleAreaMonotonicQue(int[] heights) {

@@ -249,7 +249,8 @@ public class Main {
         int val = sv2.findPeakElement(arr);
         dp1.numSquares(16);
         System.out.println("price " + dp1.curRod(arr, 8));
-
+        int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
+        System.out.println(sv2.getSkyline(bld));
 
 
 

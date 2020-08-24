@@ -1,5 +1,6 @@
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class SolutionsV2 {
@@ -1904,6 +1905,69 @@ public class SolutionsV2 {
             res.append(n);
         }
         return res.toString();
+    }
+
+    // LeetCode :: 218. The Skyline Problem
+    // The idea is to use a priority queue to store the height when the hieght changes we store the add the points in
+    // result. First we need to separate the start & end points of the building an sort them based on the x axis
+    // we put a height into the priority queue if the current value is the max value & start of a building
+    // then add this value to resList. Or if this is the end of the building we remove it from the queue after that if
+    // the removed value was the max value then we add it to the reslist
+    private class Skyline implements  Comparator<Skyline>{
+        int x;
+        boolean start;
+        int height;
+        public Skyline(){}
+        public Skyline(int xC, int h, boolean st){
+            x = xC;
+            height = h;
+            start = st;
+        }
+
+        @Override
+        public int compare(Skyline o1, Skyline o2) {
+            if(o1.x != o2.x){
+                return o1.x - o2.x;
+            } else {
+                return o1.start? -o1.height: o1.height - (o2.start ? -o2.height : o2.height);
+
+            }
+        }
+    }
+    public List<List<Integer>> getSkyline(int[][] buildings) {
+        TreeMap<Integer, Integer> mapQueue = new TreeMap<>();
+        Skyline bld[] = new Skyline[buildings.length *2];
+        int i =0;
+        for (int []b : buildings) {
+            bld[i++] = new Skyline(b[0],b[2], true);
+            bld[i++] = new Skyline(b[1],b[2], false);
+        }
+        List<List<Integer>> resList = new ArrayList<>();
+        Arrays.sort(bld, new Skyline());
+        int prevMax = 0;
+        mapQueue.put(0, 1);
+
+        for (i = 0; i < bld.length; i++) {
+            if(bld[i].start) {
+                mapQueue.put(bld[i].height, mapQueue.getOrDefault(bld[i].height, 0) +1);
+            } else {
+                if(mapQueue.get(bld[i].height) > 1){
+                    mapQueue.put(bld[i].height, mapQueue.get(bld[i].height) -1);
+                } else {
+                    mapQueue.remove(bld[i].height);
+                }
+            }
+            int curMax = mapQueue.lastKey();
+            if (prevMax != curMax) {
+                ArrayList<Integer> pt = new ArrayList<>();
+                pt.add(bld[i].x);
+                pt.add(curMax);
+                resList.add(pt);
+                prevMax = curMax;
+            }
+
+        }
+        return resList;
     }
 
 

@@ -373,7 +373,7 @@ public class Recursions {
 
 
     // LeetCode 34:: Find First and Last Position of Element in Sorted Array
-    // Check the V2 its easy to read
+    // Check the V3 its easy to read
     public int[] searchRange(int[] nums, int target) {
         int [] range = {-1,-1};
         binarySearchRng(nums, 0, nums.length-1, target, range);
@@ -524,7 +524,7 @@ public class Recursions {
         // the entry which ise smaller then the lowest item in array. Same goes for low == nums.length.
         // Why return low ?
         // Cause think about the basic idea of insertion, we insert at a point & right shift everything by one
-        // so the value the becomes bigger between low & high is our answer and at the following recursion break
+        // so the value that becomes bigger between low & high is our answer and at the following recursion break
         // low is always greater than high. Hence low is the right choice
         if (low > high) {
             return low;
