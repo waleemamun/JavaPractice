@@ -9,7 +9,10 @@ public class SolutionsV2 {
     // The idea is to use a TreeSet which is a sorted set consider the case [10,15,18,24] k=3 t=3
     // if we use the sliding window and shrink it keeping right fixed we have a problem while shrinking we cover
     // [15,18,24] and [18,24] but never cover [15,18] as right is fixed. We cannot use a left shrinking sliding
-    // window here rather use a fixed sliding window of k-Size. WE also have to lookup values in the range of +t & -t
+    // window here rather use a fixed sliding window of k-Size.
+    // Note: There is no requirement for a minimum
+    // or maximum  sliding window so it is important that we use a fixed window.
+    // WE also have to lookup values in the range of +t & -t
     // from current val.So the perfect candiate would be a TreeSet. We have to keep right fixed so to solve
     // this we can use a TreeSet store all the value in sliding window in TreeSet (which is a sorted Set) Now we make
     // use of the floor & ceiling method TreeSet.
@@ -1907,7 +1910,7 @@ public class SolutionsV2 {
         return res.toString();
     }
 
-    // LeetCode :: 218. The Skyline Problem
+    // LeetCode :: 218. The Skyline Problem (Hard) (not submitted)
     // The idea is to use a priority queue to store the height when the hieght changes we store the add the points in
     // result. First we need to separate the start & end points of the building an sort them based on the x axis
     // we put a height into the priority queue if the current value is the max value & start of a building

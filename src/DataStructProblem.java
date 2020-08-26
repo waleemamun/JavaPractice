@@ -703,5 +703,87 @@ public class DataStructProblem {
         }
     }
 
+    // LeetCode :: 519. Random Flip Matrix
+    // The idea is to use "Fisher–Yates shuffle" modern algorithm to choose the random permutation
+    // The modern Algo:
+    // Store the numbers from 1 through N in an array arr[N]
+    //   1. Pick a random number k between (0 - curLen)
+    //   2. swap the arr[k] with arr[curLen],
+    //   3. Decrease curLen by 1.
+    //   4. Repeat step 1 - 4 until the curLen is zero
+    // Here we also use further space optimisation by using a hashmap. Instead of using an array of len = M*N
+    // we use a hashmap to store the swapped items in the proper index in the hashmap.
+    // This way we dont need the whole array but just need swapped items to store in the hashmap
+    // In worst case the hashmap may grow upto O(m*n) space but average case should be better
+    class SolutionFlipMatrix {
+         public HashMap<Integer, Integer> map;
+         int total;
+         Random rand;
+         int totR;
+         int totC;
+        public SolutionFlipMatrix(int n_rows, int n_cols) {
+            totR = n_rows;
+            totC = n_cols;
+            map = new HashMap<>();
+            total = n_cols * n_rows;
+            rand = new Random();
+        }
+
+        public int[] flip() {
+            // get the next random index  between zero to total (exclusive)
+            int randomIdx = rand.nextInt(total);
+            total--;
+            int randVal = map.getOrDefault(randomIdx, randomIdx);
+            map.put(randomIdx, map.getOrDefault(total, total));
+            return new int[] {randVal/totC, randVal % totC};
+        }
+
+        public void reset() {
+            map.clear();
+            total = totR * totC;
+
+        }
+    }
+
+    // LeetCode :: 470. Implement Rand10() Using Rand7()
+    /**
+     * The rand7() API is already defined in the parent class SolBase.
+     * public int rand7();
+     * @return a random integer in the range 1 to 7
+     */
+    class Rand10 {
+        public int rand7(){
+           return new Random().nextInt(7) +1;
+        }
+
+        // The idea is to use rejection sampling to generate random10 using random7
+        // we create a n*n 2d space where the numbers (1 to 10) are mapped for 7*7
+        // we can map only upto 40, and 41 - 49 will not be mapped.
+        // We first gen ran7 for row and rand7 for col this gives
+        // a true random distribution of the row & col option after that
+        // if we found a number using the row we return it if we found an empty space
+        // (41 - 49 are empty space & 1 - 40 has numbers 1 - 10 sequentially for times hence 40)
+        // we retry to get row & col that maps to a number 1 to 40
+        public int rand10() {
+            int row;
+            int col;
+            int idx =0;
+            // repeativly try to map the row & col to a 2d space where the value is between 1 to 40
+            // as row & col max is 7 so possible values are 1 - 49
+            while (true) {
+                row= rand7();
+                col = rand7();
+                idx = (row-1) * 7 + col;
+                // found row col that maps to 40 we can use this as our result
+                if (idx <= 40)
+                    break;
+            }
+            if (idx%10 == 0)
+                return 10;
+            return idx%10;
+        }
+    }
+
+
 
 }
