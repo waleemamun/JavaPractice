@@ -1849,6 +1849,12 @@ public class Tree {
         return pathList;
     }
 
+    // Problem Def: Find the closest element in Binary Search Tree
+    // Given a binary search tree and a target node K.
+    // The task is to find the node with minimum absolute difference with given target value K.
+    // The idea is to maintain a closest value as we search for the element in BST if the value is found
+    // that should be the result and closestDiff would smallest == 0. If the value is not in the bst
+    // we still find the closest by doing a binary search for the value and on bst path update the closest
     private int closetDiff;
     private int closestNode;
     private void findClosestInBSTRec (TreeNode root, int target) {

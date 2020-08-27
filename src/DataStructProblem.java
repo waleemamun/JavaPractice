@@ -75,6 +75,74 @@ public class DataStructProblem {
  * int param_3 = obj.getRandom();
  */
 
+    // LeetCode :: 380. Insert Delete GetRandom O(1)
+    // The idea is to use and HashMap for O(1) insert/remove and an ArrayList for O(1) random
+    // We keep the same copies of the items in hashmap & arraylist, hashmap key is the item and
+    // value is the index of the item in the arrayList
+    // In this case inser should be easy we just need to insert in hashmap and arraylist and
+    // store the index of the value in hashmap
+    // Delete/remove needs a special trick we remove an item from hashmap we get the index of the
+    // item in arraylist swap it with the last item in the arraylist & update the last items index
+    // in hash map with the new swapped index. Finally delete the last item from arrayList
+    // This help us run a O(1) getrandom cause we can easily call math.random on the size of the arraylist
+    class RandomizedSet {
+
+        /** Initialize your data structure here. */
+        HashMap<Integer,Integer> randSet;
+        ArrayList <Integer> aList;
+        public RandomizedSet() {
+            randSet = new HashMap<Integer,Integer>();
+            aList = new ArrayList<Integer> ();
+
+        }
+
+        /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+        public boolean insert(int val) {
+            if(!randSet.containsKey(val)) {
+                randSet.put(val,aList.size());
+                aList.add(val);
+                return true;
+            } else
+                return false;
+
+        }
+
+        /** Removes a value from the set. Returns true if the set contained the specified element. */
+        public boolean remove(int val) {
+            if(randSet.containsKey(val)) {
+                // get the index of the val in array list
+                int idx = randSet.get(val);
+                // swap this val with the last index of the ArrayList
+                Collections.swap(aList, idx, aList.size() -1);
+                // get the value at this index after swap
+                int swapVal = aList.get(idx);
+                // update the  hashmap with the new index for swapVal
+                randSet.put(swapVal,idx);
+                // remove value from hasmap & ArrayList
+                randSet.remove(val);
+                aList.remove(aList.size()-1);
+                return true;
+            } else
+                return false;
+
+        }
+
+        /** Get a random element from the set. */
+        public int getRandom() {
+            int size = randSet.size();
+            int rand = (int)(Math.random()*size);
+            return aList.get(rand);
+        }
+    }
+
+        /**
+         * Your RandomizedSet object will be instantiated and called as such:
+         * RandomizedSet obj = new RandomizedSet();
+         * boolean param_1 = obj.insert(val);
+         * boolean param_2 = obj.remove(val);
+         * int param_3 = obj.getRandom();
+         */
+
     // 729. My Calendar I
     // The idea is to use a TreeSet to have a Balanced tree, When adding an interval the TreeSet comparator will check
     // if this value falls into any of the interval if not then add it ot the treeSet
