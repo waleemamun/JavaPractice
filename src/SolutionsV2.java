@@ -1789,7 +1789,7 @@ public class SolutionsV2 {
     // LeetCoed :: 162. Find Peak Element
     // The problem actually requires to find any peak not the max peak also nums[-1] = -INF & nums[n] = -INF so for
     // an ascending or descending curve the result would be nums[len-1] or nums[0] respectively.
-    // So based on these observation we can use a binary search on this we focus one finding a mid that is the peak
+    // So based on these observation we can use a binary search on this we focus one finding a mid that is a/the peak
     public int findPeakElement(int[] nums) {
         int low = 0;
         int high = nums.length-1;
@@ -2156,6 +2156,10 @@ public class SolutionsV2 {
     // we extract k items from the priority queue at each turn and update the priority of the items and then
     // insert them back to priority queue. We also update the likely soltuion with the extracted k items
     // we keep doing this until the queue is empty
+    //
+    // Note :: check how the priority queue is built based on the HashMap, its a nice trick to reduce creating
+    // an arraylist in the prev algo or the Class CharCount. As we already have the map storing the char and count
+    // we can use that!
     /**
      * Given a non-empty string str and an integer k, rearrange the string such that the same characters are
      * 'at least' distance k from each other.
@@ -2218,6 +2222,35 @@ public class SolutionsV2 {
         return sb.toString();
     }
 
+    /**
+     * FB-PH-IQ
+     * You're given a list of tasks, with number denoted different type of tasks,
+     * and there'll be interval between tasks with tasks of same id. Return total time for executing this task list
+     * Input: tasks = [1, 1, 2, 1], interval = 2
+     * Output: 7
+     * Expalanation:
+     * It's executed as 1 . . 1 2 . 1, so the total time is 7.
+     * */
+    // The idea here is little different than the above two problems, In the above problems we are asked to find the
+    // solution task excustion order, Here the order is already give and we are asked to calc the total time based on
+    // that. We need to know when the last same task was executed if its beyond the interval we just increment time
+    // by 1 otherwise we check the diff of the last task and current time based on that & the interval we calc the
+    // actual idle time needed
+
+    public int countTaskTime(int []tasks, int interval) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int time = 0;
+        for (int tsk : tasks) {
+            int idle = 0;
+            if(map.containsKey(tsk)) {
+                int timePassed = time - map.get(tsk);
+                idle = Math.max(interval - timePassed, 0);
+            }
+            time+= (idle +1);
+            map.put(tsk, time);
+        }
+        return time;
+    }
 
 
     }

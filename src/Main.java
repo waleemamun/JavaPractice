@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {3, 5, 8, 9, 10, 17, 17, 20};
+        int [] arr =  {1,1,2,1,2,3,2};
         int [] arr1 = {2,5,7,8};
 
         int [][] arr2d = {
@@ -249,11 +249,11 @@ public class Main {
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
-        dp1.numSquares(16);
-        System.out.println("price " + dp1.curRod(arr, 8));
+
         int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
         System.out.println(sv2.leastInterval(tasks, 2));
         System.out.println(sv2.rearrangeString(str1, 3));
+        System.out.println(sv2.countTaskTime(arr,2));
 
 
 
