@@ -210,12 +210,13 @@ public class Main {
         };
 
 
-        String [] words = {"apple", "pen"};
+        String [] words = {"acd", "dfg", "wyz", "yab", "mop",
+                "bdfh", "a", "x", "moqs", "www","bbb", "sss"};
         List<String> wordList = new ArrayList<>(Arrays.asList(words));
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "applepenappleapple";
+        String str1 = "bbabcdckaka";
         String str2 = "NAzEeF";
         int [][] edges = {
                 {0, 1},
@@ -240,6 +241,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         DataStructProblem d1 = new DataStructProblem();
         LinkList ls1 = new LinkList();
+        char [] tasks = {'A','A','A','B','B','B'};
 
         int [][] updates = {{1,1,1,1,1},
                             {1,0,0,0,1},
@@ -250,7 +252,8 @@ public class Main {
         dp1.numSquares(16);
         System.out.println("price " + dp1.curRod(arr, 8));
         int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
-        System.out.println(sv2.getSkyline(bld));
+        System.out.println(sv2.leastInterval(tasks, 2));
+        System.out.println(sv2.rearrangeString(str1, 3));
 
 
 

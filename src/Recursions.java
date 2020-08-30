@@ -1762,6 +1762,11 @@ public class Recursions {
     // The one trick her is the array can contains duplicate numbers. So if an array contains duplicate after
     // finding a nums[mid] that is equal to nums[high] we dont know whether the rotation is on the left or
     // right of mid so we just decrease the upper bound and search again
+    //
+    // Note: In this approach we always find the min value but not necessarily the splitIndex
+    // consider the example of 1 1 1 1 1 1 1 2 2 1 1 1 1 here the nums[low] value will result in 1 at the end which
+    // is our desired result but it low or high WILL NOT point to splitIndex.To get the actual split index us
+    // the aproach used in rotatedBinary search  with dup in 'rotatedBinSearchDup'
     public int findMinWithDup(int[] nums) {
         int low = 0;
         int high = nums.length-1;
@@ -2035,6 +2040,7 @@ public class Recursions {
         // the result is shortest path len - 2 (we subtract 1 for each island)
         return A[pair.x][pair.y] - 2;
     }
+
 
 
 

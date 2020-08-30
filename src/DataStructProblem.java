@@ -44,18 +44,23 @@ public class DataStructProblem {
         public boolean remove(int val) {
             if(!map.containsKey(val))
                 return false;
+            // the value exist delete the first index for this value
             HashSet<Integer> set = map.get(val);
             Iterator<Integer> itr = set.iterator();
             int idx = itr.next();
             set.remove(idx);
+            // set is empty remove the entry from map
             if(set.size() == 0)
                 map.remove(val);
+            // the removed index for the value is not the last index so we swap it with the last entry in the
+            // arraylist, update the index properly for the swapped val
             if (idx < alist.size()-1) {
                 Collections.swap(alist,idx,alist.size()-1);
                 int swapVal = alist.get(idx);
                 map.get(swapVal).add(idx);
                 map.get(swapVal).remove(alist.size()-1);
             }
+            // finally delete the last item from the arraylist
             alist.remove(alist.size()-1);
             return true;
 

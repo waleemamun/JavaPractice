@@ -440,7 +440,14 @@ public class SolutionsV1 {
         }
         return true;
     }
-
+    // The idea is to create a state machine each state is defined by each options. We have four states here number, e,
+    // dot, and (+/-). We are checking validity so we should concer ourslef about the invalid state transintions.
+    // If any in valid state transition happens we return false. So for each state lets figure our invalid transitions
+    // The number state is unique as it may not need any invalid transition cause we added another catch all state at the
+    // end by using the default state (look at 'else'). The 'e' state is invalid if another e is seen before or no number
+    // has been seen before. Similarly dot is invalid if dot is seen once berfore or dot is seen after e state.
+    // So for problems with so many cases its often a good idea to create a state machine and handle all cases using
+    // that. This make the code easy to read less error prone look at how v2 is way less clumsy then v1
     public boolean isNumberV2(String s) {
         boolean numSeen = false;
         boolean eSeen = false;

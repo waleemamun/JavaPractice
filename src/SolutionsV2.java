@@ -1973,6 +1973,250 @@ public class SolutionsV2 {
         return resList;
     }
 
+    // LeetCode :: 278. First Bad Version
+    // The idea is to do a binary search in the version
+    // Assume the array is like f f f f f f f f f t t t  we need to find the first t
+    // so we use a little modifed binary search to find the t
+    private boolean isBadVersion( int version){
+        // this is a fake api for compiling
+        return true;
+    }
+    public int firstBadVersion(int n) {
+        int low = 1;
+        int high = n;
+        while (low < high) {
+            int mid = low + (high-low)/2;
+            if (isBadVersion(mid))
+                high = mid;
+            else
+                low = mid+1;
+        }
+        return low;
+    }
+
+
+    // LeetCode :: Group Shifted String
+    /**
+     * Given a string, we can "shift" each of its letter to its successive letter,
+     * for example: "abc" -> "bcd". We can keep "shifting" which forms the sequence: "abc" -> "bcd" -> ... -> "xyz".
+     *
+     * Given a list of strings which contains only lowercase alphabets,
+     * group all strings that belong to the same shifting sequence, return
+     */
+    private String getDifString(String s){
+        if (s.length() == 1)
+            return "A";
+        StringBuilder diff = new StringBuilder();
+        for (int i =1; i<s.length();i++) {
+            if (s.charAt(i) > s.charAt( i-1)) {
+                diff.append((char)(s.charAt(i) - s.charAt(i-1) + 'a'));
+            } else {
+                diff.append((char)((s.charAt(i) + 26 - s.charAt(i-1))%26  + 'a'));
+            }
+        }
+        return diff.toString();
+    }
+    // The idea is to calulate respective diff of the chars in a string and besd on the that
+    // diffstring hash it in a map, all the string with the same hash would be grouped together in arraylist
+    // for example acd has diff 2 (c-a), (d-c) 1. or 2 ,1 or we can use the char representation that is b, a for 2, 1
+    // the benefit of represnting the diff with char is we done need to deal with diff like 25 or 24 it will be y or x
+    // Note :: In this case the resulted group string is not sorted lexicographically
+    // if we have to sort them this algo will not be O(n) rather worst cast O(nlgn)
+    public List<List<String>> groupStrings(String[] strings) {
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+        List<List<String>> resList =new ArrayList<>();
+        for (String s : strings) {
+            String diffStr = getDifString(s);
+            map.putIfAbsent(diffStr, new ArrayList<>());
+            map.get(diffStr).add(s);
+        }
+        resList.addAll(map.values());
+        // if we need a sorted solution we can do the code below
+        /*
+        for (List <String> alist : resList)
+            Collections.sort(alist);
+        */
+        return resList;
+    }
+    // This uses A Sorted result so O(nlgn) if we need sorted result hashing is not required
+    public List<List<String>> groupStringsSorted(String[] strings) {
+        List<List<String>> resList =new ArrayList<>();
+        Arrays.sort(strings, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if(o1.length() == o2.length()) {
+                    String s1 = getDifString(o1);
+                    String s2 = getDifString(o2);
+                    return s1.compareTo(s2);
+                }
+                return o1.length() -o2.length();
+            }
+        });
+        System.out.println(Arrays.toString(strings));
+        String lastDiff = getDifString(strings[0]);
+        ArrayList<String> aList = new ArrayList<>();
+        aList.add(strings[0]);
+        for (int i = 1; i<strings.length; i++) {
+            String currDiff = getDifString(strings[i]);
+            if(lastDiff.equals(currDiff)) {
+                aList.add(strings[i]);
+                lastDiff = currDiff;
+            } else {
+                resList.add(aList);
+                lastDiff  = currDiff;
+                aList = new ArrayList<>();
+                aList.add(strings[i]);
+            }
+        }
+        resList.add(aList);
+        return resList;
+
+    }
+
+    // LeetCode :: 621. Task Scheduler
+    // The idea is to apply a greedy approach to this problem. We count the frequency of each task and put them in a
+    // priority queue. The trick is we dont only extract one item from the priority queue rather extract cooldown + 1
+    // items which will ensure that when we extract the next item in the next round our CPU had enough cooldown to
+    // process next same task. Check the compare function of the priority queue for the ordering inside the queue.
+    // So we greedily extract items from the priority queue and update their priority and reinsert them for further
+    // processing untill the queue is empty
+    public class CharCount {
+        Character ch;
+        int count;
+        public CharCount(Character c, int cn){
+            count = cn;
+            ch = c;
+        }
+    }
+    public int leastInterval(char[] tasks, int n) {
+
+        ArrayList<CharCount> aList = new ArrayList<>();
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (char ch : tasks) {
+            map.put(ch, map.getOrDefault(ch, 0) +1);
+        }
+        for (Map.Entry<Character, Integer> m : map.entrySet()) {
+            aList.add(new CharCount(m.getKey(), m.getValue()));
+        }
+
+        PriorityQueue<CharCount> maxPQ = new PriorityQueue<>(new Comparator<CharCount>() {
+            @Override
+            public int compare(CharCount o1, CharCount o2) {
+                if(o1.count == o2.count) {
+                    // We can guranty in the priority queue that t
+                    // he task that we pick has been picked before any task as we compare based on
+                    // the task_id when their frquency is same
+                    return o1.ch - o2.ch;
+                }
+                return (o2.count -o1.count);
+            }
+        });
+
+        maxPQ.addAll(aList);
+        int count = 0;
+        // tempQ to store the cooldown + 1 items
+        Queue<CharCount> tempQ = new LinkedList<>();
+        ArrayList<Character> arrangement = new ArrayList<>();
+        while (!maxPQ.isEmpty()) {
+            int idle = n +1;
+            while (idle > 0 && !maxPQ.isEmpty()) {
+                CharCount task = maxPQ.remove();
+                arrangement.add(task.ch);
+                count++;
+                idle--;
+                task.count--;
+                // store the items to our temp queue we need to reinsert this to maxPQ if the count > 0
+                if(task.count > 0)
+                    tempQ.add(task);
+            }
+            // reinsert with the updated to be processed in the next turn
+            while(!tempQ.isEmpty()) {
+                maxPQ.add(tempQ.remove());
+            }
+            // break if items are processed we break here cause the queue is empty and
+            // we dont need to add the extra idle amount
+            if (maxPQ.isEmpty())
+                break;
+            count+=idle;
+            // this done extra to get the arrangement not needed in the acutal solution
+            while (idle > 0) {
+                arrangement.add('#');
+                idle--;
+            }
+
+        }
+        System.out.println(arrangement);
+        return count;
+
+    }
+
+    // LeetCode – Rearrange String k Distance Apart
+    // The idea is similar to the previous approach "LeetCode :: 621. Task Scheduler"
+    // We use a greedy approach to find the solution. We build a priority queue based on the char frequency.
+    // we extract k items from the priority queue at each turn and update the priority of the items and then
+    // insert them back to priority queue. We also update the likely soltuion with the extracted k items
+    // we keep doing this until the queue is empty
+    /**
+     * Given a non-empty string str and an integer k, rearrange the string such that the same characters are
+     * 'at least' distance k from each other.
+     *
+     * All input strings are given in lowercase letters.
+     * If it is not possible to rearrange the string, return an empty string "".
+     * Example :
+     * str = "aabbcc", k = 3
+     * Result: "abcabc"
+     * */
+
+    public String rearrangeString(String str, int k) {
+        HashMap<Character, Integer> freqMap = new HashMap<>();
+        for (char ch : str.toCharArray()) {
+            freqMap.put(ch , freqMap.getOrDefault(ch, 0) +1);
+        }
+
+        PriorityQueue<Character> maxPQ = new PriorityQueue<>(new Comparator<Character>() {
+            @Override
+            public int compare(Character o1, Character o2) {
+                if(freqMap.get(o1).equals(freqMap.get(o2))) {
+                    return o1-o2;
+                }
+                return -(freqMap.get(o1) - freqMap.get(o2));
+            }
+        });
+        // add the Character to the priority queue from map based on there frequency
+        maxPQ.addAll(freqMap.keySet());
+        // temp queue to hold k amount of extracted item from priority queue
+        Queue<Character> tempQ = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
+        int validExcpetion = 0; // trace the valid string formation
+        while (!maxPQ.isEmpty()) {
+            int extractCount = k;
+            // extract k items from maxPQ and decrease their priority
+            while (extractCount > 0 && !maxPQ.isEmpty()) {
+                Character topChar = maxPQ.remove();
+                freqMap.put(topChar, freqMap.get(topChar) - 1);
+                extractCount--;
+                tempQ.add(topChar);
+            }
+            // count the number of times we could not extract k items for valid exception count
+            if (extractCount != 0)
+                validExcpetion++;
+            // add the items back to Priority queue with new priority
+            while (!tempQ.isEmpty()) {
+                Character firstChar = tempQ.remove();
+                sb.append(firstChar);  // add to the likely solution
+                // add to maxPQ if only the frequncy > 0
+                if(freqMap.get(firstChar) > 0)
+                    maxPQ.add(firstChar);
+            }
+        }
+        // only one time exception is allowed and that is the case for the last round
+        // where we may not have k items left for example string of len 5 and k= 3 the
+        // last round we only have 2 items this exception is allowed otherwise invalid
+        if(validExcpetion >1)
+            return "";
+
+        return sb.toString();
+    }
 
 
 
