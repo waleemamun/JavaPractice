@@ -770,6 +770,73 @@ public class GraphNode {
         return dummyHead.next;
     }
 
+    // LeetCode :: 785. Is Graph Bipartite?
+    // The idea is to use BFS to two color the whole graph if possible then we can Bipartite otherwise not
+    // Note that we already given a an adjacency list so we dont need to build the graph any more.
+    // Trying to build a graph would be really foolish
+    public boolean isBipartiteBFS(int[][] graph) {
+
+        // 0 -- is no color
+        // 2 -- is Red
+        // 5 -- id Blue
+        int []color = new int[graph.length];
+        for (int i = 0; i< graph.length; i++) {
+            // process only vertices that are not colored
+            if(color[i] == 0) {
+                int src = i;
+                color[src] = 2 ; // red color first node
+                Queue<Integer> queue = new LinkedList<>();
+                queue.add(src);
+                while (!queue.isEmpty()) {
+                    int u = queue.remove();
+                    int[] adjList = graph[u];
+                    for (Integer v : adjList) {
+                        if(color[v] == color[u])
+                            return false;
+                        if (color[v] == 0) {
+                            color[v] = color[u] ^ 0x7;
+                            queue.add(v);
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    // The idea is to do a DFS to two color the graph to check if the graph is birpartite
+    // One interesting observation was the DFS version took 0ms while the BFS took 5ms
+    // most likely due to the input graph is not dense
+    private boolean isTwoColorPossible(int u, int [][] graph, int []color) {
+        // 0 -- is no color
+        // 2 -- is Red
+        // 5 -- id Blue
+        int [] adjList = graph[u];
+        for (int v : adjList) {
+            if (color[v] == color[u])
+                return false;
+            if (color[v] == 0) { // no color vertex
+                color[v] = color[u] ^ 0x7; // invert the color of the neighbor node
+                if (!isTwoColorPossible(v, graph, color))
+                    return false;
+            }
+        }
+        return true;
+
+    }
+    public boolean isBipartite(int[][] graph) {
+        int []color = new int[graph.length];
+        for (int i = 0; i< graph.length; i++) {
+            if(color[i] == 0) {
+                color[i] = 2 ; // red vertex
+                if(!isTwoColorPossible(i, graph, color))
+                    return false;
+            }
+        }
+        return true;
+
+    }
+
 
 
 }

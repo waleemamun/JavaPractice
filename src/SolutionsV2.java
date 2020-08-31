@@ -2252,5 +2252,106 @@ public class SolutionsV2 {
         return time;
     }
 
+    // LeetCode :: 1055 Shortest Way to form a string
+    // Given two String source & target form target string using the sub sequence from source string sub sequence
+    // can be the full source sting too. WE need to use minimum number of sub sequences
+    // Example : Source: abc target: abcab so the min sub sequence count is two (abc, ab)
+    // another example source : xyz target: xzyxz so in count 3 (xz, y, xz)
+    //
+    // The idea is to take a char from target and search it in the source for that char if found we store the index k
+    // of that char in source and take the next char from target and search for it in the source when we cant find any
+    // more ocurances of target's char in source on the right of index k, we increase our cont of subseq by one.
+    // if we naively implement it the search in source will take O(n) but we can optimize it by using HashMap and a
+    // TresSet to store the indexes of source so that we can look up the char in O(lgn) time in the TreeSet (avl tree)
+    public int shortestWay(String source, String target) {
+        HashMap<Character, TreeSet<Integer>> map = new HashMap<>();
+        for (int i = 0; i < source.length(); i++) {
+            map.putIfAbsent(source.charAt(i), new TreeSet<>());
+            map.get(source.charAt(i)).add(i);
+        }
+        Integer startIdx = 0;
+        System.out.println(map);
+        int count =0;
+        for (int i = 0; i < target.length();) {
+            Character ch = target.charAt(i);
+            TreeSet<Integer> lookUpList = map.getOrDefault(ch, null);
+            if(lookUpList == null)
+                return -1;
+            // nextItem is the actually the index of the char in source
+            // we lookup the nextItem/ index in the source using O(lgn) lookup in {a : 0 ,6 ,9} type of TreeSet
+            Integer nextItem = lookUpList.ceiling(startIdx);
+            if (nextItem == null){
+                // we found a mismatch lets update our count and reset startIDx but we dont want
+                // to update i count as we  need to again process this char of target with the new starIDX
+                count++;
+                startIdx = 0;
+            } else {
+                startIdx = nextItem +1;
+                // we only increment i here as there is no mismatch
+                i++;
+            }
+        }
+        return count+1;
+    }
+
+    // This another further improvement on this problem we optimise it to have a O(n) runtime instead of O(1) above.
+    // The idea is same as above the optimization is in the search part before we were using TreeSet lookup which took
+    // O(lgn), in this case we dont use TreeSet rather use another hashmap to store the last index of the char
+    // for example consider when source abcdjkacdaz so 'a' appears in source index  {a : 0, 6, 9} when we used a
+    // TreeSet we do O(lgn) lookup every time using the ceiling operation to find the idx greater than startIdx.
+    // But here we dont do O(lgn) lookup rather we keep track of the last index of 'a' by mainting a index pointer
+    // in this list {a : 0 , 6 , 9}
+    //                       ^
+    //                       |
+    //                      idx
+    // we move the idx every time we access this list and store this info (mapping of char to idx in mapIdx) so we just
+    // need to do a O(1) lookup to find the current index for the searching char instead of O(lgn) search.
+    // Another point to note is as we build the actual map by scanning left to right the index for a char will always
+    // appear ascending sorted for example a {a : 0 , 6 , 9} look how 0 ,6 ,9 is ascending sorted
+    public int shortestWayV2(String source, String target) {
+        // map to store the indexes of each chars
+        HashMap<Character, ArrayList<Integer>> map = new HashMap<>();
+        // this is the secondary map that helps in the O(1) lookup by storing the currIDx to be accessed
+        HashMap<Character, Integer> mapIdx = new HashMap<>();
+        // build the map
+        for (int i = 0; i < source.length(); i++) {
+            map.putIfAbsent(source.charAt(i), new ArrayList<>());
+            map.get(source.charAt(i)).add(i);
+            // lets set all initial indexes to be zero
+            // not the index actually store the index for the arrayList of the
+            // first map so it is obvious that all initial index will be zero
+            mapIdx.putIfAbsent(source.charAt(i), 0);
+        }
+        // lets start with startIDx set ot zero
+        Integer startIdx = 0;
+        System.out.println(map);
+        int count =0;
+        for (int i = 0; i < target.length();) {
+
+            Character ch = target.charAt(i);
+            ArrayList<Integer> lookUpList = map.getOrDefault(ch, null);
+            if(lookUpList == null)
+                return -1;
+            // get the nextitem's index here nextItem is actually the index of the nextItem in source string
+            // if multiple occurances for example {a : 0 , 6 , 9} we use the mapIdx to get the currIdx
+            Integer nextItem = lookUpList.get(mapIdx.get(target.charAt(i)));
+            if (nextItem < startIdx){
+                // we found a mismatch lets update our count and reset startIDx but we dont want
+                // to update i count as we  need to again process this char of target with the new starIDX
+                count++;
+                startIdx = 0;
+            } else {
+                startIdx = nextItem +1;
+                // we update the mapIdx for the char here to be used the next time we find the char
+                int nextIdx = (mapIdx.get(target.charAt(i)) + 1) % lookUpList.size();
+                mapIdx.put(target.charAt(i), nextIdx);
+                // we only increment i here so as there is no mismatch
+                i++;
+            }
+
+        }
+        return count+1;
+    }
+
 
     }

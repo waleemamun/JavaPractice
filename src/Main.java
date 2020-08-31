@@ -251,9 +251,7 @@ public class Main {
         int val = sv2.findPeakElement(arr);
 
         int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
-        System.out.println(sv2.leastInterval(tasks, 2));
-        System.out.println(sv2.rearrangeString(str1, 3));
-        System.out.println(sv2.countTaskTime(arr,2));
+        System.out.println(sv2.shortestWayV2("xyz","zxyxz"));
 
 
 
