@@ -2041,6 +2041,94 @@ public class Recursions {
         return A[pair.x][pair.y] - 2;
     }
 
+    // LeetCode :: 301. Remove Invalid Parentheses (Not submitted)
+    // Too complicated solution
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> output = new ArrayList<>();
+        removeHelper(s, output, 0, 0, '(', ')');
+        return output;
+    }
+
+    public void removeHelper(String s, List<String> output, int iStart, int jStart, char openParen, char closedParen) {
+        int numOpenParen = 0, numClosedParen = 0;
+        for (int i = iStart; i < s.length(); i++) {
+            if (s.charAt(i) == openParen) numOpenParen++;
+            if (s.charAt(i) == closedParen) numClosedParen++;
+            if (numClosedParen > numOpenParen) { // We have an extra closed paren we need to remove
+                for (int j = jStart; j <= i; j++) // Try removing one at each position, skipping duplicates
+                    if (s.charAt(j) == closedParen && (j == jStart || s.charAt(j - 1) != closedParen))
+                        // Recursion: iStart = i since we now have valid # closed parenthesis thru i. jStart = j prevents duplicates
+                        removeHelper(s.substring(0, j) + s.substring(j + 1, s.length()), output, i, j, openParen, closedParen);
+                return; // Stop here. The recursive calls handle the rest of the string.
+            }
+        }
+        // No invalid closed parenthesis detected. Now check opposite direction, or reverse back to original direction.
+        String reversed = new StringBuilder(s).reverse().toString();
+        if (openParen == '(')
+            removeHelper(reversed, output, 0, 0, ')','(');
+        else
+            output.add(reversed);
+    }
+
+    // This much easier to understand but requires the use of Set to store the unique items which is little expensive
+    // The idea here is to first find out how many invalid left/right parentheses can be deleted. We need to check
+    // all possible options but we can reduce the recursion calls by only performing delete for the allowed number of
+    // leftRem & rightRem we can also further guarantee the the final solution by restricting that right parentheses
+    // cannon be more than left parentheses
+
+    HashSet<String> parenthesesList = new HashSet<>();
+
+    private void removeParentheses(String s, int index, int left, int right,
+                                   int leftRem, int rightRem, StringBuilder sb){
+        if(index == s.length()) {
+            if(leftRem ==0 && rightRem == 0) {
+                parenthesesList.add(sb.toString());
+            }
+            return;
+        }
+        char ch = s.charAt(index);
+        int len = sb.length();
+        // we delete a parenthesis if only we are allowed to delete
+
+        if (s.charAt(index) ==  '(' && leftRem > 0 ||
+                s.charAt(index) ==')' && rightRem > 0) {
+            removeParentheses(s, index +1, left,
+                    right, ch =='('? leftRem -1 : leftRem,
+                    ch==')' ? rightRem -1: rightRem, sb);
+        }
+        sb.append(ch);
+        if (ch != '(' && ch != ')') {
+            removeParentheses(s, index+1, left,right, leftRem, rightRem, sb);
+        } else if (ch == '(') {
+            removeParentheses(s,index+1,
+                    left+1, right, leftRem , rightRem, sb);
+        } else if( right < left) { // ')' count is lower than '('
+            removeParentheses(s, index +1, left,
+                    right+1, leftRem, rightRem, sb);
+        }
+        sb.deleteCharAt(len);
+
+    }
+    public List<String> removeInvalidParenthesesV2(String s) {
+        int leftCount = 0;
+        int rightCount = 0;
+        for (int i =0; i< s.length(); i++){
+            if(s.charAt(i)=='(') {
+                leftCount++;
+            } else if (s.charAt(i)==')') {
+                leftCount--;
+                if(leftCount < 0) {
+                    leftCount = 0;
+                    rightCount++;
+                }
+            }
+        }
+        System.out.println(leftCount + " " + rightCount);
+        removeParentheses(s,0,0,0, leftCount,rightCount , new StringBuilder());
+        List<String> resList = new ArrayList<>(parenthesesList);
+        return resList;
+
+    }
 
 
 

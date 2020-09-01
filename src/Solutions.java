@@ -989,7 +989,6 @@ public class Solutions {
 
         return  maxLen;
     }
-
     // Leetcode ::36. Valid Sudoku
     // This version is slower due to the use of string in set,
     // the next method uses Integer instead of String and performance has been improved significantly
