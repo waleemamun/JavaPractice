@@ -857,6 +857,126 @@ public class DataStructProblem {
         }
     }
 
+    // LeetCode :: 157. Read N Characters Given Read4
+    /**
+     * Given a file and assume that you can only read the file using a given method read4,
+     * implement a method to read n characters.
+     *
+     * The read4 API is defined in the parent class Reader4.
+     *     int read4(char[] buf);
+     *
+     * Example
+     * Input: file = "leetcode", n = 5
+     * Output: 5
+     * Explanation: After calling your read method, buf should contain "leetc".
+     *              We read a total of 5 characters from the file, so return 5.
+     *
+     * Input: file = "abc", n = 4
+     * Output: 3
+     * Explanation: After calling your read method, buf should contain "abc". We read a total of 3 characters
+     * from the file, so return 3. Note that "abc" is the file's content, not buf. buf is the destination buffer
+     * that you will have to write the results to.
+     */
+    public class Reader4{ public int read4(char []buf){ return (int)Math.random()*4;}}
+    public class ReaderN extends Reader4 {
+        /**
+         * @param buf Destination buffer
+         * @param n   Number of characters to read
+         * @return    The number of actual characters read
+         *
+         * This function will be called multiple Time the code for LeetCode:: 158
+         *
+         * file = "leetcodeleetcode" n=5 read called twice
+         * output = 10 read "leetcodele"
+         * first read 'leetc' buffer has 'ode'
+         * 2dn read call buuffer already has ode so copy ode to buff; buff will have 'ode' n becomes 5 - 3 so 2
+         *  read4 call will read 'leet' but the buff will ad only 2 char 'le' and rCount = 4
+         */
+
+        char []read4Buffer = new char[4];
+        int lastReadOffSet = 0;
+        public int read(char[] buf, int n) {
+            int readSofar = 0;
+            while (n > 0) {
+                lastReadOffSet%=4;
+                if(lastReadOffSet == 0) {
+                    int rCount = read4(read4Buffer);
+                    for (;lastReadOffSet < Math.min(rCount, n); lastReadOffSet++){
+                        buf[readSofar++] = read4Buffer[lastReadOffSet++];
+                    }
+                    if (rCount<4)
+                        break;
+                    n-= rCount;
+
+                } else {
+                    int curCount =0;
+                    for (;lastReadOffSet < Math.min(4, n); lastReadOffSet++){
+                        buf[readSofar++] = read4Buffer[lastReadOffSet++];
+                        curCount++;
+                    }
+                    n-=curCount;
+                }
+
+
+            }
+            return readSofar;
+        }
+
+        // simplifying the above function reducing the duplicate code 'for loop inside if else'
+        // file = 'leetcodeleetcode' n = 5  l
+        // first read 'leetc'  lastReadoffset = 1 read4buf has 'ode' to be read
+        // 2nd read 'odele' lastOffset 2 read4vuf to be read 'et'
+        // 3rd read 'etcod' lastOffset 3 read4vuf to be read 'e'
+        // 4th read 'e'
+        public int readN(char[] buf, int n) {
+            int readSofar = 0;
+            int rCount = 0;
+            while (n > 0) {
+                lastReadOffSet %= 4;
+                if(lastReadOffSet == 0) {
+                    rCount = read4(read4Buffer);
+                } else {
+                    rCount = 4;
+                }
+                int curCount = 0;
+                for (;lastReadOffSet < Math.min(rCount, n); lastReadOffSet++){
+                    buf[readSofar++] = read4Buffer[lastReadOffSet++];
+                    curCount++;
+                }
+                if (rCount<4)
+                    break;
+                n-=curCount;
+
+
+            }
+            return readSofar;
+        }
+
+        /**
+         * @param buf Destination buffer
+         * @param n   Number of characters to read
+         * @return    The number of actual characters read
+         *
+         * This function will be called once this the code for LeetCode:: 157
+         */
+        public int readNSimple(char[] buf, int n) {
+            int readSofar =0;
+            char [] tempBuf = new char[4];
+            while (n > 0) {
+                int rCount = read4(tempBuf);
+                for (int i = 0; i < Math.min(rCount,n); i++){
+                    buf[readSofar++] = tempBuf[i];
+                }
+                n-= rCount;
+                if (rCount < 4) {
+                    break;
+                }
+            }
+            return readSofar;
+        }
+
+    }
+
 
 
 }

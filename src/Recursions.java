@@ -2081,6 +2081,9 @@ public class Recursions {
     private void removeParentheses(String s, int index, int left, int right,
                                    int leftRem, int rightRem, StringBuilder sb){
         if(index == s.length()) {
+            // when leftRem & rightRem both are zero and we have processed the whole string it means that we have
+            // correctly removed all the invalid parentheses. Parentheses will be valid if and only if the left &
+            // right count are equal if both leftRem & rightRem is zero we have our solution
             if(leftRem ==0 && rightRem == 0) {
                 parenthesesList.add(sb.toString());
             }
@@ -2109,6 +2112,7 @@ public class Recursions {
         sb.deleteCharAt(len);
 
     }
+    
     public List<String> removeInvalidParenthesesV2(String s) {
         int leftCount = 0;
         int rightCount = 0;

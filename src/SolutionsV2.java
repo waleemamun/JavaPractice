@@ -854,7 +854,8 @@ public class SolutionsV2 {
     // The idea is to create a map of the String T and then construct a new string following the order of S.
     // To follow the order of S we scan S from left to right pick each item from S and get the count from the T map
     // and add them in the new String. Finally we add the remaining char In T which does not appear in S in
-    // normal/natural sorted order
+    // normal/natural sorted order. The runtime is O(n+m) n is length of S and m is length of T
+    // The main trick is to create a map of T.
     public String customSortString(String S, String T) {
         int []map = new int[26];
         // build the map
