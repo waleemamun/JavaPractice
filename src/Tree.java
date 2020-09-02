@@ -1691,7 +1691,10 @@ public class Tree {
 
     }
 
-    //leetCode :: 938 Range Sum of BST (Not submitted)
+    //leetCode :: 938 Range Sum of BST 
+    // Check the Version 3 version 1 & 2 are slow cause O(nodes) runtime
+    // Version 3  uses the BST property and gets O(nodes) runtime in worst case when the range is huge
+    // but in average case the runtime should be O(log nodes = height of tree) because of using bst property
     int rangeSum= 0;
     private void rangeSumBSTRec (TreeNode root, int L, int R) {
         if (root == null)
@@ -1716,6 +1719,21 @@ public class Tree {
         if(L <= root.val && root.val <= R)
             rootVal+= root.val;
         return rootVal;
+    }
+    public int rangeSumBST3(TreeNode root, int L, int R) {
+        if(root == null)
+            return 0;
+
+        if (root.val > R) {
+            return rangeSumBST3(root.left, L, R);
+        } else if(root.val < L) {
+            return rangeSumBST3(root.right, L, R);
+        } else {
+            return root.val +
+                    rangeSumBST3(root.left, L, root.val -1) +
+                    rangeSumBST3(root.right, root.val +1, R);
+        }
+
     }
 
     // LeetCode :: 297. Serialize and Deserialize Binary Tree

@@ -1,4 +1,5 @@
 import javafx.geometry.Pos;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.omg.PortableInterceptor.INACTIVE;
 import sun.jvm.hotspot.utilities.Interval;
 
@@ -2134,8 +2135,68 @@ public class Recursions {
 
     }
 
+    // LeetCode :: 267 Palindrome permutation - II
+    // We have to use a backtracking approach
+    // The idea is to find build palindrome from middle to outward. First we check if a palindrome can be formed from
+    // this if no we just return. Otherwise we generate the palindromes from middle to outwards. First we need to find
+    // if there is odd length palindrome and find the middle char. if middle char exist we put the middle char as our
+    // string en expand on both side of it for example abcDcba  so D is the middle char we start with a string "D" and
+    // expand outward "cDc" -->" bcDcb" --> "abcDcba". The we use "bDb" -->" cbDbc" --> "acbDbca" and so on ...
+    // This approach actually ensures that we dont recurse too much and we only generate valid results when we reach
+    // the end. Look how the frequency is reduced in the recursion to ensure we have valid palindrome at the end
+    private void genPalindromeHelper (int len, String palStr, List<String> resList, HashMap<Character, Integer> freqMap) {
+        if(palStr.length() == len){
+            resList.add(palStr);
+            return;
+        }
+        for(Character ch : freqMap.keySet()) {
+            int count = freqMap.get(ch);
+            // if count is positive we can put this char on both side of our current string and recurse
+            if(count > 0) {
+                count -= 2;
+                freqMap.put(ch, count);
+                String newStr = ch + palStr + ch;
+                genPalindromeHelper(len, newStr, resList, freqMap);
+                // backtrack
+                count += 2;
+                freqMap.put(ch, count);
+            }
+        }
 
+    }
 
+    public List<String> generatePalindrome(String s) {
+        HashMap<Character, Integer> freq = new HashMap<>();
+        List<String> resList = new ArrayList<>();
+        int odd =0;
+        // get the frequency and check if valid palindrome possible
+        for (int i =0; i<s.length(); i++) {
+            freq.put(s.charAt(i), freq.getOrDefault(s.charAt(i), 0) + 1);
+            if(freq.get(s.charAt(i)) % 2 == 1)
+                odd++;
+            else
+                odd--;
+        }
+        // valid palindrome not possible
+        if(odd > 1)
+            return resList;
+        // start with a empty string if the palindrome is of odd length then add the middle char as the starting string
+        String palStr ="";
+        for (Character ch : freq.keySet()) {
+            if(freq.get(ch)%2 == 1) {
+                // we found a middle char lets put it in start string &
+                // also decrease the middle char count by 1 otherwise it
+                // will incorrectly counted during recursion
+                palStr+=ch;
+                freq.put(ch, freq.get(ch) -1);
+                break;
+            }
+        }
+        // call the helper function to generate our list
+        genPalindromeHelper(s.length(), palStr, resList, freq);
+
+        return resList;
+    }
 
 
 
