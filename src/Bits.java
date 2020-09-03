@@ -186,7 +186,7 @@ public class Bits {
     // LeetCode :: 89. Gray Code
     // The grey code has an interesting property, if you know n bits grey code then
     // for n+1 bit its just  (1<<n | mirrored nbits) for example 2 bit is 00 01 11 10
-    // so 3 bits 100 101 111 110 000 001 011 010. Now if we want ot generate grey code for n bits
+    // so 3 bits 000 001 011 010 110 111 101 100. Now if we want ot generate grey code for n bits
     // we can start adding 0 & 1 to a list and visit the list in reverse order and while visiting
     // add those entry with i+1 bit set to 1.
     public List<Integer> grayCode(int n) {
@@ -434,6 +434,19 @@ public class Bits {
     // The idea is to first check if its power of two & and the odd bit is the only bit set
     public boolean isPowerOfFour(int num) {
         return (num &(num - 1)) == 0 && (num & 0x55555555) !=0;
+    }
+
+    // LeetCode :: 779. K-th Symbol in Grammar
+    // This is something very very beautiful The idea is to observe the pattern of bits generated for N
+    // After that N is not relevant that much we can use K to find the solution look at the table below
+    // Decimal  0    1   2   3   4   5   6   7
+    // Binary   0  001 010 011 100 101 110 111
+    // setbit
+    // odd(1)/even (0)
+    // count:   0    1   1   0   1   0   0  1 <---- this is our pattern for 0s 1s for N we need to find
+    // how many bits set in k odd or even
+    public int kthGrammar(int N, int K) {
+        return Integer.bitCount(K-1) & 1;
     }
 
 }

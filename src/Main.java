@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,1,2,1,2,3,2};
+        int [] arr =  {1,2,3,4,5};
         int [] arr1 = {2,5,7,8};
 
         int [][] arr2d = {
@@ -241,6 +241,8 @@ public class Main {
         GraphNode g1 = new GraphNode();
         DataStructProblem d1 = new DataStructProblem();
         LinkList ls1 = new LinkList();
+        ls1 = ls1.createList(arr);
+
         char [] tasks = {'A','A','A','B','B','B'};
 
         int [][] updates = {{1,1,1,1,1},
@@ -251,7 +253,11 @@ public class Main {
         int val = sv2.findPeakElement(arr);
 
         int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
-        System.out.println(r1.generatePalindrome("abcabc"));
+        LinkList.printList(ls1);
+        LinkList ls2 = ls1.swapPairsV2(ls1);
+        LinkList.printList(ls2);
+        r1.nextPermutationV2(arr);
+        System.out.println(r1.subsetKSize(arr,2));
 
 
 

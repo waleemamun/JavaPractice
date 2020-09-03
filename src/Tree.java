@@ -1691,7 +1691,7 @@ public class Tree {
 
     }
 
-    //leetCode :: 938 Range Sum of BST 
+    //leetCode :: 938 Range Sum of BST
     // Check the Version 3 version 1 & 2 are slow cause O(nodes) runtime
     // Version 3  uses the BST property and gets O(nodes) runtime in worst case when the range is huge
     // but in average case the runtime should be O(log nodes = height of tree) because of using bst property

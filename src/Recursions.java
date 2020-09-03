@@ -295,6 +295,26 @@ public class Recursions {
         reverserArray(nums, low, lowStart);
     }
 
+    // concise version same algo as avobe this is may be easy to read
+    public void nextPermutationV2(int[] nums) {
+        int k = nums.length - 2;
+        while(k>=0 && nums[k] >= nums[k+1]) {
+            k--;
+        }
+        if (k < 0){
+            reverserArray(nums,0, nums.length -1);
+            return;
+        }
+        int l = nums.length -1;
+        while (l>= 0 && nums[l] <= nums[k]) {
+            l--;
+        }
+        int tmp = nums[k];
+        nums[k] = nums[l];
+        nums[l] = tmp;
+        reverserArray(nums,k+1, nums.length -1);
+    }
+
     // LeetCode :: 33. Search in Rotated Sorted Array
     public int search(int[] nums, int target) {
         return rotatedBinSearch(nums,0, nums.length -1, target);
@@ -1014,6 +1034,32 @@ public class Recursions {
 
     }
 
+    // AdnanAziz Subset Recursion with k length
+    // GENERATE ALL SUBSETS OF SIZE k
+    // The idea is count the remaining items to add and direct/ reduce the recursion calls as much as possible
+    private void subsetKSizeHelper (int []nums, int index, int k,
+                                    ArrayList<Integer> tempList,
+                                    List<List<Integer>> rList) {
+
+        if(tempList.size() == k){
+            rList.add(new ArrayList<>(tempList));
+            return;
+        }
+        // we calc the remaining items to add to the list
+        int remainIng = k - tempList.size();
+        // now depending on the remaining items to collect we reduce the number of recursion calls
+        for (int i = index; i < nums.length && remainIng <= nums.length -i; i++) {
+            tempList.add(nums[i]);
+            subsetKSizeHelper(nums, i + 1, k, tempList, rList);
+            tempList.remove(tempList.size()-1);
+        }
+    }
+    public List<List<Integer>> subsetKSize (int [] nums, int k) {
+        List<List<Integer>> resList = new ArrayList<>();
+        subsetKSizeHelper(nums, 0, k, new ArrayList<>(), resList);
+        return resList;
+    }
+
     //LeetCode :: 90 Subset With Duplicate
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         List<List<Integer>> resList = new ArrayList<>();
@@ -1116,7 +1162,7 @@ public class Recursions {
             }
             else
                 tempList.add(nums[i]);
-
+            // Note that we need to send index +1 in the recursion instead of i+1
             permutateBacktrack(nums,  index+ 1, tempList, rList);
             tempList.remove(tempList.size()-1);
             if (index!=i) {
@@ -2197,6 +2243,9 @@ public class Recursions {
 
         return resList;
     }
+
+
+
 
 
 

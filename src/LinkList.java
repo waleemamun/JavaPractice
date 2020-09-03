@@ -297,6 +297,21 @@ public class LinkList {
         return resultList.next;
 
     }
+    // Try solving with recursion
+    private LinkList swapPairHelper (LinkList head, LinkList first) {
+        if(first == null || first.next == null)
+            return first;
+        LinkList sec = first.next;
+        first.next = swapPairHelper(head, sec.next);
+        sec.next = first;
+        return sec;
+    }
+    public LinkList swapPairsV2(LinkList head) {
+        if(head == null)
+            return head;
+        LinkList newHead = swapPairHelper(head, head);
+        return newHead;
+    }
 
 
 
