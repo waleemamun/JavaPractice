@@ -527,7 +527,7 @@ public class Recursions {
 
     }
 
-    // 35. Search Insert Position
+    // LeetCode :: 35. Search Insert Position
     // The idea is to do binary search to find the entry, if found return index, if not found (low > high)
     // low will the index where this entry could be inserted
     public int searchInsert(int[] nums, int target) {
@@ -1234,6 +1234,7 @@ public class Recursions {
     // We only add to list if the position is not used before, we also skip the duplicates processing
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> resList = new ArrayList<>();
+        // the sort is necessary to handle the duplicates
         Arrays.sort(nums);
         boolean []used = new boolean[nums.length];
         Arrays.fill(used,false);
@@ -1553,7 +1554,7 @@ public class Recursions {
                 if (nums[cur] > nums[mid])
                     cur++;
                 high = cur;
-                break;
+                //break;
             }
             else
                 high = mid;
@@ -1712,7 +1713,7 @@ public class Recursions {
     }
 
     // The solution for letterCombinations Problem
-    // Leetcode 17
+    // Leetcode 17 :: letterCombinations
     Map<String, String> phone = new HashMap<String, String>() {{
         put("2", "abc");
         put("3", "def");

@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5};
+        int [] arr =  {1,2,3,4,5,6,7,8,9};
         int [] arr1 = {2,5,7,8};
 
         int [][] arr2d = {
@@ -256,8 +256,8 @@ public class Main {
         LinkList.printList(ls1);
         LinkList ls2 = ls1.swapPairsV2(ls1);
         LinkList.printList(ls2);
-        r1.nextPermutationV2(arr);
-        System.out.println(r1.subsetKSize(arr,2));
+        System.out.println(tr1.levelOrder(treeNode));
+        System.out.println(tr1.pathSumIII(treeNode, 7));
 
 
 

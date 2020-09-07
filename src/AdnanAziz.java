@@ -186,14 +186,14 @@ public class AdnanAziz {
     // we will find the min & max birth year, then map the birth & death years to the map as we have done for events
     public static int findMaxSimultaneousEvents(int [][] intervals){
         int minStart = Integer.MAX_VALUE;
-        int maxStart = Integer.MIN_VALUE;
+        int maxEnd = Integer.MIN_VALUE;
         // get min max start time
         for (int i = 0; i <intervals.length; i++) {
             minStart = Math.min(minStart, intervals[i][0]);
-            maxStart = Math.max(maxStart, intervals[i][0]);
+            maxEnd = Math.max(maxEnd, intervals[i][1]);
         }
         // create the mapping array this works as a hashmap
-        int [] map = new int[maxStart +1];
+        int [] map = new int[maxEnd +1];
         // we walk through intervals & map the start time & end time
         // we will do +1 for start & -1 for end time
         for (int inv[] :intervals) {
@@ -205,7 +205,7 @@ public class AdnanAziz {
         int peakTime = 0;
         // now we walk through the map and calc the running sum for each time.
         // We store the max concurrent event & peak time
-        for (int i = minStart; i <= maxStart; i++) {
+        for (int i = minStart; i <= maxEnd; i++) {
             sum+= map[i];
             if (maxEvent < sum) {
                 maxEvent = sum;

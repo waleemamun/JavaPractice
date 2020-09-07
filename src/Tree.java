@@ -710,6 +710,28 @@ public class Tree {
         }
         return rList;
     }
+    // easy to read version of levelOrder traversal
+    public List<List<Integer>> levelOrder2(TreeNode root) {
+        List<List<Integer>> rList = new ArrayList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if (root == null)
+            return rList;
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            ArrayList<Integer> tempList = new ArrayList<>();
+            for ( int i =0; i< size; i++) {
+                TreeNode node =  queue.remove();
+                tempList.add(node.val);
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+            }
+            rList.add(tempList);
+        }
+        return rList;
+    }
     // level order traversal in recursive manner its little faster , does not require as much as memory
     // this is basically using a preorder traversal but using a list of list to store the nodes in level
     // order traversal manner
@@ -2119,6 +2141,48 @@ public class Tree {
         leftBoundary.addAll(rightBoundary);
         return leftBoundary;
     }
+
+    // LeetCode :: 437. Path Sum III
+    // The idea is same as the range sum of an array the sum of any i,j of an array can be defined as
+    // sum(i,j) = running_sum[j] - running_sum[i-1].
+    // We use the same idea of "LeetCode :: 325 Maximum Size Subarray Sum Equals k"
+    // In this problem instead of an array we have a Tree and we need find the sum(i,j) in the tree going
+    // top to bottom direction.
+    // First we keep map to store the running sum and there counts  at any point if the runningSum - k is
+    // found in the map we increase our path count
+    private void pathSumHelperIII (TreeNode root, int k,
+                                   HashMap<Integer, Integer> map, int runningSum) {
+        // base case, mo need to process further
+        if(root == null)
+            return;
+        // calc the current running sum on this path
+        runningSum += root.val;
+        // check if the runningSUm - k has been seen in the map if yes we have found our 'sum' which is 'k' here
+        // in the current path so update the result
+        if (map.containsKey(runningSum - k)) {
+            pathSumCount+= map.get(runningSum -k);
+        }
+        // updathe current running sum count for this path
+        map.put(runningSum, map.getOrDefault(runningSum, 0) + 1);
+        // recurse on left & right sub tree
+        pathSumHelperIII(root.left, k, map, runningSum);
+        pathSumHelperIII(root.right, k, map, runningSum);
+        // revese the current result cause we allow only top done path so we need to remove the runningSum count after
+        // we have process the sub tree under this root node so that other node which are not a part of sub tree of
+        // this node for example its sibling or other nodes does not include this runningSUm in their path
+        // this idea is similar to backtracking
+        map.put(runningSum, map.get(runningSum) - 1);
+    }
+    int pathSumCount;
+    public int pathSumIII(TreeNode root, int sum) {
+        pathSumCount = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0,1);
+        // let recursively solve the sum count
+        pathSumHelperIII(root, sum, map, 0);
+        return pathSumCount;
+    }
+
 
 
 
