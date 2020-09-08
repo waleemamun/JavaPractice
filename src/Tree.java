@@ -1706,9 +1706,10 @@ public class Tree {
         int height = getCompleteBSTheight(root);
         if (height < 0)
             return 0;
+        // left sub tree is full skip the left subtree processing
         if(height -1 == getCompleteBSTheight(root.right)) {
             return (1 << height) + countNodes(root.right);
-        } else
+        } else // right subtree is full slip the right sub tree processing
             return  (1 << (height -1)) + countNodes(root.left);
 
     }
@@ -1970,6 +1971,7 @@ public class Tree {
         minMaxVertical(root, 0);
         int totVertical = maxHz - minHz +1;
         for (int i =0 ; i < totVertical;i++) {
+            // we are using a linked list her for faster insertion during recursion
             resList.add(new LinkedList<>());
             levelList.add(new LinkedList<>());
         }

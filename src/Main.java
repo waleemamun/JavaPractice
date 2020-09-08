@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8,9};
+        int [] arr =  {1,2,4,7,10,11,8,14,12,6,9,16,17,18};
         int [] arr1 = {2,5,7,8};
 
         int [][] arr2d = {
@@ -258,6 +258,8 @@ public class Main {
         LinkList.printList(ls2);
         System.out.println(tr1.levelOrder(treeNode));
         System.out.println(tr1.pathSumIII(treeNode, 7));
+        Ctci ct1 = new Ctci();
+        ct1.findUnsortedIndex(arr);
 
 
 
