@@ -2151,7 +2151,7 @@ public class SolutionsV2 {
 
     }
 
-    // LeetCode – Rearrange String k Distance Apart
+    // LeetCode :: 358 – Rearrange String k Distance Apart
     // The idea is similar to the previous approach "LeetCode :: 621. Task Scheduler"
     // We use a greedy approach to find the solution. We build a priority queue based on the char frequency.
     // we extract k items from the priority queue at each turn and update the priority of the items and then
@@ -2170,7 +2170,7 @@ public class SolutionsV2 {
      * Example :
      * str = "aabbcc", k = 3
      * Result: "abcabc"
-     * */
+     **/
 
     public String rearrangeString(String str, int k) {
         HashMap<Character, Integer> freqMap = new HashMap<>();
@@ -2247,6 +2247,7 @@ public class SolutionsV2 {
                 int timePassed = time - map.get(tsk);
                 idle = Math.max(interval - timePassed, 0);
             }
+            // the +1 is for this current task
             time+= (idle +1);
             map.put(tsk, time);
         }

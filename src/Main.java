@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,4,7,10,11,8,14,12,6,9,16,17,18};
+        int [] arr =  {1,2,3,4,5,6,7,8,9};
         int [] arr1 = {2,5,7,8};
 
         int [][] arr2d = {
@@ -219,12 +219,21 @@ public class Main {
         String str1 = "bbabcdckaka";
         String str2 = "NAzEeF";
         int [][] edges = {
-                {0, 1},
-                {1, 2},
-                {2, 3},
-                {3, 4},
-                {4, 5},
-                {5, 0}
+                {0, 5},
+                {4, 7},
+                {1, 13},
+                {6, 12},
+                {14, 16},
+                {6, 10},
+                {20, 30},
+                {40, 50},
+                {60, 70},
+                {80, 90},
+                {200, 300},
+                {100, 160},
+                {170, 180},
+                {190, 198},
+                {3,  8}
         };
         int []newInterval = {7,23};
 
@@ -257,9 +266,10 @@ public class Main {
         LinkList ls2 = ls1.swapPairsV2(ls1);
         LinkList.printList(ls2);
         System.out.println(tr1.levelOrder(treeNode));
-        System.out.println(tr1.pathSumIII(treeNode, 7));
-        Ctci ct1 = new Ctci();
-        ct1.findUnsortedIndex(arr);
+        System.out.println(tr1.morrisPreorderTraversal(treeNode));
+        System.out.println("Meeting room count = " + p1.minMeetingRoomsV2(edges));
+
+
 
 
 

@@ -2185,6 +2185,67 @@ public class Tree {
         return pathSumCount;
     }
 
+    // Morris Inorder Traversal O(1) space no parent pointers needed in a BST
+    public TreeNode getPredNode(TreeNode node) {
+        if (node.left == null)
+            return null;
+        TreeNode pred = node.left;
+        while (pred.right != null && pred.right != node)
+            pred = pred.right;
+        return pred;
+    }
+
+    // The idea is to find the pred node of the a node that has left child and make th pred node's right pointer
+    // point to the curr node so we have a way to go back to cur node when we visit pred node
+    public List<Integer> morrisInorderTraversal(TreeNode root) {
+        List <Integer> resList = new ArrayList<>();
+        if (root == null)
+            return resList;
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.left == null) {
+                resList.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode predecessor = getPredNode(cur);
+                if (predecessor.right == null) {
+                    predecessor.right = cur;
+                    cur = cur.left;
+                } else {
+                    resList.add(cur.val);
+                    predecessor.right = null;
+                    cur = cur.right;
+                }
+
+            }
+        }
+        return resList;
+    }
+
+    public List<Integer> morrisPreorderTraversal(TreeNode root) {
+        List <Integer> resList = new ArrayList<>();
+        if (root == null)
+            return resList;
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.left == null) {
+                resList.add(cur.val);
+                cur = cur.right;
+            } else {
+                TreeNode predecessor = getPredNode(cur);
+                if (predecessor.right == null) {
+                    resList.add(cur.val);
+                    predecessor.right = cur;
+                    cur = cur.left;
+                } else {
+                    predecessor.right = null;
+                    cur = cur.right;
+                }
+
+            }
+        }
+        return resList;
+    }
 
 
 

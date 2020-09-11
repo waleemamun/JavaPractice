@@ -878,6 +878,64 @@ public class PhoneIQ {
 
     }
 
+    // LeetCode :: 252 Meeting Rooms II
+    /**
+     * Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei),
+     * find the minimum number of conference rooms required.
+     * For example, Given [[0, 30],[5, 10],[15, 20]], return 2.
+     * */
+    // The idea is to use the same approach as the most populdation count problem in a Year or the Max concurrent event
+    // of AdnanAziz.
+    // This approach uses and O(times) solution we find the minStart & max endTime. We maintain a count array of
+    // event per time in the times array. Then we go through each interval whenever we see a start interval we do +1 for
+    // start interval and -1 for end interval. Finally while scanning the times array from start to end time we count
+    // the concurrent even per time and have a running sum. The running su gives the count of concurrent event at that
+    // time so we keep track of max running sum.
+    public int minMeetingRooms(int[][] intervals) {
+        int roomCount = 0;
+        int maxCount = 0;
+        int startTime = Integer.MAX_VALUE;
+        int endTime = 0;
+        for (int [] inv : intervals){
+            startTime = Math.min(startTime, inv[0]);
+            endTime = Math.max(endTime, inv[1]);
+        }
+        // we are using the start time to reduce the space & execution time for example
+        // if the start time is not zero we can have less storage & execution time
+        int []times = new int[endTime -startTime + 1];
+        for (int [] inv : intervals) {
+            times[inv[0]-startTime]++;
+            times[inv[1]-startTime]--;
+        }
+        // the running sum at time i gives the total concurrent event at time i, as the running sum can become less in
+        // subsequent ith time we keep track of max rof running sum to track the max concurrent event
+        for(int i = 0; i < times.length; i++) {
+            roomCount+= times[i];
+            maxCount = Math.max(maxCount, roomCount);
+        }
+
+        return maxCount;
+    }
+    // meeting room -II version 2
+    public int minMeetingRoomsV2(int[][] intervals) {
+        int maxCount = 0;
+        Arrays.sort(intervals, new IntervalComparator());
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        minHeap.add(intervals[0][1]);
+        for (int i = 1; i < intervals.length; i++){
+            if (minHeap.peek() <= intervals[i][0])
+                minHeap.remove();
+            minHeap.add(intervals[i][1]);
+            //maxCount = Math.max(maxCount, minHeap.size());
+        }
+
+        return minHeap.size();
+    }
+
+
+
+
+
     // Google Phone Interview Question Faulty keyboard
     // There is a broken keyboard in which space gets typed when you type the letter 'e'. Given an input string which is
     // the output from the keyboard. A dictionary of possible words is also provided as an input parameter of the

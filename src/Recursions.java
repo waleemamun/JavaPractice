@@ -2245,6 +2245,47 @@ public class Recursions {
         return resList;
     }
 
+    // LeetCode :: 395. Longest Substring with At Least K Repeating Characters
+    // The idea is to recursively solve this problem. We find one char that has not been repeated k-times and split the
+    // string at that char and recusively check if the sub string has a solution or not for example abbacad & k = 2
+    // we split at 'c' and check if 'abba' has valid solution
+    public int longestSubstring(String s, int k) {
+        char [] map = new char[26];
+        boolean allRepeatKTimes = true;
+        // count the frequency
+        for (int i =0; i < s.length(); i++) {
+            map[s.charAt(i) -'a']++;
+        }
+        // check if all chars in this string has k repeated items
+        for (int i = 0; i<26; i++) {
+            if(map[i] > 0 && map[i] < k) {
+                allRepeatKTimes = false;
+                break;
+            }
+        }
+        // all char has k repeated items we have our solution
+        if (allRepeatKTimes)
+            return s.length();
+        int st = 0;
+        int cur = 0;
+        int max = 0;
+        // find the char that appears less than k times and call solve everything before it recursively
+        // for example abbacaaaadbb we spilt at c so that 'abba' can be checked the we split at d to check 'aaaa'
+        for (int i = 0; i < s.length(); i++) {
+            if (map[s.charAt(i) -'a'] < k) {
+                max = Math.max(max, longestSubstring(s.substring(st,cur), k));
+                st = cur + 1;
+            }
+            cur++;
+        }
+        // consider the case when the last part of the string has a result so we deal with the last part here
+        // for example abcdefghoooooooo in this case when the loop above is over st points to the first 'o' so we need
+        // to pass recusively check for subtring tarting with 'o'
+        max = Math.max(max, longestSubstring(s.substring(st),k));
+        return max;
+    }
+
+
 
 
 

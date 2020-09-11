@@ -976,6 +976,46 @@ public class DataStructProblem {
         }
 
     }
+    // LeetCode :: 251 Flatten 2D Vector
+    /**
+     * Implement an iterator to flatten a 2d vector.
+     * For example,
+     * Given 2d vector
+     * [
+     *   [1,2],
+     *   [3],
+     *   [4,5,6]
+     * ]
+     *
+     * output = [1,2,3,4,5,6]
+     * */
+    public class Vector2D {
+        Iterator<List<Integer>> outer;
+        Iterator<Integer> inner;
+        public Vector2D(List<List<Integer>> vec2d) {
+            outer = vec2d.iterator();
+            if(outer.hasNext())
+                inner = outer.next().iterator();
+        }
+        public int next() {
+            return inner.next();
+        }
+        public boolean hasNext() {
+            if(inner.hasNext())
+                return true;
+            else {
+                boolean has = outer.hasNext();
+                if(has) {
+                    List<Integer> lst = outer.next();
+                    if(lst.size() ==0)
+                        return false;
+                    inner = lst.iterator();
+                }
+                return has;
+            }
+        }
+
+    }
 
 
 
