@@ -192,8 +192,8 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,2,3,4,5,6,7,8,9};
-        int [] arr1 = {2,5,7,8};
+        int [] arr =  {1,3,4,5,8,9,6,2,7,11};
+        int [] arr1 = {3, 6, 3, 3};
 
         int [][] arr2d = {
                 {2, 3, 4, 9},
@@ -210,13 +210,12 @@ public class Main {
         };
 
 
-        String [] words = {"acd", "dfg", "wyz", "yab", "mop",
-                "bdfh", "a", "x", "moqs", "www","bbb", "sss"};
+        String [] words = {"looked","just","like","her","brother"};
         List<String> wordList = new ArrayList<>(Arrays.asList(words));
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "bbabcdckaka";
+        String str1 = "jesslookedjustliketimherbrother";
         String str2 = "NAzEeF";
         int [][] edges = {
                 {0, 5},
@@ -248,6 +247,7 @@ public class Main {
         PhoneIQ p1 = new PhoneIQ();
         CodeArray c1  =new CodeArray();
         GraphNode g1 = new GraphNode();
+        Ctci ct1 = new Ctci();
         DataStructProblem d1 = new DataStructProblem();
         LinkList ls1 = new LinkList();
         ls1 = ls1.createList(arr);
@@ -260,14 +260,11 @@ public class Main {
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
-
         int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
-        LinkList.printList(ls1);
-        LinkList ls2 = ls1.swapPairsV2(ls1);
-        LinkList.printList(ls2);
-        System.out.println(tr1.levelOrder(treeNode));
-        System.out.println(tr1.morrisPreorderTraversal(treeNode));
-        System.out.println("Meeting room count = " + p1.minMeetingRoomsV2(edges));
+        System.out.println("res" + Arrays.toString(ct1.missingTwo(arr, 12)));
+
+
+
 
 
 

@@ -1605,6 +1605,36 @@ public class DPs {
 
         return validBreaks[s.length()];
     }
+
+    // ctci 17.13 :: Re-Space
+    // We need to use the same appraoch as the previous problem "LeetCode :: 139. Word Break (this takes 3 ms)"
+    // We apply a DP approach similar to LIS O(n^2)
+    public String bestSplit(String s, List<String> wordDict) {
+        HashSet<String> dict = new HashSet<>(wordDict);
+        int []prev = new int[s.length()+1];
+        int []cost = new int [s.length()+1];
+        cost[0] = 0;
+        for(int i = 1; i <= s.length(); i++){
+            int tempCost = s.length() +1;
+            for(int j = 0; j < i; j++){
+                int curCost = (dict.contains(s.substring(j,i)) ? 0 : i-j) + cost[j];
+                if (tempCost > curCost){
+                    tempCost = curCost;
+                    prev[i] = j;
+                }
+            }
+            cost[i] = tempCost;
+        }
+        System.out.println("Cost:" + Arrays.toString(cost));
+        System.out.println("Prev:" + Arrays.toString(prev));
+        StringBuilder sb = new StringBuilder(s);
+        int i = prev.length -1;
+        while(prev[i] != 0){
+            i = prev[i];
+            sb.insert(i," ");
+        }
+        return sb.toString();
+    }
     // A queue / bfs approach to this problem (This is not a dp solution) its the slowest....
     // this may not be the best solution
     /**

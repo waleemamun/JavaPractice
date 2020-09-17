@@ -2247,6 +2247,100 @@ public class Tree {
         return resList;
     }
 
+    public TreeNode specialSuccessor (TreeNode node, TreeNode root) {
+        if (root == null || node == null)
+            return null;
+        TreeNode cur = node.right;
+        if (cur == null){
+            cur = root;
+            TreeNode leftAncestor = null;
+            while (cur != null && cur.val != node.val){
+                if(node.val < cur.val) {
+                    leftAncestor = cur;
+                    cur = cur.left;
+                } else{
+                    cur = cur.right;
+                }
+            }
+            cur = leftAncestor;
+
+        } else {
+            while(cur.left != null){
+                cur = cur.left;
+            }
+        }
+
+        return cur;
+    }
+
+    public TreeNode specialPredecessor(TreeNode node, TreeNode root){
+        if (root == null || node == null)
+            return null;
+        TreeNode cur = node.left;
+        if (cur == null){
+            cur = root;
+            TreeNode rightAncestor = null;
+            while (cur != null && cur.val != node.val){
+                if(node.val < cur.val) {
+
+                    cur = cur.left;
+                } else{
+                    rightAncestor = cur;
+                    cur = cur.right;
+                }
+            }
+            cur = rightAncestor;
+
+        } else {
+            while(cur.right != null){
+                cur = cur.right;
+            }
+        }
+        return cur;
+    }
+    private TreeNode doubleHead = null;
+    private TreeNode bst2DoubleHelper (TreeNode node, TreeNode root) {
+        if (node == null)
+            return null;
+        if (doubleHead == null && node.left == null)
+            doubleHead = node;
+        TreeNode pred = specialPredecessor(node, root);
+        TreeNode succ = specialSuccessor(node, root);
+        //System.out.println((pred == null?"null":pred.val) + " "+node.val+ " "+ (succ==null?"null":succ.val));
+        bst2DoubleHelper(node.left, root);
+        bst2DoubleHelper(node.right, root);
+        node.left = pred;
+        node.right = succ;
+        //System.out.println("#"+(node.left == null?"null":node.left.val) + " "+node.val+ " "+ (node.right==null?"null":node.right.val));
+        return node;
+    }
+
+    public TreeNode bst2DoublyLinkList(TreeNode root) {
+        bst2DoubleHelper(root, root);
+        int count = 0;
+        TreeNode cur = doubleHead;
+
+        while (cur.right != null){
+            cur = cur.right;
+        }
+        TreeNode tail = cur;
+        tail.right = doubleHead;
+        doubleHead.left = tail;
+        cur = doubleHead;
+        count = 0;
+        while (cur != tail){
+            System.out.print(" " +cur.val);
+            cur = cur.right;
+        }
+        while (cur != doubleHead){
+            System.out.print(" " + cur.val);
+            cur = cur.left;
+        }
+        System.out.println(" " + cur.val);
+
+        return doubleHead;
+    }
+
 
 
 
