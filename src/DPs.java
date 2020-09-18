@@ -37,6 +37,55 @@ public class DPs {
         return maxSum;
     }
 
+    // CTCI :: 17.23 Max Sub matrix
+    // We need to find the maximum submatrix sum in a 2D array.
+    // We use the maximum sub array sum  to get the submatrix sum
+    // here we go by each row and then calc max subarray sum for it
+    // To cover all sorts of matrix we try all combination rows for example
+    // we use row 0 only then row 0 and row1 ,then row 0, 1 and 2 and so on.
+    // Next we try row 1 only then row 1 & 2  then row 1 ,2 , 3 and so on.
+    // Next we try row 2 only then row 2 & 3 and so on this way we cover all
+    // combination to get the maximum sum sub matrix
+    public int maxSubMatrixSum (int [][] matrix) {
+        int currSum = Integer.MIN_VALUE;
+        for (int rowSt = 0; rowSt < matrix.length; rowSt++) {
+            int []partialSum = new int[matrix[0].length];
+            for(int rowCur = rowSt; rowCur < matrix.length; rowCur++) {
+                for (int col = 0; col < matrix[0].length; col++) {
+                    partialSum[col] += matrix[rowCur][col];
+                }
+                currSum = Math.max(currSum, maxSubArray(partialSum));
+            }
+        }
+        return currSum;
+    }
+
+    public int maxSubArrayWithIndex(int[] nums) {
+
+        int maxSum = nums[0];
+        int currSum = nums[0];
+        int startIdx = 0;
+        int endIdx = 0;
+        int tid = 0;
+
+        for (int i = 1; i < nums.length; i++) {
+            currSum += nums[i];
+            // the current number is actually greater than the cumulative sum so discard everything
+            // on the left and update the current sum to current value as its bigger
+            if (nums[i] >= currSum) {
+                currSum = nums[i];
+                tid = i;
+            }
+            if (maxSum < currSum) {
+                maxSum = currSum;
+                startIdx = tid;
+                endIdx = i;
+
+            }
+        }
+        return maxSum;
+    }
+
     // LeetCode:: 44 WildCard Matching (Hard)
     // The Solution we will be using is  DP solution to the problem
 

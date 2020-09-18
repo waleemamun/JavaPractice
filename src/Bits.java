@@ -129,6 +129,22 @@ public class Bits {
         return sum | carryin;
     }
 
+    // LeetCode :: 371. Sum of Two Integers (not submitted)
+    // The above solution cannot handle negative number, this can handle neagative number
+    // The idea is to use the property of how add works, see if no carry is required just a^b will give the sum
+    // but if carry exist then we need to use (a & b) << 1  the AND will give the carry but the proper postion
+    // for carry to go is on bit shift to the left try the example of 3 + 2
+    // 011 ^ 010 = 001 and 011 & 010 = 010 and left shifting it gives 100, so now 100 ^ 001 == 101
+    public int getSum(int a, int b) {
+        int c;
+        while (b != 0){
+            c = a & b;
+            a = a ^ b;
+            b = (c<<1);
+        }
+        return a;
+    }
+
     // LeetCode 29 :: divide two number
     public static int divide (long x, long y) {
 
