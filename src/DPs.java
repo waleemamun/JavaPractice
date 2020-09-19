@@ -86,6 +86,43 @@ public class DPs {
         return maxSum;
     }
 
+    // LeetCode :: 10. Regular Expression Matching
+    // The idea is to use a DP solution similar to the wild card matching but here the case is little different than
+    // wildcard matching. Here we are matching regular expression so 'a*' can match empty string '' or 'a' or 'aaaaa'
+    // but 'a*' cannot match any char other than a's repeat or empty sequence.
+    // The DP equation is:
+    // dp [i][j] = dp[i-1][j-1] iff s(i) == p(i) or p(i) == '.'
+    // dp [i][j] = dp[i][j-2] | (dp[i-1][j] && s(i) == p(i)) iff p(i) == '*'
+    public boolean isMatch(String s, String p) {
+        boolean [][]dp  = new boolean[s.length() + 1][p.length() + 1];
+        dp[0][0] = true;
+        for (int i = 2; i <= p.length(); i++) {
+            if (p.charAt(i-1) == '*')
+                dp[0][i] = dp [0][i-2];
+        }
+
+        for (int i = 1; i < dp.length; i++){
+            for (int j = 1; j < dp[0].length; j++) {
+                // the string and pattern char matches or pattern has '.' (dot matches any single char)
+                if ((s.charAt(i-1) == p.charAt(j-1)) || p.charAt(j-1) == '.')
+                    dp[i][j] = dp [i-1][j-1];
+                // the pattern has * so we need special processing
+                else if (p.charAt(j-1) == '*') {
+                    // dp[i][j-2] presents an empty sequence for 'a*' we have to do j-2 as 'a*' is two chars
+                    // the rest of the half represents 'a*' as single 'a' or multiple a's 'aaaaa'
+                    // the dp[i-1][j] considers a non empty sequence of chars for '*' but we need to  make sure the char
+                    // before '*' in pattern matches the current char in S.
+                    // first we check if the char before * matches the current char in string s by s(i-1) == p(j-2)
+                    // or p(i-2) is a dot which matches any char
+
+                    dp[i][j] = dp[i][j-2] || (dp[i-1][j] &&
+                            (s.charAt(i-1) == p.charAt(j-2) || p.charAt(j-2) == '.'));
+                }
+            }
+        }
+        return dp[s.length()][p.length()];
+    }
+
     // LeetCode:: 44 WildCard Matching (Hard)
     // The Solution we will be using is  DP solution to the problem
 
