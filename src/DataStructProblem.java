@@ -1068,6 +1068,43 @@ public class DataStructProblem {
          */
     }
 
+    // LeetCode :: 295. Find Median from Data Stream
+    // The idea is to get the running median of unsorted sequence of numbers, we have to use a two heap approach
+    // with a minHeap and a maxHeap to solve this problem.
+    class MedianFinder {
+        PriorityQueue <Integer> minHeap;
+        PriorityQueue <Integer> maxHeap;
+        /** initialize your data structure here. */
+        public MedianFinder() {
+            minHeap = new PriorityQueue<>();
+            maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+        }
+
+        public void addNum(int num) {
+            // put an item in minHeap if the minheap <= maxheap size,
+            // we first need to put the new item to maxHeap and extract
+            // the max item from maxHeap to put it in minHeap
+            // extracting the max & adding an item to heap take lgn time
+            if (minHeap.size() <= maxHeap.size()) {
+                maxHeap.add(num);
+                minHeap.add(maxHeap.remove());
+            } else {
+                // do the same thing for maxHeap extract the min iteam from minHeap
+                // to put it on maxHeap
+                minHeap.add(num);
+                maxHeap.add(minHeap.remove());
+            }
+
+        }
+
+        public double findMedian() {
+            if ((minHeap.size() + maxHeap.size()) % 2 == 0) {
+                return (double) (minHeap.peek() + maxHeap.peek()) / 2.0;
+            } else
+                return minHeap.peek();
+        }
+    }
+
 
 
 
