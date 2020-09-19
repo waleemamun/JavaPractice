@@ -260,8 +260,9 @@ public class Main {
                             {1,0,0,0,1},
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
-        int [][] bld ={{2,9,10},{3,7,15},{5,12,12},{15,20,10},{19,24,8}};
-        System.out.println("res" + Arrays.toString(ct1.missingTwo(arr, 12)));
+        int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
+        System.out.println("kth smallest " + sv2.kthSmallestV2(bld, 5));
+
 
 
 

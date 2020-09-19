@@ -2355,5 +2355,62 @@ public class SolutionsV2 {
         return count+1;
     }
 
+    // LeetCode :: 378. Kth Smallest Element in a Sorted Matrix
+    // The idea is to use merge k sorted list
+    public int kthSmallest(int[][] matrix, int k) {
+        // rows hold the next index of each row
+        int []rows = new int[matrix.length];
+        PriorityQueue<int []> minHeap = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        for (int i = 0; i < matrix.length; i++) {
+            // pair[1] hold the current items rowIndex
+            int [] pair = {matrix[i][0], i};
+            minHeap.add(pair);
+        }
+
+        for (int i = 1; i <= k-1; i++) {
+            int [] pair = minHeap.poll();
+            rows[pair[1]]++;
+            if (rows[pair[1]] == matrix.length)
+                continue;;
+            int [] newPair = {matrix[pair[1]][rows[pair[1]]], pair[1] };
+            minHeap.offer(newPair);
+        }
+        return minHeap.poll()[0];
 
     }
+
+    public int kthSmallestV2(int[][] matrix, int k) {
+        int n = matrix.length;
+        int lo = matrix[0][0], hi = matrix[n - 1][n - 1];
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            int count = getLessEqual(matrix, mid);
+            if (count < k) lo = mid + 1;
+            else hi = mid - 1;
+        }
+        return lo;
+    }
+
+    private int getLessEqual(int[][] matrix, int val) {
+        int res = 0;
+        int n = matrix.length, i = n - 1, j = 0;
+        while (i >= 0 && j < n) {
+            if (val < matrix[i][j])
+                i--;
+            else {
+                res += i + 1;
+                j++;
+            }
+        }
+        return res;
+
+    }
+
+
+
+}

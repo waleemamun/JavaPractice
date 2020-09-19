@@ -317,7 +317,7 @@ public class Solutions {
         return maxAr;
     }
 
-    // Leetcode 15
+    // Leetcode :: 15
     // 1. sort the array
     // 2. take the first item from the sorted array as the target_sum i.e -targetx as a+b+c = 0 so b+c = -a
     // 3. in the sorted fine two items that adds up to -targetx
@@ -371,7 +371,7 @@ public class Solutions {
 
     }
 
-    //Leetcode 16
+    // Leetcode 16
     public int threeSumClosest(int[] nums, int target) {
 
         int sumClosest = 0;
@@ -510,6 +510,30 @@ public class Solutions {
         // Sort the array
         Arrays.sort(nums);
         return kSum(nums,target,4, 0);
+
+    }
+
+    // LeetCode :: 454. 4Sum II
+    // The idea is actually very Simple, we have to find a + b + c + d = 0 so a+b = -(c+d)
+    // So we generate all possible a+b from A and  B and put it in a hashtable and also count frequency of the sum
+    // then we generate all c+d and look up if this exist in our hash table this gives use the count of 4sum
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        HashMap<Integer, Integer> sumMap = new HashMap<>();
+        int count = 0;
+        for (int a: A) {
+            for (int b: B) {
+                int sum = a +b;
+                sumMap.put(sum, sumMap.getOrDefault(sum, 0) + 1);
+            }
+        }
+
+        for (int c : C) {
+            for (int d : D){
+                int sum = -(c + d);
+                count+= (sumMap.getOrDefault(sum, 0));
+            }
+        }
+        return count;
 
     }
 

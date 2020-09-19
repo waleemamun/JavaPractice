@@ -1016,6 +1016,58 @@ public class DataStructProblem {
         }
 
     }
+    // LeetCode :: 384. Shuffle an Array
+    // The idea is use The Fisher-Yates algorithm for random shuffling
+    // The Fisher-Yates algorithm runs in linear time, as generating a
+    // random index and swapping two values can be done in constant time.
+    // Although we managed to avoid using linear space on the auxiliary array
+    // from the brute force approach, we still need it for reset, so we're stuck
+    // with linear space complexity.
+    // The algorithm  is
+    // Store the numbers from 1 through N in an array arr[N]
+    //   1. Pick a random number k between (0 - curLen)
+    //   2. swap the arr[k] with arr[curLen],
+    //   3. Decrease curLen by 1.
+    //   4. Repeat step 1 - 4 until the curLen is zero
+    public class SolutionShuffle {
+        int []orig;
+        int []shfl;
+        Random rand;
+        public SolutionShuffle(int[] nums) {
+            rand = new Random();
+            shfl = new int [nums.length];
+            orig = nums;
+            int i = 0;
+            for(int n: nums)
+                shfl[i++] = n;
+        }
+
+        /** Resets the array to its original configuration and return it. */
+        public int[] reset() {
+            // just return the original array
+            return orig;
+        }
+
+        /** Returns a random shuffling of the array. */
+        public int[] shuffle() {
+            int len = shfl.length;
+            while (len > 1) {
+                int ridx = rand.nextInt(len);
+                int tmp = shfl[ridx];
+                shfl[ridx] = shfl[len-1];
+                shfl[len-1] = tmp;
+                len--;
+            }
+            return shfl;
+        }
+        /**
+         * Your Solution object will be instantiated and called as such:
+         * Solution obj = new Solution(nums);
+         * int[] param_1 = obj.reset();
+         * int[] param_2 = obj.shuffle();
+         */
+    }
+
 
 
 
