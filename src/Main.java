@@ -210,12 +210,12 @@ public class Main {
         };
 
 
-        String [] words = {"looked","just","like","her","brother"};
+        String [] words = {"cat","cats","sand","and","dog"};
         List<String> wordList = new ArrayList<>(Arrays.asList(words));
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "jesslookedjustliketimherbrother";
+        String str1 = "catsanddog";
         String str2 = "NAzEeF";
         int [][] edges = {
                 {0, 5},
@@ -261,7 +261,7 @@ public class Main {
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
-        System.out.println(dp1.isMatch("aa", "a*"));
+        System.out.println(dp1.wordBreakII(str1 ,wordList));
 
 
 

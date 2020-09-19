@@ -1692,6 +1692,57 @@ public class DPs {
         return validBreaks[s.length()];
     }
 
+    // LeetCode :: 140. Word Break II
+    // The idea is to use the same approach as wordbreak problem, we need to generate all possible word break
+    // ie words with space. Hence its better to use the memo approach as it will use DP + recursive approach so
+    // it will be easier to generate the result list. We use memoization to reduce the number of recursions.
+    // The memo stores the index in the string  where the recursion failed so that we can skip the same index
+    // processing during another recursive call. We only memo the failed index so we have to handle storing it.
+
+    public boolean wordBreakIIHelper (String s, int index, HashSet<String> dict,
+                                      StringBuilder sb, List<String> rList,
+                                      HashSet<Integer> memo){
+        if (index == s.length()) {
+            rList.add(sb.deleteCharAt(sb.length() -1).toString());
+            return true;
+        }
+        boolean found = false;
+        for (int i = index+1; i <= s.length(); i++) {
+            if (memo.contains(i)) {
+                continue;
+            }
+            String subStr = s.substring(index, i);
+            if (dict.contains(subStr)) {
+                int sbIdx = sb.length();
+                sb.append(subStr);
+                sb.append(" ");
+                // Look how the recursive call result is stored in found this is done so that we remember the last
+                // result when we return from this function call otherwise if we just return false in the end of
+                // the function we will hit a bug. Consider we found "dog" so found is true and if g is the last
+                // char and we return false instead of found in the end og the loop we will incorrectly report
+                // false always
+                found = wordBreakIIHelper(s, i, dict, sb, rList, memo);
+                if (!found) {
+                    memo.add(i);
+                }
+                sb.delete(sbIdx, sb.length());
+            }
+
+        }
+        // we cannot return false here we need to return the result of the last function call which could be true
+        // or false blindly returning false will be a bug
+        return found;
+    }
+
+    public List<String> wordBreakII(String s, List<String> wordDict) {
+        List<String> resList = new ArrayList<>();
+        HashSet<String> dict = new HashSet<>(wordDict);
+        HashSet<Integer> memo = new HashSet<>();
+        wordBreakIIHelper(s, 0, dict, new StringBuilder(), resList, memo);
+        return resList;
+    }
+
+
     // ctci 17.13 :: Re-Space
     // We need to use the same appraoch as the previous problem "LeetCode :: 139. Word Break (this takes 3 ms)"
     // We apply a DP approach similar to LIS O(n^2)
