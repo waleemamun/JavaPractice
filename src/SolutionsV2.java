@@ -2411,6 +2411,61 @@ public class SolutionsV2 {
 
     }
 
+    // LeetCode :: 149. Max Points on a Line
+    // The problem is interesting the problem asked to find the maximum points on a line
+    // two points can create a line and if we draw lines between several points, the points that appear on
+    // the same line will have same slope, so here we focus on the slope we hash two points slope all points that
+    // have the same slope with this point will be on the same line hence fall into the same hash entry we can
+    // increase the count for such same slope in the hashtable.
+    // The most important observation is the lope will be floating point number and for computers representation of
+    // floating point number its not always easy to hash them so we need to take a different approach to store the slope
+    // we can use the co-prime of two number (that is the gcd of two numbers) and store the number for example 3/6
+    // becomes 1/2
+
+    public int gcd(int a, int b) {
+        // for gcd we dont need to handle which one of a or b is bigger the code can handle that
+        return (b == 0)? a : gcd(b, a%b);
+    }
+
+    public int maxPoints(int[][] points) {
+        HashMap<String, Integer> map = new HashMap<>();
+        int result = 0;
+        for (int i = 0; i< points.length; i++) {
+            int duplicate = 0;
+            int max = 0;
+            // we take the first point and compare with the rest of the i+1 to n points
+            // note in the next iteration we can compare i+1 point with i+2 to n points
+            for (int j = i +1 ; j < points.length; j++) {
+                int y = points[i][1] - points[j][1];
+                int x = points[i][0] - points[j][0];
+                // increase the duplicate count as we see dup points
+                if (x == 0 && y == 0) {
+                    duplicate++;
+                    continue;
+                }
+                // use gcd to cal the co-prime
+                int coPrime = gcd(y, x);
+                y /= coPrime;
+                x /= coPrime;
+                // convert the slope to string format y/x
+                String tan = y + "/"+ x;
+                // hash the slope
+                map.put(tan, map.getOrDefault(tan, 0) + 1);
+                max = Math.max(max, map.get(tan));
+            }
+            // update the result max for current max ,
+            // duplicate for duplicate points and + 1 for the current ith point
+            result = Math.max(result, max + duplicate + 1);
+            // we can clear the map and save space, and clearing map does not effect max count cause the point
+            // that are on the same line as i will be counted when we consider the ith point,
+            // subsequent point dont need to consider this line and i
+            map.clear();
+        }
+        return result;
+
+    }
+
+
 
 
 }

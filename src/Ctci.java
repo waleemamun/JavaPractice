@@ -7,6 +7,9 @@ public class Ctci {
     // CTCI:: 16.16 Sub-Sort
     // find the mid indices that will sort the whole arraya
     // for example 1, 2, 4, 7. 10, 11, 8, 12, 6, 9, 16, 17, 18
+    // Find the left sorting & right sorting ends and findle the middle that is unsorted
+    // after that find the max of left & middle and find the proper sorted index for that max value on the rightEnd
+    // similarly find the min of right & middle and find the proper sorted index for that min value on the lefttEnd
     int [] findUnsortedIndex(int []nums) {
         int [] res = new int [2];
         int leftEnd = 0;
