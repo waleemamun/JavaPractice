@@ -2285,6 +2285,129 @@ public class Recursions {
         return max;
     }
 
+    // LeetCode :: 212. Word Search II
+    // The idea is to use a Trie data struct to build the dictionary. We should not use a hashset to build the
+    // dictionary. if we have a trie we can search the board and walk the trie from root if at any point we find
+    // the word in the trie we can add that word in our result. We start with every char in board and the trie root
+    // and search in the board and walk from the trie root to next nodes to see if this char sequence/ word is in trie.
+    //
+    // Note1: in the recursion we save the position of the current trie node so the next recursion can start from there,
+    //        no need to start from root node inside recursion
+    //
+    // Note2: Its possible to find the same word in board from different start point. But we don't need a HashSet to
+    //        store the unique word found. We can take advantage of the TrieNode and store a boolean for the current
+    //        word found in 'alreadyFound'. If the word is alreadyFound lets not add it to our list
+    public class TrieNode {
+        char ch;
+        TrieNode []child;
+        boolean isWord;
+        boolean alreadFound;
+        public TrieNode (char node){
+            ch = node;
+            child = new TrieNode[26];
+            isWord = false;
+            alreadFound = false;
+        }
+    }
+    public class Trie {
+        TrieNode root;
+        public Trie() {
+            root = new TrieNode('@');
+        }
+        public void addWord (String word) {
+            int i = 0;
+            TrieNode node = root;
+            while (i < word.length()) {
+                char ch = word.charAt(i);
+                // the char does not exist add it to trie
+                if (node.child[ch -'a'] == null) {
+                    node.child[ch -'a'] = new TrieNode(ch);
+                }
+                // this is the last char set the isWord
+                if (i == word.length() -1)
+                    node.child[ch -'a'].isWord = true;
+                // move to the next node in trie
+                node = node.child[ch-'a'];
+                i++;
+            }
+        }
+        public TrieNode walk (TrieNode node, char ch) {
+            TrieNode next = null;
+            if (node != null && ch != '*'
+                    && node.child[ch -'a'] != null) {
+                next = node.child[ch-'a'];
+            }
+            return next;
+        }
+    }
+
+    private void findWordHelper (char [][]board, int r, int c, StringBuilder sb,
+                                    List<String> rList, TrieNode node, Trie trie) {
+        // invalid cases return
+        if (r < 0 || c < 0 || r >= board.length
+                || c >= board[0].length || board[r][c] == '*')
+            return;
+
+        // save the current trienode
+        TrieNode next = trie.walk(node, board[r][c]);
+
+        // no entry for current char position in a word in Trie dictionary,
+        // so this is an invalid case
+        if (next == null)
+            return;
+
+        // found the current char in trie so add to the current word (sb)
+        // and store the index of stringbuilder for backtracking
+        int sbIdx = sb.length();
+        sb.append(board[r][c]);
+
+        // The word is in dictionary, Its possible to add this word to our list.
+        // But if the word is already Found lets not add it to our list this
+        // reduces the need for hashtable to store unique entries
+        if (next.isWord && !next.alreadFound) {
+            rList.add(sb.toString());
+            next.alreadFound = true;
+        }
+
+        // backtrack to find the result
+        char temp = board[r][c];
+        board[r][c] = '*';
+        
+        // search horizontally & vertically
+        findWordHelper(board, r + 1, c, sb, rList, next, trie);
+        findWordHelper(board, r - 1, c, sb, rList, next, trie);
+        findWordHelper(board, r, c + 1, sb, rList, next, trie);
+        findWordHelper(board, r, c - 1, sb, rList, next, trie);
+
+        // revert the backtracking changes so far
+        board[r][c] = temp;
+        sb.delete(sbIdx, sb.length());
+    }
+
+    public List<String> findWords(char[][] board, String[] words) {
+        List<String> resList = new ArrayList<>();
+        Trie trie = new Trie();
+
+        for (String w : words) {
+            trie.addWord(w);
+        }
+        TrieNode root = trie.root;
+
+        for(int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (root.child[board[i][j] - 'a'] == null)
+                    continue;
+                findWordHelper(board, i, j, new StringBuilder(), resList, root, trie);
+                if (resList.size() == words.length) {
+                    return resList;
+                }
+
+            }
+        }
+
+
+        return resList;
+    }
 
 
 

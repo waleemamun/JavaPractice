@@ -202,15 +202,16 @@ public class Main {
                 {9, -10, 20 ,5}
 
         };
+
         char [][] board = {
-                {'1','1','1','1'},
-                {'1','1','1','1'},
-                {'1','1','1','1'},
-                {'0','0','0','1'}
+                {'o','a','a','n'},
+                {'e','t','a','e'},
+                {'i','h','k','r'},
+                {'i','f','l','v'}
         };
 
 
-        String [] words = {"cat","cats","sand","and","dog"};
+        String [] words = {"oath","pea","eat","rain"};
         List<String> wordList = new ArrayList<>(Arrays.asList(words));
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
@@ -261,7 +262,7 @@ public class Main {
                             {1,1,1,1,1}};
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
-        System.out.println("gcd " +sv2.gcd(10, 125));
+        System.out.println(r1.findWords(board, words));
 
 
 
