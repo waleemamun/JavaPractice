@@ -2372,7 +2372,7 @@ public class Recursions {
         // backtrack to find the result
         char temp = board[r][c];
         board[r][c] = '*';
-        
+
         // search horizontally & vertically
         findWordHelper(board, r + 1, c, sb, rList, next, trie);
         findWordHelper(board, r - 1, c, sb, rList, next, trie);

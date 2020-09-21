@@ -15,6 +15,17 @@ public class SegmentTree {
      *        are stored in the segment tree and the key for the tree is the operation (sum, min, max).
      *        This will make all the queries O(lgn) and updates O(lgn) if there are multiple query/update
      *
+     *        Segment tree can be represented using an array instead of an actual tree data struct.
+     *        We will use the array tree[] to store the nodes of our segment tree (initialized to all zeros).
+     *        The following scheme (0 - based indexing) is used:
+     *
+     *        1. The node of the tree is at index 0. Thus tree[0] is the root of our tree.
+     *        2. The children of tree[i] are stored at tree[2*i+1] and tree[2*i+2].
+     *        we build the tree array recursively
+     *
+     *        We will pad our arr[] with extra 0 or null values so that n = 2^kn=2
+     *        k (where nn is the final length of arr[] and kk is a non negative integer.)
+     *
      *
      */
     int [] tree;
@@ -30,6 +41,7 @@ public class SegmentTree {
         int maxSize = 2 * (int) Math.pow(2, x) - 1;
         tree = new int [maxSize];
         // Remember to call the build segment tree  with tree index 0
+        // WE build the segment tree with root at tree[0]
         buildSegTree(nums,0,0,len-1);
         System.out.println("Seg Tree " +Arrays.toString(tree));
     }
@@ -51,6 +63,7 @@ public class SegmentTree {
     }
     // Remember to call the build segment tree  with tree index 0
     // WE build the segment tree with root at tree[0]
+    // we can build the tree recursively almost like a binary search tree build
     private void buildSegTree(int  []arr, int treeIndex, int lo, int hi) {
         if (lo == hi) {                 // leaf node. store value in node.
             tree[treeIndex] = arr[lo];
@@ -58,14 +71,15 @@ public class SegmentTree {
         }
 
         int mid = lo + (hi - lo) / 2;   // recurse deeper for children.
-        buildSegTree(arr, 2 * treeIndex + 1, lo, mid);
-        buildSegTree(arr, 2 * treeIndex + 2, mid + 1, hi);
+        buildSegTree(arr, 2 * treeIndex + 1, lo, mid);          // left child
+        buildSegTree(arr, 2 * treeIndex + 2, mid + 1, hi);  // right child
 
         // merge build results,
         // This step is very important to update/ populate the value for intermediate nodes
         // update the intermediate node as the leaf has been completed
         tree[treeIndex] = merge(tree[2 * treeIndex + 1], tree[2 * treeIndex + 2]);
     }
+
 
     // Wrapper for querying the Seg Tree
     public int lookUpSegTree (int  i, int j) {
@@ -74,6 +88,10 @@ public class SegmentTree {
 
     // call this method as querySegTree(0, 0, n-1, i, j);
     // Here [i,j] is the range/interval you are querying.
+    // Here (lo,hi) represents the range of the current sub tree rooted at treeIndex
+    // We start with root node tree[0] and the range covered by this node is (0, n -1),
+    // so each call to this function recursively will have range figured out for left &
+    // right subtree. That is why we dont need to save the ranges for each internal node.
     // This method relies on "null" nodes being equivalent to storing zero.
     // The method returns a result when the queried range matches exactly
     // with the range represented by a current node. Else it digs deeper into
@@ -116,6 +134,11 @@ public class SegmentTree {
     // Note : do not confuse it with heapify
     // call this method as updateValSegTree(0, 0, n-1, i, val);
     // Here you want to update the value at index i with value val.
+    // again (lo,hi) is the range represented by the subtree rooted at treeIndex.
+    // The initial lo,hi is given by 0,n-1. So we can calc the subsequent lo,hi in each
+    // recursive call. For this ranges we dont need to save ranges in internal node and
+    // the segment tree can be represented using just an array.
+
     private void updateValSegTree(int treeIndex, int lo, int hi, int arrIndex, int val) {
         if (lo == hi) {                 // leaf node. update element.
             tree[treeIndex] = val;

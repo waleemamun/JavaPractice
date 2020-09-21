@@ -192,7 +192,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {1,3,4,5,8,9,6,2,7,11};
+        int [] arr =  {3,2,0,6,5,-1,2};
         int [] arr1 = {3, 6, 3, 3};
 
         int [][] arr2d = {
@@ -263,6 +263,9 @@ public class Main {
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
+        int abc[] = {3,2,0,6,5,-1,2};
+        FenwickTree f1 = new FenwickTree(abc);
+        f1.print();
 
 
 

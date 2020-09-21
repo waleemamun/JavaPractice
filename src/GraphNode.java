@@ -292,6 +292,7 @@ public class GraphNode {
     // (think about the depth of recursion). This way of visit will give us an Eulerian Path.
     // Note we used a priority queue/ Min Heap for adjlist because the problem definition ask us to pick the
     // solution/node in Lexical order so when exploring edges we pick the edge that leads to lexically smaller node
+    // check this : https://www.geeksforgeeks.org/hierholzers-algorithm-directed-graph/
     private void dfsEuler (HashMap<String, PriorityQueue<String>> graph,
                            String node, LinkedList<String> eulerPath) {
         PriorityQueue<String> adjList = graph.get(node);
