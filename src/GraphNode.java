@@ -318,67 +318,124 @@ public class GraphNode {
         return eulerPath;
     }
 
-    //LeetCode :: 269 Alien Dictonary
-    private void dfsAlien(Character u, HashMap<Character,ArrayList<Character>> graph,
-                          int [] colors, StringBuilder sb) {
+
+
+    // LeetCode :: 269 Alien Dictonary (Hard)
+    // The idea here is to build a graph representing the order relation among the chars
+    // Then we just need to do a toplogical sort of the graph.
+    // The problem is hard for a reason as it explores a lot of edge cases.
+    // Some of the edge case is related to building the graph and some of them are related
+    // to the topological sort
+    // The DFS  here does a proper toplogical sort of a directed graph where the start vertex is not known
+    private boolean dfsAlien(Character u, HashMap<Character,ArrayList<Character>> graph,
+                             int [] colors, StringBuilder sb) {
         ArrayList<Character> adjList = graph.getOrDefault(u, null);
         colors[u] = 1;// grey
-        if (adjList != null) {
-            for (Character v : adjList) {
-                // color is white
-                if(colors[v] == 0) {
-                    colors[v] = 1; // grey
-                    dfsAlien(v, graph, colors,sb);
-                }
-            }
+        boolean res = true;
+        for (Character v : adjList) {
+            // color is white we can visit this vertex
+            if(colors[v] == 0) {
+                colors[v] = 1; // grey
+                // store the current result of recursion
+                res = dfsAlien(v, graph, colors,sb);
+                // if the result of recursion broke our condition that is the result of recursive
+                // call is false we return immediately, we need to break recusion when result is
+                // false so return immediately, for true case we can proceed with recursion so no
+                // need to break
+                if (!res)
+                    return false;
+            } else if (colors[v] == 1) { // color is grey loop detected
+                // grey vertex indicate a loop and there cannot be any loop in topological sort
+                // so we return false here. Black vertex are ok if we visit a black vertex we do
+                // not need to return false
+                return false;
+            } // color is black do nothing
         }
         colors[u] = 2; // black
         sb.append(u);
+        return true;
     }
 
     public String alienOrder(String []words){
         HashMap<Character,ArrayList<Character>> graph = new HashMap<>();
-        HashMap<Character, Integer> inDegree = new HashMap<>();
+
         // build the graph from the lexical ordering of words
+        for (String w : words) {
+            for (int i = 0; i < w.length(); i++){
+                graph.putIfAbsent(w.charAt(i), new ArrayList<>());
+            }
+        }
         for (int j = 1; j <words.length; j++) {
             String first = words[j-1];
             String second = words[j];
-            int len = Math.min(first.length(), second.length());
             int i = 0;
-            while (i< len && first.charAt(i) == second.charAt(i))
+            int len = Math.min(first.length(), second.length());
+            while (i< len && first.charAt(i) == second.charAt(i)) {
                 i++;
-            // add edge to the adjlist
-            graph.putIfAbsent(first.charAt(i), new ArrayList<>());
-            graph.get(first.charAt(i)).add(second.charAt(i));
-            // count the indegree of the graph
-            inDegree.putIfAbsent(first.charAt(i), 0);
-            inDegree.put(second.charAt(i), inDegree.getOrDefault(second.charAt(i), 0) +1);
-        }
-        Character src = '*' ;
-        // get the src node for dfs, the src node has zero indegrees. There will always be a zero indegree node because
-        // the alien alphabet must have a  start
-        for (Map.Entry<Character, Integer> entry : inDegree.entrySet()) {
-            if(entry.getValue() == 0) {
-                src = entry.getKey();
-                break;
+            }
+            if (i < len) {
+                // add edge to the adjlist
+                graph.get(first.charAt(i)).add(second.charAt(i));
+                // count the indegree of the graph
+            } else {
+                if (second.length() < first.length())
+                    return "";
             }
         }
-        if (src == '*') {
-            System.out.println("No zero Indegree src");
-            return "";
+
+        int []colors = new int[128];
+        StringBuilder sb = new StringBuilder();
+        for (Character src : graph.keySet()) {
+            if (colors[src] == 0) {
+                // do dfs + topological sort of the graph to get the order of the alien dictionary
+                boolean res = dfsAlien(src, graph, colors, sb);
+                if (!res)
+                    return "";
+            }
         }
 
-        // we can either use bfs or dfs to do topological sort I have implemented both
-        // if you want the fds version uncomment the following lines and comment out the bfs version
+        return sb.reverse().toString();
+    }
+    // This is the BFS approcah to the problem BFS is little slower but easier to
+    // implement in interview if not specified bfs can be used fot topo sort
+    public String alienOrderBFS(String []words){
+        HashMap<Character,ArrayList<Character>> graph = new HashMap<>();
+        HashMap<Character, Integer> inDegree = new HashMap<>();
+        // build the graph from the lexical ordering of words
+        for (String w : words) {
+            for (int i = 0; i < w.length(); i++){
+                graph.putIfAbsent(w.charAt(i), new ArrayList<>());
+                inDegree.put(w.charAt(i), 0);
+            }
+        }
+        for (int j = 1; j <words.length; j++) {
+            String first = words[j-1];
+            String second = words[j];
+            int i = 0;
+            int len = Math.min(first.length(), second.length());
+            while (i< len && first.charAt(i) == second.charAt(i)) {
+                i++;
+            }
+            if (i < len) {
+                // add edge to the adjlist
+                graph.get(first.charAt(i)).add(second.charAt(i));
+                // increment the indegree of the second node
+                inDegree.put(second.charAt(i), inDegree.getOrDefault(second.charAt(i), 0) +1);
+            } else {
+                if (second.length() < first.length())
+                    return "";
+            }
+        }
 
-        // do dfs + topological sort of the graph to get the order of the alien dictionary
-        //int []colors = new int[128];
-        // StringBuilder sb = new StringBuilder();
-        // dfsAlien(src, graph, colors, sb);
-
-        // do bfs + topo sort
-        String sb = bfsTopologicalSearchAlien(src, graph, inDegree);
-        return sb;
+        Queue<Character> queue = new LinkedList<>();
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<Character, Integer> entry : inDegree.entrySet()) {
+            Character src = entry.getKey();
+            if (entry.getValue() == 0) {
+                queue.add(src);
+            }
+        }
+        return bfsTopologicalSearchAlien(queue, graph, inDegree);
     }
 
     // BFS + topological sort
@@ -404,10 +461,9 @@ public class GraphNode {
      *         then the topological sort is not possible for the given graph.
      *
      * */
-    public  String bfsTopologicalSearchAlien (Character src, HashMap<Character,ArrayList<Character>> graph,
+    public  String bfsTopologicalSearchAlien (Queue<Character> queue, HashMap<Character,ArrayList<Character>> graph,
                                           HashMap<Character, Integer> inDegree) {
-        Queue<Character> queue = new LinkedList<>();
-        queue.add(src);
+
         StringBuilder sb = new StringBuilder();
         // we need the total node count assuming graph has all the node so total count is graph/adjlist rep size
         int totalNodeCount = inDegree.size();
@@ -432,7 +488,7 @@ public class GraphNode {
                 }
             }
         }
-        return visitedNodeCount == totalNodeCount ? sb.toString() : "No Topological sort exist for this graph";
+        return visitedNodeCount == totalNodeCount ? sb.toString() : "";
     }
 
 
