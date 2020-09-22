@@ -263,8 +263,9 @@ public class Main {
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
-        int abc[] = {5,6,8,3,4,8,2,3};
-        System.out.println(sv2.countSmaller(abc));
+        int abc[] = {5,7,10,12, 20};
+        System.out.println("Missing " + sv2.missingElement(abc, 8));
+
 
 
 

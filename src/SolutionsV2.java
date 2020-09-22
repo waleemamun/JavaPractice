@@ -2518,6 +2518,41 @@ public class SolutionsV2 {
     }
 
 
+    // LeetCode :: 1060. Missing Element in Sorted Array
+    // The idea is to find the missing numbers in between the low and mid for example 5, 7, 10, 12, 20
+    // has total 16 number in (5,20) missing is 16 - 5 = 11. so if we are looking for 8th missing on the left of mid
+    // we have (10 - 5 + 1 -3 ) == 3 missing on the right of 10 we have rest of the missing so as k = 8 we can drop
+    // the left half of the array and go to the right half we can also drop the 3 missing position so k's new postion
+    // on the right would be 5th missing we solve this using a binary search
+    public int missingElement(int[] nums, int k) {
+        int low = 0;
+        int high = nums.length -1;
+        int missing = (nums[high] - nums[low] + 1) - (high -low +1);
+        if (k > missing)
+            return nums[high] + (k -missing);
+
+        while (low < high) {
+
+            int mid = low + (high -low)/2;
+            // need to break if low == mid as we found the solution and further processing will be have negative value
+            // for missing causing an infinite loop
+            if (low == mid)
+                break;
+            missing = (nums[mid] - nums[low] + 1) - (mid - low +1);
+            // missing is more than the missing element in left half lets skip left
+            if (k > missing) {
+                low = mid;
+                // we can drop the missing item and update k for the right half
+                // this only need in right (for example k == 8 missing == 3 new k == 5)
+                k -= missing;
+            }
+            else  { // missing is in the left half lets skip right half
+                high = mid;
+            }
+        }
+        return nums[low] + k;
+    }
+
 
 
 }
