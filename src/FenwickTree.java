@@ -69,7 +69,7 @@ public class FenwickTree {
         return index + (index & -index);
     }
 
-    // Call this way to get the sum of the whole array 
+    // Call this way to get the sum of the whole array
     public void print() {
         for (int i = 0; i<binaryIndexedTree.length -1; i++)
             System.out.print(" " + getSum(i));

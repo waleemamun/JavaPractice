@@ -2411,7 +2411,7 @@ public class SolutionsV2 {
 
     }
 
-    // LeetCode :: 149. Max Points on a Line
+    // LeetCode :: 149. Max Points on a Line (Hard)
     // The problem is interesting the problem asked to find the maximum points on a line
     // two points can create a line and if we draw lines between several points, the points that appear on
     // the same line will have same slope, so here we focus on the slope we hash two points slope all points that
@@ -2463,6 +2463,58 @@ public class SolutionsV2 {
         }
         return result;
 
+    }
+
+    // LeetCode :: 315. Count of Smaller Numbers After Self (Hard)
+    // This is a very interesting here. We are using a FenWick Tree for our solution. The Fenwick tree is normally used
+    // for prefix range sum of an array. Here in the tree instead of storing the value x of the array we store the
+    // index of the item x (in sorted array). So say we have 5, 6, 8, 3, 4, 1, 2, 3 now the sorted version is
+    // 1,2,3,3,4,5,6,8. The position of value 2 in the sorted array is 1. So in out fenwick tree we would store the
+    // index frequency of 2 that is 1. We have to process items from the right to left updating the index frequency.
+    // Note as we move from left to right the index of the right elements will be added and if we query we get the
+    // view of the fenwick tree from right to current point so for any value x the if we query the sum would be the
+    // index frequency sum (of the index that is smalled then x's value).
+    public List<Integer> countSmaller(int[] nums) {
+        List<Integer> rlist = new LinkedList<>();
+        int []bitree = new int[nums.length +1];
+        // sort the array to so we ge the first occurances of an item and its relative order in the array
+        int []copy = nums.clone();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        Arrays.sort(copy);
+        // store the first occurances of the index in a Map for fast removal
+        for (int i = 0; i < copy.length; i++) {
+            map.putIfAbsent(copy[i],i);
+        }
+        // We first need to query then add think of the last element in 5, 6, 8, 3, 4, 1, 2, 3. For 3 our query will
+        // give zero which is correct then we add 3's index / first occurance position '2' (in the sorted array) to
+        // update the fenwick tree by 1. So now any item that is bigger than 3 will see and increase in frequecy count
+        // in the fenwick tree. Any item that is smaller than 3 will not see it. Try to picture a frequency of the
+        // items. The fenwick tree checks/updates the frequency count sum of the items affected by the current change
+        // so 3 can affect 4 ,5, ,6 ,8 but no 1 or 2. Note the 2nd 3 is not affected by this as we move from right to
+        // left (this is how the duplicates are handled)
+        for (int i = nums.length - 1; i >= 0; i--) {
+            // we can use that info to search for indexes lower that its
+            rlist.add(0, queryBIT(bitree,map.get(nums[i]) -1));
+            addBITree(bitree, map.get(nums[i]), 1);
+        }
+        return rlist;
+    }
+
+    private void addBITree (int []bitree, int index, int val) {
+        index = index + 1;
+        while (index < bitree.length) {
+            bitree[index] += val;
+            index += index & (-index);
+        }
+    }
+    private int queryBIT (int []bitree, int index) {
+        int sum = 0;
+        index = index +1;
+        while (index > 0) {
+            sum += bitree[index];
+            index -= index & (-index);
+        }
+        return sum;
     }
 
 

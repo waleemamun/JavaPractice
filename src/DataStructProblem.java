@@ -895,61 +895,63 @@ public class DataStructProblem {
 
         char []read4Buffer = new char[4];
         int lastReadOffSet = 0;
-        public int read(char[] buf, int n) {
-            int readSofar = 0;
-            while (n > 0) {
-                lastReadOffSet%=4;
-                if(lastReadOffSet == 0) {
-                    int rCount = read4(read4Buffer);
-                    for (;lastReadOffSet < Math.min(rCount, n); lastReadOffSet++){
-                        buf[readSofar++] = read4Buffer[lastReadOffSet++];
-                    }
-                    if (rCount<4)
-                        break;
-                    n-= rCount;
+        int readRemain = 0;
 
-                } else {
-                    int curCount =0;
-                    for (;lastReadOffSet < Math.min(4, n); lastReadOffSet++){
-                        buf[readSofar++] = read4Buffer[lastReadOffSet++];
-                        curCount++;
-                    }
-                    n-=curCount;
-                }
-
-
-            }
-            return readSofar;
-        }
-
-        // simplifying the above function reducing the duplicate code 'for loop inside if else'
         // file = 'leetcodeleetcode' n = 5  l
         // first read 'leetc'  lastReadoffset = 1 read4buf has 'ode' to be read
         // 2nd read 'odele' lastOffset 2 read4vuf to be read 'et'
         // 3rd read 'etcod' lastOffset 3 read4vuf to be read 'e'
         // 4th read 'e'
-        public int readN(char[] buf, int n) {
+        // LeetCode :: 158. Read N Characters Given Read4 II - Call multiple times
+        // The idea is as follows
+        // We have to store the amount char left to read in readRemain that way we on the subsequent call we can read
+        // the remaining item from the buffer read4Buffer. The read4Buffer also holds the last read item so we can read
+        // from this buffer if anything is left to read to the destination buffer
+        public int read(char[] buf, int n) {
             int readSofar = 0;
-            int rCount = 0;
             while (n > 0) {
+                // offset into the read4Buffer giving the current position to start the read from
                 lastReadOffSet %= 4;
-                if(lastReadOffSet == 0) {
-                    rCount = read4(read4Buffer);
-                } else {
-                    rCount = 4;
+                if(readRemain == 0) {
+                    readRemain = read4(read4Buffer);
                 }
+                if (readRemain == 0)
+                    break;
                 int curCount = 0;
-                for (;lastReadOffSet < Math.min(rCount, n); lastReadOffSet++){
+                while (curCount < Math.min(readRemain, n)) {
                     buf[readSofar++] = read4Buffer[lastReadOffSet++];
                     curCount++;
+                    readRemain--;
                 }
-                if (rCount<4)
-                    break;
                 n-=curCount;
-
-
             }
             return readSofar;
+        }
+
+        // this is little faster but still O(n) as the one earlier both are ok just done different ways
+        public int read2(char[] buf, int n) {
+            int readSofar = 0;
+            while (n > 0 && readRemain > 0) {
+                buf[readSofar++] = read4Buffer[lastReadOffSet++];
+                n--;
+                readRemain--;
+            }
+            while (n > 0) {
+                lastReadOffSet %= 4;
+                readRemain = read4(read4Buffer);
+                if (readRemain == 0)
+                    break;
+                lastReadOffSet = 0;
+                int count = Math.min(readRemain, n);
+                while (count > 0) {
+                    buf[readSofar++] = read4Buffer[lastReadOffSet++];
+                    readRemain--;
+                    count--;
+                }
+                n-= lastReadOffSet;
+            }
+            return readSofar;
+
         }
 
         /**
@@ -968,6 +970,8 @@ public class DataStructProblem {
                     buf[readSofar++] = tempBuf[i];
                 }
                 n-= rCount;
+                // this condition is very much need to handle the case when you file size is smaller than n
+                // for example assume file size 10 and n = 100 so we need to check if we can read any more
                 if (rCount < 4) {
                     break;
                 }

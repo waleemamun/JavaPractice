@@ -263,9 +263,8 @@ public class Main {
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
-        int abc[] = {3,2,0,6,5,-1,2};
-        FenwickTree f1 = new FenwickTree(abc);
-        f1.print();
+        int abc[] = {5,6,8,3,4,8,2,3};
+        System.out.println(sv2.countSmaller(abc));
 
 
 
