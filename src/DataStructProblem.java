@@ -320,10 +320,10 @@ public class DataStructProblem {
 
     // LeetCode :: 304. Range Sum Query 2D - Immutable
     // The idea is to think about the how do get a specific rectangle given all the rectangle from top,left
-    class NumMatrix {
+    class NumMatrixImmurable {
         int cache[][] = null;
 
-        public NumMatrix(int[][] matrix, boolean skip) {
+        public NumMatrixImmurable(int[][] matrix, boolean skip) {
             if (matrix.length == 0) {
                 cache = null;
                 return;
@@ -350,7 +350,7 @@ public class DataStructProblem {
         // create the cache table building on the same idea of getting a bounded region using region starting from zero
         // Sum(ABCD) =  Sum(OB)+Sum(OC) + matrix[i][j] - Sum(OA)
         // Think how you can get you region by subtracting rectangles from the  bottom right rectangle
-        public NumMatrix (int [][] matrix) {
+        public NumMatrixImmurable (int [][] matrix) {
             if (matrix.length == 0) {
                 cache = null;
                 return;
@@ -1109,6 +1109,52 @@ public class DataStructProblem {
         }
     }
 
+    // LeetCode :: 308. Range Sum Query 2D - Mutable
+    // The idea is to build a 2d FenwickTree and then find the range sum in 2d array using the same idea as
+    // Sum(ABCD) = Sum(OD)−Sum(OB)−Sum(OC)+Sum(OA) in problem 304 in this file
+    // Note the 2d Fenwick tree at (i,j) holds the sum of (0,0) -> (i,j) rectangle. So we can use the equation
+    // Sum(ABCD) = Sum(OD)−Sum(OB)−Sum(OC)+Sum(OA) to get the sum of any rectangle in the 2d matrix.
+
+    class NumMatrix {
+        int [][]BITree;
+        int [][]nums;
+        public NumMatrix(int[][] matrix) {
+            BITree = new int [matrix.length +1][matrix[0].length +1];
+            nums = new int [matrix.length][matrix[0].length];
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j =0; j< matrix[0].length; j++) {
+                    update(i,j,matrix[i][j]);
+                }
+            }
+        }
+        // update the 2d fenwick tree works similar to updating the 1D fenwick tree
+        public void update(int row, int col, int val) {
+            int delta = val - nums[row][col];
+            nums[row][col] = val;
+            for (int i = row+1; i < BITree.length; i+= i & (-i)) {
+                for (int j = col+1; j < BITree[0].length; j+= j & (-j)) {
+                    BITree[i][j] += delta;
+                }
+            }
+        }
+        // getting sum in  the 2d fenwick tree works similar to getting sum in the 1D fenwick tree
+        private int sumRegion (int row, int col) {
+            int sum = 0;
+            for (int i = row+1; i > 0; i-= i & (-i)) {
+                for (int j = col+1; j > 0; j-= j & (-j)) {
+                    sum += BITree[i][j];
+                }
+            }
+            return sum;
+        }
+
+        public int sumRegion(int row1, int col1, int row2, int col2) {
+            return sumRegion(row2, col2)
+                    - sumRegion( row1-1, col2)
+                    - sumRegion(row2, col1-1)
+                    + sumRegion(row1-1, col1 -1);
+        }
+    }
 
 
 
