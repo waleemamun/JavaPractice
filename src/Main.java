@@ -252,6 +252,7 @@ public class Main {
         DataStructProblem d1 = new DataStructProblem();
         LinkList ls1 = new LinkList();
         ls1 = ls1.createList(arr);
+        SolutionsV3 sv3  = new SolutionsV3();
 
         char [] tasks = {'A','A','A','B','B','B'};
 
@@ -265,6 +266,7 @@ public class Main {
         System.out.println(r1.findWords(board, words));
         int abc[] = {5,7,10,12, 20};
         System.out.println("Missing " + sv2.missingElement(abc, 8));
+        System.out.println(sv3.numberToWords(10000));
 
 
 
