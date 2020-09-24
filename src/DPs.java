@@ -1869,6 +1869,66 @@ public class DPs {
         return max;
     }
 
+    // LeetCode :: 689. Maximum Sum of 3 Non-Overlapping Subarrays (Hard) (not submitted)
+    // This is a hard DP problem. We have to find non-overlapping k size sub-array (three sub array) that gives max sum
+    // First we get the range sum at each index for then ext k items. We store it in rangeSum array. Now the problem
+    // becomes finding three position i,j,l in the rangeSum array where i + k <= j and j + k <= l (i&j and j&l are k apart)
+    // and (rangeSum[i] + rangeSum[j] + rangeSum[l]) is maximized. This i,j,l can be found dynamically.
+    // Now assume if j is fixed we can easily find i  on the left & l on the right in rangeSum that maximizes the above
+    // mentioned sum. To find the max on the left & right we use left & right array.
+    // We need to store the max of range sum from left in left array and max of range sum from right in right array
+    // So now for every possible j we check  the max value index of i in left & for l we get in right
+    // See the exxample below to better understand the scenario
+    // nums      [1, 2, 1, 2, 6, 7, 5, 1] (input array)
+    // rangeSum  [3, 3, 3, 8, 13, 12, 6]  (holds range sum at index i for next k elements)
+    // left      [0, 0, 0, 3, 4, 4, 4]    (holds the index of maximum range sum from left at index i)
+    // right     [4, 4, 4, 4, 4, 5, 6]    (holds the index of maximum range sum from right at index i)
+    public int[] maxSumOfThreeSubarrays(int[] nums, int k) {
+        int rangeSum[] = new int [nums.length - k + 1];
+        int left[] = new int[nums.length - k + 1];
+        int right[] = new int[nums.length - k + 1];
+
+        int curSum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            curSum += nums[i];
+            if (i >= k)
+                curSum -= nums[i-k];
+            if (i - k +1 >= 0)
+                rangeSum[i - k + 1]  = curSum;
+        }
+        // get the so far max rangeSum position from the left in left array
+        int idx = 0;
+        for (int i = 0; i < rangeSum.length; i++) {
+            if(rangeSum[i] > rangeSum[idx]) {
+                idx = i;
+            }
+            left[i] = idx;
+        }
+        // get the so far max rangeSum position from the right in right array
+        idx = rangeSum.length -1;
+        for (int i = rangeSum.length -1; i >= 0; i--) {
+            if(rangeSum[i] >= rangeSum[idx]) {
+                idx = i;
+            }
+            right[i] = idx;
+        }
+        // now for each j find i & l such that it maximizes (rangeSum[i] + rangeSum[j] + rangeSum[l])
+        int res[] = {-1,-1,-1};
+        for (int j = k; j < rangeSum.length - k;j++) {
+            int i = left[j - k];
+            int l = right[j + k];
+            //System.out.println((rangeSum[i] + rangeSum[j] + rangeSum[l]));
+            if (res[0] == -1 ||
+                    (rangeSum[i] + rangeSum[j] + rangeSum[l])
+                            > (rangeSum[res[0]] + rangeSum[res[1]] + rangeSum[res[2]])) {
+                res[0] = i;
+                res[1] = j;
+                res[2] = l;
+            }
+        }
+
+        return res;
+    }
 
 
 

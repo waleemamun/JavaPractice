@@ -264,10 +264,11 @@ public class Main {
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
-        int abc[] = {5,7,10,12, 20};
+        int abc[] = {1,2,1,2,6,7,5,1};
         System.out.println("Missing " + sv2.missingElement(abc, 8));
-        //System.out.println(sv3.numberToWords(10000));
-        System.out.println(r1.addOperators("120345",15 ));
+        //System.out.println("count = " +sv3.lengthOfLongestSubstringKDistinctV2("aaaaaaaa",3));
+        System.out.println(Arrays.toString(dp1.maxSumOfThreeSubarrays(abc, 2)));
+
 
 
 
