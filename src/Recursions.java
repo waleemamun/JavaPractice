@@ -2409,6 +2409,105 @@ public class Recursions {
         return resList;
     }
 
+    // LeetCode :: 282. Expression Add Operators (hard)
+    // This uses the same idea as the basic calculator II the idea is in expression a+b+c*d at each iteration /recursion
+    // process one operator and two operand and handle the previous for example when processing b+c we are sure that a
+    // can be added to sum. Special handling is needed for * , as it has higher precedence we need to complete all the
+    // mulitply be fore add so for a+b+c*d*e+f the c*d*e needs multiplying before adding to sum (sum is a + b) so this
+    // is done by lastVal*= curVal here
+    private void addOperatorsHelper(String num, int index, long target, List <String> rList,
+                                    StringBuilder sb, long sum, char sign, long lastVal) {
+        if (index == num.length()) {
+            //System.out.println(sb.toString() + " :" + sum);
+            sum+= lastVal;
+            if (target == sum) {
+                sb.deleteCharAt(sb.length() -1);
+                //System.out.println(sb.toString() + " ########################## " + sum + " "+lastVal);
+                rList.add(sb.toString());
+            }
+            return;
+        }
+        char [] operator= {'*','+','-'};
+
+        for (int i = index + 1; i <= num.length(); i++) {
+            String n = num.substring(index,i);
+            if (n.length() > 1 && n.charAt(0) == '0')
+                continue;
+            long curVal = Long.parseLong(n);
+            for (int j = 0; j < ((i == num.length())? 1 :operator.length); j++) {
+                char op = operator[j];
+                int sbIdx = sb.length();
+                long zeroVal = 0;
+                sb.append(curVal);
+                sb.append(op);
+                if (sign == '+') {
+                    sum += lastVal;
+                    lastVal = curVal;
+                }
+                else if (sign == '-') {
+                    sum += lastVal;
+                    lastVal = -curVal;
+                }
+                else { // multiply case '*'
+                    if (curVal == 0)
+                        zeroVal = lastVal;
+                    lastVal *= curVal ;
+                }
+
+                //System.out.println("bef: " +sb.toString()+" "+sum + ":" + lastVal + " :" + zeroVal);
+                addOperatorsHelper(num, i, target, rList, sb, sum, op, lastVal);
+                sb.delete(sbIdx, sb.length());
+
+
+                if (sign == '+' || sign == '-')
+                    sum -= lastVal;
+                else {
+                    if (curVal != 0)
+                        lastVal /= curVal;
+                    else
+                        lastVal = zeroVal;
+
+                }
+
+            }
+
+
+        }
+    }
+
+    private void addOperatorsHelperV2(String num, int index, long target, List <String> rList,
+                                    StringBuilder sb, long sum, char sign, long lastVal) {
+        if (index == num.length()) {
+            //System.out.println(sb.toString() + " :" + sum);
+            sum+= lastVal;
+            if (target == sum) {
+                sb.deleteCharAt(sb.length() -1);
+                //System.out.println(sb.toString() + " ########################## " + sum + " "+lastVal);
+                rList.add(sb.toString());
+            }
+            return;
+        }
+        char [] operator= {'*','+','-'};
+
+        for (int i = index + 1; i <= num.length(); i++) {
+            String n = num.substring(index,i);
+            if (n.length() > 1 && n.charAt(0) == '0')
+                continue;
+            long curVal = Long.parseLong(n);
+            int sbIdx = sb.length();
+            addOperatorsHelperV2(num, i, target,rList,sb.append('+').append(curVal), sum + lastVal, '+', curVal);
+            addOperatorsHelperV2(num, i, target,rList,sb.append('-').append(-curVal), sum - lastVal, '-', -curVal);
+            addOperatorsHelperV2(num, i, target,rList,sb.append('*').append(lastVal), sum + lastVal, '-', -curVal);
+
+
+        }
+    }
+
+    public List<String> addOperators(String num, int target) {
+        List <String> rList = new ArrayList<>();
+        addOperatorsHelper(num, 0, target,rList, new StringBuilder(), 0, '+',0);
+        return rList;
+    }
 
 
 
