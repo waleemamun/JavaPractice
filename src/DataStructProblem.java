@@ -1156,6 +1156,50 @@ public class DataStructProblem {
         }
     }
 
+    // LeetCode :: 528. Random Pick with Weight
+    // Think how on an unsorted array you can distribute a random number.
+    // The idea is to do a prefix sum. If we have a prefix sum array that array will be ascending sorted.
+    // Each entry represents the range it can consume for example in case of
+    //        idx  0 1  2  3  4  5
+    // orig array 10 3  5  7  2  3
+    // prefix sum 10 13 18 25 27 30
+    // so if we generate a number between 0 to 30 and say the number is between 0 - 9 it will got to index 0 as
+    // orig array[0] = 10, similarly if the random number is 12 it goes index 1 and if the number is 20 it goes
+    // to idx 3. So because of the prefix sum and generating a random number between 0 to total sum.
+    // The prefix sum represents the weight per index. Finally base on that above observation we can just do a
+    // binary search on our prefix sum array to find the proper index.
+    class WeightedRandomPick {
+        int sum = 0;
+        int []wt;
+        public WeightedRandomPick(int[] w) {
+            wt = new int [w.length];
+            for (int i = 0; i <w.length; i++) {
+                sum += w[i];
+                wt[i] = sum;
+            }
+        }
+
+        private int search(int []wt, int val) {
+            int low = 0;
+            int high = wt.length -1;
+            while (low < high) {
+                int mid = low + (high-low)/2;
+                // we cannot use val == wt[mid] as the random number is from zero totSum
+                if (val < wt[mid])
+                    high = mid;
+                else
+                    low = mid + 1;
+            }
+            return low;
+        }
+
+        public int pickIndex() {
+            int val = (int) (Math.random() * sum);
+            int idx = search(wt, val);
+            return idx;
+        }
+    }
+
 
 
 }
