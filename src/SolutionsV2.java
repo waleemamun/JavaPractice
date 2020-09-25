@@ -600,6 +600,26 @@ public class SolutionsV2 {
         // interesting way to convert an List of 2D arrays to a 2D array
         return resList.toArray(new int[resList.size()][]);
     }
+    // this is the submitted version both submitted & not submitted are good
+    public int[][] intervalIntersectionSubmitted(int[][] A, int[][] B) {
+        int i = 0;
+        int j = 0;
+        ArrayList<int []> rList  = new ArrayList<>();
+        while (i<A.length && j <B.length) {
+            int []res = new int[2];
+            res[0] = Math.max(A[i][0],B[j][0]);
+            res[1] = Math.min(A[i][1],B[j][1]);
+            if (res[0] <= res[1]) {
+                rList.add(res);
+            }
+            if (A[i][1] <= B[j][1])
+                i++;
+            else
+                j++;
+
+        }
+        return rList.toArray(new int[rList.size()][]);
+    }
 
     // LeetCode :: 289. Game of Life
     // We want to do it in O(1) space notice that the values are currently 0 & 1 which requires just the first bit

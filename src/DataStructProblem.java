@@ -1163,7 +1163,7 @@ public class DataStructProblem {
     //        idx  0 1  2  3  4  5
     // orig array 10 3  5  7  2  3
     // prefix sum 10 13 18 25 27 30
-    // so if we generate a number between 0 to 30 and say the number is between 0 - 9 it will got to index 0 as
+    // so if we generate a number between 0 to 30 and say the number is between 0 - 10 it will got to index 0 as
     // orig array[0] = 10, similarly if the random number is 12 it goes index 1 and if the number is 20 it goes
     // to idx 3. So because of the prefix sum and generating a random number between 0 to total sum.
     // The prefix sum represents the weight per index. Finally base on that above observation we can just do a
@@ -1184,7 +1184,8 @@ public class DataStructProblem {
             int high = wt.length -1;
             while (low < high) {
                 int mid = low + (high-low)/2;
-                // we cannot use val == wt[mid] as the random number is from zero totSum
+                // we cannot use val == wt[mid] as the we are trying to find where this val can be inserted not
+                // searching for the value itself
                 if (val < wt[mid])
                     high = mid;
                 else
@@ -1197,6 +1198,122 @@ public class DataStructProblem {
             int val = (int) (Math.random() * sum);
             int idx = search(wt, val);
             return idx;
+        }
+    }
+
+    // LeetCode :: 173. Binary Search Tree Iterator
+    // The idea is to iteratively inorder traverse a binary search tree.
+    // We preprocess at constructor by traversing all the left child and put them in a stack
+    class BSTIterator2 {
+        Stack<TreeNode> stack;
+        TreeNode node;
+        public BSTIterator2(TreeNode root) {
+            stack = new Stack<>();
+            node = root;
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+
+        }
+
+        /** @return the next smallest number */
+        // The next call amortized O(1) in most cases we get a O(1) run time in some when a right child exist
+        // we traverse the right child and put them in stack for next recursions
+        public int next() {
+            node = stack.pop();
+            int res = node.val;
+            node = node.right;
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            return res;
+        }
+
+        /** @return whether we have a next smallest number */
+        // This is O(1) if both stack is empty & node is null we return false
+        public boolean hasNext() {
+            if(node == null && stack.isEmpty())
+                return false;
+            else
+                return true;
+        }
+    }
+    // its slow not sure why
+    class BSTIterator {
+        ArrayList<Integer> nodeList;
+        TreeNode node;
+        int pos;
+        public BSTIterator(TreeNode root) {
+            pos = 0;
+            nodeList = new ArrayList<>();
+            node = root;
+            Stack<TreeNode> stack = new Stack<>();
+            while (!stack.isEmpty() || node != null) {
+                if (node != null) {
+                    stack.push(node);
+                    node = node.left;
+                } else {
+                    node = stack.pop();
+                    nodeList.add(node.val);
+                    node = node.right;
+                }
+            }
+        }
+
+        /** @return the next smallest number */
+        // The next call amortized O(1) in most cases we get a O(1) run time in some when a right child exist
+        // we traverse the right child and put them in stack for next recursions
+        public int next() {
+            return nodeList.get(pos++);
+        }
+
+        /** @return whether we have a next smallest number */
+        // This is O(1) if both stack is empty & node is null we return false
+        public boolean hasNext() {
+            return nodeList.size() > 0 && pos < nodeList.size();
+        }
+    }
+    // LeetCode :: 1428. Leftmost Column with at Least a One
+    // The idea is to find the first row that have 1 in the final column as this are row sorted if we find the
+    // first row that has 1 in the last column then we can search that row and subsequent rows for a better column
+    // So we first do a linear search on the last column to get the first row that has at least an 1.
+    // Now we can scan the row from right to left to find a better (low index) column that has 1 if not found we check
+    // the next row and so on.
+    // This produces a O(M+N) algo N to search the last column for 1 and the search in the marix the
+    // to find our better column which will be M+N as we go stepwise
+    interface BinaryMatrix {
+        public int get(int row, int col);
+        public List<Integer> dimensions();
+    }
+    class BinaryMatrixSearch {
+
+        public int search (BinaryMatrix binaryMatrix, int row, int col) {
+            int i = 0;
+            for (i = 0 ;i <= row; i++) {
+                if(binaryMatrix.get(i,col) == 1)
+                    break;
+            }
+            return i;
+
+        }
+        public int leftMostColumnWithOne(BinaryMatrix binaryMatrix) {
+            List<Integer> dim = binaryMatrix.dimensions();
+            int rows = dim.get(0);
+            int cols = dim.get(1);
+            int r = search(binaryMatrix, rows-1, cols-1);
+            if (r == rows)
+                return -1;
+            int c = cols -1;
+            for (int i = r; i< rows; i++) {
+                if (binaryMatrix.get(i, c) == 1) {
+                    while (c > 0 && binaryMatrix.get(i,c-1) != 0)
+                        c--;
+                }
+
+            }
+            return c;
         }
     }
 
