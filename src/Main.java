@@ -267,7 +267,7 @@ public class Main {
         int abc[] = {1,2,1,2,6,7,5,1};
         System.out.println("Missing " + sv2.missingElement(abc, 8));
         //System.out.println("count = " +sv3.lengthOfLongestSubstringKDistinctV2("aaaaaaaa",3));
-        System.out.println(sv3.maximumSwap(234777710));
+        System.out.println(sv3.partitionLabelsV3("kabcdefk"));
 
 
 

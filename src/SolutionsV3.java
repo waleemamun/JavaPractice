@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class SolutionsV3 {
@@ -320,6 +321,121 @@ public class SolutionsV3 {
 
     }
 
+    // LeetCode :: 763. Partition Labels
+    // The idea is to do a merged intervals approach to the problem so we start with find out the start & end
+    // position of a char in the string we store it for all chars in string this gives unsorted over lapping intervals
+    // we sort the intervals constant time (only 26 entries). The use the merge overlapping intervals technique
+    // The V2 uses arrays list but v1 uses simple 2D array which is a better implementation
+    public List<Integer> partitionLabelsV2(String S) {
+        HashMap<Character, ArrayList<Integer>> map = new HashMap<>();
+        for (int i = 0; i < S.length(); i++) {
+            map.putIfAbsent(S.charAt(i), new ArrayList<>());
+            if (map.get(S.charAt(i)).size() == 0) {
+                map.get(S.charAt(i)).add(i);
+                map.get(S.charAt(i)).add(i);
+            }
+            else {
+                map.get(S.charAt(i)).set(1,i);
+            }
+        }
+        ArrayList<ArrayList<Integer>> intervals = new ArrayList<>();
+        intervals.addAll(map.values());
+        intervals.sort(new Comparator<ArrayList<Integer>>() {
+            @Override
+            public int compare(ArrayList<Integer> o1, ArrayList<Integer> o2) {
+                if (o1.get(0) == o2.get(0))
+                    return o1.get(1) - o2.get(1);
+                return o1.get(0) - o2.get(0);
+            }
+        });
+        System.out.println(intervals);
+        ArrayList<ArrayList<Integer>> mergedIntervals = new ArrayList<>();
+        List<Integer> rList = new ArrayList<>();
+        ArrayList<Integer> lastInv = intervals.get(0);
+        for (ArrayList<Integer> curInv : intervals) {
+            if (lastInv.get(1) < curInv.get(1)) {
+                if (curInv.get(0) <= lastInv.get(1)) {
+                    lastInv.set(1, curInv.get(1));
+                } else {
+                    //disjoint case
+                    mergedIntervals.add(lastInv);
+                    lastInv = curInv;
+                }
+            }
+        }
+        mergedIntervals.add(lastInv);
+        for (ArrayList<Integer> lst : mergedIntervals) {
+            rList.add(lst.get(1) - lst.get(0) +1);
+        }
 
+        System.out.println(mergedIntervals);
+        return rList;
+    }
+    // This is done using simple 2D array. The runtime is O(n) as the sort is done on 26 size array which is constant
+    // time  = 26log26.
+    public List<Integer> partitionLabels(String S) {
+        int[][] intervals = new int[26][2];
+        for (int[] inv: intervals){
+            inv[0] = S.length();
+            inv[1] = S.length();
+        }
+        List<Integer> rList = new ArrayList<>();
+        for (int i = 0; i < S.length(); i++) {
+            char ch = S.charAt(i);
+            if (intervals[ch-'a'][0] == S.length()) {
+                intervals[ch-'a'][0] = i;
+                intervals[ch-'a'][1] = i;
+            } else {
+                intervals[ch-'a'][1] = i;
+            }
+        }
+        Collections.sort(Arrays.asList(intervals), new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] - o2[0];
+            }
+        });
+        int [] lastInv = intervals[0];
+        ArrayList<int[]> mergeList = new ArrayList<>();
+        for (int []curInv : intervals) {
+            if (curInv[0] == S.length())
+                break;
+            if (lastInv[1] < curInv[1]) {
+                if ( curInv[0] <= lastInv[1])
+                    lastInv[1] = curInv[1];
+                else{
+                    mergeList.add(lastInv);
+                    lastInv = curInv;
+                }
+            }
+        }
+        mergeList.add(lastInv);
+        for (int []inv : mergeList) {
+            rList.add(inv[1] - inv[0] +1);
+        }
+        System.out.println(Arrays.deepToString(intervals));
+        return rList;
+    }
+    // A greedy approach to the problem we save the last index of each char and used the last
+    public List<Integer> partitionLabelsV3(String S) {
+        int [] last = new int[26];
+        for (int i = 0; i<S.length(); i++) {
+            char ch = S.charAt(i);
+            last[ch-'a'] = i;
+        }
+        List <Integer> rList = new ArrayList<>();
+        int lastId = 0;
+        int startId= 0;
+        for (int i = 0; i < S.length(); i++) {
+            char ch = S.charAt(i);
+            lastId = Math.max(lastId, last[ch -'a']);
+            if (lastId == i) {
+                rList.add(lastId - startId + 1);
+                startId = i + 1;
+            }
+
+        }
+        return rList;
+    }
 
 }
