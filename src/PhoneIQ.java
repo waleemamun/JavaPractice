@@ -892,6 +892,8 @@ public class PhoneIQ {
     // the concurrent even per time and have a running sum. The running su gives the count of concurrent event at that
     // time so we keep track of max running sum.
     public int minMeetingRooms(int[][] intervals) {
+        if (intervals.length == 0)
+            return 0;
         int roomCount = 0;
         int maxCount = 0;
         int startTime = Integer.MAX_VALUE;
@@ -917,23 +919,36 @@ public class PhoneIQ {
         return maxCount;
     }
     // meeting room -II version 2
+    // this version is faster O(nlgn)
+    private class IntervalComparatorSimple implements Comparator<int []> {
+        @Override
+        // sort by start interval
+        public int compare(int[] o1, int[] o2) {
+            return o1[0] - o2[0];
+        }
+    }
     public int minMeetingRoomsV2(int[][] intervals) {
+        if (intervals.length == 0)
+            return 0;
         int maxCount = 0;
-        Arrays.sort(intervals, new IntervalComparator());
+        // sort the array based on the start interval
+        Arrays.sort(intervals, new IntervalComparatorSimple());
         PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        // add the first meetings end to the priority queue
         minHeap.add(intervals[0][1]);
         for (int i = 1; i < intervals.length; i++){
+            // pick the next start time and see if the star time is
+            // after the peek queue this meeting can ber removed
+            // from the queue more like this room is now available.
             if (minHeap.peek() <= intervals[i][0])
                 minHeap.remove();
+            // add the end interval so when we get a start interval
+            // after this we can remove this and occupy this room
             minHeap.add(intervals[i][1]);
-            //maxCount = Math.max(maxCount, minHeap.size());
         }
 
         return minHeap.size();
     }
-
-
-
 
 
     // Google Phone Interview Question Faulty keyboard
