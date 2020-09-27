@@ -1871,7 +1871,7 @@ public class DPs {
 
     // LeetCode :: 689. Maximum Sum of 3 Non-Overlapping Subarrays (Hard) (not submitted)
     // This is a hard DP problem. We have to find non-overlapping k size sub-array (three sub array) that gives max sum
-    // First we get the range sum at each index for then ext k items. We store it in rangeSum array. Now the problem
+    // First we get the range sum at each index for then next k items. We store it in rangeSum array. Now the problem
     // becomes finding three position i,j,l in the rangeSum array where i + k <= j and j + k <= l (i&j and j&l are k apart)
     // and (rangeSum[i] + rangeSum[j] + rangeSum[l]) is maximized. This i,j,l can be found dynamically.
     // Now assume if j is fixed we can easily find i  on the left & l on the right in rangeSum that maximizes the above

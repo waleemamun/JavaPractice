@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class SolutionsV3 {
 
@@ -238,8 +235,90 @@ public class SolutionsV3 {
         return result;
     }
 
+    // LeetCode :: 692. Top K Frequent Words
+    public class WordFreq {
+        String str;
+        int frequency;
+        public WordFreq(String s, int f){
+            str = s;
+            frequency = f;
+        }
+    }
+    public List<String> topKFrequent(String[] words, int k) {
+        HashMap<String, Integer> map = new HashMap<>();
+        List<String> aList = new LinkedList<>();
+        for (String w : words) {
+            map.put(w, map.getOrDefault(w, 0) +1);
+        }
+        PriorityQueue<WordFreq> minHeap = new PriorityQueue<>(new Comparator<WordFreq>() {
+            @Override
+            public int compare(WordFreq o1, WordFreq o2) {
+                if (o1.frequency == o2.frequency) {
+                    // this has to be reverse order than the frequency cause we need sort
+                    // lexicographically but as we build minHeap we need reverse lexicographical order hence we put the
+                    // - before the compare below. String is big to small in minHeap, now when we will remove from
+                    // minHeap the big will be removed before small
+                    return -o1.str.compareTo(o2.str);
+                } else {
+                    // frequency is small to big in minHeap
+                    return o1.frequency - o2.frequency;
+                }
+            }
+        });
+        for (String s : map.keySet()) {
+            int f = map.get(s);
+            minHeap.add(new WordFreq(s, f));
+            if(minHeap.size() > k)
+                minHeap.remove();
+        }
+        while (!minHeap.isEmpty()) {
+            // we need to remove the item from the top of the priority
+            // queue add at front of the linked list as we need
+            // top K element in Big to small sorted order
+            aList.add(0,minHeap.remove().str);
+        }
+        return aList;
 
+    }
+    // The same approach as above only optimisation is we dont need the WordFreq Class as we already have the map
+    // storing the frequency per string so we can use that info to build our priority queue of string based on their
+    // frequency from the map. So need for a WordFreq Object
+    public List<String> topKFrequentV2(String[] words, int k) {
+        HashMap<String, Integer> map = new HashMap<>();
+        List<String> aList = new LinkedList<>();
+        for (String w : words) {
+            map.put(w, map.getOrDefault(w, 0) +1);
+        }
+        PriorityQueue<String> minHeap = new PriorityQueue<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (map.get(o1) == map.get(o2)) {
+                    // this has to be reverse order than the frequency cause we need sort
+                    // lexicographically but as we build minHeap we need reverse lexicographical order hence we put the
+                    // - before the compare below. String is big to small in minHeap, now when we will remove from
+                    // minHeap the big will be removed before small
+                    return -o1.compareTo(o2);
+                } else
+                    // frequency is small to big in minHeap
+                    return map.get(o1) - map.get(o2);
 
+            }
+        });
+        for (String s : map.keySet()) {
+            int f = map.get(s);
+            minHeap.add(s);
+            if(minHeap.size() > k)
+                minHeap.remove();
+        }
+        while (!minHeap.isEmpty()) {
+            // we need to remove the item from the top of the priority
+            // queue add at front of the linked list as we need
+            // top K element in Big to small sorted order
+            aList.add(0,minHeap.remove());
+        }
+        return aList;
+
+    }
 
 
 
