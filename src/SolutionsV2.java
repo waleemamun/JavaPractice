@@ -2016,7 +2016,7 @@ public class SolutionsV2 {
     }
 
 
-    // LeetCode :: Group Shifted String
+    // LeetCode :: 249 Group Shifted String
     /**
      * Given a string, we can "shift" each of its letter to its successive letter,
      * for example: "abc" -> "bcd". We can keep "shifting" which forms the sequence: "abc" -> "bcd" -> ... -> "xyz".
@@ -2051,6 +2051,7 @@ public class SolutionsV2 {
             map.putIfAbsent(diffStr, new ArrayList<>());
             map.get(diffStr).add(s);
         }
+        //add the result to the list we can just simply use add all to add all the values of the map to the list
         resList.addAll(map.values());
         // if we need a sorted solution we can do the code below
         /*

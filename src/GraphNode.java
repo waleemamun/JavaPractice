@@ -894,6 +894,98 @@ public class GraphNode {
 
     }
 
+    // LeetCode :: 721. Accounts Merge (Not Submitted)
+    // This uses the idea of Union & Find algorithm used in Kruskal's minimum STP. Here all the email in the same input
+    // list can be thoought of as edges and we need to merge union them.
+    // The basic idea comes from "Disjoint Sets using union by rank and path compression Graph Algorithm" of Kruskal STP
+    // First we need to make set so we need to make each node a set of its own. The we try to union two set if they
+    // do not belong to the same set.
+    // This cane also done with DFS
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        HashMap<String, String> owner = new HashMap<>();
+        HashMap<String, String> parent = new HashMap<>();
+        HashMap<String, TreeSet<String>> union = new HashMap<>();
+        List<List<String>> rList = new ArrayList<>();
+        // make every node point to it self as parent this is the makeSet step
+        // we also keep track of the email to owner/name mapping as our problem demands
+        for (List<String> strList : accounts) {
+            for (int i = 1; i < strList.size(); i++) {
+                owner.put(strList.get(i), strList.get(0));
+                parent.put(strList.get(i), strList.get(i));
+            }
+        }
+        // this is kind of the find & union step
+        for (List<String> strList : accounts) {
+            String p = findSet(strList.get(1), parent);
+            for (int i = 2; i < strList.size(); i++) {
+                parent.put(findSet(strList.get(i), parent),p);
+            }
+        }
+        // this step does the union & grouping the same data together & sort them as requested by the program output
+        for (List<String> strList : accounts) {
+            String p = findSet(strList.get(1), parent);
+            union.putIfAbsent(p, new TreeSet<>());
+            for (int i = 1; i < strList.size(); i++) {
+                union.get(p).add(strList.get(i));
+            }
+        }
+        // this prepares the result in output format
+        for (String u: union.keySet()) {
+            ArrayList<String> tList = new ArrayList<>();
+            tList.add(0, owner.get(u));
+            tList.addAll(union.get(u));
+            rList.add(tList);
+        }
+
+        return rList;
+    }
+    // find parent of a node if node is its own parent return node
+    private String findSet(String node, HashMap<String, String> parent) {
+        if (node.equals(parent.get(node)))
+            return node;
+        return findSet(parent.get(node), parent);
+    }
+    public void acountMergeDFS(String u, HashSet<String> visited,
+                               HashMap<String, HashSet<String>> graph,
+                               TreeSet<String> topoList){
+        visited.add(u);
+        HashSet<String> adjList = graph.get(u);
+        for (String v: adjList) {
+            if(!visited.contains(v)) {
+                acountMergeDFS(v,visited, graph, topoList);
+            }
+        }
+        topoList.add(u);
+
+    }
+    public List<List<String>> accountsMergeV2(List<List<String>> accounts) {
+        HashMap<String, HashSet<String>> graph = new HashMap<>();
+        HashMap<String, String> owner = new HashMap<>();
+        HashSet<String> visited = new HashSet<>();
+        // build the graph
+        for (List<String> strList : accounts) {
+            for (int i = 1; i < strList.size() ; i++) {
+                owner.put(strList.get(i), strList.get(0));
+                graph.putIfAbsent(strList.get(i), new HashSet<>());
+                if (i +1 < strList.size()) {
+                    graph.putIfAbsent(strList.get(i+1), new HashSet<>());
+                    graph.get(strList.get(i)).add(strList.get(i+1));
+                    graph.get(strList.get(i+1)).add(strList.get(i));
+                }
+            }
+        }
+        List<List<String>> rList = new ArrayList<>();
+        for (String u : graph.keySet()) {
+            if (!visited.contains(u)){
+                TreeSet<String> topoList = new TreeSet<>();
+                acountMergeDFS(u, visited, graph, topoList);
+                ArrayList<String> tList = new ArrayList<>(topoList);
+                tList.add(0,owner.get(u));
+                rList.add(tList);
+            }
+        }
+        return rList;
+    }
 
 
 }

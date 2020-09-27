@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class SolutionsV3 {
 
@@ -121,6 +124,123 @@ public class SolutionsV3 {
             max = Math.max(max,right -left);
         return max;
     }
+    // LeetCode :: 670. Maximum Swap
+    // The idea is to find the a bigger number on the right if found swap
+    public int maximumSwap(int num) {
+        String number = Integer.toString(num);
+        char []str = number.toCharArray();
+
+        int idx = 0;
+        char max = 0;
+        int i =0;
+        boolean found = false;
+        for(i = 0; i< str.length; i++) {
+            max = str[i];
+            for (int j = i + 1; j < str.length; j++) {
+                if (max <= str[j]) {
+                    idx = Math.max(idx, j);
+                    max = str[j];
+                    found = true;
+                }
+            }
+            if (found)
+                break;
+
+        }
+        if(i != str.length) {
+            char temp = str[idx];
+            str[idx] = str[i];
+            str[i] = temp;
+        }
+
+        return Integer.parseInt(new String(str));
+    }
+
+    // LeetCode :: 311. Sparse Matrix Multiplication
+    // The idea is to find out the non zero set for B and when doing a multiply only consider the non-zero values
+    public int[][] multiply(int[][] A, int[][] B) {
+        List<ArrayList<Integer>> columnList = new ArrayList<>();
+        for (int j = 0; j < B[0].length; j++) {
+            ArrayList<Integer> nonZeroSet = new ArrayList<>();
+            for (int i = 0 ; i < B.length; i++) {
+                if (B[i][j] != 0)
+                    nonZeroSet.add(i);
+            }
+            columnList.add(nonZeroSet);
+        }
+        System.out.println(columnList);
+        int [][]C = new int[A.length][B[0].length];
+        for (int i = 0; i < C.length; i++) {
+            for (int j = 0; j < C[0].length; j++) {
+                ArrayList<Integer> tList = columnList.get(j);
+                for (Integer n : tList) {
+                    C[i][j] += A[i][n] * B[n][j];
+                }
+            }
+        }
+        return C;
+    }
+
+    // This is very nice way to solve this problem  look how row k is handles before j it means we first try to figure
+    // how much one element (A[i][k]) contribute to the partial sum of C[i][j]
+    public int[][] multiplyV2(int[][] A, int[][] B) {
+        int m = A.length, n = A[0].length, nB = B[0].length;
+        int[][] C = new int[m][nB];
+
+        for(int i = 0; i < m; i++) {
+            for(int k = 0; k < n; k++) {
+                if (A[i][k] != 0) {
+                    for (int j = 0; j < nB; j++) {
+                        if (B[k][j] != 0) C[i][j] += A[i][k] * B[k][j];
+                    }
+                }
+            }
+        }
+        return C;
+    }
+    // This is the most optimal solution
+    // The idea is to store one of the sparse matrix as a list of column,non-zero-value pair
+    // and use that list to perform the multiplication, This is also calculating the how each element of A is
+    // contributing to the sum of C[i][j] as before
+    public int[][] multiplyV3(int[][] A, int[][] B) {
+        int m = A.length, n = A[0].length, nB = B[0].length;
+        int[][] result = new int[m][nB];
+        // First we need to calc the column, non-zero-valu pair of each row of sparse matrix A
+        // We store this as tuple (pos i (column), pos i +1 (val)) in a list
+        List[] indexA = new List[m];
+        for(int i = 0; i < m; i++) {
+            List<Integer> numsA = new ArrayList<>();
+            for(int j = 0; j < n; j++) {
+                if(A[i][j] != 0){
+                    // store the column
+                    numsA.add(j);
+                    // store the value at this row,col so we have two consecutive entries (col, non-zero-val)
+                    numsA.add(A[i][j]);
+                }
+            }
+            indexA[i] = numsA;
+        }
+
+        for(int i = 0; i < m; i++) {
+            List<Integer> numsA = indexA[i];
+            for(int p = 0; p < numsA.size() - 1; p += 2) {
+                // get the column from the list
+                int colA = numsA.get(p);
+                // get the value at that column
+                int valA = numsA.get(p + 1);
+                for(int j = 0; j < nB; j ++) {
+                    int valB = B[colA][j];
+                    result[i][j] += valA * valB;
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+
+
 
 
 }

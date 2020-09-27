@@ -2341,6 +2341,36 @@ public class Tree {
         return doubleHead;
     }
 
+    // LeetCode :: 1026. Maximum Difference Between Node and Ancestor
+    // The idea is to keep track of low and high value of the ancestors. At each node we check if the node's value is
+    // lower than the current low of ancestor then we update the low to the new low for the ancestor. if the node's
+    // value is higher than the ancestor high we update the ancestor high. Next we calc the current diff for this node
+    // with ancestor low & high. We also keep track of maxDiff in a global variable
+    int maxDiff = 0;
+    private void maxAncestorDiffHelper (TreeNode node, int low, int high){
+        if(node == null)
+            return;
+        // update ancestor low or high depending on the node's value
+        if (node.val > high)
+            high = node.val;
+        else if (node.val < low)
+            low = node.val;
+        // calc the current diff
+        int currDiff = Math.abs(high - node.val);
+        currDiff += Math.max(currDiff, Math.abs(low - node.val));
+        // update the global max diff if required
+        maxDiff = Math.max(maxDiff, currDiff);
+        // traverse the tree
+        maxAncestorDiffHelper(node.left, low, high);
+        maxAncestorDiffHelper(node.right, low, high);
+    }
+    public int maxAncestorDiff(TreeNode root) {
+        if (root != null)
+            maxAncestorDiffHelper(root,root.val,root.val);
+        return maxDiff;
+    }
+
+
 
 
 
