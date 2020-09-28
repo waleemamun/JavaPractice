@@ -1316,6 +1316,77 @@ public class DataStructProblem {
             return c;
         }
     }
+    // LeetCode :: 348. Design Tic-Tac-Toe
+    // The idea is to not impplement the board itself rather keep track of row & col.
+    // We create an array rowCount to count the X or O in that row for X (player = 1) we do a +1 and
+    // for O (player = 2) we do -1. So if at any point a rowCount[id] becomes +n(player1 wins) or -n (player2 wins)
+    // we do the same for colCount & diag & reverse diag. The reverse diag can be calculated using the formula
+    // (row + col == n-1)
+    class TicTacToe {
+        int diag;
+        int []rowCount;
+        int []colCount;
+        int revDiag;
+        int win;
+        int n;
+        /** Initialize your data structure here. */
+        public TicTacToe(int n) {
+            diag = 0;
+            revDiag = 0;
+            win = 0;
+            rowCount = new int[n];
+            colCount = new int[n];
+            this.n = n;
+        }
+
+        /** Player {player} makes a move at ({row}, {col}).
+         @param row The row of the board.
+         @param col The column of the board.
+         @param player The player, can be either 1 or 2.
+         @return The current winning condition, can be either:
+         0: No one wins.
+         1: Player 1 wins.
+         2: Player 2 wins. */
+        public int move(int row, int col, int player) {
+            // win found no already no need to proceed
+            if (win != 0)
+                return win;
+            // no win yet
+            if (player == 1) {
+                rowCount[row]++;
+                colCount[col]++;
+                // check if its diag position & increase diag
+                if (row == col)
+                    diag++;
+                // check if its reverse diag position & increase reverse diag
+                if ((row + col) == (n-1))
+                    revDiag++;
+                // check if a solution is reached
+                if (rowCount[row] == n || colCount[col] == n || diag == n || revDiag == n)
+                    win = 1;
+                return win;
+            } else {
+                rowCount[row]--;
+                colCount[col]--;
+                // check if its diag position & decrease diag
+                if (row == col)
+                    diag--;
+                // check if its reverse diag position & decrease reverse diag
+                if (row + col == n-1)
+                    revDiag--;
+                // check if a solution is reached
+                if (rowCount[row] == -n || colCount[col] == -n || diag == -n || revDiag == -n)
+                    win = 2;
+                return win;
+            }
+        }
+    }
+
+/**
+ * Your TicTacToe object will be instantiated and called as such:
+ * TicTacToe obj = new TicTacToe(n);
+ * int param_1 = obj.move(row,col,player);
+ */
 
 
 
