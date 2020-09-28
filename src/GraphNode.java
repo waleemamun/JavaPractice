@@ -987,5 +987,58 @@ public class GraphNode {
         return rList;
     }
 
+    // LeetCode :: 994. Rotting Oranges
+    // The idea is to do a in-place BFS traversal of the grid we mark the fresh tomato = 1 by rotten value + 1
+    // rotten value start with 2 so the next level of bfs will mark neighbor 3 then the next level mark neighbor 4
+    // and so on.
+    // One important observation how to keep track of all fresh tomato has been marked rotten the best idea is to count
+    // the number of fresh tomato initially and then reducde the number by 1 when the tomato is rotten meaning put
+    // in the bfs queue. Note we dont need to use a hashset to keep track of the tomato cells as we only ar interested
+    // in the fresh Tomato count. If we are asked to find the remaining fresh tomato then hashset can be used
+    public int orangesRotting(int[][] grid) {
+        int mins = -1;
+        int fresh = 0;
+        Queue<int[]> queue = new LinkedList<>();
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                // rotten oranges
+                if (grid[i][j] == 2)
+                    queue.add(new int[] {i,j});
+                else if(grid[i][j] == 1) {
+                    fresh++;
+                }
+            }
+        }
+        if (fresh == 0)
+            return 0;
+        int [][]dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        int []u = {-1,-1};
+        //System.out.println(Arrays.deepToString(grid));
+        //System.out.println(fresh);
+        while (!queue.isEmpty()) {
+            u = queue.remove();
+            int r = u[0];
+            int c = u[1];
+            // visit all neighbors
+            for (int i = 0; i <dir.length;i++) {
+                int incR = dir[i][0];
+                int incC = dir[i][1];
+                if (r + incR < grid.length && r + incR >= 0
+                        && c + incC < grid[0].length && c + incC >= 0
+                        && grid[r + incR][c + incC] == 1) {
+                    grid[r + incR][c + incC] = grid[r][c] + 1;
+                    queue.add(new int [] {r + incR, c + incC});
+                    int val =  (r + incR) * grid[0].length + (c + incC);
+                    fresh--;
+                }
+
+            }
+        }
+        //System.out.println(Arrays.deepToString(grid));
+        if(fresh == 0 && u[0]!=-1)
+            mins = grid[u[0]][u[1]] -2;
+        return mins;
+    }
+
 
 }

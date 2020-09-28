@@ -256,18 +256,14 @@ public class Main {
 
         char [] tasks = {'A','A','A','B','B','B'};
 
-        int [][] updates = {{1,1,1,1,1},
-                            {1,0,0,0,1},
-                            {1,0,1,0,1},
-                            {1,0,0,0,1},
-                            {1,1,1,1,1}};
+        int [][] updates = {};
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
         int abc[] = {1,2,1,2,6,7,5,1};
         System.out.println("Missing " + sv2.missingElement(abc, 8));
         //System.out.println("count = " +sv3.lengthOfLongestSubstringKDistinctV2("aaaaaaaa",3));
-        System.out.println(sv3.partitionLabelsV3("kabcdefk"));
+        System.out.println(g1.orangesRotting(updates));
 
 
 
