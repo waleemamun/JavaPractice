@@ -2370,6 +2370,52 @@ public class Tree {
         return maxDiff;
     }
 
+    // LeetCode :: 863. All Nodes Distance K in Binary Tree
+    // The idea is to search the target node's subtree for k distant node
+    // and get k -i ancestor and search the k - i th ancestor for k-i distant child. We need to search the ancestor
+    // opposit subtree meaning if the target node is found on the left we search ancestor's right subtree and vice versa
+    private void getKDistantNodes(TreeNode root, int k, List<Integer> nodeList) {
+        if (root == null || k < 0)
+            return;
+        if (k == 0) {
+            nodeList.add(root.val);
+            return;
+        }
+        getKDistantNodes(root.left, k -1, nodeList);
+        getKDistantNodes(root.right, k -1, nodeList);
+    }
+
+    private int kDistanteNodes (TreeNode node, TreeNode target, int k, List<Integer> nodeList) {
+        if (node == null)
+            return -1;
+        if (node == target) {
+            getKDistantNodes(target, k, nodeList);
+            return 1;
+        }
+        int l = kDistanteNodes(node.left, target, k, nodeList);
+        int r = kDistanteNodes(node.right, target, k , nodeList);
+        if (l > 0) {
+            if(l < k) {
+                getKDistantNodes(node.right, k - l -1, nodeList);
+            } else if (l==k)
+                nodeList.add(node.val);
+            return l + 1;
+        } else if (r > 0) {
+            if(r < k) {
+                getKDistantNodes(node.left, k - r -1, nodeList);
+            } else if (r==k)
+                nodeList.add(node.val);
+            return r + 1;
+        } else
+            return  -1;
+    }
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        List<Integer> rList = new ArrayList<>();
+        int val = kDistanteNodes(root, target, K, rList);
+        return rList;
+    }
+
 
 
 

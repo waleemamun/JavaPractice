@@ -437,5 +437,64 @@ public class SolutionsV3 {
         }
         return rList;
     }
+    // LeetCode :: 1152. Analyze User Website Visit Pattern
+    // This problem is very badly described may be the purpose is to ask the interviewer a lot of requirement
+    // gathering question. The main goal is to find out the requirement implementation is pure brute force.
+    // Basically the intent of the problem is to find the most common 3 sequence web site access
+    // sequence. So the only option is to brute force and generate per user all possible 3 sequence website visit
+    // sequence  and put a count of the sequence frequency in a hashmap and do the same for all user. The seq that has
+    // highest count is the most common user access sequence. This would require N^3 to generate  the 3 seq counts
+    public class WebAccess {
+        String web;
+        int time;
+        public WebAccess(String s, int t) {
+            web = s;
+            time = t;
+        }
+    }
+
+    public List<String> mostVisitedPattern(String[] username, int[] timestamp, String[] website) {
+        List <String> rList = new ArrayList<>();
+        HashMap<String, ArrayList<WebAccess>> userVisitMap = new HashMap<>();
+
+        for (int i = 0; i < username.length; i++) {
+            userVisitMap.putIfAbsent(username[i], new ArrayList<>());
+            userVisitMap.get(username[i]).add(new WebAccess(website[i], timestamp[i]));
+        }
+        HashMap<String, Integer> seqFrequency = new HashMap<>();
+        String res = "";
+        for (String user : userVisitMap.keySet()) {
+            // this will remove duplicate seq
+            HashSet<String> set = new HashSet<>();
+            ArrayList<WebAccess> userSeq = userVisitMap.get(user);
+            Collections.sort(userSeq, (a,b)->(a.time - b.time));
+            for (int i = 0; i<userSeq.size(); i++) {
+                for (int j = i+1; j < userSeq.size(); j++) {
+                    for (int k = j+1; k < userSeq.size(); k++) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(userSeq.get(i).web);
+                        sb.append(" ");
+                        sb.append(userSeq.get(j).web);
+                        sb.append(" ");
+                        sb.append(userSeq.get(k).web);
+                        String str = sb.toString();
+                        if(set.contains(str))
+                            continue;
+                        set.add(str);
+                        seqFrequency.put(str, seqFrequency.getOrDefault(str, 0) + 1);
+                        if (res == "" ||  seqFrequency.get(res) < seqFrequency.get(str)
+                                || (seqFrequency.get(res) ==seqFrequency.get(str) && str.compareTo(res) < 0) ) {
+
+                            res = str;
+                        }
+
+                    }
+                }
+            }
+        }
+        String[] webs = res.split(" ");
+        rList.addAll(Arrays.asList(webs));
+        return rList;
+    }
 
 }
