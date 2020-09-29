@@ -547,5 +547,32 @@ public class SolutionsV3 {
         return stateBitmap;
     }
 
+    // LeetCode :: 1167. Minimum Cost to Connect Sticks
+    // The idea is to use a greedy approach to pick the smallest two items from the pile add/merge them and put them
+    // back into the pile and oick the next two smallest item until all the stick/items are merged
+    // The idea is to use a minHeap, first we add all the sticks in the minheap & we remove two items at a time from
+    // the heap and add them. We put the result back into the heap for so that this merged stick can be use with some
+    // smaller stick.
+    // After pulling two item form the heap if the heap is empty we dont need to put the result back as we have the
+    // final stick
+    public int connectSticks(int[] sticks) {
+        if (sticks.length <= 1)
+            return 0;
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        for (int s : sticks) {
+            minHeap.add(s);
+        }
+        int cost = 0;
+        while (!minHeap.isEmpty()){
+            int z = minHeap.remove() + minHeap.remove();
+            cost += z;
+            // heap is empty so we got our final result we are left with only one stick now
+            if (minHeap.isEmpty())
+                break;
+            minHeap.add(z);
+        }
+        return cost;
+    }
+
 
 }
