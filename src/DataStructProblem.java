@@ -1415,7 +1415,86 @@ public class DataStructProblem {
             i++;
             return res;
         }
-}
+    }
+
+    // LeetCode :: 353. Design Snake Game
+    // The idea is to use a deque to track the snake position in the board when the head moves it adds to the end of
+    // dequeue the head position and if no food then delete from the tail (front of the deque). One important test
+    // is to allow snake head to move to tail position as the tail will follow consider a snake of size four moves
+    // in 2x2 board in clock or anticlock wise
+    class SnakeGame {
+
+        /** Initialize your data structure here.
+         @param width - screen width
+         @param height - screen height
+         @param food - A list of food positions
+         E.g food = [[1,1], [1,0]] means the first food is positioned at [1,1], the second is at [1,0].            */
+        int colC;
+        int rowC;
+        int[][]sFood;
+        Deque<int []> dq; // hold the snake body including head & tail head is at the end and tail is at the begining
+        HashSet<Integer> body; // hashset to track the current body position instead of creating a whole board as we have a limit on memory
+        int i; // food position tracker
+        public SnakeGame(int width, int height, int[][] food) {
+            colC = width;
+            rowC = height;
+            dq = new LinkedList<>();
+            dq.add(new int []{0,0});
+            body = new HashSet<>();
+            body.add(0);
+            sFood = food;
+            i = 0;
+        }
+
+
+        /** Moves the snake.
+         @param direction - 'U' = Up, 'L' = Left, 'R' = Right, 'D' = Down
+         @return The game's score after the move. Return -1 if game over.
+         Game over when snake crosses the screen boundary or bites its body. */
+        public int move(String direction) {
+            int []head = dq.peekLast();
+            int r = head[0];
+            int c = head[1];
+            if (direction.equals("U")) {
+                r -= 1;
+            } else if (direction.equals("D")) {
+                r += 1;
+            } else if (direction.equals("R")) {
+                c += 1;
+            } else {
+                c -= 1;
+            }
+
+            if (r < 0 || c < 0 || r >= rowC || c >= colC)
+                return -1;
+            // remove the tail first so the snake can move to tail position if wanted
+            // we can add the tail back if food found
+            int []tail = dq.removeFirst();
+            body.remove(tail[0] * colC + tail[1]);
+
+            // check if snake touch its body
+            int val = r * colC + c;
+            if (body.contains(val))
+                return -1;
+            // add new cell as snake head
+            dq.addLast(new int []{r,c});
+            // update the snake position
+            body.add(val);
+            if (i < sFood.length && sFood[i][0] == r && sFood[i][1] == c) {
+                i++;
+                dq.addFirst(tail);
+            }
+
+            return dq.size()-1;
+
+        }
+    }
+
+/**
+ * Your SnakeGame object will be instantiated and called as such:
+ * SnakeGame obj = new SnakeGame(width, height, food);
+ * int param_1 = obj.move(direction);
+ */
 
 
 
