@@ -1387,6 +1387,35 @@ public class DataStructProblem {
  * TicTacToe obj = new TicTacToe(n);
  * int param_1 = obj.move(row,col,player);
  */
+    // LeetCode :: 901. Online Stock Span
+    // The idea is to store the numbers and also maintain an array last which store the index of last bigger number
+    // in last[i] for each nums[i]. The idea is similar to storing last bigger index when scanning from right to left
+    // we scan from right to left as we want to stop at bigger number than price
+    class StockSpanner {
+        int []nums;
+        int []last;
+        int i;
+        public StockSpanner() {
+            nums = new int[10001]; // store the number stream
+            last = new int[10001]; // store the last bigger number index
+            i = 1;
+            last[0] = -1;
+            nums[0] = Integer.MAX_VALUE;
+        }
+
+        public int next(int price) {
+            int j = i - 1;
+            nums[i] = price;
+            // find the lsat bigger numner index we will hop very quickly here when the previous numbers are stored
+            while (j > 0 && price >= nums[j]) {
+                j = last[j];
+            }
+            last[i] = j;
+            int res = i - last[i];
+            i++;
+            return res;
+        }
+}
 
 
 
