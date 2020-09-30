@@ -1495,7 +1495,123 @@ public class DataStructProblem {
  * SnakeGame obj = new SnakeGame(width, height, food);
  * int param_1 = obj.move(direction);
  */
+    // LeetCode :: 1429. First Unique Number
+    // We maintain a adoubly linked list queue of unique nodes so far
+    // Same idea as LRU cache we need a hashmap and doubly linked list we add new node to the tail and read from the
+    // head, if we discover a repeat we remove it from doubly linked list.
+    public class DblLinkNode {
+        int val;
+        DblLinkNode prev;
+        DblLinkNode next;
+        int count;
+
+        public DblLinkNode (int v){
+            val = v;
+            prev = null;
+            next = null;
+            count = 1;
+        }
+        public void incCount() {
+            count++;
+        }
+    }
+
+    class FirstUnique2 {
+        HashMap<Integer, DblLinkNode> map;
+        DblLinkNode head;
+        DblLinkNode tail;
+
+        public FirstUnique2(int[] nums) {
+            map = new HashMap<>();
+            head = new DblLinkNode(0);
+            tail = new DblLinkNode(0);
+            head.next = tail;
+            head.prev = tail;
+            tail.next = head;
+            tail.prev = head;
+            for (int n : nums) {
+                add(n);
+            }
+
+        }
+
+        private void addTail(DblLinkNode node) {
+            node.next = tail;
+            node.prev = tail.prev;
+            tail.prev.next = node;
+            tail.prev = node;
+        }
+
+        public int showFirstUnique() {
+            if (head.next == tail)
+                return -1;
+            return head.next.val;
+        }
+        private void remove(DblLinkNode node){
+            node.next.prev = node.prev;
+            node.prev.next = node.next;
+            node.next = null;
+            node.prev = null;
+        }
+
+        public void add(int value) {
+            DblLinkNode node = map.getOrDefault(value, null);
+            if (node == null) {
+                node = new DblLinkNode(value);
+                addTail(node);
+                map.put(value, node);
+            } else {
+                if (node.count == 1)
+                    remove(node);
+                node.incCount();
+            }
+            //print();
+
+        }
+        public void print (){
+            DblLinkNode node = head;
+            while (node != tail){
+                System.out.print(node.val + " ");
+                node = node.next;
+            }
+            System.out.println();
+        }
+    }
 
 
+    class FirstUnique {
+
+        private Set<Integer> setQueue = new LinkedHashSet<>();
+        private Map<Integer, Boolean> isUnique = new HashMap<>();
+
+        public FirstUnique(int[] nums) {
+            for (int num : nums) {
+                this.add(num);
+            }
+        }
+
+        public int showFirstUnique() {
+            // If the queue contains values, we need to get the first one from it.
+            // We can do this by making an iterator, and getting its first item.
+            if (!setQueue.isEmpty()) {
+                return setQueue.iterator().next();
+            }
+            return -1;
+        }
+
+        public void add(int value) {
+            // Case 1: This value is not yet in the data structure.
+            // It should be ADDED.
+            if (!isUnique.containsKey(value)) {
+                isUnique.put(value, true);
+                setQueue.add(value);
+                // Case 2: This value has been seen once, so is now becoming
+                // non-unique. It should be REMOVED.
+            } else if (isUnique.get(value)) {
+                isUnique.put(value, false);
+                setQueue.remove(value);
+            }
+        }
+    }
 
 }

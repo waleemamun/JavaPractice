@@ -2416,6 +2416,36 @@ public class Tree {
         return rList;
     }
 
+    // LeetCode :: 1120. Maximum Average Subtree
+    // The idea is calc the left & right subtree node count & average in a bottom up manner
+    // At each node we get the left subtree node count, value sum & right subtree node count, value sum
+    // so at each node node count is : left_count + 1 + right_count
+    // and value sum : left_sum + node.val + right_sum
+    // we keep track of maxAvg in a global variable
+    double maxAvg = 0;
+    private long [] maximumAvgSubtreeHelper (TreeNode node) {
+        // base null node has zero node count & zero val
+        if (node == null)
+            return new long [] {0,0};
+        // get the left subtree node count & value_sum
+        long[] left = maximumAvgSubtreeHelper(node.left);
+        // get the right subtree node count & value_sum
+        long[] right = maximumAvgSubtreeHelper(node.right);
+        // calc the node count & value_sum at this node
+        long[] res = new long[2];
+        res[0] = left[0] + 1 + right[0]; // node count of this subtree
+        res[1] = left[1] + node.val + right[1]; // value sum of this subtree
+        // current avg
+        double avg = (double) res[1]/ (double)res[0];
+        // update max avg if possible
+        maxAvg = Math.max(maxAvg, avg);
+        return res;
+    }
+    public double maximumAverageSubtree(TreeNode root) {
+        maximumAvgSubtreeHelper(root);
+        return maxAvg;
+    }
+
 
 
 
