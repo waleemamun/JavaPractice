@@ -6,6 +6,7 @@ public class FenwickTree {
     // but not all of them are leaf node we cannot just print the whole
     // binaryIndexedTree for sum we have to query it using the getSum to
     // get the results
+    // Check this : https://www.topcoder.com/community/competitive-programming/tutorials/binary-indexed-trees/
     private int binaryIndexedTree[];
 
     /**

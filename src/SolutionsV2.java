@@ -826,7 +826,7 @@ public class SolutionsV2 {
         return result;
     }
 
-    // LeetCode :: 325 Maximum Size Subarray Sum Equals k
+    // LeetCode :: 325 Maximum Size Subarray Sum Equals k (not submitted)
     // The idea is to use same idea as the one above. We calc a running sum for all the arr index.
     // for any j>i the sum between j & i  can be calc using the running  sums[j-i] = sum[j] - sum[i-1]
     // We store the running sum in a map key and value is the index
@@ -839,7 +839,7 @@ public class SolutionsV2 {
         HashMap<Integer, Integer> map = new HashMap<>();
         int currSum = 0;
         map.put(0,-1);
-        int maxSize = -1;
+        int maxSize = 0;
         for (int i = 0; i<nums.length; i++) {
             currSum+= nums[i];
             if (map.containsKey(currSum -k)) {
@@ -856,9 +856,11 @@ public class SolutionsV2 {
     // LeetCode :: 283. Move Zeroes
     public void moveZeroes(int[] nums) {
         int j =0;
+        // find the first zero so we that we can start from the first zero thus minimising operations
         while ( j<nums.length && nums[j] != 0)
             j++;
         int i = j+1;
+        // we will move non-zero item to left starting at j, more like pivoting
         while (i< nums.length) {
             if (nums[i]!= 0) {
                 int tmp = nums[i];
@@ -1106,9 +1108,7 @@ public class SolutionsV2 {
         int j = 0;
         for (int i = 0; i < nums.length; i++) {
             // remove from the front of the queue if the queue exceeds the window size
-            // Note this loop will execute not more than once, so we can change the loop
-            // to a if condition
-            while(!deque.isEmpty() && deque.peek() < i -k +1){
+            if(!deque.isEmpty() && deque.peek() < i -k +1){
                 deque.removeFirst();
             }
             // We found a bigger value. Remove from the tail of the queue all smaller values
@@ -1663,6 +1663,7 @@ public class SolutionsV2 {
     // by inc. We need to store the inc in each start index so the increment will propagate for the overlapping index
     // So after that operation that the current range will +inc so the next item after the range (endIndex +1) needs
     // to -inc casue we are propagating the sum so endIndex + 1 needs to be decremented by inc.
+    // This problem more is more like the meeting room or population problem
     public int[] getModifiedArray(int length, int[][] updates) {
         int [] result = new int[length];
         for (int i = 0; i<updates.length; i++) {
@@ -1702,7 +1703,7 @@ public class SolutionsV2 {
     // The idea is same as the range sum problem 560, we need to get the running sum and the running_sum % mod for all
     // elements of the array. We need to pay attention to the mod k (as the problem talks about n*k also all elements in
     // the array is positive). The mod K will be same say x for two item if the diff between the running sum is x or
-    // multiple of x. if two running sum is a & b then a%k =x and b%k =x then b - a == x or multiple of x.
+    // multiple of x. if two running sum is a & b then a%k =x and b%k =x then b - a == x .
     // So we basically use this idea here. We put the running sum % k in hashmap and if we encounters same
     // running_sum % k then the difference between the running sum of this two positions is k or multiple of k
     // if the subset len is atleast 2  then our result is true
@@ -1726,6 +1727,27 @@ public class SolutionsV2 {
             // store the item into map we tend to keep the oldest index so the the subset
             // size is bigger (i - idx) when we consider later
             map.putIfAbsent(sum,i);
+        }
+        return false;
+    }
+    // same approach just initializing the hashmap to (0,-1)
+    public boolean checkSubarraySumv2(int[] nums, int k) {
+        int sum = 0;
+        HashMap < Integer, Integer > map = new HashMap < > ();
+        // init map to (0, -1) 0 cause when the sum%k == 0 we found our solution and -1 is
+        // for calc length -1 denotes the position before 0 index
+        map.put(0, -1);
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (k != 0)
+                sum = sum % k;
+            if (map.containsKey(sum)) {
+                // the check  > 1 is fine because we need a subarray size atleast two so for example 3 - 1 = 2
+                // note that sum(i,j) = sum(j) - sum (i -1) <--- this i -1 not i hence > 1 is fine so 3-1 = 2 > 1
+                if (i - map.get(sum) > 1)
+                    return true;
+            } else
+                map.put(sum, i);
         }
         return false;
     }
@@ -1811,6 +1833,7 @@ public class SolutionsV2 {
     // The problem actually requires to find any peak not the max peak also nums[-1] = -INF & nums[n] = -INF so for
     // an ascending or descending curve the result would be nums[len-1] or nums[0] respectively.
     // So based on these observation we can use a binary search on this we focus one finding a mid that is a/the peak
+    // check version 2 more compact & easy to read
     public int findPeakElement(int[] nums) {
         int low = 0;
         int high = nums.length-1;
@@ -1837,6 +1860,23 @@ public class SolutionsV2 {
 
         return mid;
     }
+
+    // The above one has to many edge cases this is a more compact version
+    // the idea is to move towards the peak using a binary search approach
+    public int findPeakElementV2(int[] nums) {
+        int l = 0, r = nums.length - 1;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            // nums [mid] is bigger than right  so lets check on the left for a smaller item
+            if (nums[mid] > nums[mid + 1])
+                r = mid;
+            else
+                l = mid + 1;
+        }
+        return l;
+    }
+
+
 
     // LeetCode :: 163. Missing Ranges
     // The idea is to use the lower & upper to find the missing range in s the sorted array we do linear scan  to find
@@ -2378,8 +2418,10 @@ public class SolutionsV2 {
 
     // LeetCode :: 378. Kth Smallest Element in a Sorted Matrix
     // The idea is to use merge k sorted list
+    // Check the usage of rows array and pair array to handle the k sorted merging, in rows we hold the next indexes
+    // per row, in the priority queue we put the matrix val and the row number in the 'pair' array.
     public int kthSmallest(int[][] matrix, int k) {
-        // rows hold the next index of each row
+        // rows hold the next column index of each row
         int []rows = new int[matrix.length];
         PriorityQueue<int []> minHeap = new PriorityQueue<>(new Comparator<int[]>() {
             @Override
@@ -2503,6 +2545,7 @@ public class SolutionsV2 {
         HashMap<Integer, Integer> map = new HashMap<>();
         Arrays.sort(copy);
         // store the first occurances of the index in a Map for fast removal
+        // we actually need the relative order of an item in the array
         for (int i = 0; i < copy.length; i++) {
             map.putIfAbsent(copy[i],i);
         }
@@ -2515,6 +2558,8 @@ public class SolutionsV2 {
         // left (this is how the duplicates are handled)
         for (int i = nums.length - 1; i >= 0; i--) {
             // we can use that info to search for indexes lower that its
+            // the - 1 is because any number before nums[i]'s index -1 is smaller than nums[i] say for example
+            // nums[i] = 3 first occurance = 2 any number in index 0  ,1 are smaller than 3
             rlist.add(0, queryBIT(bitree,map.get(nums[i]) -1));
             addBITree(bitree, map.get(nums[i]), 1);
         }

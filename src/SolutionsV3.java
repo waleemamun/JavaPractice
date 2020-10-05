@@ -153,6 +153,27 @@ public class SolutionsV3 {
 
         return Integer.parseInt(new String(str));
     }
+    // this also nice solution keep track of the last index of a digit. Duirng comparison we compare last index with
+    // current index for each digit higher than the current digit
+    public int maximumSwapV2(int num) {
+        char[] A = Integer.toString(num).toCharArray();
+        int[] last = new int[10];
+        for (int i = 0; i < A.length; i++) {
+            last[A[i] - '0'] = i;
+        }
+
+        for (int i = 0; i < A.length; i++) {
+            for (int d = 9; d > A[i] - '0'; d--) {
+                if (last[d] > i) {
+                    char tmp = A[i];
+                    A[i] = A[last[d]];
+                    A[last[d]] = tmp;
+                    return Integer.valueOf(new String(A));
+                }
+            }
+        }
+        return num;
+    }
 
     // LeetCode :: 311. Sparse Matrix Multiplication
     // The idea is to find out the non zero set for B and when doing a multiply only consider the non-zero values
@@ -306,7 +327,7 @@ public class SolutionsV3 {
             }
         });
         for (String s : map.keySet()) {
-            int f = map.get(s);
+            //int f = map.get(s);
             minHeap.add(s);
             if(minHeap.size() > k)
                 minHeap.remove();
@@ -572,6 +593,81 @@ public class SolutionsV3 {
             minHeap.add(z);
         }
         return cost;
+    }
+
+    // LeetCode :: 819. Most Common Word
+
+    public String mostCommonWord(String paragraph, String[] banned) {
+        HashSet<String> banList = new HashSet<>(Arrays.asList(banned));
+        HashMap<String, Integer> map = new HashMap<>();
+        String []words = paragraph.split(" ");
+        String res = "";
+        int max = 0;
+        for (String w : words) {
+            String lw  = w.toLowerCase();
+            if(!Character.isLetter(lw.charAt(lw.length() -1)))
+                lw = lw.substring(0,lw.length() -1);
+            if (!banList.contains(lw.toLowerCase())) {
+                int count = map.getOrDefault(lw, 0) + 1;
+                map.put(lw, count);
+                if (max < count) {
+                    max = count;
+                    res = lw;
+                }
+            }
+        }
+        return res;
+    }
+
+    // LeetCode :: 1268. Search Suggestions System
+    // The idea is interesting if the words list are sorted and we are looking for prefix if we find the first index of
+    // the prefix then the following indexes will most likely to match
+    private int comparePrefix(String str, String prefix) {
+        if (prefix.length() > str.length())
+            return  -1;
+        if(str.startsWith(prefix))
+            return 0;
+        else {
+            int i = 0;
+            while (i < str.length() && i< prefix.length()
+                    && str.charAt(i) == prefix.charAt(i))
+                i++;
+
+            return str.charAt(i) - prefix.charAt(i);
+
+        }
+    }
+    public List<List<String>> suggestedProducts(String[] products, String searchWord) {
+        List<List<String>> rList = new ArrayList<>();
+        Arrays.sort(products);
+        for (int i = 1; i <= searchWord.length();i++) {
+            String prefix = searchWord.substring(0,i);
+            int low = 0;
+            int high = products.length - 1;
+            int idx = 0;
+            while (low < high) {
+                int mid = low + (high - low)/2;
+                int res = comparePrefix(products[mid], prefix);
+                if (res == 0) {
+                    idx = mid;
+                    high = mid - 1;
+                } else if (res < 0){
+                    low = mid + 1;
+                } else {
+                    high = mid -1;
+                }
+            }
+            ArrayList<String> tList = new ArrayList<>();
+            int count = 3;
+            while (idx < products.length && count > 0) {
+                if (products[idx].startsWith(prefix))
+                    tList.add(products[idx++]);
+                count--;
+            }
+            rList.add(tList);
+
+        }
+        return rList;
     }
 
 

@@ -284,7 +284,7 @@ public class GraphNode {
     // LeetCode :: 332. Reconstruct Itinerary
     // This proble is interesting it actually finds the Eulerian Trail in a graph. Note this algo assumes the given
     // graph consist a valid Eulerian Trail. To find a Eulerian Trail we can use a modified DFS. IN this case when
-    // we visit a node we dont mark them grey /black rather we delete the that we use to visit the graph. So we start
+    // we visit a node we dont mark them grey /black rather we delete the edge that we use to visit the graph. So we start
     // with a src node and start traversing the graph and keep removing visited edges. In this problem the graph is
     // directed so we need to move just one direction other for undirected need to remove both direction. We keep
     // visiting an removing edges until all the edges of a node is visited. When all the edges a visited we add this
@@ -298,6 +298,7 @@ public class GraphNode {
         PriorityQueue<String> adjList = graph.get(node);
         // we need to check null for adjList cause there could exist a node with no out degree, so no adj
         while (adjList!= null && !adjList.isEmpty()) {
+            // remove the visited edge and traverse the graph
             dfsEuler(graph, adjList.poll(), eulerPath);
         }
         // All the edges are visited lets add this node to path in stack order
@@ -1039,6 +1040,136 @@ public class GraphNode {
             mins = grid[u[0]][u[1]] -2;
         return mins;
     }
+
+    // Articulation points/ cut vertex of a graph
+    /**
+     *
+     * Articulation points/ cut vertex of a graph
+     *
+     * The idea is to use DFS (Depth First Search). In DFS, we follow vertices in tree form called DFS tree.
+     * In DFS tree, a vertex u is parent of another vertex v, if v is discovered by u (obviously v is an
+     * adjacent of u in graph). In DFS tree, a vertex u is articulation point if one of the following
+     * two conditions is true.
+     *  1) u is root of DFS tree and it has at least two children.
+     *  2) u is not root of DFS tree and it has a child v such that no
+     *     vertex in subtree rooted with v has a back edge to one of the ancestors (in DFS tree) of u.
+     * */
+    int dTime = 0;
+    public List<Integer> articualtionPoint(int n, List<List<Integer>> connections) {
+        List<Integer> cutVertex = new ArrayList<>();
+        List<Integer>[] graph = new ArrayList[n];
+        int []color = new int[n];
+        int []discovery = new int [n];
+        int []low = new int[n];
+        int []parent = new int[n];
+        Arrays.fill(parent, -1);
+
+        for (int i =0; i< graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // build the graph
+        for (List<Integer> con : connections) {
+            graph[con.get(0)].add(con.get(1));
+            graph[con.get(1)].add(con.get(0));
+        }
+        // we start with the first vertex assuming only one strongly connected component in the graph
+        // if more than one strongly connected component we would have to run dfs for all nodes
+        dfsCutVertex(0, graph, color, discovery, low, parent, cutVertex);
+        return cutVertex;
+    }
+    private void dfsCutVertex(int u, List<Integer>[] graph,
+                              int []color, int []discovery,
+                              int []low, int []parent,
+                              List<Integer> cutVertex) {
+        ++dTime;
+        color[u] = 1;// grey
+        List<Integer> adjList = graph[u];
+        discovery[u] = dTime;
+        low[u] = dTime;
+        int child = 0;
+        for (Integer v : adjList) {
+            if(color [v] == 0) {
+                parent[v] = u;
+                child++;
+                dfsCutVertex(v, graph, color, discovery, low, parent, cutVertex);
+                low[u] = Math.min(low[u], low[v]);
+                // this is the root of the dfs tree so if it has at least two children its a cut vertex
+                if (parent[u] == -1 && child > 1)
+                    cutVertex.add(u);
+                // if this not the root and non of the node in u's subtree has back edge
+                // to u's ancestor then u is a cut vertex. As low[v] >= discovery time of u it means no back to u's
+                // ancestor
+                if (parent[u] != -1 && low[v] >= discovery[u]) {
+                    cutVertex.add(u);
+                }
+
+            } else if (parent[u] != v) { // not parent node & either grey or black vertex
+                // we found an back edge so lets update the low for this node
+                low[u] = Math.min(low[u], discovery[v]);
+            }
+        }
+
+    }
+
+    // LeetCode :: 1192. Critical Connections in a Network
+    // The idea is the same as aritculation point finding of a connected graph, Here we need the critical edge
+    // that is connected to cut vertex so whenever we find a cut vertex we update the  critical edge say we find cut
+    // vertex as us after visiting it neighbor v so (u,v) is the critical edge
+    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+
+        List<List<Integer>> critEdge = new ArrayList<>();
+        List<Integer>[] graph = new ArrayList[n];
+        int []discovery = new int [n];
+        int []low = new int[n];
+
+        for (int i =0; i< graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        // build the graph
+        for (List<Integer> con : connections) {
+            graph[con.get(0)].add(con.get(1));
+            graph[con.get(1)].add(con.get(0));
+        }
+        // we start with the first vertex assuming only one strongly connected component in the graph
+        // if more than one strongly connected component we would have to run dfs for all nodes
+        for (int i =0; i< n; i++) {
+            if (discovery[i] == 0)
+                dfsCriticalConnection(0, graph, discovery, low, i, critEdge);
+        }
+        return critEdge;
+    }
+
+    private void dfsCriticalConnection(int u, List<Integer>[] graph,
+                                       int []discovery,
+                                       int []low, int parent,
+                                       List<List<Integer>> critEdge) {
+        ++dTime;
+        List<Integer> adjList = graph[u];
+        discovery[u] = dTime;
+        low[u] = dTime;
+        for (Integer v : adjList) {
+            if(discovery [v] == 0) {
+                dfsCriticalConnection(v, graph, discovery, low, u, critEdge);
+                // update the current low for the vertex u
+                low[u] = Math.min(low[u], low[v]);
+                // if this not the root and non of the node in u's subtree has back edge
+                // to u's ancestor then u is a cut vertex. As low[v] >= discovery time of u it means no back to u's
+                // ancestor so the edge (u,v) is the critical edge.
+                if (low[v] > discovery[u]) {
+                    ArrayList<Integer> tList = new ArrayList<>();
+                    tList.add(u);
+                    tList.add(v);
+                    critEdge.add(tList);
+                }
+            } else if (parent != v) { // not parent node & either grey or black vertex
+                // we found an back edge so lets update the low for this node
+                low[u] = Math.min(low[u], discovery[v]);
+            }
+        }
+
+    }
+
+
 
 
 }

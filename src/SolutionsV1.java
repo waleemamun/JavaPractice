@@ -1322,8 +1322,10 @@ public class SolutionsV1 {
         for (int i = 0; i<heights.length; i++) {
             while(!deque.isEmpty() && heights[i] < heights[deque.peekLast()]) {
                 int rightBoundIdx = deque.removeLast();
+                // this is just index before our current max height position
+                // from right index to i-1 everything can be consider in this iteration
                 int leftBoundIdx = deque.isEmpty() ? -1: deque.peekLast();
-                int width = i - leftBoundIdx -1;
+                int width = i - 1 - leftBoundIdx;
                 int area =  width * heights[rightBoundIdx];
                 maxArea = Math.max(maxArea, area);
             }
@@ -1332,7 +1334,7 @@ public class SolutionsV1 {
         while (!deque.isEmpty()) {
             int rightBoundIdx = deque.removeLast();
             int leftBoundIdx = deque.isEmpty() ? -1: deque.peekLast();
-            int width = heights.length - leftBoundIdx -1;
+            int width = heights.length - 1 - leftBoundIdx;
             int area =  width * heights[rightBoundIdx];
             maxArea = Math.max(maxArea, area);
         }

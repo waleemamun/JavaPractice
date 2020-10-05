@@ -937,7 +937,7 @@ public class DataStructProblem {
                 readRemain--;
             }
             while (n > 0) {
-                lastReadOffSet %= 4;
+
                 readRemain = read4(read4Buffer);
                 if (readRemain == 0)
                     break;
@@ -1163,7 +1163,7 @@ public class DataStructProblem {
     //        idx  0 1  2  3  4  5
     // orig array 10 3  5  7  2  3
     // prefix sum 10 13 18 25 27 30
-    // so if we generate a number between 0 to 30 and say the number is between 0 - 10 it will got to index 0 as
+    // so if we generate a number between 0 to 30 and say the number is between 0 - 9 it will got to index 0 as
     // orig array[0] = 10, similarly if the random number is 12 it goes index 1 and if the number is 20 it goes
     // to idx 3. So because of the prefix sum and generating a random number between 0 to total sum.
     // The prefix sum represents the weight per index. Finally base on that above observation we can just do a

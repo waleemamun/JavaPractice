@@ -39,6 +39,7 @@ public class PhoneIQ {
     }
     // Given two arrays with equal length we need to find if the first array can be converted
     // to second array by any number of subarray reversal of the 2nd array
+    // The idea is to check if both are anagrams
     public static boolean equalArrays(int []nums1, int []nums2) {
         HashMap<Integer, Integer> map = new HashMap<>();
 
@@ -87,13 +88,19 @@ public class PhoneIQ {
      * nums = [2, 4, 5, 7]
      * k = 8
      * Output: 5
-     * Explanation: [2], [4], [2, 4], [2, 4, 5], [2, 5]
+     * Explanation: [2], [4], [2, 4], [2, 4, 5], [2, 5] (here the min + max of each subset <= K
+     * for (2,4,5) the 2 + 5 = 7 <= 8
+     * The problem ask us to find the of subset  where the min element of each subset + max element of each subset <= K
+     *
      * The idea is to not generate any subset. Note subset of sorted array is the same as unsorted array
      * in our case if we sort the array first then it will be easier to process the min max in the subsets
      * So first sort the array. Now we use the idea similar to twoSum problems where we use two pointer left
      * & right and try to find the two poistion for which the nums[left] + nums[right] <=k , if we find such a
      * point then we calc the subset in between nums[left](inclusive) & nums[right] (inclusive).
-     * The reason for using the count += 1 << (hi - lo); is exlained by the example below
+     * The reason for using the count += 1 << (hi - lo); is because think how mane number of sets
+     * for n element 2^n == 1 << n so we will have 1 << ( hi-low +1) but we have to drop one item every time to
+     * handle duplicate that's why we have 1 less (1 << high - low)
+     *
      * [1,2,3, 9] with k = 10
      * If you went ahead and built the subsets you would have the following case:
      * When you get the 1:
@@ -346,8 +353,26 @@ public class PhoneIQ {
         return result;
 
     }
+    int[] findMaxProductV2(int[] arr) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        int []res = new int[arr.length - 2];
+        int k = 0;
+        int prod = 1;
+        for (int i = 0;  i<arr.length; i++) {
+            minHeap.add(arr[i]);
+            prod *= arr[i];
+            if (i >= 3){
+                prod /= minHeap.remove();
+            }
+            if (i >=2)
+                res[k++] = prod;
+        }
+        return res;
+
+    }
 
     // Longest subarray not having more than K distinct elements
+    // this implementation is not right, check the leetcode version below
     public int kDistinctMinSubArr(String s, int k) {
         HashMap <Character,Integer> map= new HashMap<Character,Integer>();
         int maxLen = 0;
@@ -408,6 +433,50 @@ public class PhoneIQ {
         }
         return max;
     }
+
+    // LeeCode :: 340. Longest Substring with At Most K Distinct Characters (Hard)
+    // This is also sliding window problem. It is solved similar to LeetCode :: 1004. Max Consecutive Ones III
+    // In this type of sliding window problem we are asked to find 'At Most K' when we are looking for at most k we can
+    // increase the sliding window to grow k+1 size instead of k size. That we we can cover the consecutive elements for
+    // example bacccde and at most k =2  when we consider k + 1 = 2 +1 = 3 size window we can take 'acccd' as our window
+    // thus covering th consequtive 'c'.
+    // Check the version 2 also int exactly same just better performance because of char map intead of hashmap and char
+    // array instead of String s
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int max  = 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        int unique = 0;
+        int left = 0;
+        int right = 0;
+        while (right < s.length()) {
+            char ch = s.charAt(right);
+            int count = map.getOrDefault(ch, 0);
+            if (count == 0)
+                unique++;
+            map.put(ch, count +1);
+            // increase sliding window to k+1 instead of k as we need to support at most k items
+            while (unique == k + 1) {
+                char ch2 = s.charAt(left);
+                int cnt = map.get(ch2);
+                // removed onde unique char lets break sliding window
+                if(cnt == 1) {
+                    unique--;
+                }
+                map.put(ch2, cnt - 1);
+                // update length using right - left as we consider k+1 item
+                // so we dont need to use right - left +1
+                max = Math.max(max, right - left);
+                left++;
+            }
+            right++;
+        }
+        // this handles corner case when we reached the end of the string but did not handle the last window
+        // so check if last window is bigger
+        if (unique <= k)
+            max = Math.max(max,right -left);
+        return max;
+    }
+
 
     // count the number of node in a tree that are visible from the left side so
     // if we are looking at the tree from left count the  number of nodes. This is basically asking to check the
@@ -492,6 +561,10 @@ public class PhoneIQ {
         return res;
     }
 
+    // Given an array of integers (which may include repeated integers), determine if there's a way to split the array
+    // into two subarrays A and B such that the sum of the integers in both arrays is the same, and all of the integers
+    // in A are strictly smaller than all of the integers in B.
+    // Note: Strictly smaller denotes that every integer in A must be less than, and not equal to, every integer in B.
     boolean balancedSplitExists(int[] arr) {
         // Write your code here
         Arrays.sort(arr);
@@ -503,6 +576,8 @@ public class PhoneIQ {
         for (int i = arr.length -1 ; i>0; i--) {
             leftSum -= arr[i];
             rightSum += arr[i];
+            // the reason arr[i] != arr[i-1] is that array A has to be strictly smaller than array B that's if two
+            // adjacent items are same value they must belong to only one array
             if (leftSum == rightSum && arr[i] != arr[i-1])
                 return true;
         }
@@ -696,17 +771,22 @@ public class PhoneIQ {
     }
 
     // Slow Sums : Greedy approach chose the two largest element add their sum as the penalty
+    // The idea is to choose the biggest two element and remove them from the list and add their sum to the list
+    // and pick the next two
     int getTotalTime(int[] arr) {
         // Write your code here
         int penalty = 0;
+        // this is more like a stack
         LinkedList<Integer> arrList = new LinkedList<>();
         for (int n : arr) {
             arrList.add(n);
         }
         Collections.sort(arrList,Collections.reverseOrder());
         while (arrList.size() != 1) {
+            //remove two items from the stack
             int sum = arrList.remove(0);
             sum+= arrList.remove(0);
+            // insert the sum at the front of the stack
             arrList.addFirst(sum);
             penalty += sum;
         }
@@ -1128,6 +1208,24 @@ public class PhoneIQ {
         return trie.oneSkipSearch(str);
     }
 
+    // Amazon | OA 2019 | Substrings of size K with K distinct chars
+    public List<String> kSubstring(String s, int k) {
+        char []str  = s.toCharArray();
+        HashSet<Character> set = new HashSet<>();
+        HashSet<String> resList = new HashSet<>();
+        for (int i = 0; i <str.length; i++) {
+            if (i >= k) {
+                set.remove(str[i-k]);
+                System.out.println(str[i-k] + " " + set.size());
+            }
+            set.add(str[i]);
+            if (set.size() == k) {
+                resList.add(s.substring(i- k +1, i + 1));
+            }
+        }
+        List <String> rList = new ArrayList<>(resList);
+        return rList;
+    }
 
 
 
