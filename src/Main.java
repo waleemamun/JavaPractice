@@ -260,7 +260,7 @@ public class Main {
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
-        int abc[] = {1,2,3,4,5,2,3};
+        int abc[] = {1, 1};
         System.out.println("Missing " + sv2.missingElement(abc, 8));
         //System.out.println("count = " +sv3.lengthOfLongestSubstringKDistinctV2("aaaaaaaa",3));
         //System.out.println(p1.kSubstring("abcabc", 3));
@@ -271,7 +271,8 @@ public class Main {
             alist.add(new ArrayList<>(Arrays.asList(i)));
         }
         //System.out.println(alist);
-        System.out.println(g1.criticalConnections(iarr.length, alist));
+        //System.out.println(g1.criticalConnections(iarr.length, alist));
+        System.out.println(p1.uniquePairs(abc, 2));
 
 
 

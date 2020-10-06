@@ -1227,6 +1227,27 @@ public class PhoneIQ {
         return rList;
     }
 
+    // Amazon OA
+    // Given an int array nums and an int target, find how many unique pairs in the
+    // array such that their sum is equal to target. Return the number of pairs.
+
+    public int uniquePairs(int[] nums, int target){
+        HashSet<Integer> set = new HashSet<>();
+        HashSet<Integer> invalid = new HashSet<>();
+        int count = 0;
+        for (int n: nums) {
+            if(set.contains(target -n)) {
+                set.remove(target - n);
+                invalid.add(target -n);
+                invalid.add(n);
+                count++;
+            } else {
+                if (!invalid.contains(n))
+                    set.add(n);
+            }
+        }
+        return count;
+    }
 
 
 

@@ -106,6 +106,10 @@ public class SolutionsV1 {
 
     }
 
+    // The main idea is to create a a direction array for for row & col
+    // that will traverse the array in spiral order clockwise we use the direction arrays to
+    // determine the next direction when we hit a boundary or already visited position we change
+    // our direction according to the  row & col directin arrays
     public List<Integer> spiralOrder(int[][] matrix) {
         List<Integer> spList = new ArrayList<>();
         if (matrix.length == 0)
@@ -136,6 +140,33 @@ public class SolutionsV1 {
             i++;
         }
         return spList;
+    }
+
+    // LeetCode :: 59. Spiral Matrix II
+    // Same approach as above
+    public int[][] generateMatrix(int n) {
+        int []rDir = {0, 1, 0, -1};
+        int []cDir = {1, 0, -1, 0};
+        int [][]res = new int[n][n];
+        int i = 1;
+        int r = 0;
+        int c = 0;
+        int idx = 0;
+        while (i <= n*n) {
+            res[r][c] = i;
+            int nextR = r + rDir[idx];
+            int nextC = c + cDir[idx];
+            if (nextR < 0 || nextC < 0 || nextR >= n || nextC >= n || res[nextR][nextC] != 0) {
+                idx = (idx +1) % 4;
+                nextR = r + rDir[idx];
+                nextC = c + cDir[idx];
+            }
+            r = nextR;
+            c = nextC;
+            i++;
+        }
+        return res;
+
     }
 
     // Leetcode :: 55. Jump Game
