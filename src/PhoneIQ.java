@@ -1216,7 +1216,7 @@ public class PhoneIQ {
         for (int i = 0; i <str.length; i++) {
             if (i >= k) {
                 set.remove(str[i-k]);
-                System.out.println(str[i-k] + " " + set.size());
+                //System.out.println(str[i-k] + " " + set.size());
             }
             set.add(str[i]);
             if (set.size() == k) {

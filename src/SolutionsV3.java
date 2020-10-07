@@ -620,6 +620,7 @@ public class SolutionsV3 {
     }
 
     // LeetCode :: 1268. Search Suggestions System
+    // we dont need to use a trie for this problem
     // The idea is interesting if the words list are sorted and we are looking for prefix if we find the first index of
     // the prefix then the following indexes will most likely to match
     private int comparePrefix(String str, String prefix) {
@@ -668,6 +669,47 @@ public class SolutionsV3 {
 
         }
         return rList;
+    }
+
+    // LeetCode :: 992. Subarrays with K Different Integers
+    // This problem is interesting it uses sliding window approach but its easy to get stuck only about sliding window
+    // We can use the at most k distinct char sub array sliding window finding approach to solve this problem.
+    // The idea is 'Exactly k distinct' = 'at most K distinct' - 'at most (k-1) distinct' this will give use the result
+    // See the sliding window implementation below
+    public int subarraysWithKDistinct(int[] A, int K) {
+        return subarraysAtMostK(A, K) - subarraysAtMostK(A, K-1);
+    }
+
+    // calc the number of at most K distinct chars sub array
+    private int subarraysAtMostK(int []nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int left = 0;
+        int right = 0;
+        int unique = 0;
+        int subArrayCount = 0;
+        while (right < nums.length) {
+            int count = map.getOrDefault(nums[right], 0);
+            if (count == 0)
+                unique++;
+            map.put(nums[right], count + 1);
+            // we are looking for at most that's why we have k+1
+            while (unique == k+1) {
+                int tc = map.get(nums[left]);
+                if ((tc -1) == 0) {
+                    unique--;
+                }
+                map.put(nums[left], tc -1);
+                left++;
+            }
+            // why adding up (right - left + 1) works ?
+            // The idea is to how many sub arrays we can have with at most k chars once we found the k the k value does
+            // not matter what matters is the length of the subarray , given a len n for a subarray we can have
+            // n*(n+1)/2 different contigious sub arrays. as 1 + 2 + 3 + .... + n = n*(n+1)/2 so basically
+            // for len 4 we can get 1 + 2 + 3 + 4 = 10 sub arrays
+            subArrayCount += (right - left + 1);
+            right++;
+        }
+        return subArrayCount;
     }
 
 

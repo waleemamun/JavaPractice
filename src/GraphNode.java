@@ -1169,6 +1169,97 @@ public class GraphNode {
 
     }
 
+    // LeetCode :: 1135. Connecting Cities With Minimum Cost
+    // find the parent of x node
+    // The idea is to use Kruskal's algorithm to find the MST
+    // we use the union/find algo for Kruskal's MST
+    // Note this lago run time is O(ELogE)
+    private int find(int x , int []parent) {
+        if (parent[x] == x)
+            return x;
+        // find the parent
+        int p = find(parent[x], parent);
+        // update the this node parent for path compression
+        parent[x] = p;
+        return p;
+    }
+
+    // we are going to make a union of x & y node
+    private void union(int x, int y, int [] parent) {
+        // find parent of x
+        int px = find(x, parent);
+        // find parent of y
+        int py = find(y, parent);
+        // union x & y if they have different parent
+        if (px != py) {
+            parent[py] = px;
+        }
+
+    }
+
+    public int minimumCost(int N, int[][] connections) {
+        int mstCost = 0;
+        int nodeCount = 0;
+        int []parent = new int[N];
+        nodeCount = N;
+        // make set
+        for (int i = 0; i < N; i++) {
+            parent[i] = i;
+        }
+        // sort the edges so that we pick the smallest edge first
+        Arrays.sort(connections, (a,b)-> (a[2] - b[2]));
+        for (int [] edges : connections) {
+            int u = edges[0];
+            int v = edges[1];
+            int cost = edges[2];
+            // find if both vertex belongs to two different set & merge/union the set
+            if (find(u, parent) != find(v, parent)) {
+                // calc the mst cost
+                mstCost += cost;
+                nodeCount--;
+                // union. merge u & ve vertex so this edge (u,v) is a part of our MST
+                union(u,v, parent);
+            }
+        }
+        if (nodeCount > 1)
+            return -1;
+        return mstCost;
+    }
+    // we can also implement this using prim's algorithm but not the O(VLogV) version as that version requires a heap
+    // implementation with decrease key option
+
+    public int minimumCostPRIM(int N, int[][] connections) {
+        int minCost = 0;
+        HashMap<Integer, List<int[]>> graph = new HashMap<>();
+        // build the graph
+        for (int [] con : connections) {
+            graph.putIfAbsent(con[0], new ArrayList<>());
+            graph.putIfAbsent(con[1], new ArrayList<>());
+            graph.get(con[0]).add(new int [] {con[1], con[2]});
+            graph.get(con[1]).add(new int [] {con[0], con[2]});
+        }
+        PriorityQueue<int []> minPQ = new PriorityQueue<>((a,b)->(a[2] - b[2]));
+        minPQ.add(new int [] {1 ,1, 0});
+        HashSet<Integer> visited = new HashSet<>();
+        while (!minPQ.isEmpty()) {
+            int []edge = minPQ.poll();
+            int u = edge[0];
+            int v = edge[1];
+            int cost = edge[1];
+            if (!visited.contains(v)) {
+                List<int []>adjList = graph.get(v);
+                visited.add(v);
+                minCost+= cost;
+                for (int []n : adjList ) {
+                    minPQ.add(new int [] {v, n[0], n[1]});
+                }
+            }
+        }
+        if (visited.size() != N)
+            return -1;
+        return minCost;
+    }
+
 
 
 
