@@ -91,8 +91,8 @@ public class DPs {
     // wildcard matching. Here we are matching regular expression so 'a*' can match empty string '' or 'a' or 'aaaaa'
     // but 'a*' cannot match any char other than a's repeat or empty sequence.
     // The DP equation is:
-    // dp [i][j] = dp[i-1][j-1] iff s(i) == p(i) or p(i) == '.'
-    // dp [i][j] = dp[i][j-2] | (dp[i-1][j] && s(i) == p(i)) iff p(i) == '*'
+    // dp [i][j] = dp[i-1][j-1] iff s(i) == p(j) or p(j) == '.'
+    // dp [i][j] = dp[i][j-2] | (dp[i-1][j] && s(i) == p(j-1)) iff p(j) == '*'
     public boolean isMatch(String s, String p) {
         boolean [][]dp  = new boolean[s.length() + 1][p.length() + 1];
         dp[0][0] = true;
@@ -1928,6 +1928,82 @@ public class DPs {
         }
 
         return res;
+    }
+
+    // Amazon | OA 2020 | Ways to Split String Into Prime Numbers
+    // This is the same approach as LIS same way wordbreak is done we dont have dixtionary so we build using sieve
+    // prime a primce dictinary
+    private boolean waysToSplitPrimeHelper(String s, int idx ,boolean []notPrime, HashSet<Integer> failedIdxMemo) {
+        if (idx == s.length()) {
+            primeCount++;
+            primeCount %= 1000000007;
+            return true;
+        }
+        boolean found = false;
+        if(s.charAt(idx) == '0')
+            return false;
+        for (int i = idx +1; i <= s.length(); i++) {
+            String str = s.substring(idx,i);
+            Integer n = Integer.parseInt(str);
+
+            if (n <= 1000000 && notPrime[n] || failedIdxMemo.contains(i))
+                continue;
+            found = waysToSplitPrimeHelper(s, i, notPrime, failedIdxMemo);
+            if (!found) {
+                failedIdxMemo.add(i);
+            }
+        }
+
+        return found;
+    }
+    int primeCount = 0;
+    public int waysToSplitPrime (String s) {
+        HashSet<Integer> failedIdxMemo = new HashSet<>();
+        boolean []notPrime = Utilities.sievePrime(1000000);
+        waysToSplitPrimeHelper(s, 0, notPrime, failedIdxMemo);
+        return primeCount;
+    }
+    // This is the same approach as LIS
+    public int waysToSplitPrimeV2(int n) {
+        int mod = (int)1e9 + 7;
+        boolean[] isPrime = new boolean[(int)1e6 + 1];
+        Arrays.fill(isPrime, true);
+        // get sieve's prime until 1e6
+        for(int i=2;i*i<=(int)1e6;i++) {
+            if(isPrime[i]) {
+                for(int j=i; j*i<=(int)1e6; j++) {
+                    isPrime[i*j] = false;
+                }
+            }
+        }
+        isPrime[1] = false;
+        isPrime[0] = false;
+        // convert the integer to string
+        String s = String.valueOf(n);
+        // dp array for prime count
+        int[] dp = new int[s.length() + 1];
+        dp [0] =1;
+        // Apply the similar approach as LIS
+        for (int i = 1; i<=s.length(); i++) {
+            for (int j = 0; j<i ; j++) {
+                // handles number starting with zero & numbers greater than 10^6
+                // we dont need process in the above two case
+                // we can make it even faster by detecting a zero in the number if there is a zer there is no solution
+                // this can be handle even before the dp calc
+                if (s.charAt(j) == '0' || i - j > 6)
+                    continue;
+                String str = s.substring(j,i);
+                Integer num = Integer.parseInt(str);
+                if (dp[j] != 0 && isPrime[num]) {
+                    if (j==0)
+                        dp[i] = 1;
+                    else
+                        dp[i] = (dp[i] + dp[j]) % mod;
+                }
+            }
+        }
+
+        return dp[s.length()] ;
     }
 
 

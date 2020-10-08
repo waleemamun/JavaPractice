@@ -272,7 +272,7 @@ public class Main {
         }
         //System.out.println(alist);
         //System.out.println(g1.criticalConnections(iarr.length, alist));
-        System.out.println(p1.uniquePairs(abc, 2));
+        System.out.println(dp1.waysToSplitPrimeV2(11303));
 
 
 

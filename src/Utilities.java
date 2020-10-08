@@ -300,6 +300,31 @@ public class Utilities {
     }
 
 
+    // Sieve of Eratosthenes
+    // Find all the prime from 2 - N
+    public static boolean [] sievePrime (int n) {
+        int nLimit = (int)Math.sqrt(n);
+        boolean []notPrime = new boolean[n+1];
+        notPrime[1] = true;
+        notPrime[0] = true;
+        for (int i = 2; i <= nLimit; i++) {
+            if (notPrime[i] == false) {
+                for (int j = 2; j*i <= n; j++){
+                    notPrime[j*i] = true;
+                }
+            }
+        }
+/*
+        for (int i = 2; i<=n; i++) {
+            if (notPrime[i] == false)
+                System.out.print(" " + i);
+        }
+*/
+        System.out.println();
+        return notPrime;
+    }
+
+
 
 
 }
