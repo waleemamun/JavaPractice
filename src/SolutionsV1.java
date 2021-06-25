@@ -1,8 +1,5 @@
 import javafx.util.Pair;
-import org.omg.PortableInterceptor.INACTIVE;
-import sun.jvm.hotspot.utilities.Interval;
 
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.*;
 
 public class SolutionsV1 {

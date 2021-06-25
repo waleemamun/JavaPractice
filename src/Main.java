@@ -1,10 +1,6 @@
-import org.omg.PortableInterceptor.INACTIVE;
-import org.omg.PortableServer.LIFESPAN_POLICY_ID;
-import sun.awt.image.ImageWatched;
-
-import javax.swing.plaf.synth.SynthEditorPaneUI;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Main {
@@ -270,9 +266,10 @@ public class Main {
         for (Integer [] i : iarr) {
             alist.add(new ArrayList<>(Arrays.asList(i)));
         }
-        //System.out.println(alist);
-        //System.out.println(g1.criticalConnections(iarr.length, alist));
+        System.out.println(alist);
+        System.out.println("Crit" + g1.criticalConnections(iarr.length, alist));
         System.out.println(dp1.waysToSplitPrimeV2(11303));
+
 
 
 

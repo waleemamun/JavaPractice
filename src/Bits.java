@@ -291,7 +291,7 @@ public class Bits {
     // LeetCode :: 231 Power of Two
     public boolean isPowerOfTwo(int n) {
         int x = n&(n-1);
-        return (n>0 && x==0)?true:false;
+        return (n > 0 && x == 0);
     }
 
     // Adnan-Aziz 5.7 pow(x,y)

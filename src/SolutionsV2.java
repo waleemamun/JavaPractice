@@ -1,6 +1,3 @@
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class SolutionsV2 {
@@ -300,7 +297,7 @@ public class SolutionsV2 {
     // We will use a generic sliding window for this.
     public List<Integer> findAnagrams(String s, String p) {
         List<Integer> resList = new ArrayList<>();
-        if (s.length() ==0 || p.length() ==0) {
+        if (s.length() == 0 || p.length() == 0) {
             return resList;
         }
         // Create the frequency for the pattern string

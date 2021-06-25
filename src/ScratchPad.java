@@ -1,9 +1,4 @@
-
-
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-
 import java.util.*;
-import java.util.jar.JarEntry;
 
 public class ScratchPad {
 
@@ -13,6 +8,7 @@ public class ScratchPad {
         LinkedList<Integer> queue = new LinkedList<>();
         HashMap<Integer, Integer> map = new HashMap<>();
         int size = 10;
+
         PriorityQueue<String> minHeap = new PriorityQueue<>(size, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
@@ -106,6 +102,9 @@ public class ScratchPad {
         for (String word : words) {
             int count = strMap.getOrDefault(word, 0);
             strMap.put(word,count + 1);
+        }
+        for (String st : strMap.keySet()) {
+            System.out.println("Puppy " +st + " " + strMap.get(st));
         }
         System.out.println("Hash Iterator");
         Iterator itrMap = strMap.entrySet().iterator();

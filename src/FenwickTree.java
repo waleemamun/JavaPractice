@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class FenwickTree {
     // The array to hold the fenwick tree
     // remember that each index contain sum node in the tree

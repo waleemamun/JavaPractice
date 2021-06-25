@@ -1,6 +1,3 @@
-import javafx.print.Collation;
-
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Solutions {
@@ -53,7 +50,7 @@ public class Solutions {
     // LeetCode :: 6 ZigZag Conversion
     public String convert(String s, int numRows) {
 
-        StringBuilder [] sbArray = new StringBuilder[numRows];
+        StringBuilder[] sbArray = new StringBuilder[numRows];
         StringBuilder output = new StringBuilder();
         if (numRows == 1)
             return s;
@@ -61,7 +58,7 @@ public class Solutions {
         for (int i = 0; i < numRows ; i++) {
             sbArray[i] = new StringBuilder();
         }
-        int midCharsCount = numRows - 2;
+
         int rows = 0;
         boolean isVertical = true;
         for (int i = 0; i < s.length(); i++) {
@@ -590,6 +587,16 @@ public class Solutions {
                 nums[curr++] = nums[i];
         }
         return curr;
+    }
+    // another approach
+    public int removeDuplicatesAnotherApproach(int[] nums) {
+
+        int pos = 0;
+        for (int n = 1; n<nums.length; n++) {
+            if(nums[pos] != nums[n])
+                nums[++pos] = nums[n];
+        }
+        return pos+1;
     }
 
     // LeetCode 27: Remove Element val from an unsorted array O(n)
@@ -1626,6 +1633,29 @@ public class Solutions {
         }
 
         return fastPow(x, N);
+    }
+
+    //LeetCode :: 14. Longest Common Prefix
+    public String longestCommonPrefix(String[] strs) {
+        StringBuilder sb  = new StringBuilder();
+        boolean isValid = true;
+        if (strs.length == 0 || strs[0].length() == 0)
+            return sb.toString();
+        int j = 0;
+        for (String str:  strs)
+        for (char ch : strs[0].toCharArray()) {
+            for (String st: strs){
+                if (j >=st.length() || st.charAt(j) != ch)
+                    isValid = false;
+
+            }
+            if(!isValid)
+                break;
+            sb.append(ch);
+            j++;
+        }
+
+        return sb.toString();
     }
 
 
