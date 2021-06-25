@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.util.*;
 
 public class GraphNode {
@@ -136,8 +134,8 @@ public class GraphNode {
 
         while (!Q.isEmpty()) {
             Pair<String, Integer> node = Q.remove();
-            String word = node.getKey();
-            int level = node.getValue();
+            String word = node.getFirst();
+            int level = node.getSecond();
             for (int i = 0; i < L; i++) {
 
                 // Intermediate words for current word

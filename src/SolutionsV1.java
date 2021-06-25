@@ -1,5 +1,3 @@
-import javafx.util.Pair;
-
 import java.util.*;
 
 public class SolutionsV1 {
@@ -1151,7 +1149,7 @@ public class SolutionsV1 {
         // This helps to reduce our search.
         // Hence, we follow the sliding window approach on as small list.
         while (r < filteredS.size()) {
-            char c = filteredS.get(r).getValue();
+            char c = filteredS.get(r).getSecond();
             int count = windowCounts.getOrDefault(c, 0);
             windowCounts.put(c, count + 1);
 
@@ -1161,11 +1159,11 @@ public class SolutionsV1 {
 
             // Try and contract the window till the point where it ceases to be 'desirable'.
             while (l <= r && formed == required) {
-                c = filteredS.get(l).getValue();
+                c = filteredS.get(l).getSecond();
 
                 // Save the smallest window until now.
-                int end = filteredS.get(r).getKey();
-                int start = filteredS.get(l).getKey();
+                int end = filteredS.get(r).getFirst();
+                int start = filteredS.get(l).getFirst();
                 if (ans[0] == -1 || end - start + 1 < ans[0]) {
                     ans[0] = end - start + 1;
                     ans[1] = start;

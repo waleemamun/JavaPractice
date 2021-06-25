@@ -270,7 +270,7 @@ public class Main {
         System.out.println("Crit" + g1.criticalConnections(iarr.length, alist));
         System.out.println(dp1.waysToSplitPrimeV2(11303));
 
-
+        System.out.println("PairSum " + ct1.printPairSum(arr1, 6));
 
 
 
