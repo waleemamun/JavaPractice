@@ -235,6 +235,8 @@ public class CodeArray {
     // or i+j = (m+n+1)/2
     // so j = (m+n+1)/2 - i; in the code i = partiionX and j = partitionY
     // the we binary search the smaller array to find a partion that will satisfy that pariton is equal size on both side
+    // Try with ArrayA = 1 3 8 9 15
+    //          ArrayB = 7 11 18 19 21 25
     public double findMedianSortedArrays(int input1[], int input2[]) {
         //if input1 length is greater than switch them so that input1 is smaller than input2.
         if (input1.length > input2.length) {

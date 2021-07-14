@@ -200,7 +200,7 @@ public class Recursions {
         // we exhausted all left & right parenthesis,
         // str now has a valid combination lets add it to the list
         if (leftRem == 0 && rightRem == 0) {
-            list.add(String.copyValueOf(str));
+            list.add(new String(str));
         } else {
             // add the left parenthesis & go in the deep of recursion to add
             // the next parenthesis (which could be a left ot right parenthesis)

@@ -97,8 +97,8 @@ public class LinkList {
 
     }
 
-    // Leetcode 19
-    public LinkList removeNthFromEnd(LinkList head, int n) {
+    // Leetcode 19 :: Remove Nth Node From End of List
+    public LinkList removeNthFromEndV2(LinkList head, int n) {
         LinkList prevN = head;
         LinkList fast = head;
         int count = 0;
@@ -128,6 +128,26 @@ public class LinkList {
         return head;
     }
 
+    // this version has a cleaner code
+    public LinkList removeNthFromEnd(LinkList head, int n) {
+        if (head == null)
+            return null;
+        LinkList dummy = new LinkList();
+        LinkList slow = dummy;
+        LinkList fast = dummy;
+        dummy.next = head;
+
+        while (fast != null &&  n >= 0) {
+            fast = fast.next;
+            n--;
+        }
+        while (fast != null) {
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
     // Leetcode :: 21  Merge Two Sorted Lists
     // Check the V2 its the better implementation uses O(1) space
     public LinkList mergeTwoLists(LinkList l1, LinkList l2) {
@@ -368,7 +388,24 @@ public class LinkList {
         revList(head,head.next, newHead, head);
         return newHead.next;
     }
+    // more simpler version easy to read
+    public void revList(LinkList p, LinkList c, LinkList nh){
+        if (c==null) {
+            nh.next = p;
+            return;
+        }
+        revList(c, c.next, nh);
+        c.next = p;
 
+    }
+    public LinkList reverseListV3(LinkList head) {
+        if (head == null)
+            return head;
+        LinkList newHead = new LinkList();
+        revList(head,head.next,newHead);
+        head.next = null;
+        return newHead.next;
+    }
 
     // LeetCode 25:  Reverse Nodes in k-Group
     // The idea is to call the api (revListFromTo) multiple times.
