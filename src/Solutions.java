@@ -897,6 +897,43 @@ public class Solutions {
         return indicies;
     }
 
+    public List<Integer> findSubstringV4(String s, String[] words) {
+        List<Integer> rList = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        for (String w : words){
+            map.put(w,map.getOrDefault(w, 0) +1);
+        }
+        int width = words[0].length();
+        int left = 0;
+        int right = 0;
+        int desiredCount = words.length;
+
+        while (right < s.length()) {
+            String sub = s.substring(right,right+width);
+            Integer count = map.getOrDefault(sub, null);
+            if (count != null) {
+                map.put(sub,count -1);
+                if (count >=0)
+                    desiredCount--;
+            }
+            while (desiredCount == 0) {
+                String sb = s.substring(left, left + width);
+                Integer cnt = map.getOrDefault(sb, null);
+                if (cnt != null) {
+                    if (cnt >= 0)
+                        desiredCount++;
+                    map.put(sb, cnt +1);
+                }
+                if ((right - left)/width  == words.length)
+                    rList.add(left);
+                left += width;
+            }
+            right += width;
+        }
+
+        return rList;
+    }
+
     // LeetCode 32 (Hard):: Longest Valid Parentheses This is a 3ms solution. This requires O(n) solution.
     // It requires 3 n passes in the array. But there is a DP solution to this problem which requires 1 n pass.
     // The basic idea here is to maintain an countArray and a stack. The stack stores idx of the
