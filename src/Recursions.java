@@ -291,20 +291,27 @@ public class Recursions {
     // concise version same algo as avobe this is may be easy to read
     public void nextPermutationV2(int[] nums) {
         int k = nums.length - 2;
+        // find the first position where ascending order from the right ends
         while(k>=0 && nums[k] >= nums[k+1]) {
             k--;
         }
+        // if the whole array is ascending from right just reverse the whole thing
         if (k < 0){
             reverserArray(nums,0, nums.length -1);
             return;
         }
+        // Find the next number which is > num[k] on the right side of K
         int l = nums.length -1;
         while (l>= 0 && nums[l] <= nums[k]) {
             l--;
         }
+        // swap the next big number with nums[k]
         int tmp = nums[k];
         nums[k] = nums[l];
         nums[l] = tmp;
+        // reverse everything on the right of K so that we get next perm
+        // reversing the on the right of k will give us smaller number which
+        // is our next perm and it will be just bigger than the current perm
         reverserArray(nums,k+1, nums.length -1);
     }
 

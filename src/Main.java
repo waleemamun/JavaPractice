@@ -207,12 +207,12 @@ public class Main {
         };
 
 
-        String [] words = {"oath","pea","eat","rain"};
+        String [] words = {"word","good","best","good"};
         List<String> wordList = new ArrayList<>(Arrays.asList(words));
         String tokens[] = {"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"};
         String word1 = "    amar   sonar    bangla ami    tomay valobashi    ";
         String word2 = "abcdkmL";
-        String str1 = "catsanddog";
+        String str1 = "wordgoodgoodgoodbestword";
         String str2 = "NAzEeF";
         int [][] edges = {
                 {0, 5},
@@ -232,7 +232,7 @@ public class Main {
                 {3,  8}
         };
         int []newInterval = {7,23};
-
+        Solutions sv = new Solutions();
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
         Recursions r1 = new Recursions();
@@ -266,11 +266,8 @@ public class Main {
         for (Integer [] i : iarr) {
             alist.add(new ArrayList<>(Arrays.asList(i)));
         }
-        System.out.println(alist);
-        System.out.println("Crit" + g1.criticalConnections(iarr.length, alist));
-        System.out.println(dp1.waysToSplitPrimeV2(11303));
+        System.out.println(sv.findSubstringV4(str1, words));
 
-        System.out.println("PairSum " + ct1.printPairSum(arr1, 6));
 
 
 

@@ -897,38 +897,36 @@ public class Solutions {
         return indicies;
     }
 
+    //worst performance dont use it
     public List<Integer> findSubstringV4(String s, String[] words) {
         List<Integer> rList = new ArrayList<>();
-        HashMap<String, Integer> map = new HashMap<>();
-        for (String w : words){
-            map.put(w,map.getOrDefault(w, 0) +1);
+        if (words.length == 0)
+            return rList;
+        HashMap<String, Integer> wordDict = new HashMap<>();
+        for (String w: words) {
+            wordDict.put(w, wordDict.getOrDefault(w,0) + 1);
         }
-        int width = words[0].length();
-        int left = 0;
-        int right = 0;
-        int desiredCount = words.length;
-
-        while (right < s.length()) {
-            String sub = s.substring(right,right+width);
-            Integer count = map.getOrDefault(sub, null);
-            if (count != null) {
-                map.put(sub,count -1);
-                if (count >=0)
-                    desiredCount--;
-            }
-            while (desiredCount == 0) {
-                String sb = s.substring(left, left + width);
-                Integer cnt = map.getOrDefault(sb, null);
-                if (cnt != null) {
-                    if (cnt >= 0)
-                        desiredCount++;
-                    map.put(sb, cnt +1);
+        Integer width = words[0].length();
+        for (int i = 0; i + width <= s.length(); i++) {
+            int k = i;
+            HashMap<String, Integer> foundDict = new HashMap<>();
+            int desireCount = 0;
+            while (k < s.length()) {
+                String sub = s.substring(k, k + width);
+                Integer wCount = wordDict.getOrDefault(sub, null);
+                if (wCount == null) {
+                    break;
+                } else {
+                    foundDict.put(sub, foundDict.getOrDefault(sub, 0) + 1);
+                    if (foundDict.get(sub) > wCount) {
+                        break;
+                    }
+                    desireCount++;
                 }
-                if ((right - left)/width  == words.length)
-                    rList.add(left);
-                left += width;
+                k+= width;
             }
-            right += width;
+            if (desireCount == words.length)
+                rList.add(i);
         }
 
         return rList;
