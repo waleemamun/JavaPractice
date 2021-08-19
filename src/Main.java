@@ -267,8 +267,7 @@ public class Main {
             alist.add(new ArrayList<>(Arrays.asList(i)));
         }
         System.out.println(sv.findSubstringV4(str1, words));
-        sv.jumpv3(arr);
-
+        System.out.println("fix error");
 
 
 
