@@ -188,7 +188,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {3,2,0,6,5,-1,2};
+        int [] arr =  {2,3,1,1,4};
         int [] arr1 = {3, 6, 3, 3};
 
         int [][] arr2d = {
@@ -267,7 +267,7 @@ public class Main {
             alist.add(new ArrayList<>(Arrays.asList(i)));
         }
         System.out.println(sv.findSubstringV4(str1, words));
-
+        sv.jumpv3(arr);
 
 
 

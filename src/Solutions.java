@@ -1268,7 +1268,7 @@ public class Solutions {
         // we mark nums[2] negative if we found 3 in the array and so on.
         // After this the array indices will be marked negative, for the entries present in the array.
         for ( i = 0; i < nextPositive; i++){
-
+            // check if the number does not go beyond array boundary
             if(Math.abs(nums[i]) <= nextPositive) {
                 // before marking negative lets check if we already marked i negative or not
                 // to avoid double negative making the value positive,
@@ -1358,6 +1358,8 @@ public class Solutions {
 
     }
 
+    // This is a two pinter solution we have two pointers left and right
+    // and move one pointer at a time to make a decision.
     // This is the better O(n) & O(1) space solution; Easy to read solution.
     // The idea is to use two pointers left & right starting from two ends.
     // Also keep track of current leftMax & rightMax.
@@ -1477,17 +1479,17 @@ public class Solutions {
                 i = currEnd;
                 jmpCount++;
                 break;
-            } else {
+            }
                 // lets look for the max covered by this range
-                for (int j = curSt; j <= currEnd; j++) {
-                    if(j >= nums.length) break;
-                    if(j + nums[j] > max) {
-                        max = j + nums[j];
-                        // update the i to be new greedy choice we will start from this postion in the next iteration
-                        i = j;
-                    }
+            for (int j = curSt; j <= currEnd && j < nums.length; j++) {
+
+                if(j + nums[j] > max) {
+                    max = j + nums[j];
+                    // update the i to be new greedy choice we will start from this postion in the next iteration
+                    i = j;
                 }
             }
+
 
             jmpCount++;
         }

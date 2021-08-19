@@ -95,6 +95,9 @@ public class DPs {
     public boolean isMatch(String s, String p) {
         boolean [][]dp  = new boolean[s.length() + 1][p.length() + 1];
         dp[0][0] = true;
+        // we need to intialize this way because s = "aab"
+        // can match p = "c*a*b", meaning the c* can actually
+        // represent '', 'c' or 'ccc*'
         for (int i = 2; i <= p.length(); i++) {
             if (p.charAt(i-1) == '*')
                 dp[0][i] = dp [0][i-2];
