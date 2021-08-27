@@ -179,7 +179,7 @@ public class SolutionsV1 {
         boolean isZero = false;
         boolean zeroCovered = true;
         while (i >= 0 ){
-            if (nums[i] == 0 && isZero == false) {
+            if (nums[i] == 0 && !isZero) {
                 j = i;
                 isZero = true;
                 zeroCovered = false;
@@ -197,6 +197,23 @@ public class SolutionsV1 {
             i--;
         }
         return zeroCovered;
+    }
+    // easy to read O(n) solution, we are checking if any previous value can cover the zeros for jump
+    public boolean canJump2 (int []nums) {
+        if (nums.length == 1)
+            return true;
+        int maxCover = 0;
+        int cover = 0;
+        for (int i = 0; i < nums.length; i++) {
+            cover = i + nums[i];
+            maxCover = Math.max(cover, maxCover);
+            // check if any positive value before zero can cover the ith position
+            // we keep i < nums.length -1 because last item dont need to cover.
+            // We just need to reach for the last element [2,0,0] <-- true
+            if (maxCover <= i && i < nums.length -1)
+                return false;
+        }
+        return true;
     }
 
     // Leetcode 56:: Merge Intervals
