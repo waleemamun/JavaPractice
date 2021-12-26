@@ -1,0 +1,10 @@
+.DS_Store
+.idea/compiler.xml
+.idea/description.html
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+JavaPractice.iml
+out/

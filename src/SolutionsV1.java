@@ -362,6 +362,10 @@ public class SolutionsV1 {
     }
 
     // Leetcode :: 60 Permutation Sequence
+    // We are to find the kth permutation in the sorted order
+    // For 1 2 3 4 we can consider {1, (2, 3,4) perm } where (2 ,3 ,4) gives total 6  = 3! permutation
+    // we can have the same for {2 , (1 ,3 ,4)} = 6 perm
+    // we can use this idea to get to the kth perm
     public String getPermutation(int n, int k) {
         int pos = 0;
         ArrayList<Integer> numbers = new ArrayList<>();
@@ -687,35 +691,26 @@ public class SolutionsV1 {
         Stack<String> dir = new Stack<>();
         // Creating an iterator
 
-        if(path.charAt(0) == '/')
-            dir.push("/");
-        else
-            return path;
+        dir.push("/");
         String [] dirList = path.split("\\/");
-        for (int i = 1 ; i< dirList.length; i++){
+        for (int i = 0 ; i< dirList.length; i++){
             if (dirList[i].length() != 0) {
-                if (isEqStr(dirList[i],"."))
+                if (dirList[i].equalsIgnoreCase("."))
                     continue;
-                else if (isEqStr(dirList[i],"..")) {
-
-                    if(!isEqStr(dir.peek(),"/")){
+                else if (dirList[i].equalsIgnoreCase("..")) {
+                    if (!dir.peek().equalsIgnoreCase("/"))
                         dir.pop();
-                    }
                 }else {
                     dir.push(dirList[i]);
                 }
             }
         }
-        Iterator itr = dir.iterator();
-        if(itr.hasNext())
-            canonicalPathSb.append(itr.next());
-        while (itr.hasNext()) {
-            canonicalPathSb.append(itr.next());
+
+        while (!dir.empty()&&dir.peek().equalsIgnoreCase("/")) {
+            canonicalPathSb.append(dir.pop());
             canonicalPathSb.append("/");
         }
-        if(canonicalPathSb.length()>1)
-            canonicalPathSb.deleteCharAt(canonicalPathSb.length()-1);
-        return canonicalPathSb.toString();
+        return canonicalPathSb.reverse().toString();
     }
 
     // The idea is to split the strings using the delim '/', and get a list of strings,
@@ -1257,6 +1252,49 @@ public class SolutionsV1 {
         if (minSize == Integer.MAX_VALUE)
             return "";
         return s.substring(minL,minR+1);
+    }
+
+    public String minWindowV5(String s, String t) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (Character ch : t.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int left = 0, right = 0;
+        int desiredCount = t.length();
+        int min = Integer.MAX_VALUE;
+        int []index = {-1, -1};
+        while (right < s.length()) {
+            Character ch = s.charAt(right);
+            Integer count = map.get(ch);
+            if (count != null) {
+                if (count > 0)
+                    desiredCount--;
+                map.put(ch, count - 1);
+            }
+            while (desiredCount == 0) {
+                ch = s.charAt(left);
+                count = map.get(ch);
+                if (count != null) {
+                    if (count == 0)
+                        desiredCount++;
+                    count += 1;
+                    map.put(ch, count);
+
+                }
+                if (min >= right -left +1) {
+                    min = right -left +1;
+                    index[0] = left;
+                    index[1] = right;
+                }
+                left++;
+            }
+            right++;
+
+        }
+        if (index[0] == -1)
+            return "";
+        return s.substring(index[0],index[1] + 1);
+
     }
 
     //LeetCode 80 :: Remove Duplicates from Sorted Array II

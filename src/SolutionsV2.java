@@ -76,6 +76,25 @@ public class SolutionsV2 {
         }
         return false;
     }
+
+    // same as v2 just with a for loop
+    public boolean containsNearbyAlmostDuplicateV3(int[] nums, int k, int t) {
+        TreeSet<Long> tset = new TreeSet<>();
+        for (int i = 0; i < nums.length; i++) {
+
+            Long floor = tset.floor((long)nums[i] + t);
+            Long ceil = tset.ceiling((long)nums[i] -t);
+            if ((floor != null && floor >= nums[i])
+                    || (ceil != null && ceil <= nums[i]))
+                return true;
+            tset.add((long)nums[i]);
+            if (i >= k)
+                tset.remove((long)nums[i-k]);
+
+
+        }
+        return false;
+    }
     // LeetCode :: 219. Contains Duplicate II
     // ******* This is a wrong solution **********
     // It will fail test cases like [1,2,2,2,4,14,19,20,2,7,8,] k = 4
@@ -349,6 +368,41 @@ public class SolutionsV2 {
         }
 
         return resList;
+    }
+
+    public List<Integer> findAnagramsV2(String s, String p) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        int l = 0, r = 0;
+        List<Integer> rList = new ArrayList<>();
+        for (Character ch : p.toCharArray()) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        int desiredCount = p.length();
+        while (r < s.length()){
+            Character ch = s.charAt(r);
+            Integer count = map.get(ch);
+            if (count != null) {
+                if (count > 0)
+                    desiredCount--;
+                map.put(ch, count -1);
+            }
+            while (desiredCount == 0) {
+                ch = s.charAt(l);
+                count = map.get(ch);
+                if (count != null) {
+                    map.put(ch, count +1);
+                    if (count == 0)
+                        desiredCount++;
+
+                }
+                if (r - l + 1 == p.length())
+                    rList.add(l);
+                l++;
+            }
+            r++;
+        }
+        return rList;
+
     }
 
     // LeetCode :: 567. Permutation in String

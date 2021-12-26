@@ -600,6 +600,32 @@ public class LinkList {
         return newHead;
     }
 
+    // just little optimization
+    public LinkList deleteDuplicatesKeepDistinct2(LinkList head) {
+        if (head == null)
+            return null;
+        LinkList dummy = new LinkList(); // we need a newhead if the first entry pointed by head is duplicated
+        LinkList cur = head;
+        LinkList unq = dummy;
+        while (cur != null) {
+            int len = 0;
+            LinkList prev = cur;
+            while (cur != null && cur.data == prev.data){
+                len++;
+                cur = cur.next;
+            }
+            // len == 1 so this value is unique
+            if (len == 1) {
+                unq.next = prev;
+                unq = unq.next;
+            }
+        }
+
+        unq.next = null;
+
+        return dummy.next;
+    }
+
     // Leetcode :: 86 Partition List
     // The idea is to use two heads frontHead & tailHead, frontHead points to the list of lower values
     // & tailHead points to the head of greater or equal values. Then we use two moving pointers front

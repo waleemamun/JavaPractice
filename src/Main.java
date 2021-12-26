@@ -266,7 +266,8 @@ public class Main {
         for (Integer [] i : iarr) {
             alist.add(new ArrayList<>(Arrays.asList(i)));
         }
-        System.out.println(sv.findSubstringV4(str1, words));
+        //System.out.println("Res = " + sv.findSubstringV5(str1, words));
+        System.out.println("Sol " + sv2.findAnagramsV2("cbaebabacd","abc"));
 
 
 

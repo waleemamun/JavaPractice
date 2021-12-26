@@ -897,7 +897,8 @@ public class Solutions {
         return indicies;
     }
 
-    //worst performance dont use it
+    // worst performance dont use it the problem is using constructing the sub string every time
+    // and looking up using a on the map as string key
     public List<Integer> findSubstringV4(String s, String[] words) {
         List<Integer> rList = new ArrayList<>();
         if (words.length == 0)
@@ -907,11 +908,20 @@ public class Solutions {
             wordDict.put(w, wordDict.getOrDefault(w,0) + 1);
         }
         Integer width = words[0].length();
+        int[] inverseMapS = new int[s.length()];
+        int last = s.length() - width;
+        for (int i = 0; i <= last; i++) {
+            String sub = s.substring(i, i+ width);
+            inverseMapS[i] = wordDict.getOrDefault(sub, -1);
+        }
+
         for (int i = 0; i + width <= s.length(); i++) {
+            if (inverseMapS[i] == -1)
+                continue;
             int k = i;
             HashMap<String, Integer> foundDict = new HashMap<>();
             int desireCount = 0;
-            while (k < s.length()) {
+            while (k <= last) {
                 String sub = s.substring(k, k + width);
                 Integer wCount = wordDict.getOrDefault(sub, null);
                 if (wCount == null) {
@@ -926,6 +936,64 @@ public class Solutions {
                 k+= width;
             }
             if (desireCount == words.length)
+                rList.add(i);
+        }
+
+        return rList;
+    }
+
+    // This is a more easy to read version the idea is to do an inverse indexing of the S to identify which index of
+    // S has the starting of a word from  the valid words list the saves substring creation and lookup. The other nice
+    // optimisation is after creating the dictionary we index the dictionary in another wordtable and keep the count.
+    // Then use the index of the dictionary in our inverse Map of s. So when we scan S if for any valid start we lookup
+    // the inverseMap of S gives us the index of the dictionary in wordTable
+
+    public List<Integer> findSubstringV5(String s, String[] words) {
+        List<Integer> rList = new ArrayList<>();
+        if (words.length == 0)
+            return rList;
+        HashMap<String, Integer> wordDict = new HashMap<>();
+        int[] wordsTable = new int [words.length];
+        int index = 0;
+        for (int i = 0; i < words.length; i++) {
+            Integer idx = wordDict.get(words[i]);
+            if (idx == null) {
+                idx = index;
+                wordDict.put(words[i], idx);
+                index++;
+            }
+            wordsTable[idx]++;
+        }
+        Integer width = words[0].length();
+        int[] inverseMapS = new int[s.length()];
+        int last = s.length() - width;
+        for (int i = 0; i <= last; i++) {
+            String sub = s.substring(i, i+ width);
+            inverseMapS[i] = wordDict.getOrDefault(sub, -1);
+        }
+        int []tempTable = new int[wordsTable.length];
+
+        for (int i = 0; i + width <= s.length(); i++) {
+            // invalid start skip this
+            if (inverseMapS[i] == -1)
+                continue;
+            Arrays.fill(tempTable,0);
+            int k = i;
+            int desiredCount = 0;
+            while (k <= last) {
+                if (inverseMapS[k] == -1) {
+                    break;
+                } else {
+                    tempTable[inverseMapS[k]]++;
+                    if (tempTable[inverseMapS[k]] > wordsTable[inverseMapS[k]])
+                        break;
+                    else
+                        desiredCount++;
+
+                }
+                k+= width;
+            }
+            if (desiredCount == words.length)
                 rList.add(i);
         }
 
