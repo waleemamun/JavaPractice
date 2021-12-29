@@ -943,33 +943,8 @@ public class Tree {
         node.right = buildTreeHelper(preorder, inorder, stop);
         return node;
     }
-    
-    // This implementation is easy to read & less complicated. We build the tree node by scanning the postorder
-    // array but to pick the right & left sub tree we use the inorder array. Note we are basically doing a  modified preorder
-    // traversal while building the tree as postorder node can traversed  (node right left) from the right in preorder
-    int postSt;
-    public TreeNode buildTreeV3(int[] inorder, int[] postorder) {
-        postSt = postorder.length;
-        for (int i = 0; i<inorder.length; i++) {
-            inorderMap.put(inorder[i],i);
-        }
-        return buildTreePost(inorder, postorder, 0, inorder.length -1);
 
-    }
-    private TreeNode buildTreePost(int [] inorder, int[] postorder, int start, int end) {
-        if (start > end)
-            return null;
-        postSt--;
-        if (start == end) {
-            return new TreeNode(postorder[postSt]);
-        }
-        int mid = inorderMap.get(postorder[postSt]);
-        TreeNode node = new TreeNode(postorder[postSt]);
-        node.right = buildTreePost(inorder, postorder, mid+1, end);
-        node.left = buildTreePost(inorder,postorder, start, mid -1);
-        return node;
 
-    }
     // LeetCode :: 106. Construct Binary Tree from Inorder and Postorder Traversal
     // This can be solved the same as problem 105 above (where inoreder & preorder was given)
     // The diff is for post order we have to traverse the post order array from right to left and
@@ -1051,6 +1026,33 @@ public class Tree {
         root.left = buildTreePostOrderV2Rec(inorder, postorder, inorderSt,
                 inOrderRootIdx -1, postorderSt + 1 + rightSubtreeSize , postorderEn);
         return root;
+    }
+
+    // This implementation is easy to read & less complicated. We build the tree node by scanning the postorder
+    // array but to pick the right & left sub tree we use the inorder array. Note we are basically doing a  modified preorder
+    // traversal while building the tree as postorder node can traversed  (node right left) from the right in preorder
+    int postSt;
+    public TreeNode buildTreeV3(int[] inorder, int[] postorder) {
+        postSt = postorder.length;
+        for (int i = 0; i<inorder.length; i++) {
+            inorderMap.put(inorder[i],i);
+        }
+        return buildTreePost(inorder, postorder, 0, inorder.length -1);
+
+    }
+    private TreeNode buildTreePost(int [] inorder, int[] postorder, int start, int end) {
+        if (start > end)
+            return null;
+        postSt--;
+        if (start == end) {
+            return new TreeNode(postorder[postSt]);
+        }
+        int mid = inorderMap.get(postorder[postSt]);
+        TreeNode node = new TreeNode(postorder[postSt]);
+        node.right = buildTreePost(inorder, postorder, mid+1, end);
+        node.left = buildTreePost(inorder,postorder, start, mid -1);
+        return node;
+
     }
     // LeetCode :: 107. Binary Tree Level Order Traversal II
     // The idea is to recursively call to add nodes per level.
