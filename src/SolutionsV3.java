@@ -57,7 +57,7 @@ public class SolutionsV3 {
     // increase the sliding window to grow k+1 size instead of k size. That we we can cover the consecutive elements for
     // example bacccde and at most k =2  when we consider k + 1 = 2 +1 = 3 size window we can take 'acccd' as our window
     // thus covering th consequtive 'c'.
-    // Check the version 2 also int exactly same just better performance because of char map intead of hashmap and char
+    // Check the version 2 also int exactly same just better performance because of char map instead of hashmap and char
     // array instead of String s
     public int lengthOfLongestSubstringKDistinct(String s, int k) {
         int max  = 0;
@@ -75,7 +75,7 @@ public class SolutionsV3 {
             while (unique == k + 1) {
                 char ch2 = s.charAt(left);
                 int cnt = map.get(ch2);
-                // removed onde unique char lets break sliding window
+                // removed one unique char lets break sliding window
                 if(cnt == 1) {
                     unique--;
                 }

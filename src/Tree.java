@@ -563,6 +563,18 @@ public class Tree {
         }
         return true;
     }
+    // This has same run time 1 ms which is better but technically the iterative version should be faster.
+    // one benefit of this approach is we can terminate early so based on the tree this may become faster
+    private boolean validBST(TreeNode root,  Integer low, Integer high) {
+        if (root == null)
+            return true;
+        if (low != null && low >= root.val)
+            return false;
+        if (high != null && high <= root.val)
+            return false;
+        return validBST(root.left, low, root.val)
+                && validBST(root.right, root.val, high);
+    }
     // 101. Symmetric Tree check the version 2 its more neat
     private boolean isSymmetricRec (TreeNode p, TreeNode q) {
         if( p == null || q == null){
@@ -711,6 +723,7 @@ public class Tree {
         return rList;
     }
     // easy to read version of levelOrder traversal
+    // This more concise & easy to explain version of level order traversal
     public List<List<Integer>> levelOrder2(TreeNode root) {
         List<List<Integer>> rList = new ArrayList<>();
         Queue<TreeNode> queue = new LinkedList<>();
@@ -798,6 +811,35 @@ public class Tree {
             rList.add(level, tempList);
         }
         return rList;
+    }
+
+    // same idea as the levelOrder traversal only trick is to add the a reversed list for even levels
+    public List<List<Integer>> zigzagLevelOrderV2(TreeNode root) {
+        List<List<Integer>> rlist = new ArrayList<>();
+        if (root == null) return rlist;
+        Queue<TreeNode> queue = new LinkedList<>();
+        int level = 1;
+        queue.add(root);
+        while(!queue.isEmpty()) {
+            int size = queue.size();
+            ArrayList<Integer> tlist = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.remove();
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+
+                tlist.add(node.val);
+
+            }
+            if (level %2 == 0)
+                Collections.reverse(tlist);
+            rlist.add(tlist);
+            level++;
+
+        }
+        return rlist;
     }
 
     // LeetCode :: 104. Maximum Depth of Binary Tree
@@ -900,6 +942,33 @@ public class Tree {
         node.left = buildTreeHelper(preorder,inorder, node.val);
         node.right = buildTreeHelper(preorder, inorder, stop);
         return node;
+    }
+    
+    // This implementation is easy to read & less complicated. We build the tree node by scanning the postorder
+    // array but to pick the right & left sub tree we use the inorder array. Note we are basically doing a  modified preorder
+    // traversal while building the tree as postorder node can traversed  (node right left) from the right in preorder
+    int postSt;
+    public TreeNode buildTreeV3(int[] inorder, int[] postorder) {
+        postSt = postorder.length;
+        for (int i = 0; i<inorder.length; i++) {
+            inorderMap.put(inorder[i],i);
+        }
+        return buildTreePost(inorder, postorder, 0, inorder.length -1);
+
+    }
+    private TreeNode buildTreePost(int [] inorder, int[] postorder, int start, int end) {
+        if (start > end)
+            return null;
+        postSt--;
+        if (start == end) {
+            return new TreeNode(postorder[postSt]);
+        }
+        int mid = inorderMap.get(postorder[postSt]);
+        TreeNode node = new TreeNode(postorder[postSt]);
+        node.right = buildTreePost(inorder, postorder, mid+1, end);
+        node.left = buildTreePost(inorder,postorder, start, mid -1);
+        return node;
+
     }
     // LeetCode :: 106. Construct Binary Tree from Inorder and Postorder Traversal
     // This can be solved the same as problem 105 above (where inoreder & preorder was given)
