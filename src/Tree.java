@@ -2050,7 +2050,53 @@ public class Tree {
         return resList;
     }
 
-    // LeetCode :: 987. Vertical Order Traversal of a Binary Tree
+    // Trying it with level order traversal
+    public class VerticalNode {
+        TreeNode node;
+        int pos;
+        public VerticalNode(TreeNode n, int p) {
+            node = n;
+            pos = p;
+        }
+    }
+
+    public List<List<Integer>> verticalOrder(TreeNode root) {
+        // write your code here
+        List<List<Integer>> rlist = new ArrayList<>();
+
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        Queue<VerticalNode> q = new LinkedList<>();
+        if (root == null)
+            return rlist;
+        q.add(new VerticalNode(root, 0));
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        while(!q.isEmpty()) {
+            int size = q.size();
+            for (int i = 0; i <size; i++) {
+                VerticalNode nd = q.remove();
+                ArrayList<Integer> tList = map.getOrDefault(nd.pos, new ArrayList<>());
+                tList.add(nd.node.val);
+                map.put(nd.pos, tList);
+                min = Math.min(min, nd.pos);
+                max = Math.max(max, nd.pos);
+                if (nd.node.left != null)
+                    q.add(new VerticalNode( nd.node.left, nd.pos -1));
+                if (nd.node.right != null) {
+                    q.add(new VerticalNode(nd.node.right, nd.pos +1));
+                }
+
+            }
+        }
+        List<Integer> [] list = new List[max - min +1];
+        for (Integer pos : map.keySet()) {
+            list[pos + Math.abs(min)] = map.get(pos);
+        }
+        rlist.addAll(Arrays.asList(list));
+        return rlist;
+    }
+
+    // LeetCode :: 987. Vertical Order Traversal of a Binary Tree (Hard)
     // The idea is to hash the nodes based on their vertical distance from the root. Instead of actual hashmap
     // we are using a LIst to use asa Hash, as the keys are basically indexes from (-x to +x), we just need to
     // translate it to (0 to x) this is done by getting the horizontal min/max using the function minMaxVertical

@@ -188,7 +188,7 @@ public class Main {
 //        Recursions r1 = new Recursions();
 //        int [] nums = {1,3,5,7,9,11,13,15};
 //        System.out.println(r1.combineThree(nums));
-        int [] arr =  {2,3,1,1,4};
+        int [] arr =  {1,2,3,4,5,6,7,8,9,10};
         int [] arr1 = {3, 6, 3, 3};
 
         int [][] arr2d = {
@@ -268,6 +268,9 @@ public class Main {
         }
         //System.out.println("Res = " + sv.findSubstringV5(str1, words));
         System.out.println("Sol " + sv2.findAnagramsV2("cbaebabacd","abc"));
+        System.out.println(tr1.levelOrder(treeNode));
+        System.out.println(tr1.verticalOrder(treeNode));
+
 
 
 

@@ -1,6 +1,14 @@
 import java.util.*;
 
 public class ScratchPad {
+    public static  void atest(){
+        ArrayList<Integer> alist = new ArrayList<>(10);
+        alist.add(3, 5);
+        alist.add(2, 4);
+        alist.add(1, 3);
+        alist.add(0, 2);
+
+    }
 
     public static void linleListPractice(){
         LinkedList<Integer> stack = new LinkedList<>();
