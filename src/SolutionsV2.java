@@ -1277,6 +1277,30 @@ public class SolutionsV2 {
         return nums1;
     }
 
+    // LeetCode :: 503. Next Greater Element II
+    // This problem requires using a 'decreasing' monotonic queue from left to right  to get the next greater
+    // value on the right. This similar to the next greater temperature problem. This problem ask as to solve
+    // the next greater element in a circular queue, to get the next greater element in a circular queue we
+    // just need to traverse the array twice. In the first pass we get the value for the elements from left to right
+    // and second pass we get the circular values for example 1 2 4 5 4 3 for the last element 3 if we traverse the
+    // array again we get the next grater value. we also get the next greater value for the 2nd last element in the
+    // same pass
+
+    public int[] nextGreaterElements(int[] nums) {
+        Deque<Integer> dq = new LinkedList<>();
+        int res[] = new int[nums.length];
+        Arrays.fill(res, -1);
+        // Decreasing  monotonic queue from left to right we are making a double pass of the array to find next greater
+        // value in the circular path
+        for (int i = 0; i < nums.length * 2; i++) {
+            while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i % nums.length]) {
+                res[dq.removeLast() % nums.length] = nums[i % nums.length];
+            }
+            dq.add(i % nums.length);
+        }
+
+        return res;
+    }
     // LeetCode :: 456. 132 Pattern
     // The idea is to use a decreasing monotonic queue.
     // we start from the right and form a decreasing MQ. Sometime its easier to  build a MQ from right

@@ -2286,10 +2286,11 @@ public class Tree {
         // recurse on left & right sub tree
         pathSumHelperIII(root.left, k, map, runningSum);
         pathSumHelperIII(root.right, k, map, runningSum);
-        // revese the current result cause we allow only top done path so we need to remove the runningSum count after
+        // revese the current result cause we allow only top down path so we need to remove the runningSum count after
         // we have process the sub tree under this root node so that other node which are not a part of sub tree of
         // this node for example its sibling or other nodes does not include this runningSUm in their path
-        // this idea is similar to backtracking
+        // this idea is similar to backtracking, and we only care about path count hence making it zero works. But
+        // otherwise we had to remove the entry from the map
         map.put(runningSum, map.get(runningSum) - 1);
     }
     int pathSumCount;
@@ -2534,6 +2535,8 @@ public class Tree {
     }
 
     // LeetCode :: 1120. Maximum Average Subtree
+    // Problem def : Given a binary tree, find the subtree with maximum average. Return the root of the subtree.
+    //               It's guaranteed that there is only one subtree with maximum average.
     // The idea is calc the left & right subtree node count & average in a bottom up manner
     // At each node we get the left subtree node count, value sum & right subtree node count, value sum
     // so at each node node count is : left_count + 1 + right_count
