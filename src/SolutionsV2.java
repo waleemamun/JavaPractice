@@ -2287,6 +2287,72 @@ public class SolutionsV2 {
 
     }
 
+    // just optimising the space
+    public int leastIntervalV2(char[] tasks, int n) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        PriorityQueue<Character> maxHeap = new PriorityQueue<>(new Comparator<Character>() {
+            @Override
+            public int compare(Character o1, Character o2) {
+                return -(map.get(o1) - map.get(o2));
+            }
+        });
+        for (Character ch : tasks) {
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        // add all the item to the priority queue
+        maxHeap.addAll(map.keySet());
+        Queue<Character> tempQ = new LinkedList<>();
+        int count = 0;
+        while (!maxHeap.isEmpty()) {
+            int idleCount = n + 1;
+            while (idleCount > 0 && !maxHeap.isEmpty()){
+                Character task = maxHeap.remove();
+                int freq = map.get(task);
+                freq--;
+                count++;
+                idleCount--;
+                map.put(task, freq);
+                if (freq > 0)
+                    tempQ.add(task);
+            }
+            while (!tempQ.isEmpty()) {
+                maxHeap.add(tempQ.remove());
+            }
+            if (maxHeap.isEmpty())
+                break;
+            count += idleCount;
+        }
+        return count;
+
+    }
+
+    // This is the best solution as we dont need to find the order of the task we can just calc the time to
+    // complete the task. This solution is from leetcode the solution is explained in the link below
+    // https://leetcode.com/problems/task-scheduler/discuss/104500/Java-O(n)-time-O(1)-space-1-pass-no-sorting-solution-with-detailed-explanation
+    public int leastIntervalV3(char[] tasks, int n) {
+        int[] counter = new int[26];
+        int max = 0;
+        int maxCount = 0;
+        for(char task : tasks) {
+            counter[task - 'A']++;
+            if(max == counter[task - 'A']) {
+                maxCount++;
+            }
+            else if(max < counter[task - 'A']) {
+                max = counter[task - 'A'];
+                maxCount = 1;
+            }
+        }
+
+        int partCount = max - 1;
+        int partLength = n - (maxCount - 1);
+        int emptySlots = partCount * partLength;
+        int availableTasks = tasks.length - max * maxCount;
+        int idles = Math.max(0, emptySlots - availableTasks);
+
+        return tasks.length + idles;
+    }
+
     // LeetCode :: 358 – Rearrange String k Distance Apart
     // The idea is similar to the previous approach "LeetCode :: 621. Task Scheduler"
     // We use a greedy approach to find the solution. We build a priority queue based on the char frequency.
@@ -2368,6 +2434,10 @@ public class SolutionsV2 {
      * Expalanation:
      * It's executed as 1 . . 1 2 . 1, so the total time is 7.
      * */
+    // Check the version 3 of the leetcode problem "621. Task Scheduler" that is exactly what needs to be done
+    // we need to just calc the time and no need to get the order hence we can ditch priority queue approach
+    // to understand how the calc is done check the leetcode solution link in the above problem.
+    // The below solution could work too but the leetcode solution above explains it better
     // The idea here is little different than the above two problems, In the above problems we are asked to find the
     // solution task excustion order, Here the order is already give and we are asked to calc the total time based on
     // that. We need to know when the last same task was executed if its beyond the interval we just increment time
