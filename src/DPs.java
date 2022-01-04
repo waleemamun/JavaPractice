@@ -19,6 +19,7 @@ public class DPs {
     // We keep track of the max sum on each update of current sum which gurantees that we wend up with max SUm
     // This is also a DP problem notice in here we based our solution of ith element based on the solution of i-1
     // element hence using overlapping sub problems
+    // This is also called the kadane's algorithm
     public int maxSubArray(int[] nums) {
 
         int maxSum = nums[0];
@@ -35,11 +36,21 @@ public class DPs {
         }
         return maxSum;
     }
-
-    // CTCI :: 17.23 Max Sub matrix
+    // same idea more concise
+    public int maxSubArrayV2(int[] nums) {
+        int maxSum = nums[0];
+        int curSum = nums[0];
+        for(int i = 1; i < nums.length; i++) {
+            curSum = Math.max(nums[i], nums[i] + curSum);
+            maxSum = Math.max(curSum, maxSum);
+        }
+        return maxSum;
+    }
+    // CTCI :: 17.23 Maxium Sub matrix sum in a 2d Array
+    // We use the Kadane's Algo in 2D Array
     // We need to find the maximum submatrix sum in a 2D array.
     // We use the maximum sub array sum  to get the submatrix sum
-    // here we go by each row and then calc max subarray sum for it
+    // here we go by each row and then calc max subarray sum for
     // To cover all sorts of matrix we try all combination rows for example
     // we use row 0 only then row 0 and row1 ,then row 0, 1 and 2 and so on.
     // Next we try row 1 only then row 1 & 2  then row 1 ,2 , 3 and so on.
@@ -57,6 +68,86 @@ public class DPs {
             }
         }
         return currSum;
+    }
+    // Get the maximum sub array rectangle in 2D matrix and also get the boundary of the rectangle
+    // We use the Kadane's algo in a 2D array to find the max sum and the rectangle bound
+    // its the same as the above CTCI :: 17.23 problem in that we used a row wise scan here we use a column wise scan
+    // but the idea is same. First we start with the left most column and calc the max sum for that array then
+    // add the next column to it and ge the max sum for example we start with col 0 array then col 0 & col 1 array
+    // then col 0 , 1 , 2 array and so on. note when we move the left then we go by col 1 , 2, 3 and so on followed by
+    // col 2 ,3 and so on . Basically while scanning consider all the possible rectangle.
+    public int maxSubMatrixSumV2 (int [][] matrix) {
+        int maxLeft = 0, maxRight = 0, maxUp = 0, maxDown = 0;
+        int maxSum = Integer.MIN_VALUE, curSum = 0;
+        int col = matrix[0].length;
+        int row = matrix.length;
+        for (int left = 0; left < col; left++) {
+            int []tempSum = new int[row];
+            for (int right = left; right < col; right++) {
+                for (int i = 0; i < row; i++) {
+                    tempSum[i] += matrix[i][right];
+                }
+                // run the kadane's algo on the tempSum
+                curSum = tempSum[0];
+                int st = 0;
+                for (int i = 1; i< tempSum.length; i++) {
+                    curSum += tempSum[i];
+                    if (tempSum[i] > curSum) {
+                        curSum = tempSum[i];
+                        st = i;
+                    }
+                    if (curSum > maxSum) {
+                        maxSum = curSum;
+                        maxLeft = left;
+                        maxRight = right;
+                        maxDown = i;
+                        maxUp = st;
+                    }
+                }
+
+            }
+        }
+        System.out.println("L " + maxLeft + " R " + maxRight + " U " + maxUp +  " D " + maxDown);
+        return maxSum;
+    }
+
+    // LeetCode :: 363. Max Sum of Rectangle No Larger Than K
+    // The idea is to use the 2D kadane's algorithm and to get the max sum less than K we need to use the approach
+    // of range sum less than K problem which basically the priblem "LeetCode :: 560. Subarray Sum Equals K" but as
+    // we are asked to get sum less than K we use a TreeSet and ceiling method in combination with the approach of
+    // problem 560
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        int maxSum = Integer.MIN_VALUE, curSum = 0;
+        int col = matrix[0].length;
+        int row = matrix.length;
+
+        for (int left = 0; left < col; left++) {
+            int []tempSum = new int[row];
+            for (int right = left; right < col; right++) {
+                for (int i = 0; i < row; i++) {
+                    tempSum[i] += matrix[i][right];
+                }
+                curSum = 0;
+                // We are using a treeset to get the value sum(j) - sum(i-1) <= k or sum(i-1) >= sum(j) - k
+                // where k is the sum(i,j) = sum(j) - sum(i-1)
+                TreeSet<Integer> set = new TreeSet<>();
+                set.add(0);
+                for (int i = 0; i < tempSum.length; i++) {
+                    curSum += tempSum[i];
+                    // search for existing sum at least that is k less than the current sum if such and entry is found
+                    // we found one answer lets update the max
+                    Integer ceil = set.ceiling(curSum - k);
+                    if (ceil != null) {
+                        // curSum - ceil because we want to get the value that is less than or equal to k so if subtract
+                        // ceil (already found sum) from curSum we get our result
+                        maxSum = Math.max(maxSum, curSum - ceil);
+                    }
+                    set.add(curSum);
+                }
+            }
+        }
+        return  maxSum;
+
     }
 
     public int maxSubArrayWithIndex(int[] nums) {

@@ -232,6 +232,10 @@ public class Main {
                 {3,  8}
         };
         int []newInterval = {7,23};
+        int [][] mat = { {2, 1, -3, -4, 5},
+                         {0, 6, 3, 4, 1},
+                         {2, -2, -1, 4, -5},
+                         {-3, 3, 1, 0, 3}};
         Solutions sv = new Solutions();
         SolutionsV1 sv1 = new SolutionsV1();
         SolutionsV2 sv2 = new SolutionsV2();
@@ -270,6 +274,7 @@ public class Main {
         System.out.println("Sol " + sv2.findAnagramsV2("cbaebabacd","abc"));
         System.out.println(tr1.levelOrder(treeNode));
         System.out.println(tr1.verticalOrder(treeNode));
+        System.out.println("Rectangle Sum " + dp1.maxSubMatrixSumV2(mat));
 
 
 
