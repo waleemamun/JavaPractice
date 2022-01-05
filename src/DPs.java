@@ -135,7 +135,10 @@ public class DPs {
                 for (int i = 0; i < tempSum.length; i++) {
                     curSum += tempSum[i];
                     // search for existing sum at least that is k less than the current sum if such and entry is found
-                    // we found one answer lets update the max
+                    // we found one answer lets update the max, here ceiling works as it gives us the least value bigger
+                    // than curSum -k so that when we calc the maxSum the difference of curSum & ceil is the biggest,
+                    // any value bigger than ceil will make the difference smaller hence picking ceiling is fine,
+                    // we can discard any value greater than ceil
                     Integer ceil = set.ceiling(curSum - k);
                     if (ceil != null) {
                         // curSum - ceil because we want to get the value that is less than or equal to k so if subtract

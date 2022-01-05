@@ -883,12 +883,13 @@ public class SolutionsV2 {
     // We store the running sum in a map key and value is the index
     // if the running sum is not present. We have to check if the entry already
     // exists in the map or not if it exist we dont need to update the index  as we want to keep using the oldest index
-    // Note we have to consider the i-1 postions running sum not i postion. So the subarray size can
+    // Note we have to consider the i-1 positions running sum not i position. So the subarray size can
     // be calculated  using j- (i-1). Hence we start with map entry (0,-1)
-    // Consider the example of {5,10,-5,-10,15,30,-30} the result is 7 = (6- (-1))
+    // Consider the example of {5,10,-5,-10,15,30,-30} & k = 15 the result is 7 = (6- (-1))
     public int maxSubArrayLen(int[] nums, int k) {
         HashMap<Integer, Integer> map = new HashMap<>();
         int currSum = 0;
+        // WE init map with (0,1) for values that sums to k from index 0,
         map.put(0,-1);
         int maxSize = 0;
         for (int i = 0; i<nums.length; i++) {
@@ -902,6 +903,69 @@ public class SolutionsV2 {
             map.putIfAbsent(currSum,i);
         }
         return maxSize;
+    }
+
+    // Leetcode :: 862. Shortest Subarray with Sum at Least K
+    // Sum(j,i) = sum (j) - sum(i-1) now if k <= sum(j,i) then
+    // k <= sum (j) - sum(i-1) so
+    // sum (i-1) <= sum(j) - k
+    // Here we the problem says ateast K & get the shortest length thats why we need the while loop below
+    // The run time is slow
+    // There is a montonic queue version for this solution but dont forget to review this solution
+    public int shortestSubarray(int[] A, int K) {
+        int minLen = A.length + 1;
+        TreeMap<Long, Integer> map = new TreeMap<>();
+        long currSum = 0;
+        // Init the map with (0, -1) to support for values that sums to k from index 0,
+        map.put(0l, -1);
+        for (int i = 0; i < A.length; i++) {
+            currSum += A[i];
+            Long atLeastK = map.floorKey(currSum - K);
+            // Here we the problem says ateast K & get the shortest length so when we found a value that is at least or
+            // greater than k we update the minLen but note we keep the value of the array as key in the TreeMap not the
+            // index so we dont know if any other greater value has shorter length thats why we have to look up all the
+            // values here. This would be different if instead of shortest length we need smallest sum in that case we
+            // could use just an if condition
+            while (atLeastK != null) {
+                minLen = Math.min(minLen, i - map.get(atLeastK));
+                map.remove(atLeastK);
+                atLeastK = map.floorKey(atLeastK);
+            }
+            map.put(currSum, i);
+        }
+        return minLen == A.length + 1?-1: minLen ;
+    }
+
+    // This is the monotonic queue implementation.
+    // The idea is to first get the running sum of the array. Then use the running sum to build a monotonic queue
+    // from left to right. While building the monotonic queue we also check for the current elemenet >= front_queue + k
+    public int shortestSubarrayV2(int[] A, int K) {
+        int minLen = A.length + 1;
+        Deque<Integer> dq = new LinkedList<>();
+        // this has to be length + 1 because the first sum runningSum[0] need to be zero
+        long [] runningSum = new long[A.length +1];
+
+        for (int i = 0; i < A.length; i++) {
+            runningSum[i+1] = runningSum[i] + (long)A[i];
+        }
+
+        for (int i = 0; i < runningSum.length; i++) {
+            // increasing queue cause if x2 > x1 and runningSum(x2) < runningSum(x1) then
+            // for some next i runningSum(i) - k >= runningSum(x1) > runningSum(x1) then
+            // runningSum(i) - k >= runningSum(x2) as x2 > x1 then i - x2 < i - x1 so x2 is better choice hence we build
+            // a increasing mono queue
+            while(!dq.isEmpty() && runningSum[i] <= runningSum[dq.peekLast()]) {
+                dq.removeLast();
+            }
+            // check if the current element >= front_q + K if yes then calc the len
+            // as this is the increasing mono queue so the front is the smallest so if the front + k does not satisfy
+            // the condition then no other element after the front will satisfy it either
+            while (!dq.isEmpty() && runningSum[i] >= runningSum[dq.peekFirst()] + K) {
+                minLen = Math.min(minLen, i  - dq.removeFirst());
+            }
+            dq.addLast(i);
+        }
+        return minLen == A.length + 1?-1: minLen ;
     }
 
     // LeetCode :: 283. Move Zeroes
