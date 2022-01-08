@@ -288,6 +288,10 @@ public class GraphNode {
     // Note we used a priority queue/ Min Heap for adjlist because the problem definition ask us to pick the
     // solution/node in Lexical order so when exploring edges we pick the edge that leads to lexically smaller node
     // check this : https://www.geeksforgeeks.org/hierholzers-algorithm-directed-graph/
+    // Note: here the dfs is modified so we allow traversing grey vertices as we can travel a vertex multiple times in '
+    // an eulerian path, ths is why we can construct the euler path by adding node to eulerPath at the end of the dfs
+    // call. Because we allow grey vertex traversal we will see same vertex couple of times. This is the trick to
+    // construct euler path
     private void dfsEuler (HashMap<String, PriorityQueue<String>> graph,
                            String node, LinkedList<String> eulerPath) {
         PriorityQueue<String> adjList = graph.get(node);
@@ -447,7 +451,8 @@ public class GraphNode {
      * Step-2: Pick all the vertices with in-degree as 0 and add them into a queue (Enqueue operation)
      *
      * Step-3: Remove a vertex from the queue (Dequeue operation) and then.
-     *
+     *      add the remove vertex to a path list (this will give the toposort path if one exist depending on the
+     *      condition on step 5)
      *      Increment count of visited nodes by 1.
      *      Decrease in-degree by 1 for all its neighboring nodes.
      *      If in-degree of a neighboring nodes is reduced to zero, then add it to the queue.
@@ -455,6 +460,7 @@ public class GraphNode {
      * Step 4: Repeat Step 3 until the queue is empty.
      * Step 5: If count of visited nodes is not equal to the number of nodes in the graph
      *         then the topological sort is not possible for the given graph.
+     *
      *
      * */
     public  String bfsTopologicalSearchAlien (Queue<Character> queue, HashMap<Character,ArrayList<Character>> graph,

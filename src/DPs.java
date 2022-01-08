@@ -1485,26 +1485,32 @@ public class DPs {
         return resList;
     }
 
-    // *****(This memoization becomes very slow) ********
     // LeetCode :: 95. Unique Binary Search Trees II
     // The Problems requires us to generate all BST possible for 1 to n. So we actually have to generate those tree.
     // The idea is to go by each node from 1 to n as root and create a tree. So for each node as root we need to
     // build a left subtree & a right subtree and then add the left subtree & right subtree as to the root.
     // We use two lists to store the left subtrees & right subtrees, Then for root we take one node from left subtree
-    // & one node from rightSubtree. Finally return the list
+    // & one node from rightSubtree. Finally return the list. While creating the DP table use a hash key from (start,end)
+    // using a object s hash key slows the proggram execution but if we have integer has that can be easily pre-calculated
+    // then it very fast
+
+    private int getPairHash(int start, int end) {
+        return start*100+end;
+    }
     private List<TreeNode> genBSTree (int start, int end,
-                                      HashMap<Pair<Integer, Integer>, List<TreeNode>> mapTreeNode) {
+                                      HashMap<Integer, List<TreeNode>> mapTreeNode) {
         List<TreeNode> rList = new ArrayList<>();
         if (start > end) {
             rList.add(null);
             return rList;
         }
-        if (mapTreeNode.containsKey(new Pair<>(start, end))) {
-            return mapTreeNode.get(new Pair<>(start, end));
+        if (mapTreeNode.containsKey(getPairHash(start,end))) {
+            //System.out.println("memo " + start +" "+ end);
+            return mapTreeNode.get(getPairHash(start,end));
         }
         if (start == end) {
             rList.add( new TreeNode(start));
-            mapTreeNode.put(new Pair<>(start, end), rList);
+            mapTreeNode.put(getPairHash(start,end), rList);
             return rList;
         }
 
@@ -1526,16 +1532,15 @@ public class DPs {
                 }
             }
         }
-        mapTreeNode.put(new Pair<>(start,end),rList);
+        mapTreeNode.put(getPairHash(start,end),rList);
         return rList;
     }
     public List<TreeNode> generateTrees(int n) {
-        HashMap<Pair<Integer, Integer>, List<TreeNode>> mapTreeNode  = new HashMap<>();
+        HashMap<Integer, List<TreeNode>> mapTreeNode  = new HashMap<>();
         if (n == 0)
             return new ArrayList<TreeNode>();
         return genBSTree(1,n, mapTreeNode);
     }
-
     // LeetCode :: 313. Super Ugly Number
     // Same logic as Ugly number, just extending the case from 3 primes (2,3, 5) to k primes
     // we use and indexes array to keep the current point of prime[i] pointing to uglyNumber[i] fror nextMult calc

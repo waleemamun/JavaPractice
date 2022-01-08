@@ -1712,6 +1712,40 @@ public class Recursions {
         }
     }
 
+    // another recursive version the main idea is that the break condition is when we have found 3 dots we process
+    // and validate if the last part is valid part of IP if so add it to the list
+    public List<String> restoreIpAddressesV3(String s) {
+        List<String> list = new ArrayList<>();
+        resIP(s, 0, list, "", 0);
+        return list;
+    }
+    private boolean isValidIP(String s) {
+        if(s.length() == 0 || (s.charAt(0) == '0' && s.length() > 1)|| s.length() > 3
+                || Integer.parseInt(s) > 255 || Integer.parseInt(s) <0)
+            return false;
+        return true;
+    }
+    private void resIP(String s, int index, List<String> list, String ip, int dotCount) {
+        if (dotCount == 3) {
+            if (index >= s.length())
+                return;
+            else {
+                String sb = s.substring(index, s.length());
+                if(isValidIP(sb))
+                    list.add(ip+ sb);
+                return;
+            }
+        }
+        for (int i = 1; i <=3 && index + i <= s.length(); i++) {
+            String sub = s.substring(index, index + i);
+            if (!isValidIP(sub))
+                continue;
+            resIP(s, index +i, list, ip +sub + ".", dotCount + 1);
+
+
+        }
+    }
+
     // The solution for letterCombinations Problem
     // Leetcode 17 :: letterCombinations
     Map<String, String> phone = new HashMap<String, String>() {{
