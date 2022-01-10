@@ -2656,6 +2656,9 @@ public class SolutionsV2 {
 
     }
 
+    // The idea here is very interesting, The matrix is row and column sorted.
+    // So the idea is to search the submatrix for the value, We start with a low & high & mid value and try to find
+    // the count of values <= mid. To find the count we use the idea of row/col sorted matrix and use a sub matrix
     public int kthSmallestV2(int[][] matrix, int k) {
         int n = matrix.length;
         int lo = matrix[0][0], hi = matrix[n - 1][n - 1];
@@ -2667,7 +2670,9 @@ public class SolutionsV2 {
         }
         return lo;
     }
-
+    // This func helps to find the count of values <=mid by finding the submatrix where all the values <= mid
+    // This can be done by searching the fist column to get the row and then in that row increase the submatrix
+    // size for each column
     private int getLessEqual(int[][] matrix, int val) {
         int res = 0;
         int n = matrix.length, i = n - 1, j = 0;
@@ -2675,6 +2680,9 @@ public class SolutionsV2 {
             if (val < matrix[i][j])
                 i--;
             else {
+                // find the sub matrix size that have values <= mid for example for a 4x4 matrix the sub matrix
+                // can be 3x1 , 3x2 or 3x3 an so on, we increase by i+1 for each column to increase the sub matrix
+                // size from 3x1 to 3x2 to 3x3
                 res += i + 1;
                 j++;
             }
