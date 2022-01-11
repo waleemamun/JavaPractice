@@ -651,6 +651,10 @@ public class GraphNode {
                 if (adjList != null) {
                     for (String v : adjList) {
                         // found the dest node return the shortest length
+                        // Note this is ok to report at this point instead of inside the visited check because this
+                        // the end vertex and this will be discovered and even if its put on the queue later that is
+                        // fine the discovery time is same for all the node in the same level so for endVertex this
+                        // should work fine
                         if(v.equals(endWord)) {
                             return u.len+1;
                         }

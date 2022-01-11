@@ -2123,7 +2123,7 @@ public class Recursions {
         return A[pair.x][pair.y] - 2;
     }
 
-    // LeetCode :: 301. Remove Invalid Parentheses (Not submitted)
+    // LeetCode :: 301. Remove Invalid Parentheses (Not submitted) (Hard)
     // Too complicated solution
     public List<String> removeInvalidParentheses(String s) {
         List<String> output = new ArrayList<>();
