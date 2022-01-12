@@ -257,6 +257,7 @@ public class Main {
         char [] tasks = {'A','A','A','B','B','B'};
 
         int [][] updates = {};
+        int [][] gedge = { {0, 1}, {1,2}, {2,3},{3,0}};
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
@@ -276,6 +277,7 @@ public class Main {
         System.out.println(tr1.verticalOrder(treeNode));
         System.out.println("Rectangle Sum " + dp1.maxSubMatrixSumV2(mat));
         System.out.println(r1.restoreIpAddressesV3("25525511135"));
+        g1.buildGraph(gedge);
 
 
 

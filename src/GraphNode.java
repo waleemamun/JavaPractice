@@ -17,17 +17,17 @@ public class GraphNode {
         parent = Integer.MIN_VALUE;
     }
 
+    /***
+     * Note: Look how we vuild the graph using the HashMap its way faster to code/build graph like this
+     */
     public HashMap<Integer, HashSet<Integer>> buildGraph(int edges[][]) {
         HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
         for (int i =0 ; i< edges.length; i++) {
-            HashSet<Integer> adjSetA = graph.getOrDefault(edges[i][0], new HashSet<Integer>());
-            adjSetA.add(edges[i][1]);
-            HashSet<Integer> adjSetB = graph.getOrDefault(edges[i][1], new HashSet<Integer>());
-            adjSetB.add(edges[i][0]);
-            graph.put(edges[i][0], adjSetA);
-            graph.put(edges[i][1], adjSetB);
+            graph.computeIfAbsent(edges[i][0], k-> new HashSet<>()).add(edges[i][1]);
+            graph.computeIfAbsent(edges[i][1], k-> new HashSet<>()).add(edges[i][0]);
         }
-        System.out.println("Graph node Size " + graph.size());
+        // Note how we are printing the code in 1 line its faster if we just need to one thig in the loop
+        graph.forEach((k,v) -> System.out.println(k +" :: " + v));
         return graph;
     }
 
@@ -422,6 +422,7 @@ public class GraphNode {
                 // increment the indegree of the second node
                 inDegree.put(second.charAt(i), inDegree.getOrDefault(second.charAt(i), 0) +1);
             } else {
+                // handle wrong input like abcd & abc
                 if (second.length() < first.length())
                     return "";
             }
@@ -559,23 +560,22 @@ public class GraphNode {
             graph[edges[1]].add(edges[0]);
             indegree[edges[0]]++;
         }
-        ArrayList<Integer> pList = new ArrayList<>();
+
         Queue <Integer> queue = new LinkedList<>();
-        // Do a BFS Topological Sort
         for (int i =0; i<numCourses; i++) {
-            // get the possible start vertices (vertex with indegree == 0)
             if(indegree[i] == 0)
                 queue.add(i);
         }
 
         if(queue.size() == 0)
             return new int[0];
-        int visitedNodes = 0;
-        // traverse the graph o find topo sort
+        int totCount = 0;
+        int []pOrder = new int[numCourses];
         while (!queue.isEmpty()) {
             int u = queue.remove();
-            visitedNodes++;
-            pList.add(u);
+            pOrder[totCount] = u;
+            totCount++;
+            // traverse the adj list  and remove the visited edges aka reduce the in-degrees of the adjacency
             ArrayList<Integer> adjList = graph[u];
             if(adjList != null) {
                 for (Integer v : adjList) {
@@ -585,15 +585,8 @@ public class GraphNode {
                 }
             }
         }
-        // for topo sort all nodes need to be visited
-        if(visitedNodes != numCourses)
+        if(totCount != numCourses)
             return new int[0];
-        int []pOrder = new int[pList.size()];
-        int i = 0;
-        for (Integer p : pList){
-            pOrder[i++]  = p;
-        }
-
         return pOrder;
     }
     // LeetCode :: 127. Word Ladder
@@ -900,7 +893,7 @@ public class GraphNode {
 
     }
 
-    // LeetCode :: 721. Accounts Merge (Not Submitted)
+    // LeetCode :: 721. Accounts Merge
     // This uses the idea of Union & Find algorithm used in Kruskal's minimum STP. Here all the email in the same input
     // list can be thoought of as edges and we need to merge union them.
     // The basic idea comes from "Disjoint Sets using union by rank and path compression Graph Algorithm" of Kruskal STP
@@ -951,17 +944,21 @@ public class GraphNode {
             return node;
         return findSet(parent.get(node), parent);
     }
+
+    // The dfs approach creates a dfs forest in the graph and returns the trees of the forest in list which is our
+    // solution the dfs approach is simple but the above approach uses Kruskal's merge& union algo implementation
+    // which is a good excercise
     public void acountMergeDFS(String u, HashSet<String> visited,
                                HashMap<String, HashSet<String>> graph,
-                               TreeSet<String> topoList){
+                               TreeSet<String> traverseList){
         visited.add(u);
         HashSet<String> adjList = graph.get(u);
         for (String v: adjList) {
             if(!visited.contains(v)) {
-                acountMergeDFS(v,visited, graph, topoList);
+                acountMergeDFS(v,visited, graph, traverseList);
             }
         }
-        topoList.add(u);
+        traverseList.add(u);
 
     }
     public List<List<String>> accountsMergeV2(List<List<String>> accounts) {
@@ -983,9 +980,9 @@ public class GraphNode {
         List<List<String>> rList = new ArrayList<>();
         for (String u : graph.keySet()) {
             if (!visited.contains(u)){
-                TreeSet<String> topoList = new TreeSet<>();
-                acountMergeDFS(u, visited, graph, topoList);
-                ArrayList<String> tList = new ArrayList<>(topoList);
+                TreeSet<String> traverseList = new TreeSet<>();
+                acountMergeDFS(u, visited, graph, traverseList);
+                ArrayList<String> tList = new ArrayList<>(traverseList);
                 tList.add(0,owner.get(u));
                 rList.add(tList);
             }
