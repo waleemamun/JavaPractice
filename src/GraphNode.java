@@ -1055,13 +1055,23 @@ public class GraphNode {
      *  1) u is root of DFS tree and it has at least two children.
      *  2) u is not root of DFS tree and it has a child v such that no
      *     vertex in subtree rooted with v has a back edge to one of the ancestors (in DFS tree) of u.
+     *
+     *  Why this low[u] works?
+     *  This works because critical edge  does not belong in  loop, so when we discover a vertex which has
+     *  low value < u's discovery value it means we have seen a cycle. and if we have seen a cycle none of the edge are
+     *  critical so we can return this low value for all the edge in the cycle. Note a vertex on the cycle can still be
+     *  our cut vertex provide that vertex has another neighbor v which is not part of cycle and that's when (u,v)
+     *  becomes a critical edge and u becomes cut vertex
      * */
     int dTime = 0;
-    public List<Integer> articualtionPoint(int n, List<List<Integer>> connections) {
+    public List<Integer> articulationPoint(int n, List<List<Integer>> connections) {
         List<Integer> cutVertex = new ArrayList<>();
         List<Integer>[] graph = new ArrayList[n];
         int []color = new int[n];
         int []discovery = new int [n];
+        // low[] --> earliest visited vertex (the vertex with minimum
+        // discovery time) that can be reached from subtree
+        // rooted with current vertex
         int []low = new int[n];
         int []parent = new int[n];
         Arrays.fill(parent, -1);
@@ -1100,7 +1110,7 @@ public class GraphNode {
                     cutVertex.add(u);
                 // if this not the root and non of the node in u's subtree has back edge
                 // to u's ancestor then u is a cut vertex. As low[v] >= discovery time of u it means no back to u's
-                // ancestor
+                // ancestor its possible that this condition can be written as low[v] > discovery[u]
                 if (parent[u] != -1 && low[v] >= discovery[u]) {
                     cutVertex.add(u);
                 }
@@ -1114,9 +1124,9 @@ public class GraphNode {
     }
 
     // LeetCode :: 1192. Critical Connections in a Network
-    // The idea is the same as aritculation point finding of a connected graph, Here we need the critical edge
+    // The idea is the same as articulation point finding of a connected graph, Here we need the critical edge
     // that is connected to cut vertex so whenever we find a cut vertex we update the  critical edge say we find cut
-    // vertex as us after visiting it neighbor v so (u,v) is the critical edge
+    // vertex as u's after visiting it neighbor v so (u,v) is the critical edge
     public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
 
         List<List<Integer>> critEdge = new ArrayList<>();

@@ -711,6 +711,31 @@ public class SolutionsV3 {
         return subArrayCount;
     }
 
+    // LeetCode :: 277. Find the Celebrity
+    // This is not a graph problem the idea is to eliminate who is not a celebrity, For example if A knows B then A
+    // cannot be a celebrity and if A does not know B then B is not a celebrity and A can be a celebrity.
+    // So we scan to the array once to find a possible celebrity if we found someone we need to
+    // make sure all other poeple knows this celebrity hence the second loop
+    // This is more like the majority finding algo, In one pass we find the celeb and then 2nd pass we confirm the
+    // celebrity
+    private boolean knows(int a, int b) {return true;}
+    public int findCelebrity(int n) {
+        int celeb = 0;
+        for (int i = 0; i < n;i++) {
+            if(knows(celeb, i)) {
+                celeb = i;
+            }
+        }
+        int count = 0;
+        for (int i = 0 ; i < n; i++) {
+            if (i != celeb && knows(i, celeb))
+                count++;
+        }
+        if(count == n-1)
+            return celeb;
+        return  -1;
+    }
+
 
 
 
