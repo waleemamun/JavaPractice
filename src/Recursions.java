@@ -2543,6 +2543,42 @@ public class Recursions {
         return rList;
     }
 
+    // LeetCode ::490. The Maze
+    // The idea is to use a DFS approcah to solve this. One trick is to run the DFS When we hit the wall before that
+    // we can move left, right, up and down direction to reach the wall and then call DFS
+    private boolean hasMazePath(int [][] maze, int r, int c, int [] dest) {
+        if (maze[r][c] != 0) {
+            return false;
+        }
+        if (r == dest[0] && c == dest[1])
+            return true;
+        int up = r -1;
+        maze[r][c] = 2;
+        while (up >=0 && maze[up][c] != 1)
+            up--;
+        if (hasMazePath(maze, up +1, c, dest))
+            return true;
+        int down = r+1;
+        while (down < maze.length && maze[down][c] != 1)
+            down++;
+        if (hasMazePath(maze, down -1, c,dest))
+            return true;
+        int left = c-1;
+        while (left >= 0 && maze[r][left] != 1)
+            left--;
+        if (hasMazePath(maze,r, left + 1, dest))
+            return true;
+        int right = c+1;
+        while (right <maze[0].length && maze[r][right] != 1)
+            right++;
+        if(hasMazePath(maze, r , right -1, dest))
+            return true;
+        return false;
+    }
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        return hasMazePath(maze, start[0], start[1],destination);
+    }
+
 
 
 

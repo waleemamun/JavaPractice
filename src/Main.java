@@ -278,6 +278,8 @@ public class Main {
         System.out.println("Rectangle Sum " + dp1.maxSubMatrixSumV2(mat));
         System.out.println(r1.restoreIpAddressesV3("25525511135"));
         g1.buildGraph(gedge);
+        int flight [][] = {{0,1,1},{1,2,1},{0,2,5},{2,3,1}};
+        System.out.println( "cost = " + g1.findCheapestPrice(4,flight,0,3,1));
 
 
 

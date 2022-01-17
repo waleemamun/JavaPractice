@@ -1272,6 +1272,56 @@ public class GraphNode {
         return minCost;
     }
 
+    // LeetCode :: 787. Cheapest Flights Within K Stops
+    // The idea is to use the Dijktsra's shortest path a modified version of it. We need to consider
+    // not only shortest path but also a slightly costlier less hop path
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int k) {
+        HashMap<Integer, ArrayList<Integer []>> graph = new HashMap<>();
+        Integer [] dist = new Integer[n];
+        Integer [] stopCount = new Integer[n];
+        PriorityQueue<Integer []> minHeap = new PriorityQueue<>((a,b)->(a[1] - b[1]));
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        Arrays.fill(stopCount, Integer.MAX_VALUE);
+        for (int []edge : flights) {
+            graph.computeIfAbsent(edge[0], (key) -> new ArrayList<>()).add(new Integer[] {edge[1],edge[2]});
+            graph.computeIfAbsent(edge[1], (key)-> new ArrayList<>());
+        }
+        minHeap.add(new Integer[]{src, 0, 0});
+        dist[src] = 0;
+        stopCount[src] = 0;
+        while (!minHeap.isEmpty()) {
+            Integer[] u = minHeap.remove();
+            int nodeU = u[0], cost = u[1], hop = u[2];
+            // found the dest this should be the lowest cost as we are maintaining the min heap
+            // we always reach the destination with smaller cost first due to the minHeap
+            if (nodeU == dst)
+                return cost;
+            // we have used more hops we cannot process anything on this path
+            if (hop == k+1)
+                continue;
+            ArrayList<Integer[]> adjList = graph.get(nodeU);
+            for (Integer []v : adjList) {
+                int nodeV= v[0], edgeWeight = v[1];
+                if (dist[nodeV] > cost + edgeWeight) {
+                    // note how we are using the cost instead of the dist[u] this is very important cause we
+                    // want to check if a slightly costlier path with less hop is present, if dist[u] was used it will
+                    // only give the shortest path
+                    minHeap.add(new Integer[] {nodeV, cost + edgeWeight, hop + 1});
+                    dist[nodeV] = cost + edgeWeight;
+                } else if (hop < stopCount[nodeV]) {
+                    // there is slightly higher cost path with less hop lets add it to heap for reconsider
+                    minHeap.add(new Integer[] {nodeV, cost + edgeWeight, hop + 1});
+                }
+                // we update stopCount for the neighbor as hop because the first node from src should have hop zero
+                // and 2nd node from src has hop = 1 and so on
+                stopCount[nodeV] = hop;
+            }
+
+        }
+
+        return dist[dst] == Integer.MAX_VALUE? -1 : dist[dst];
+    }
+
 
 
 
