@@ -1322,6 +1322,53 @@ public class GraphNode {
         return dist[dst] == Integer.MAX_VALUE? -1 : dist[dst];
     }
 
+    // The DFS DP approach for the above problem
+    // This is interesting how DFS+DP was used to figure out the cheapest path with at most K hops for this problem
+    // DFS cannot be used for weighted graph shortest path but here we are looking for cheapest path with K hop so
+    // we give priority to the hops first and the optimize on the cost hence DFS works. The DP is just memoizing the
+    // solution so we can avoid repeated recurse and cache the result. This has better run time for this also as DFS has
+    // better runtime than shortest path like dijkstra
+    private int[][] adjMatrix;
+    private HashMap<Pair<Integer, Integer>, Long> memo;
+
+    public int findCheapestPricev2(int n, int[][] flights, int src, int dst, int K) {
+        this.adjMatrix = new int[n][n];
+        this.memo = new HashMap<Pair<Integer, Integer>, Long>();
+        for (int[] flight: flights) {
+            this.adjMatrix[flight[0]][flight[1]] = flight[2];
+        }
+        long ans = this.findShortest(src, K, dst, n);
+        return ans >= Integer.MAX_VALUE ? -1 : (int)ans;
+    }
+
+    public long findShortest(int node, int stops, int dst, int n) {
+        // No need to go any further if the destination is reached
+        if (node == dst) {
+            return 0;
+        }
+        // Can't go any further if no stops left
+        if (stops < 0) {
+            return Integer.MAX_VALUE;
+        }
+        Pair<Integer, Integer> key = new Pair<Integer, Integer>(node, stops);
+        // If the result of this state is already cached, return it
+        if (this.memo.containsKey(key)) {
+            return this.memo.get(key);
+        }
+        // Recursive calls over all the neighbors
+        long ans = Integer.MAX_VALUE;
+        for (int neighbor = 0; neighbor < n; ++neighbor) {
+            int weight = this.adjMatrix[node][neighbor];
+            // 0 value means no edge
+            if (weight > 0) {
+                ans = Math.min(ans, this.findShortest(neighbor, stops - 1, dst, n) + weight);
+            }
+        }
+        // Cache the result
+        this.memo.put(key, ans);
+        return ans;
+    }
+
 
 
 
