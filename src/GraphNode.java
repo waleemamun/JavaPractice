@@ -1369,6 +1369,111 @@ public class GraphNode {
         return ans;
     }
 
+    // LeetCode :: 797. All Paths From Source to Target
+    // The idea is to run a modified dfs to traverse the graph and get the path to the dest, The modification to DFS
+    // is we allow traversing visited vertex again, we dont have any issue traversing a visited vertex because its
+    // a DAG so no cycle in the graph and its safe to visit grey vertex
+    private void dfsAllPath(int [][]graph, int u, ArrayList<Integer> tlist, int dest, List<List<Integer>> pathList) {
+        if (u == dest){
+            pathList.add(new ArrayList<>(tlist));
+            return;
+        }
+        int []adj = graph[u];
+        for(int v: adj) {
+            tlist.add(v);
+            dfsAllPath(graph, v, tlist, dest, pathList);
+            tlist.remove(tlist.size() -1);
+        }
+    }
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        List<List<Integer>> pathList = new ArrayList<>();
+        int src = 0;
+        int dest = graph.length -1;
+        ArrayList<Integer> tlist = new ArrayList<>();
+        tlist.add(src);
+        dfsAllPath(graph, 0, tlist,dest, pathList);
+        return pathList;
+    }
+
+    // LeetCode:: 323. Number of Connected Components in an Undirected Graph
+    // The idea is to run a DFS for all the nodes and the root of unique dfs tree
+    public int countComponents(int n, int[][] edges) {
+        int count = 0;
+        HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+        for (int i = 0; i<n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int []edg : edges) {
+            graph.get(edg[0]).add(edg[1]);
+            graph.get(edg[1]).add(edg[0]);
+        }
+        int [] color = new int[n];
+        Arrays.fill(color, 0);
+        for (int u = 0; u < n; u++) {
+            // white vertex this means this vertex is a root of the dfs tree
+            if (color[u] == 0) {
+                // count the root of the dfs tree
+                count++;
+                dfsSCC(u, color, graph);
+            }
+        }
+        return count;
+    }
+    private void dfsSCC(Integer u, int []color, HashMap<Integer, ArrayList<Integer>> graph) {
+        color[u] = 1;
+        ArrayList<Integer> adjList = graph.get(u);
+        for (Integer v : adjList) {
+            if(color[v] == 0)
+                dfsSCC(v, color, graph);
+        }
+        color[u] = 2;
+    }
+
+    // The idea here is to use the run the "Disjoint Sets using union by rank and path compression Graph Algorithm"
+    // to find out the SCC. This is a very well known technique to find the SCC's of a graph. This algo runs faster than
+    // DFS as DFS is O(V+E) but this is O(aE) where a is approximately = 4 so this algo becomes O(E). THis is due to the
+    // use of path compression using the rank array & findParent function where we update parent of all the node
+    // in the path to the new parent
+    private int findParent(int x, int []parent) {
+        if (x == parent[x])
+            return x;
+        parent[x] = findParent(parent[x], parent);
+        return parent[x];
+    }
+    private void unionNodes(int x, int y, int []parent, int []rank) {
+        int px = findParent(x, parent);
+        int py = findParent(y, parent);
+        if (px != py) {
+            if(rank[px] > rank[py]) {
+                parent[py] = px;
+                rank[px]+= rank[py];
+            } else {
+                parent[px] = py;
+                rank[py] += rank[px];
+            }
+        }
+    }
+    public int countComponentsV2(int n, int[][] edges) {
+        int count = 0;
+        int []parent = new int[n];
+        int []rank = new int[n];
+
+        for (int i = 0; i <n; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+        count = n;
+        for (int []e : edges) {
+            int u = e[0] , v = e[1];
+            if (findParent(u, parent) != findParent(v, parent)) {
+                count--;
+                unionNodes(u, v, parent, rank);
+            }
+        }
+        return count;
+    }
+
+
 
 
 
