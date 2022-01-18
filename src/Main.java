@@ -257,7 +257,7 @@ public class Main {
         char [] tasks = {'A','A','A','B','B','B'};
 
         int [][] updates = {};
-        int [][] gedge = { {0, 1}, {1,2}, {2,3},{3,0}};
+        int [][] gedge = { {0,1},{0,2},{0,3},{1,4}};
         int val = sv2.findPeakElement(arr);
         int [][] bld ={{1,5,9}, {10,11,13}, {12,13,15}};
         System.out.println(r1.findWords(board, words));
@@ -280,6 +280,7 @@ public class Main {
         g1.buildGraph(gedge);
         int flight [][] = {{0,1,1},{1,2,1},{0,2,5},{2,3,1}};
         System.out.println( "cost = " + g1.findCheapestPrice(4,flight,0,3,1));
+        System.out.println(g1.validTree(5, gedge));
 
 
 

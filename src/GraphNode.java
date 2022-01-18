@@ -1396,7 +1396,8 @@ public class GraphNode {
     }
 
     // LeetCode:: 323. Number of Connected Components in an Undirected Graph
-    // The idea is to run a DFS for all the nodes and the root of unique dfs tree
+    // The idea is to run a DFS for all the nodes and count the root of unique dfs tree which gives the number
+    // of SCC in graph
     public int countComponents(int n, int[][] edges) {
         int count = 0;
         HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
@@ -1472,6 +1473,177 @@ public class GraphNode {
         }
         return count;
     }
+
+    //LeetCode :: 1319. Number of Operations to Make Network Connected
+    // The idea is to run dfs to get count the SCC and then we check if we have enough edges to connect all nodes
+    // if yes we only need scc -1 edges if no  we cannot connect the graph. The run time is very slow for this DFS
+    // based solution. Lets check is we can use "Disjoint Sets using union by rank and path compression Graph Algorithm"
+    // Check the solution V2 with Disjoint Set Algo the runtime is significantly faster as it run in O(E) time
+    private void dfsMakeConnection(HashMap<Integer, HashSet<Integer>> graph, int [] color, int u, int parent) {
+        color[u] = 1;
+        HashSet<Integer> adj = graph.get(u);
+        for (int v : adj) {
+            if (color[v] == 0) {
+                dfsMakeConnection(graph, color, v, u);
+            }
+        }
+    }
+    public int makeConnected(int n, int[][] connections) {
+        HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
+        for (int i = 0; i<n; i++) {
+            graph.put(i, new HashSet<>());
+        }
+        for (int []e : connections) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+        int [] color = new int[n];
+        Arrays.fill(color,0);
+        int scc = 0;
+
+        for (int u = 0; u < n; u++) {
+            if(color[u] == 0) {
+                scc++;
+                dfsMakeConnection(graph, color, u, -1);
+            }
+
+        }
+        if (connections.length < n -1)
+            return -1;
+        return scc-1;
+    }
+
+    // The idea here is also same we need to find the number of SCC but in this case we use the
+    // "Disjoint Sets using union by rank and path compression Graph Algorithm". This makes the runtime very fast as it
+    // O(E) compared to O(V+E) for DFS. So its better to use this algo if we are looking for SCC count
+    private int findMC(int x, int [] parent) {
+        if (x==parent[x])
+            return x;
+        parent[x] = findMC(parent[x], parent);
+        return parent[x];
+    }
+    private void unionMC(int x, int y, int []parent, int []rank) {
+        int px = findMC(x, parent);
+        int py = findMC(y,parent);
+        if(px != py) {
+            if(rank[px] > rank[py]) {
+                parent[py] = px;
+                rank[px] += rank[py];
+            } else {
+                parent[px] = py;
+                rank[py] += rank[px];
+            }
+        }
+    }
+    public int makeConnectedV2(int n, int[][] connections) {
+        int []parent = new int[n];
+        int []rank = new int[n];
+        for (int i = 0; i<n ;i++){
+            parent[i] = i;
+            rank[i] = 1;
+        }
+        int scc = n;
+        for (int []e : connections) {
+            int u = e[0], v = e[1];
+            if (findMC(u,parent) != findMC(v, parent)){
+                unionMC(u, v, parent, rank);
+                scc--;
+            }
+        }
+
+        if (connections.length < n -1)
+            return -1;
+        return scc-1;
+    }
+
+    // LeetCOde :: 261. Graph Valid Tree
+    // The idea is to run BFS or DFS to detect a loop and count the number of SCC. if loop found we return false
+    // if no loop found but we found more than 1 SCC we return false
+    // Any problem that requires getting SCC we will find a better runtime with Disjoint Set Union Find algo
+    // BFS/DFS will have higher runtime
+    private boolean bfsVT(int src, HashMap<Integer, ArrayList<Integer>> graph, int []color){
+        Queue<Integer> q = new LinkedList<>();
+        color[src] = 1; // grey vertex
+        q.add(src);
+        while(!q.isEmpty()) {
+            int u = q.remove();
+            ArrayList<Integer> adj = graph.get(u);
+            color[u] = 2; // black vertex need to color black for loop detection, only grey -> grey means loop
+            for (int v : adj) {
+                if (color[v] == 0) {
+                    q.add(v);
+                    color[v] = 1;
+                } else if (color[v]== 1) { // visited another grey vertex so loop detected
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean validTreeV2(int n, int[][] edges) {
+        HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            graph.put(i, new ArrayList<>());
+        }
+        for (int []e : edges) {
+            graph.get(e[0]).add(e[1]);
+            graph.get(e[1]).add(e[0]);
+        }
+        int [] color = new int[n];
+        Arrays.fill(color, 0);
+        int scc = 0;
+        // run bfs for all node and count SCC
+        for (int src = 0; src < n; src++){
+            if (color[src] == 0) {
+                scc++;
+                if (scc > 1 || !bfsVT(src, graph, color))
+                    return false;
+
+            }
+        }
+        return true;
+    }
+    // Same idea find a loop and count the SCC if loop detected we return false, if scc > 1 we return false
+    // In this version we use the Disjoint set union/find algo and the run time is much better than the BFS above
+    private int findVT(int x, int []parent) {
+        if (x == parent[x])
+            return x;
+        parent[x] = findVT(parent[x], parent);
+        return parent[x];
+    }
+    private void unionVT(int x, int y, int []parent, int []rank) {
+        int px = parent[x];
+        int py = parent[y];
+        if (px != py) {
+            if(rank[px] > rank[py]) {
+                parent[py] = px;
+                rank[px] += rank[py];
+            } else {
+                parent[px] = py;
+                rank[py] += rank[px];
+            }
+        }
+    }
+    public boolean validTree(int n, int[][] edges) {
+        int []parent = new int[n];
+        int []rank = new int[n];
+        for (int i = 0; i<n ;i++){
+            parent[i] = i;
+            rank[i] = 1;
+        }
+        int scc = n;
+        for (int []e : edges) {
+            int u = e[0], v = e[1];
+            if (findVT(u,parent) != findVT(v,parent)) {
+                scc--;
+                unionVT(u,v,parent,rank);
+            } else { // loop detected 
+                return false;
+            }
+        }
+        return scc == 1;
+    }
+
 
 
 
