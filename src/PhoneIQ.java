@@ -954,7 +954,7 @@ public class PhoneIQ {
 
     }
 
-    // LeetCode :: 252 Meeting Rooms II
+    // LeetCode :: 253 Meeting Rooms II
     /**
      * Given an array of meeting time intervals consisting of start and end times [[s1,e1],[s2,e2],...] (si < ei),
      * find the minimum number of conference rooms required.
@@ -964,7 +964,7 @@ public class PhoneIQ {
     // of AdnanAziz.
     // This approach uses and O(times) solution we find the minStart & max endTime. We maintain a count array of
     // event per time in the times array. Then we go through each interval whenever we see a start interval we do +1 for
-    // start interval and -1 for end interval. Finally while scanning the times array from start to end time we count
+    // start interval and -1 for end interval. Finaly while scanning the times array from start to end time we count
     // the concurrent even per time and have a running sum. The running su gives the count of concurrent event at that
     // time so we keep track of max running sum.
     public int minMeetingRooms(int[][] intervals) {
@@ -996,6 +996,10 @@ public class PhoneIQ {
     }
     // meeting room -II version 2
     // this version is faster O(nlgn)
+    // The idea is to sort the intervals based on the start time and then put the end time of the sorted intervals
+    // in a minHeap. We add the ene interval to the minHeap and before adding this end interval we check if the current
+    // top of the minHeap is smaller than the start time if that is the case its safe to remove this from the heap.
+    // it also means the previous meeting is done and we can take this room.
     private class IntervalComparatorSimple implements Comparator<int []> {
         @Override
         // sort by start interval

@@ -1637,7 +1637,7 @@ public class GraphNode {
             if (findVT(u,parent) != findVT(v,parent)) {
                 scc--;
                 unionVT(u,v,parent,rank);
-            } else { // loop detected 
+            } else { // loop detected
                 return false;
             }
         }

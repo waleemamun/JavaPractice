@@ -111,7 +111,7 @@ public class DPs {
         return maxSum;
     }
 
-    // LeetCode :: 363. Max Sum of Rectangle No Larger Than K
+    // LeetCode :: 363. Max Sum of Rectangle No Larger Than K (Hard)
     // The idea is to use the 2D kadane's algorithm and to get the max sum less than K we need to use the approach
     // of range sum less than K problem which basically the priblem "LeetCode :: 560. Subarray Sum Equals K" but as
     // we are asked to get sum less than K we use a TreeSet and ceiling method in combination with the approach of
@@ -189,7 +189,7 @@ public class DPs {
     public boolean isMatch(String s, String p) {
         boolean [][]dp  = new boolean[s.length() + 1][p.length() + 1];
         dp[0][0] = true;
-        // we need to intialize this way because s = "aab"
+        // we need to initialize this way because s = "aab"
         // can match p = "c*a*b", meaning the c* can actually
         // represent '', 'c' or 'ccc*'
         for (int i = 2; i <= p.length(); i++) {
@@ -206,7 +206,7 @@ public class DPs {
                 else if (p.charAt(j-1) == '*') {
                     // dp[i][j-2] presents an empty sequence for 'a*' we have to do j-2 as 'a*' is two chars
                     // the rest of the half represents 'a*' as single 'a' or multiple a's 'aaaaa'
-                    // the dp[i-1][j] considers a non empty sequence of chars for '*' but we need to  make sure the char
+                    // the dp[i-1][j] considers a non-empty sequence of chars for '*' but we need to  make sure the char
                     // before '*' in pattern matches the current char in S.
                     // first we check if the char before * matches the current char in string s by s(i-1) == p(j-2)
                     // or p(i-2) is a dot which matches any char
@@ -670,7 +670,11 @@ public class DPs {
     // operator holds the last value :) !!!
     // ways[i]  = ways[i] + ways[j-coins[i]]
     // Now we come to the 2nd observation although this problem looks similar to 'combinationSum4' method in this file
-    // this is not the same notice how the inner/outer loop is reversed in these cases. Its because for this problem
+    // this is not the same because in the combination sum we can use permutation like (1,2,1) and (2,1,1) and (1,1,2)
+    // for target 4 they are all valid combination. But in case of the coin problem we cannot use permutation its more
+    // like a combination so we are allowed to use only one of the permutation for example either (1,1,2) or (1,2,1)
+    // it gives us just 1 way. But for combinationSum4 it gave as 3 ways.
+    // Notice how the inner/outer loop is reversed in these cases. Its because for this problem
     // we first count how may ways for coins 1 - i we can achieve our amount, then we add the coin[i+1] to figure out
     // the number of ways. Look at the implementation of version 1 and the reason for using the 2d array before space
     // optimisation.
@@ -693,7 +697,7 @@ public class DPs {
     // The idea is very similar to the above problem here we need to find minumum ways
     // At every step we have few  options if the value of coin is bigger than the amount we use the previous coins value
     // for this amount. Otherwise we check if we dont take this coin so ways[i-1][j] is a better choice or if we take
-    // this coin ways[i-1][j - coin[i-1]] + 1 is a better choice (minimum).
+    // this coin ways[i][j - coin[i-1]] + 1 is a better choice (minimum).
     // So based on that our Dp eqn ways[i][j] = Math.min (ways[i-1][j], ways[i][j-coins[i]) +1)
     // Here we are using -1 to denote no result so we set the firs row to -1
     // we set first column to 0 as this would give a value 1 for ways[2][2], ways[4]4], ways[5][5] when coins are 2,4,5
@@ -968,6 +972,25 @@ public class DPs {
             }
         }
         return max * max;
+    }
+
+    // non memo version of the maximal square the idea is the same at each
+    // dp[i][j] = min (dp[i-1][j-1] , dp[i-1][j], dp[i][j-1]) + 1
+    // so we check three square (left, up, diagonal ie left corner) from current square
+    // and pick the minimum of it
+    public int maximalSquare2(char[][] matrix) {
+        int [][]dp = new int[matrix.length+1][matrix[0].length+1];
+        int maxSq = 0;
+        for (int i = 1; i <= matrix.length; i++) {
+            for (int j = 1; j<= matrix[0].length; j++) {
+                if(matrix[i-1][j-1] =='1') {
+                    dp[i][j] = Math.min(dp[i-1][j],dp[i][j-1]);
+                    dp[i][j] = Math.min(dp[i][j],dp[i-1][j-1]) + 1;
+                    maxSq = Math.max(maxSq, dp[i][j]);
+                }
+            }
+        }
+        return maxSq * maxSq;
     }
 
     // LeetCode :: 264. Ugly Number II

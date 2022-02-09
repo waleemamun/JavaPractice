@@ -193,6 +193,29 @@ public class SolutionsV2 {
         return strList;
     }
 
+    // easy to read version
+    public List<String> summaryRangesV2(int[] nums) {
+        List<String> rlist= new ArrayList<>();
+        if (nums.length == 0)
+            return rlist;
+        int st = nums[0], end = nums[0];
+        String str = "";
+        for (int i = 1; i <=nums.length; i++) {
+            if (i < nums.length && nums[i] - nums[i-1] == 1) {
+                end = nums[i];
+            } else {
+                if (st != end)
+                    str = st + "->" + end;
+                else
+                    str = st +"";
+                rlist.add(str);
+                if (i < nums.length)
+                    st = end = nums[i];
+            }
+        }
+        return rlist;
+    }
+
     // LeetCode :: 229. Majority Element II
     // This uses the same majority Algorithm used in the AdnanAziz (one majority item covering more than half the array)
     // Known as the Boyer-Moore Majority Vote Algorithm
@@ -244,6 +267,9 @@ public class SolutionsV2 {
     }
 
     // LeetCode :: 169. Majority Element
+    // The idea is to eliminate items so, first we pick a candidate increase the count for it if discover a different
+    // item we reduce this candidate's vote when the vote becomes zer we pick another new candidate and see if
+    // this can be the majority element. Finally, we double-check the number of vote for our candidate
     public int majorityElement(int[] nums) {
         int candidate = 0;
         int count = 0;
@@ -905,13 +931,14 @@ public class SolutionsV2 {
         return maxSize;
     }
 
-    // Leetcode :: 862. Shortest Subarray with Sum at Least K
+    // Leetcode :: 862. Shortest Subarray with Sum at Least K (Hard)
     // Sum(j,i) = sum (j) - sum(i-1) now if k <= sum(j,i) then
     // k <= sum (j) - sum(i-1) so
     // sum (i-1) <= sum(j) - k
     // Here we the problem says ateast K & get the shortest length thats why we need the while loop below
     // The run time is slow
-    // There is a montonic queue version for this solution but dont forget to review this solution
+    // There is a montonic queue version for this solution but don't forget to review THIS solution it has some insights
+    // but the monotonic queue is a better solution.
     public int shortestSubarray(int[] A, int K) {
         int minLen = A.length + 1;
         TreeMap<Long, Integer> map = new TreeMap<>();
@@ -921,7 +948,7 @@ public class SolutionsV2 {
         for (int i = 0; i < A.length; i++) {
             currSum += A[i];
             Long atLeastK = map.floorKey(currSum - K);
-            // Here we the problem says ateast K & get the shortest length so when we found a value that is at least or
+            // Here we the problem says ateast K & get the 'shortest' length so when we found a value that is at least or
             // greater than k we update the minLen but note we keep the value of the array as key in the TreeMap not the
             // index so we dont know if any other greater value has shorter length thats why we have to look up all the
             // values here. This would be different if instead of shortest length we need smallest sum in that case we
@@ -951,7 +978,7 @@ public class SolutionsV2 {
 
         for (int i = 0; i < runningSum.length; i++) {
             // increasing queue cause if x2 > x1 and runningSum(x2) < runningSum(x1) then
-            // for some next i runningSum(i) - k >= runningSum(x1) > runningSum(x1) then
+            // for some next i runningSum(i) - k >= runningSum(x1) > runningSum(x2) then
             // runningSum(i) - k >= runningSum(x2) as x2 > x1 then i - x2 < i - x1 so x2 is better choice hence we build
             // a increasing mono queue
             while(!dq.isEmpty() && runningSum[i] <= runningSum[dq.peekLast()]) {
@@ -1024,6 +1051,7 @@ public class SolutionsV2 {
     // LeetCode :: 1004. Max Consecutive Ones III
     // Use a sliding window approach one catch is we need to look for K + 1 zeros to stop expanding
     // the right window hence at the end we need to check if we have covered the last window length
+    // This problem requires maximum so we can also use the v2 approach which does not shrink the window
     public int longestOnes(int[] A, int K) {
         int desiredCount = K+1;
         int left = 0;
@@ -1050,6 +1078,29 @@ public class SolutionsV2 {
             max = Math.max(max,right-left);
         return max;
 
+    }
+
+    // Sliding window approach but in this case we never shrink the window
+    // We can solve this problem a little efficiently. Since we have to find
+    // the MAXIMUM window, we never reduce the size of the window. We either
+    // increase the size of the window or remain same but never reduce the size.
+    public int longestOnesV2(int[] nums, int k) {
+        int left = 0, right;
+        for (right = 0; right < nums.length; right++) {
+            // If we included a zero in the window we reduce the value of k.
+            // Since k is the maximum zeros allowed in a window.
+            if (nums[right] == 0) {
+                k--;
+            }
+            // A negative k denotes we have consumed all allowed flips and window has
+            // more than allowed zeros, thus increment left pointer by 1 to keep the window size same.
+            if (k < 0) {
+                // If the left element to be thrown out is zero we increase k.
+                k += 1 - nums[left]; // nums only contains 1 or zero so when left is pointing at 1, dont increase k
+                left++;
+            }
+        }
+        return right - left;
     }
 
     // LeetCode :: 636. Exclusive Time of Functions (not Submitted)
@@ -1809,6 +1860,8 @@ public class SolutionsV2 {
             result[updates[i][0]] += updates[i][2];
             // decrement the (endIndex + 1) by inc if we cross the len boundary we dont need to to do this
             if (updates[i][1] < length -1) {
+                // the reason for a endIndex + 1 is we cannot casue we are propagating the sum to endIndex and for
+                // endIndex + 1 we need to decrement count
                 result[updates[i][1] + 1] -= updates[i][2];
             }
         }
@@ -1846,6 +1899,11 @@ public class SolutionsV2 {
     // So we basically use this idea here. We put the running sum % k in hashmap and if we encounters same
     // running_sum % k then the difference between the running sum of this two positions is k or multiple of k
     // if the subset len is atleast 2  then our result is true
+    // Note the math: If we find  a % k is same as (b+nk) % k then a % k = (b + nk) % k
+    //                 then  a = b + nk so b -  a = nk
+    // now if 'a' is a previous range sum and 'b' is a later range sum then we have found a range sum diff b-a = nk
+    // our solution
+
     public boolean checkSubarraySum(int[] nums, int k) {
         HashMap<Integer,Integer> map = new HashMap<>();
         int sum = 0;
@@ -2061,14 +2119,10 @@ public class SolutionsV2 {
         for (Integer n : nums) {
             numbers.add(n.toString());
         }
-        Collections.sort(numbers, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                String str1 = o1+o2;
-                String str2 = o2+o1;
-                return str2.compareTo(str1);
-            }
-
+        Collections.sort(numbers, (o1,o2)->{
+            String s1 = o1+o2;
+            String s2 = o2+o1;
+            return s2.compareTo(s1);
         });
         // handle al zero cases
         if (numbers.get(0).equals("0"))
@@ -2091,15 +2145,11 @@ public class SolutionsV2 {
         for (Integer n : nums) {
             numbers[i++] = n.toString();
         }
-        Arrays.sort(numbers, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                String str1 = o1+o2;
-                String str2 = o2+o1;
-                return str2.compareTo(str1);
-            }
-
-        });
+        Arrays.sort(numbers,(o1,o2)->{
+            String s1 = o1+o2;
+            String s2 = o2+o1;
+            return s2.compareTo(s1);
+        } );
         // handle al zero cases
         if (numbers[0].equals("0"))
             return "0";
@@ -2116,6 +2166,13 @@ public class SolutionsV2 {
     // we put a height into the priority queue if the current value is the max value & start of a building
     // then add this value to resList. Or if this is the end of the building we remove it from the queue after that if
     // the removed value was the max value then we add it to the reslist
+    // By using a max priority queue we keep track of the building with the max height so far i.e. the building thats
+    // covering all other lower height buildings.
+    // Note there are three edge cases in this problem, Based on the these three edge cases we sort the skyline start/end points
+    // 1) when the start point of two building matches we need to put the one with larger height in to the queue first
+    // 2) if the end point of two building matches we need to put the one with smaller height into the queue first
+    // 3) if the start & end point of two buildings are same then the start of the building should put into the queue first
+    //
     private class Skyline implements  Comparator<Skyline>{
         int x;
         boolean start;

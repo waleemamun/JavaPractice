@@ -1960,6 +1960,59 @@ public class Tree {
         binaryTreePathsRec(root, pathList, new StringBuilder());
         return pathList;
     }
+    // Iterative approach PreOrder/DFS traversal
+    public List<String> binaryTreePathsV2(TreeNode root) {
+        List<String> pathList = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        Stack<String> pathStack = new Stack<>();
+        TreeNode node = root;
+        stack.push(node);
+        pathStack.push(Integer.toString(node.val));
+        while (!stack.empty()){
+            node = stack.pop();
+            String path = pathStack.pop();
+            if (node.left == null && node.right == null) {
+                pathList.add(path);
+            }
+            if (node.right != null) {
+                stack.push(node.right);
+                pathStack.push(path+"->"+node.right.val);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+                pathStack.push(path+"->"+node.left.val);
+            }
+        }
+
+        return pathList;
+    }
+    // iterative BFS approach
+    public List<String> binaryTreePathsV3(TreeNode root) {
+        List<String> pathList = new ArrayList<>();
+        Queue<TreeNode> q = new LinkedList<>();
+        Queue<String> pathQueue = new LinkedList<>();
+        if (root == null)
+            return pathList;
+        q.add(root);
+        pathQueue.add(Integer.toString(root.val));
+        while (!q.isEmpty()){
+            TreeNode node = q.remove();
+            String path = pathQueue.remove();
+            if (node.left == null && node.right == null) {
+                pathList.add(path);
+            }
+            if (node.left != null) {
+                q.add(node.left);
+                pathQueue.add(path+"->"+node.left.val);
+            }
+            if (node.right != null) {
+                q.add(node.right);
+                pathQueue.add(path+"->"+node.right.val);
+            }
+        }
+
+        return pathList;
+    }
 
     // Problem Def: Find the closest element in Binary Search Tree
     // Given a binary search tree and a target node K.
