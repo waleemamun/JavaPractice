@@ -1,3 +1,6 @@
+import jdk.nashorn.internal.ir.SplitReturn;
+import sun.util.resources.cldr.is.CalendarData_is_IS;
+
 import java.util.*;
 
 public class DataStructProblem {
@@ -281,14 +284,16 @@ public class DataStructProblem {
     // Simply store the  current value in the top. All calls to peek will return top
     // We update top during initialization once and then top is update in next call we
     // return the top value and update top with the nextValue
+    // We need to modify the hasNext as the pointers has moved because of our call in '
+    // the constructor, as the pointer is moved 1 ahead we need to compare top with null
+    // to check if we have reached the end
     class PeekingIterator implements Iterator<Integer> {
         Iterator<Integer> peekingIterator;
         Integer top = null;
         public PeekingIterator(Iterator<Integer> iterator) {
             // initialize any member here.
             peekingIterator = iterator;
-            if (peekingIterator.hasNext())
-                top = peekingIterator.next();
+            top = peekingIterator.hasNext() ? peekingIterator.next() : null;
         }
 
         // Returns the next element in the iteration without advancing the iterator.
@@ -302,17 +307,14 @@ public class DataStructProblem {
         @Override
         public Integer next() {
             Integer res = top;
-            if (peekingIterator.hasNext())
-                top = peekingIterator.next();
-            else
-                top = null;
+            top = peekingIterator.hasNext() ? peekingIterator.next() : null;
             return res;
 
         }
 
         @Override
         public boolean hasNext() {
-            return peekingIterator.hasNext();
+            return top != null;
         }
     }
 
@@ -348,7 +350,7 @@ public class DataStructProblem {
         // create the cache table building on the same idea of getting a bounded region using region starting from zero
         // Sum(ABCD) =  Sum(OB)+Sum(OC) + matrix[i][j] - Sum(OA)
         // Think how you can get you region by subtracting rectangles from the  bottom right rectangle
-        public NumMatrixImmurable (int [][] matrix) {
+        public NumMatrixImmurable (int [][] matrix, int v2) {
             if (matrix.length == 0) {
                 cache = null;
                 return;
@@ -364,7 +366,7 @@ public class DataStructProblem {
         // This uses the more complicated version look at the constructor public NumMatrix(int[][] matrix, boolean skip)
         // lets not do this as it just makes the cacl complicated I think I was using top right corner here
         // The better version is below
-        public int sumRegion2(int row1, int col1, int row2, int col2) {
+        public int sumRegion1(int row1, int col1, int row2, int col2) {
             int x = cache[row2][col2];
             int y = (col1 == 0 ? 0 : cache[row2][col1-1]);
             int z = (row1 == 0 ? 0:cache[row1-1][col2]);
@@ -373,9 +375,37 @@ public class DataStructProblem {
         }
         // This version is faster & easier check the constructor public NumMatrix (int [][] matrix)
         // Sum(ABCD) = Sum(OD)−Sum(OB)−Sum(OC)+Sum(OA)
-        public int sumRegion(int row1, int col1, int row2, int col2) {
+        public int sumRegion2(int row1, int col1, int row2, int col2) {
             return cache[row2+1][col2+1] - cache[row2+1][col1] - cache[row1][col2+1] + cache[row1][col1];
         }
+
+        // version 3
+
+        public NumMatrixImmurable (int [][] matrix) {
+            if (matrix.length == 0) {
+                cache = null;
+                return;
+            }
+            for (int col = 0; col < matrix[0].length; col++) {
+                for (int row = 1; row < matrix.length; row++) {
+                    matrix[row][col] += matrix[row-1][col];
+                }
+            }
+            for (int row = 0; row < matrix.length; row ++){
+                for (int col = 1; col< matrix[0].length; col++) {
+                    matrix[row][col] += matrix[row][col-1];
+                }
+            }
+            cache = matrix;
+        }
+        public int sumRegion(int row1, int col1, int row2, int col2) {
+            int x = cache[row2][col2];
+            int y = (col1 == 0 ? 0 : cache[row2][col1-1]);
+            int z = (row1 == 0 ? 0:cache[row1-1][col2]);
+            int a = (row1 == 0 || col1 == 0) ? 0:cache[row1 -1][col1-1];
+            return x - y -z +a;
+        }
+
     }
 
     // LeetCode :: 211. Add and Search Word - Data structure design
@@ -514,6 +544,7 @@ public class DataStructProblem {
     public class DblLinkList {
          int val;
          int key;
+         int count;
          DblLinkList prev;
          DblLinkList next;
          public DblLinkList(int k,int v){
@@ -521,6 +552,13 @@ public class DataStructProblem {
              key = k;
              prev = next = null;
          }
+        public DblLinkList(int k,int v, int c){
+            val = v;
+            key = k;
+            count = c;
+            prev = next = null;
+        }
+
     }
 
     class LRUCacheDList {
@@ -606,6 +644,108 @@ public class DataStructProblem {
 
         }
     }
+    // LeetCode :: 460. LFU Cache
+    // The idea is to use two hashmaps and a doubly linked list. The first hashmap  is similar to LRU cache  but the
+    // 2nd hashmap is a frequency map and points to doubly linked list of nodes for that frequency when we get/put a
+    // node we move the node from one doubly linked list to another (lower to higher frequency). We also need to keep
+    // track of the min which very important for deleting the lowest frequency node. When we access a node we update
+    // the frequency of that node from lower to higher by 1. Now if the lower frequency dlist becomes empty and at the
+    // same time the current min is same as the lower frequency we need to update/increase min by 1.
+    // When we add a new item to the LFU cache we reset min to 1.
+    // Note its easier to use dlist with head/tail to code this. We can also use only head and use head.prev to point
+    // to the head of the list head.next to point to the tail of the list but the code becomes hard to manage
+    // during interview, so we can discuss this as an optimisation.
+    class LFUCache {
+        HashMap<Integer, DblLinkList> cache;
+        HashMap<Integer, DblLinkList> freqMap;
+        int cap;
+        int min;
+        public LFUCache(int capacity) {
+            cap = capacity;
+            min = 0;
+            cache = new HashMap<>();
+            freqMap = new HashMap<>();
+        }
+
+        public int get(int key) {
+            DblLinkList node = cache.getOrDefault(key, null);
+            if (node != null) {
+                removeFromOldFreq(node);
+                addToHead(node);
+                return node.val;
+            }
+            return -1;
+        }
+        // Its much
+        private void addHeadTail(int freq) {
+            DblLinkList head = new DblLinkList(0,0,0);
+            DblLinkList tail = new DblLinkList(0,0,0);
+            head.next = tail;
+            tail.prev = head;
+            head.prev = tail;
+            tail.next = head;
+            freqMap.put(freq, head);
+        }
+
+        private void addToHead(DblLinkList node) {
+            if (!freqMap.containsKey(node.count)){
+                addHeadTail(node.count);
+            }
+            DblLinkList head = freqMap.get(node.count);
+            node.prev = head;
+            node.next = head.next;
+            head.next.prev = node;
+            head.next = node;
+        }
+
+        private void removeFromOldFreq(DblLinkList node) {
+            DblLinkList before = node.prev;
+            DblLinkList after = node.next;
+            DblLinkList head = freqMap.get(node.count);
+            DblLinkList tail = head.prev;
+            before.next = after;
+            after.prev = before;
+            node.prev = node.next = null;
+            // this dlist is empty and the current min is same as this  frequency so, we increase min by 1
+            if (head.next == tail && min == node.count)
+                min = node.count+1;
+            node.count++;
+
+        }
+
+        private void deleteNode (int freq) {
+            DblLinkList head = freqMap.get(freq);
+            DblLinkList tail = head.prev;
+            DblLinkList node = tail.prev;
+            tail.prev = node.prev;
+            node.prev.next = tail;
+            // this dlist is empty and the current min is same as this  frequency so, we increase min by 1
+            if (head.next == tail && min == node.count)
+                min = node.count+1;
+            cache.remove(node.key);
+        }
+        public void put(int key, int value) {
+            if (cap == 0) return;
+            DblLinkList node = cache.getOrDefault(key, null);
+            if (node == null) {
+                if (cap == cache.size()) {
+                    System.out.println(key +" v " + value + " m "+ min );
+                    deleteNode(min);
+                }
+                node = new DblLinkList(key, value, 1);
+                addToHead(node);
+                // new item reset current min to 1
+                min = 1;
+                cache.put(key,node);
+            } else {
+                node.val = value;
+                removeFromOldFreq(node);
+                addToHead(node);
+            }
+        }
+
+    }
+
     // This is another way to implement the LRU cache using Java's LinkedHashMap
     // LinkedHashMap is ordered map and we just need to overwrite the removeEldestEntry
     // to implement the cache.
@@ -1389,6 +1529,7 @@ public class DataStructProblem {
     // The idea is to store the numbers and also maintain an array last which store the index of last bigger number
     // in last[i] for each nums[i]. The idea is similar to storing last bigger index when scanning from right to left
     // we scan from right to left as we want to stop at bigger number than price
+    // This is also a DP approach, We  cannot use Mononic Queue cause we need Decreasing monotonic queue from right
     class StockSpanner {
         int []nums;
         int []last;

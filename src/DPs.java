@@ -1240,6 +1240,40 @@ public class DPs {
         return Math.max(oneBuyOneSell, twoBuyTwoSell);
     }
 
+    // The idea is to use two directional DP calc approach. If we observe closely the problem says no overlapping
+    // between the transactions. So, we can treat this problem as the '121. Best Time to Buy and Sell Stock' problem
+    // where we need to do just one transaction to find the best result. So this problem becomes dividing the prices
+    // into two subsequence and finding the on transaction that maximizes the buy sell in that subsequence/part.
+    // The result then would be finding two such subsequence among all two subsequence of the prices.
+    // Now if we go brute force there is N ways to make Two subsequence/part in prices array.
+    // Here we can use our DP solution to store the intermediate results. We are using two directional scan for price.
+    // The left array stores the profits if we go from left to right. The right array store the profit if we go from
+    // right to left. So, our max profit would be to choose the max of (left[i] + right[i+1]) so the partition location
+    // is i, i+1
+    public int maxProfitDP(int[] prices) {
+        int []left = new int[prices.length];
+        int []right = new int[prices.length];
+        int low = prices[0];
+        int maxProfit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            left[i] = maxProfit = Math.max(maxProfit, prices[i] - low);
+            low = Math.min(low, prices[i]);
+        }
+        int high = prices[prices.length-1];
+        maxProfit = 0;
+        for (int i = prices.length-1; i >= 0;i--) {
+            right[i] = maxProfit = Math.max(maxProfit, high - prices[i]);
+            high = Math.max(high, prices[i]);
+        }
+        maxProfit = left[0] + right[0]; // consider if we buy at the start and sell at the end (just one transaction case not two)
+        int j = 1;
+        for (int i = 0; i < left.length-1; i++) {
+            maxProfit = Math.max(maxProfit,left[i] + right[j++]);
+        }
+        return maxProfit;
+    }
+
+
     // LeetCode :: 188. Best Time to Buy and Sell Stock IV (not Submitted)
     // The idea is to use the state machine DP as above
     // Here we have two state that can occur k times
@@ -1349,11 +1383,13 @@ public class DPs {
         int len = Math.max(la, lb)+1;
         int[] ps = new int[len];
         ps[0] = 1;
+        // storing prime powers p^1, p^2, p^3 ....
         for(int i = 1; i < len; i++) {
             ps[i] = ps[i-1]*p;
         }
 
         int[] hashA = new int[la+1];
+        // now calculating Sum (a(i)*p^i) for i=1 to i=i
         for(int i = 1; i <= la; i++) {
             hashA[i] = hashA[i-1] + A[i-1] * ps[i];
         }
@@ -1514,8 +1550,8 @@ public class DPs {
     // build a left subtree & a right subtree and then add the left subtree & right subtree as to the root.
     // We use two lists to store the left subtrees & right subtrees, Then for root we take one node from left subtree
     // & one node from rightSubtree. Finally return the list. While creating the DP table use a hash key from (start,end)
-    // using a object s hash key slows the proggram execution but if we have integer has that can be easily pre-calculated
-    // then it very fast
+    // using a object s hash key slows the proggram execution but if we have integer hash that can be easily pre-calculated
+    // then it is very fast
 
     private int getPairHash(int start, int end) {
         return start*100+end;
@@ -1656,7 +1692,7 @@ public class DPs {
     // return : we have to return the maxProfit;
     // The idea is following at any item  if the item weight is bigger than the current knapsack capacity we cannot use
     // this item and we get our best DP value(profit) without this item so we look at values V[i-1][w] for wi > w
-    // if the items weight is small enough to fit in knapsack the we have two options to choose from we pick the max
+    // if the items weight is small enough to fit in knapsack then we have two options to choose from we pick the max
     // of the two options. First option is not to use this item at all so we get our value without this item so V[i-1][w]
     // Second option is to use this item so we have to make a space of weight wi in the knapsack so we can check the
     // price at [w-wi] which is V[i-1][w-wi] and add the price of wi which is vi to it so V[i-1][w-wi] + vi
@@ -1699,7 +1735,7 @@ public class DPs {
                     Values[w] = Math.max(Values[w],
                             Values[ w - itemsW[i-1]] + itemsVal[i-1]);
                 } else
-                    Values[w] = Values[w];
+                    Values[w] = Values[w]; // no need to do this, I just put it here to understand the optimisation better
             }
             System.out.println(Arrays.toString(Values));
         }
@@ -1988,6 +2024,8 @@ public class DPs {
                 dp[i] = Math.max(dp[i], dp[i-j] + dp[j]);
             }
             dp[i] = Math.max(dp[i], nums[i-1]);
+            // this is very important as in LIS the solution is not always
+            // in the last element so, we keep track of max
             max = Math.max(dp[i], max);
         }
         return max;

@@ -2754,7 +2754,7 @@ public class SolutionsV2 {
     // the same line will have same slope, so here we focus on the slope we hash two points slope all points that
     // have the same slope with this point will be on the same line hence fall into the same hash entry we can
     // increase the count for such same slope in the hashtable.
-    // The most important observation is the lope will be floating point number and for computers representation of
+    // The most important observation is the slope will be floating point number and for computers representation of
     // floating point number its not always easy to hash them so we need to take a different approach to store the slope
     // we can use the co-prime of two number (that is the gcd of two numbers) and store the number for example 3/6
     // becomes 1/2

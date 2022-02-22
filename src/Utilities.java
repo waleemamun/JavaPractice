@@ -306,7 +306,7 @@ public class Utilities {
         notPrime[1] = true;
         notPrime[0] = true;
         for (int i = 2; i <= nLimit; i++) {
-            if (notPrime[i] == false) {
+            if (!notPrime[i]) {
                 for (int j = 2; j*i <= n; j++){
                     notPrime[j*i] = true;
                 }
