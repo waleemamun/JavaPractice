@@ -1,6 +1,7 @@
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class DPs {
@@ -2166,6 +2167,26 @@ public class DPs {
         }
 
         return dp[s.length()] ;
+    }
+
+    // LeetCode :: 312. Burst Balloons
+    // The problem is classic Matrix chain multiplication problem. At each point we try to figure out which i
+    // will maximize my value
+    public int maxCoins(int[] nums) {
+        List<Integer> ballons = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        ballons.add(0,1);
+        ballons.add(1);
+        int n = ballons.size();
+        int [][]dp = new int[n][n];
+        for (int start = n-2; start >=1; start--) {
+            for(int end = start; end <= n-2; end++) {
+                for(int i = start; i <= end; i++){
+                    int val = ballons.get(start-1) * ballons.get(i) * ballons.get(end+1);
+                    dp[start][end] = Math.max(dp[start][end], val + dp[start][i-1] + dp[i+1][end]);
+                }
+            }
+        }
+        return dp[1][n-2];
     }
 
 
