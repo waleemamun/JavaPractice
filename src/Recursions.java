@@ -1991,6 +1991,7 @@ public class Recursions {
     }
 
     // LeetCode :: 216. Combination Sum III
+    // Check the version2
     // This idea is the same as combination sum we recurse & backtrack to find the solution
     // The range of number is 1 to 9 so in the for loop we used startIdx to 9
     // We used a boolean map to keep track of the used items in this recursion to avoid duplication
@@ -2029,6 +2030,7 @@ public class Recursions {
         return resList;
     }
 
+    // The version 2 is better it does not require unnecessary map called 'used'
     private void combinationSum3RecV2(int k, int target, int sum,
                                     List<List<Integer>> resList,
                                     ArrayList<Integer> tempList,
@@ -2040,12 +2042,9 @@ public class Recursions {
             return;
         }
         for (int i = startIdx; i <= 9; i++) {
-
             tempList.add(i);
             combinationSum3RecV2(k, target, sum + i, resList, tempList, i+1);
             tempList.remove(tempList.size() -1);
-
-
         }
 
     }
