@@ -2031,6 +2031,8 @@ public class Recursions {
     }
 
     // The version 2 is better it does not require unnecessary map called 'used'
+    // just used the combination NCK approach with one additional check to see if t
+    // he sum of the combination equals the target
     private void combinationSum3RecV2(int k, int target, int sum,
                                     List<List<Integer>> resList,
                                     ArrayList<Integer> tempList,
