@@ -2031,8 +2031,8 @@ public class Recursions {
     }
 
     // The version 2 is better it does not require unnecessary map called 'used'
-    // just used the combination NCK approach with one additional check to see if t
-    // he sum of the combination equals the target
+    // just used the combination NCK approach with one additional check to see if
+    // the sum of the combination equals the target
     private void combinationSum3RecV2(int k, int target, int sum,
                                     List<List<Integer>> resList,
                                     ArrayList<Integer> tempList,
@@ -2084,7 +2084,8 @@ public class Recursions {
         }
 
     }
-    // just  expand the island 2 we will color(store shortes path len) along the bfs border
+    // just  expand the island 2 we will color(store shortest path len) along the bfs border
+    // check the v2 its same algo with more concise implementation
     private int expandIsland(int [][]A, int r, int c, Queue <IntPair> queue) {
         if (r+1 < A.length) {
             if (A[r+1][c] == 0) {
@@ -2121,7 +2122,24 @@ public class Recursions {
         }
         return 0;
     }
-
+    // this is more concise version
+    private int expandIslandV2(int [][]A, int r, int c, Queue <IntPair> queue) {
+        int[] rx = {-1, 1, 0, 0};
+        int[] cx = {0, 0, -1, 1};
+        for (int i = 0; i<4; i++) {
+            int ry = r + rx[i];
+            int cy = c + cx[i];
+            if (ry < 0 || cy < 0 || ry>= A.length || cy>=A[0].length)
+                continue;
+            if (A[ry][cy] == 1)
+                return 1;
+            if (A[ry][cy] == 0) {
+                A[ry][cy] = A[r][c] + 1;
+                queue.add(new IntPair(ry,cy));
+            }
+        }
+        return 0;
+    }
     public int shortestBridge(int[][] A) {
         Queue<IntPair> queue = new LinkedList<>();
         int i = 0;
