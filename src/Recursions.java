@@ -2029,6 +2029,32 @@ public class Recursions {
         return resList;
     }
 
+    private void combinationSum3RecV2(int k, int target, int sum,
+                                    List<List<Integer>> resList,
+                                    ArrayList<Integer> tempList,
+                                    int startIdx) {
+        if (tempList.size() > k)
+            return;
+        if (tempList.size() == k && sum == target) {
+            resList.add(new ArrayList<>(tempList));
+            return;
+        }
+        for (int i = startIdx; i <= 9; i++) {
+
+            tempList.add(i);
+            combinationSum3RecV2(k, target, sum + i, resList, tempList, i+1);
+            tempList.remove(tempList.size() -1);
+
+
+        }
+
+    }
+    public List<List<Integer>> combinationSum3V2(int k, int n) {
+        List<List<Integer>> resList = new ArrayList<>();
+        combinationSum3RecV2(k, n,0,resList, new ArrayList<>(), 1);
+        return resList;
+    }
+
     // LeetCode :: 934. Shortest Bridge
     // Recursion + DFS + BFS
     // The idea is to do a DFS to color one of the island 2 so that the other Island remain color 1

@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ScratchPad {
     public static  void atest(){
@@ -8,6 +10,11 @@ public class ScratchPad {
         alist.add(1, 3);
         alist.add(0, 2);
 
+    }
+    public static void lambdaPR(){
+        Integer []arr = {2,3,3,1,3,1,3,4,4,1};
+        Map<Integer,Long> map = Arrays.stream(arr).collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+        map.forEach((k,v)->System.out.println(k+":>"+v));
     }
 
     public static void linleListPractice(){

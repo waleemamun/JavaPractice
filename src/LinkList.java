@@ -1,7 +1,4 @@
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Stack;
+import java.util.*;
 
 
 public class LinkList {
@@ -241,23 +238,8 @@ public class LinkList {
             return new LinkList();
 
         LinkList resultList = new LinkList(-1); // create a dummy list node as the result list
-        // Create the MIN Heap/Priority Queue
-        PriorityQueue<LinkList> pQueue = new PriorityQueue<>(new Comparator<LinkList>() {
-            @Override
-            public int compare(LinkList o1, LinkList o2) {
-                if (o1.data < o2.data)
-                    return -1;
-                else if (o1.data > o2.data)
-                    return 1;
-                else
-                    return 0;
-            }
-        });
-
-        for (LinkList list : lists) {
-            if (list != null)
-                pQueue.add(list);
-        }
+        PriorityQueue<LinkList> pQueue = new PriorityQueue<>((o1,o2)->(o1.data -o2.data));
+        pQueue.addAll(Arrays.asList(lists));
         // create curr pointer for the result list we will increase the curr pointer
         // to add items at the end of the list as we remove them from the MIN Heap
         // each item added will be the smallest item on the Heap
@@ -319,6 +301,15 @@ public class LinkList {
 
     }
     // Try solving with recursion
+    private LinkList swapPairHelper2 (LinkList first) {
+        if(first == null || first.next == null)
+            return first;
+        LinkList sec = first.next;
+        first.next = swapPairHelper2(sec.next);
+        sec.next = first;
+        return sec;
+    }
+
     private LinkList swapPairHelper (LinkList head, LinkList first) {
         if(first == null || first.next == null)
             return first;
@@ -566,7 +557,7 @@ public class LinkList {
     // with prev value the distance between prev & cur determines whether this value
     // is unique or not. If the distance is 1 then its unique otherwise it not unique
     // and we can skip this value
-    public LinkList deleteDuplicatesKeepDistinct(LinkList head) {
+    public LinkList deleteDuplicatesKeepDistinctv2(LinkList head) {
         if (head == null)
             return null;
         LinkList newHead = null; // we need a newhead if the first entry pointed by head is duplicated

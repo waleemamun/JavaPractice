@@ -281,6 +281,7 @@ public class Main {
         int flight [][] = {{0,1,1},{1,2,1},{0,2,5},{2,3,1}};
         System.out.println( "cost = " + g1.findCheapestPrice(4,flight,0,3,1));
         System.out.println(g1.validTree(5, gedge));
+        ScratchPad.lambdaPR();
 
 
 
