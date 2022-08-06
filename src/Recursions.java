@@ -2325,6 +2325,7 @@ public class Recursions {
     }
 
     // LeetCode :: 395. Longest Substring with At Least K Repeating Characters
+    // This is not a good candidate for RECURSION; check the v2 which uses sliding window approach.
     // The idea is to recursively solve this problem. We find one char that has not been repeated k-times and split the
     // string at that char and recusively check if the sub string has a solution or not for example abbacad & k = 2
     // we split at 'c' and check if 'abba' has valid solution
@@ -2362,6 +2363,66 @@ public class Recursions {
         // to pass recusively check for subtring tarting with 'o'
         max = Math.max(max, longestSubstring(s.substring(st),k));
         return max;
+    }
+
+    // The idea here is to use a sliding window approach to get the max substring length. In a sliding window we can
+    // either restrict the number of unique char or the frequency of  each char in the window. In this problem the
+    // frequency is restricted by problem definition so we only cna play with the number of unique chars.
+    // So we first figure out the number of unique chars in the string then we try to find the max substring for unique
+    // chars ranging from [1 to maxUnique] where each char is repeated atleast K times. So we repeat the sliding window
+    // for different number of unique chars to find out the best solution. if we get the results for the range of uniq
+    // chars we will find the max len for at least one in the range of uniq chars. for example if there are 4 uniq chars
+    // we may find the optimal solution for 2 uniq chars
+    // The runtime for this is O(maxUni * N) = O(26*N) = O(N)
+    public int longestSubstringV2(String s, int k) {
+        int maxLen = 0;
+        HashSet<Character> set = new HashSet<>();
+        for (Character ch : s.toCharArray()){
+            set.add(ch);
+        }
+        int maxUnq = set.size();
+        for (int curUnq = 1; curUnq <=maxUnq; curUnq++){
+            int left = 0;
+            int right = 0;
+            int unq = 0;
+            int atLeastK = 0;
+            HashMap<Character, Integer> map = new HashMap<>();
+            // use the generic sliding window approach, we increase the window as long as our conditions are met
+            // here the condition is the number of unique chars. We are trying to expand the window until the number
+            // of uni chars is less than the total number of unique chars for this range.
+            while(right<s.length()) {
+                if (unq <= curUnq)  {
+                    Character ch = s.charAt(right);
+                    int count = map.getOrDefault(ch, 0);
+                    if (count == 0){
+                        unq++;
+                    }
+                    count++;
+                    if (count == k) {
+                        atLeastK++;
+                    }
+                    map.put(ch,count);
+                    right++;
+                } else {
+                    Character ch = s.charAt(left);
+                    int count = map.get(left);
+                    if (count == k)
+                        atLeastK--;
+                    count--;
+                    if (count == 0)
+                        unq--;
+                    map.put(ch, count);
+                    left++;
+                }
+                if (curUnq == unq && unq == atLeastK) {
+                    // we do right - left because in the if condition right has moved
+                    // to point to the next item so no need right -left +1
+                    maxLen = Math.max(maxLen, right - left);
+                }
+
+            }
+        }
+        return maxLen;
     }
 
     // LeetCode :: 212. Word Search II
