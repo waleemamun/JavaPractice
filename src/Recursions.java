@@ -2643,9 +2643,51 @@ public class Recursions {
         }
     }
 
+    /**
+     * When we use dfs to do this question, the most tricky part is that how to deal with multiplication. For every
+     * addition and subtraction, we just directly adding or subtracting the new number. However, for multiplication,
+     * we should multiply current number and previous number firstly, and then add previous previous number.
+     * So we can use a variable preNum to record every previous number in each recursion step. If current recursive
+     * call is trying multiplication, we should use previous calculation value subtract previous number, and then
+     * adding multiplication result between previous number and current number.
+     * */
+    private void dfs(List<String> res, String num, String path, int target, long preVal, long prevSum, int pos){
+        if (pos == num.length() && target == prevSum){
+            res.add(path);
+            return;
+        }
+
+        for (int i = pos; i < num.length(); i++) {
+            if (i != pos && num.charAt(pos) == '0') break; // we can't have numbers with multiple digits started with zero,
+            String strVal = num.substring(pos, i + 1);
+            long curr = Long.valueOf(strVal);
+            if (pos == 0){
+                // preVal needs to be set to cur as this is the first entry for recursive calls, by specially handling
+                // the case for pos == 0 only once in the whole recursion we made the code more simple and concise
+                dfs(res, num, path + curr, target, curr, curr, i + 1);
+            } else{
+                dfs(res, num, path + "+" + curr, target, curr, prevSum + curr, i + 1);
+                dfs(res, num, path + "-" + curr, target, -curr, prevSum - curr, i + 1); // previous val for next will be -X
+                // consider x*y the preVal is used to identify the left operand of multiplication so preVal is x for x*y
+                // in case of multiplication the sum is like x + y * z here x+y is preSum & y is preVal
+                // so preSum -preVal == x
+                // again we need the y*z part as y = preVal z = cur
+                // then x+y*z becomes preSum - preVal + preVal * cur
+                dfs(res, num, path + "*" + curr, target, preVal * curr, prevSum - preVal + preVal * curr, i + 1);
+                /** eg.  5 + 3 * 2  should be 11 instead of 16, lets say we are evaluating the last stage
+                 preVal will be 3, prevSum will be 8 (5 + 3) from previous operation, and curr will be 2
+                 prevSum - preVal + preVal * curr ===> 8 - 3 + 3 * 2 = 11
+                 and for next round preVal * curr ===> 3 * 2 should be as previous val 2 + (3 * 2) + ...
+                 */
+            }
+        }
+    }
     public List<String> addOperators(String num, int target) {
         List <String> rList = new ArrayList<>();
-        addOperatorsHelper(num, 0, target,rList, new StringBuilder(), 0, '+',0);
+        //addOperatorsHelper(num, 0, target,rList, new StringBuilder(), 0, '+',0);
+        // in this call the value of preVal actually does not matter as in the first call the value for preVal will
+        // calculate and passed for the subsequent recursion see the pos == 0 condition in recursive call
+        dfs(rList, num, "",target,0, 0, 0);
         return rList;
     }
 
