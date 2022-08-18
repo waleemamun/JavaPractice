@@ -547,7 +547,6 @@ public class Tree {
         ArrayList<Integer> alist = new ArrayList<>();
         TreeNode node = root;
         double lastVal = -Double.MAX_VALUE;
-        boolean isFirst = true;
         while (!stack.empty() || node != null) {
             if(node != null) {
                 stack.push(node);
@@ -852,6 +851,10 @@ public class Tree {
         return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
 
     }
+    // one line code :)
+    public int maxDepth2(TreeNode root) {
+        return (root==null) ? 0: 1+Math.max(maxDepth2(root.left),maxDepth2(root.right));
+    }
 
     // LeetCode :: 105. Construct Binary Tree from Preorder and Inorder Traversal
     // Remember to use hashMap whenever you only do lookup in an unsorted array never
@@ -862,7 +865,7 @@ public class Tree {
     // right & left subtree. One thing to remember is the boundary in the inorder array is different
     // from preorder array on the preorder array fro right subtree we need to jump from current
     // position + the length of left subtree so the calc is (end - start + 1 + prestart + 1)
-    // Check the version 1 its very interesting little complicated
+    // Check the version 4 its the best solution
     HashMap<Integer,Integer> inorderMap = new HashMap<>();
     public TreeNode buildTreeV2(int[] preorder, int[] inorder) {
         if(preorder.length == 0 || inorder.length == 0 || preorder.length != inorder.length)
@@ -915,6 +918,27 @@ public class Tree {
                 inOrderRootIdx -1, preorderSt + 1, preorderSt + leftSubtreeSize);
         root.right = buildTreePreOrderRecV3(inorder, preorder, inOrderRootIdx +1 ,
                 inorderEnd , preorderSt + leftSubtreeSize +1, preorderEn);
+        return root;
+    }
+
+    // This is the easiest solution uses start & end pointers along with an index to traverse the preorder tree
+    int preSt = -1;
+    private TreeNode buildTreePreOrderRecV4(int[] inorder,
+                                            int[] preorder,
+                                            int inorderSt,int inorderEnd) {
+        if (inorderEnd < inorderSt)
+            return null;
+        preSt++;
+        int inOrderRootIdx = inorderMap.get(preorder[preSt]);
+        // for post oder we cal the right sub tree size as the right sub tree appears after root node
+        // for indorder case we just need to calc left subtree size instead using inOrderRootIdx - inorderSt
+
+        TreeNode root = new TreeNode(preorder[preSt]);
+        //System.out.println(root.val + " " + rightSubtreeSize + " " + inorderEnd +" " + inOrderRootIdx);
+        root.left = buildTreePreOrderRecV4(inorder, preorder, inorderSt,
+                inOrderRootIdx -1);
+        root.right = buildTreePreOrderRecV4(inorder, preorder, inOrderRootIdx +1 ,
+                inorderEnd);
         return root;
     }
     // This is a very nice solution, We build the tree in preorder
@@ -1161,6 +1185,7 @@ public class Tree {
     }
     // LeetCode :: 111. Minimum Depth of Binary Tree
     // Calc the minimum depth from the root to leaf so the min depth will not be zero
+    // special handling requires if only one child is null, then we need to consider only the non-null child
     public int minDepth(TreeNode root) {
         if (root == null) return 0;
         int left = minDepth(root.left);
@@ -1208,11 +1233,13 @@ public class Tree {
     }
 
     // LeetCode :: 114. Flatten Binary Tree to Linked List
+    // Check the V2 it avoids the unnecessary while loop in the recursive function
     // The idea is to traverse the tree in revrese post order (right subtree , left subtree , node)
     // for each node after traversing the right subtree we store it & traverse the left subtree & store it
     // now if there is no left subtree, this node's right child can directly point to right subtree,
     // otherwise we find the last node in left subtree make its right pointer point to right subtree
     // finally  make the left subtree its right child
+    // Note:: It DOES NOT matter if you flatten the right tree first or the left tree
     public TreeNode flattenRec (TreeNode node){
         if (node == null)
             return null;
@@ -1238,28 +1265,24 @@ public class Tree {
         }
         return node;
     }
-    // same login making the code concise, but the not sure if its easier to read
-    public TreeNode flattenRecV2 (TreeNode node){
-        if (node == null)
-            return null;
-        // get the flattened right subtree
-        node.right = flattenRecV2(node.right);
-        // get the flattened left subtree
-        node.left = flattenRecV2(node.left);
-        if (node.left != null) {
-            // left subtree is not empty find the right most child in left subtree
-            TreeNode walk = node.left;
-            while (walk.right != null)
-                walk = walk.right;
-            // right most child of left subtree points right subtree
-            walk.right = node.right;
-            // right child point to left subtree
-            node.right = node.left;
-        }
-        // make left node null
-        node.left = null;
-        return node;
 
+    // The idea is similar to the approach above but here we avoid the while loop by just returning the tail node
+    // instead of the current node. we get both left tail & right tail node  & if the right tail is not null we return
+    // the right tail. Returning tail works because consider the smallest example a node has both right & left child now
+    // after flatening we will return the right node which will be the tail node. Try this example by hand if you
+    // are confused.
+    public TreeNode flattenRecV2 (TreeNode node){
+         if(node == null || (node.left == null && node.right == null)) {
+             return node;
+         }
+         TreeNode leftTail = flattenRecV2(node.left);
+         TreeNode rightTail = flattenRecV2(node.right);
+         if (leftTail != null) {
+             leftTail.right = node.right;
+             node.right = node.left;
+             node.left = null;
+         }
+         return rightTail != null ? rightTail: leftTail;
     }
     public void flatten(TreeNode root) {
         flattenRecV2(root);
@@ -1476,6 +1499,7 @@ public class Tree {
     // the left subtree by using the node from start to mid node & create the right subtree by using the node
     // from mid.next node to end node
     // Remember in this case we consider the end node to exclusive & start node to be inclusive so (start,end]
+    // check the v2
     public TreeNode sortedListToBST(LinkList head) {
         TreeNode root = null;
         if (head == null)
@@ -1505,6 +1529,37 @@ public class Tree {
         node.left = sortedListToBSTRec(start,slow);
         // create the right subtree using the  list from right of mid
         node.right = sortedListToBSTRec(slow.next, end);
+        return node;
+    }
+    // This uses the same idea when you are given an inorder array and asked to create a balances BST
+    // The idea is to build the tree inorder while traversing the list in ascending order. We need a global head pointer.
+    // we move the head along the list and only move it when a valid node can be produced. for example low > high
+    // would be an invalid case.
+    // The first node in the inorder list will create the left most node in BST, that's why we need to build the using
+    // inorder approach. We keep track of the low & high index in the list for each subtree. Everytime we create a valid
+    // node it has to be withing the boundary of (low, high). As we start with (0 , size of list) range, on every step
+    // the range is split to (low, mid -1) & (mid + 1, high) this range allows the node to be created in proper order (inorder).
+    // Note:: we can also build a perfect BST same way if we are given a array of inorder traversal. It be same approach
+    // only no need to manage a linkedlist but an array, so just neeed a global index
+    LinkList inNode = null;
+    public TreeNode sortedListToBSTV2(LinkList head) {
+        inNode = head;
+        int sz = 0;
+        while(head != null) {
+            head = head.next;
+            sz++;
+        }
+        return sortedListToBSTRecV2(0, sz - 1);
+    }
+    private TreeNode sortedListToBSTRecV2(int low, int high) {
+        if (inNode == null || low > high)
+            return null;
+        int mid = (low + high)/2;
+        TreeNode lstree = sortedListToBSTRecV2(low, mid -1);
+        TreeNode node = new TreeNode(inNode.val);
+        node.left = lstree;
+        inNode = inNode.next;
+        node.right = sortedListToBSTRecV2(mid+1, high);
         return node;
     }
 
@@ -1986,7 +2041,7 @@ public class Tree {
 
         return pathList;
     }
-    // iterative BFS approach
+    // iterative BFS approachy
     public List<String> binaryTreePathsV3(TreeNode root) {
         List<String> pathList = new ArrayList<>();
         Queue<TreeNode> q = new LinkedList<>();
