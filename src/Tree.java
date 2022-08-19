@@ -25,6 +25,32 @@ public class Tree {
         }
         System.out.println();
     }
+    // print the tree using a preorder approach 
+    // we print the tree in preorder while printing instead of top down we go 
+    // left to right for root --> leaf for ease of printing. we use a padding
+    // string & shildArrow to denote left or right child.
+    // '|--' denotes left child
+    // '|->' denotes right child
+    // we also use '|' to draw a vertical line to connect left & right siblings
+    public void print(TreeNode root) {
+        System.out.println(root.val);
+        printHelper(root.left, "", "|__", root.right != null);
+        printHelper(root.right, "", "|->", false);
+    }
+
+    public void printHelper(TreeNode root, String padding, String childArrow, boolean hasSibling) {
+        if (root != null) {
+            String str = padding.toString() + childArrow + root.val;
+            System.out.println(str);
+            if (hasSibling) {
+                padding+= "|  ";
+            } else  {
+                padding+= "  ";
+            }
+            printHelper(root.left, padding, "|__", root.right != null);
+            printHelper(root.right, padding, "|->", false);
+        }
+    }
 
     public void createBinaryTree (int arr[]) {
         if (arr.length == 0) {

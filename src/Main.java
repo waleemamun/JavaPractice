@@ -282,6 +282,19 @@ public class Main {
         System.out.println( "cost = " + g1.findCheapestPrice(4,flight,0,3,1));
         System.out.println(g1.validTree(5, gedge));
         ScratchPad.lambdaPR();
+        Tree tr = new Tree();
+        int [] nums = {11,12,20,30,40,50,60,75,85,88,90};
+        TreeNode nd = tr.createBSTree(0, nums.length -1, nums);
+        List<Integer> lst = tr.preorderTraversal(nd);
+        System.out.println("pre list " + lst);
+        Integer []pre = lst.toArray(new Integer[0]);
+        System.out.println("preorder array " + Arrays.toString(pre));
+        TreeNode nd2 =AdnanAziz.buildBSTfromPreOrder(pre);
+        tr.preOrderTraversalRec(nd2);
+        System.out.println();
+        tr.print(nd2);
+
+
 
 
 

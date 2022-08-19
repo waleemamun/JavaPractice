@@ -212,4 +212,25 @@ public class AdnanAziz {
         return maxEvent;
     }
 
+    // 15.5 RECONSTRUCT A BST FROM TRAVERSAL DATA
+    // Given a preorder traversal build a height balanced BST.
+    // Note all keys are distinct/unique in the preorder traversal
+    private static int rid;
+    public static TreeNode buildBSTfromPreOrder(Integer []pre) {
+        int rid = 0;
+        return buildBST(pre, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    private static TreeNode buildBST(Integer[] pre, int min, int max) {
+        if (rid == pre.length || min > max)
+            return null;
+        if(pre[rid] < min || pre[rid] > max)
+            return null;
+        TreeNode node  = new TreeNode(pre[rid]);
+        rid++;
+        node.left = buildBST(pre, min, node.val);
+        node.right = buildBST(pre, node.val,  max);
+        return node;
+    }
+
 }
