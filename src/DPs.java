@@ -622,6 +622,9 @@ public class DPs {
     public int combinationSum4(int[] nums, int target) {
         int []ways = new int[target + 1];
         ways[0] = 1;
+        // we need to figure out per target how the nums can be used to reach that target
+        // here the target is 1, 2 ,4, .... target. The outer loop calc for each target the ways possible
+        // inner loop used all available number to reach one target
         for (int i = 1; i < ways.length; i++) {
             for (int j = 0; j < nums.length;j++) {
                 // we don't want to process if the current value is smaller the nums[j]
@@ -869,7 +872,6 @@ public class DPs {
             return 0;
         int last = 0;
         int lastLast = 0;
-        int max = 0;
         for (int i = 0; i<nums.length; i++) {
             int temp = last;
             last = Math.max(last, lastLast + nums[i]);
@@ -1341,7 +1343,7 @@ public class DPs {
         return getMoneyAmountRec(dp, 1, n);
     }
 
-    // Leetcode 718 :: Maximum Length of Repeated Subarray (DP) same as longest common substring
+    // Leetcode `718` :: Maximum Length of Repeated Subarray (DP) same as longest common substring
     public int findLength(int[] A, int[] B) {
         int result = 0;
         int m = A.length;
@@ -1478,8 +1480,8 @@ public class DPs {
         if (matrix.length == 0)
             return 0;
         int [][] memo = new int [matrix.length][matrix[0].length];
-        for (int i =0 ; i< matrix.length; i++)
-            Arrays.fill(memo[i],0);
+//        for (int i =0 ; i< matrix.length; i++)
+//            Arrays.fill(memo[i],0);
         int longestPath = 0;
         for (int i=0; i< matrix.length; i++) {
             for (int j =0; j<matrix[0].length; j++) {

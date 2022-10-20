@@ -728,6 +728,8 @@ public class DataStructProblem {
             if (cap == 0) return;
             DblLinkList node = cache.getOrDefault(key, null);
             if (node == null) {
+                // when reaching capacity we need to delete before adding the new item as the new item will have freq
+                // count = 1 so if donot delete before add the new item has high chance of getting deleted
                 if (cap == cache.size()) {
                     System.out.println(key +" v " + value + " m "+ min );
                     deleteNode(min);

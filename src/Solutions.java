@@ -942,6 +942,8 @@ public class Solutions {
         return rList;
     }
 
+    // NOTE :: Check Version 6 the sliding window approach. Interesting trick allows sliding window to succeed.
+    //         The version 6 is the best approach
     // This is a more easy to read version the idea is to do an inverse indexing of the S to identify which index of
     // S has the starting of a word from  the valid words list the saves substring creation and lookup. The other nice
     // optimisation is after creating the dictionary we index the dictionary in another wordtable and keep the count.
@@ -998,6 +1000,86 @@ public class Solutions {
         }
 
         return rList;
+    }
+
+    // THis uses the sliding window approach. This approach works bacause of calling the slidingWindow function
+    // from the main call for as many as words[0].length times. Think very carefully about this and you will see how it
+    // works. say we have foobarthkggfoobar for [foo, bar] the 2nd foobar will be considered because of our multiple
+    // calls to slidingWindow. as foo = 3 here we either start thk or hkg or kgg it will work when we pick kgg
+    private HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
+    private int n;
+    private int wordLength;
+    private int substringSize;
+    private int k;
+
+    private void slidingWindow(int left, String s, List<Integer> answer) {
+        HashMap<String, Integer> wordsFound = new HashMap<>();
+        int wordsUsed = 0;
+        boolean excessWord = false;
+
+        // Do the same iteration pattern as the previous approach - iterate
+        // word_length at a time, and at each iteration we focus on one word
+        for (int right = left; right <= n - wordLength; right += wordLength) {
+
+            String sub = s.substring(right, right + wordLength);
+            if (!wordCount.containsKey(sub)) {
+                // Mismatched word - reset the window
+                wordsFound.clear();
+                wordsUsed = 0;
+                excessWord = false;
+                left = right + wordLength;
+            } else {
+                // If we reached max window size or have an excess word
+                while (right - left == substringSize || excessWord) {
+                    String leftmostWord = s.substring(left, left + wordLength);
+                    left += wordLength;
+                    wordsFound.put(leftmostWord, wordsFound.get(leftmostWord) - 1);
+
+                    if (wordsFound.get(leftmostWord) >= wordCount.get(leftmostWord)) {
+                        // This word was an excess word
+                        excessWord = false;
+                    } else {
+                        // Otherwise we actually needed it
+                        wordsUsed--;
+                    }
+                }
+
+                // Keep track of how many times this word occurs in the window
+                wordsFound.put(sub, wordsFound.getOrDefault(sub, 0) + 1);
+                if (wordsFound.get(sub) <= wordCount.get(sub)) {
+                    wordsUsed++;
+                } else {
+                    // Found too many instances already
+                    excessWord = true;
+                }
+
+                if (wordsUsed == k && !excessWord) {
+                    // Found a valid substring
+                    answer.add(left);
+                }
+            }
+        }
+    }
+
+    public List<Integer> findSubstringv6(String s, String[] words) {
+        n = s.length();
+        k = words.length;
+        wordLength = words[0].length();
+        substringSize = wordLength * k;
+
+        for (String word : words) {
+            wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+        }
+
+        List<Integer> answer = new ArrayList<>();
+        // the following code will handle the special case of 1st input
+        //1st input like thfoobarmanfoo for [foo, bar]
+        //2nd input like thefoobarmanfoo for [foo, bar]
+        for (int i = 0; i < wordLength; i++) {
+            slidingWindow(i, s, answer);
+        }
+
+        return answer;
     }
 
     // LeetCode 32 (Hard):: Longest Valid Parentheses This is a 3ms solution. This requires O(n) solution.
@@ -1748,7 +1830,7 @@ public class Solutions {
         if (strs.length == 0 || strs[0].length() == 0)
             return sb.toString();
         int j = 0;
-        for (String str:  strs)
+
         for (char ch : strs[0].toCharArray()) {
             for (String st: strs){
                 if (j >=st.length() || st.charAt(j) != ch)

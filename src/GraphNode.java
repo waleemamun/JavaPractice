@@ -18,7 +18,7 @@ public class GraphNode {
     }
 
     /***
-     * Note: Look how we vuild the graph using the HashMap its way faster to code/build graph like this
+     * Note: Look how we build the graph using the HashMap its way faster to code/build graph like this
      */
     public HashMap<Integer, HashSet<Integer>> buildGraph(int edges[][]) {
         HashMap<Integer, HashSet<Integer>> graph = new HashMap<>();
@@ -34,10 +34,7 @@ public class GraphNode {
     public void dfs(HashMap<Integer, HashSet<Integer>> graph) {
         System.out.println("DFS");
         int []color = new int [graph.size() +1];
-        Set<Integer> nodeSet = graph.keySet();
-        Iterator<Integer> itr = nodeSet.iterator();
-        while(itr.hasNext()) {
-            Integer u =  itr.next();
+        for (Integer u : graph.keySet()){
             if(color[u] == 0) {// white vertex
                 dfsVisit(u, graph, color);
                 System.out.println();
@@ -48,9 +45,7 @@ public class GraphNode {
     public void dfsVisit(Integer u,  HashMap<Integer, HashSet<Integer>> graph, int []color){
         color[u] = 1; // grey vertex
         HashSet<Integer> adjset = graph.get(u);
-        Iterator<Integer> itr = adjset.iterator();
-        while(itr.hasNext()) {
-            Integer v = itr.next();
+        for (Integer v: adjset) {
             if(color[v] == 0) { // unexplored
                 dfsVisit(v, graph, color);
             } else if(color[v] == 1) { // already visited grey vertex
@@ -84,9 +79,7 @@ public class GraphNode {
             color[u] = 2; // black
             System.out.print(u + " ");
             HashSet<Integer> adjSet = graph.get(u);
-            Iterator<Integer> itr = adjSet.iterator();
-            while (itr.hasNext()) {
-                Integer v = itr.next();
+            for(Integer v: adjSet) {
                 if (color[v] == 0){ // white vertex
                     queue.add(v);
                     color[v] = 1; // grey vertex
@@ -1031,7 +1024,6 @@ public class GraphNode {
                         && grid[r + incR][c + incC] == 1) {
                     grid[r + incR][c + incC] = grid[r][c] + 1;
                     queue.add(new int [] {r + incR, c + incC});
-                    int val =  (r + incR) * grid[0].length + (c + incC);
                     fresh--;
                 }
 
@@ -1057,6 +1049,15 @@ public class GraphNode {
      *     vertex in subtree rooted with v has a back edge to one of the ancestors (in DFS tree) of u.
      *
      *  Why this low[u] works?
+     *  Low is keeping track of if there is a back edge; for a back edge low will be updated to the ancestor's
+     *  discovery value  low[u] = min (low[u], disc[v]) here v is already visited so v must be an ancestor of u.
+     *
+     *  Also after every dfs call we update low depending on the low of adjacency vertes which is
+     *  low[u] = min(low[u],low[v])
+     *  if we see that there exist atleast one such vertex v whose low is >= this node u's discovery; it means v is
+     *  v is not part of the back edge cycle and if we remove u, v become disconnected
+     *  if (low[v] >= disc[u]) then u is a cutvertex
+     *
      *  This works because critical edge  does not belong in  loop, so when we discover a vertex which has
      *  low value < u's discovery value it means we have seen a cycle. and if we have seen a cycle none of the edge are
      *  critical so we can return this low value for all the edge in the cycle. Note a vertex on the cycle can still be
@@ -1127,6 +1128,8 @@ public class GraphNode {
     // The idea is the same as articulation point finding of a connected graph, Here we need the critical edge
     // that is connected to cut vertex so whenever we find a cut vertex we update the  critical edge say we find cut
     // vertex as u's after visiting it neighbor v so (u,v) is the critical edge
+    // Note we are trying to find cut edge not vertex so we need to use low[v] > disc[u] as our condition instead of
+    // low[v] >= disc[u]
     public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
 
         List<List<Integer>> critEdge = new ArrayList<>();
@@ -1245,10 +1248,12 @@ public class GraphNode {
         HashMap<Integer, List<int[]>> graph = new HashMap<>();
         // build the graph
         for (int [] con : connections) {
-            graph.putIfAbsent(con[0], new ArrayList<>());
-            graph.putIfAbsent(con[1], new ArrayList<>());
-            graph.get(con[0]).add(new int [] {con[1], con[2]});
-            graph.get(con[1]).add(new int [] {con[0], con[2]});
+            graph.computeIfAbsent(con[0],(k)->new ArrayList<>()).add(new int[] {con[1], con[2]});
+            graph.computeIfAbsent(con[1],(k)->new ArrayList<>()).add(new int[] {con[0], con[2]});
+//            graph.putIfAbsent(con[0], new ArrayList<>());
+//            graph.putIfAbsent(con[1], new ArrayList<>());
+//            graph.get(con[0]).add(new int [] {con[1], con[2]});
+//            graph.get(con[1]).add(new int [] {con[0], con[2]});
         }
         PriorityQueue<int []> minPQ = new PriorityQueue<>((a,b)->(a[2] - b[2]));
         minPQ.add(new int [] {1 ,1, 0});
@@ -1307,14 +1312,16 @@ public class GraphNode {
                     // want to check if a slightly costlier path with less hop is present, if dist[u] was used it will
                     // only give the shortest path
                     minHeap.add(new Integer[] {nodeV, cost + edgeWeight, hop + 1});
+                    // we only update the dist & the stopCount array in this path because in the else if case we are just
+                    // trying to see if we can get another less hop more expensive path but not necessary its our
+                    // solution and the dist & stopcount arrays are for storing  optimal values
                     dist[nodeV] = cost + edgeWeight;
-                } else if (hop < stopCount[nodeV]) {
+                    stopCount[nodeV] = hop + 1;
+                } else if (hop +1 < stopCount[nodeV]) {
                     // there is slightly higher cost path with less hop lets add it to heap for reconsider
                     minHeap.add(new Integer[] {nodeV, cost + edgeWeight, hop + 1});
                 }
-                // we update stopCount for the neighbor as hop because the first node from src should have hop zero
-                // and 2nd node from src has hop = 1 and so on
-                stopCount[nodeV] = hop;
+
             }
 
         }
@@ -1538,6 +1545,7 @@ public class GraphNode {
     public int makeConnectedV2(int n, int[][] connections) {
         int []parent = new int[n];
         int []rank = new int[n];
+        // make set
         for (int i = 0; i<n ;i++){
             parent[i] = i;
             rank[i] = 1;
@@ -1545,6 +1553,7 @@ public class GraphNode {
         int scc = n;
         for (int []e : connections) {
             int u = e[0], v = e[1];
+            // find & union
             if (findMC(u,parent) != findMC(v, parent)){
                 unionMC(u, v, parent, rank);
                 scc--;

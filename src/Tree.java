@@ -1617,35 +1617,29 @@ public class Tree {
     }
 
     // Adnan Aziz 10.11 inorder in O(1) space given parent pointer
+    // use the parent pointer to identify & travel which nodes are already visited or needs to be visited next
     public List<Integer> inOrderTraversalWithParent(TreeNode root) {
         TreeNode curr = root;
         TreeNode parent = null;
         TreeNode prev = null;
-        TreeNode next = null;
         List <Integer> traverseList = new ArrayList<>();
         while (curr != null) {
-            if(prev == curr.parent) {
-                if (curr.left != null){
+            TreeNode next = null;
+            if(prev == curr.parent) { // coming down from parent to left subtree
+                if (curr.left != null) { // more left nodes remaining go left
                     next = curr.left;
-                } else {
+                } else { // no more left node visit this node and go to the next node
                     traverseList.add(curr.data);
-                    if(curr.right == null)
-                        next = curr.parent;
-                    else
-                        next = curr.right;
+                    next = curr.right != null ? curr.right: curr.parent; // right child exist; visit right subtree
                 }
-            } else if (prev == curr.left) {
+            } else if (prev == curr.left) { // left subtree already visit done; visit this node
                 traverseList.add(curr.data);
-                if(curr.right == null)
-                    next = curr.parent;
-                else
-                    next = curr.right;
-            } else {
-                curr = curr.parent;
+                next = curr.right != null ? curr.right: curr.parent; // right child exist; visit right subtree otherwise go upwards
+            } else { // the subtree rooted at this node has been completely visited so go upwards
+                next = curr.parent;
             }
             prev = curr;
             curr = next;
-
         }
         return traverseList;
 
@@ -1961,6 +1955,8 @@ public class Tree {
     }
 
     // LeetCode :: 865. Smallest Subtree with all the Deepest Nodes
+    // Note: The problem is asking to find the smallest subtree that contains 'ALL' the deepest nodes;
+    // so if there are two nodes that are the deepest we need the subtree rooted at that node
     private HashMap<TreeNode, Integer> mapTreeNode = new HashMap<>();
     // Get Height using memoization
     private int getHeightOfNode(TreeNode node){
@@ -1996,6 +1992,8 @@ public class Tree {
         }
     }
 
+    // Note: The problem is asking to find the smallest subtree that contains 'ALL' the deepest nodes;
+    // so if there are two nodes that are the deepest we need the subtree rooted at that node
     // here note how we depend on the height to get the result node in such scenario
     // we can use the a new object to hold the height and the node and return both as a object
     public TreeNode subtreeWithAllDeepestV2(TreeNode root) {
@@ -2596,23 +2594,18 @@ public class Tree {
     // LeetCode :: 1026. Maximum Difference Between Node and Ancestor
     // The idea is to keep track of low and high value of the ancestors. At each node we check if the node's value is
     // lower than the current low of ancestor then we update the low to the new low for the ancestor. if the node's
-    // value is higher than the ancestor high we update the ancestor high. Next we calc the current diff for this node
-    // with ancestor low & high. We also keep track of maxDiff in a global variable
+    // value is higher than the ancestor high we update the ancestor high. At each step we calc the diff of  low & high.
+    // We also keep track of maxDiff in a global variable
     int maxDiff = 0;
     private void maxAncestorDiffHelper (TreeNode node, int low, int high){
         if(node == null)
             return;
-        // update ancestor low or high depending on the node's value
         if (node.val > high)
             high = node.val;
         else if (node.val < low)
             low = node.val;
-        // calc the current diff
-        int currDiff = Math.abs(high - node.val);
-        currDiff += Math.max(currDiff, Math.abs(low - node.val));
-        // update the global max diff if required
-        maxDiff = Math.max(maxDiff, currDiff);
-        // traverse the tree
+
+        maxDiff = Math.max(maxDiff, high-low);
         maxAncestorDiffHelper(node.left, low, high);
         maxAncestorDiffHelper(node.right, low, high);
     }

@@ -130,6 +130,7 @@ public class ScratchPad {
         }
         System.out.println(" Stack ");
         LinkedList<String> stringStack = new LinkedList<>();
+
         for (String word: words){
             stringStack.addFirst(word);
 
