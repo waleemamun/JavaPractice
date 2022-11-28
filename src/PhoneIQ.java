@@ -839,6 +839,7 @@ public class PhoneIQ {
 
     // LeetCOde :: 56. Merge Intervals
     // The idea is to sort the intervals based on the start of the intervals and then merge the overlapping intervals
+    // check the v2 its more compact
     private class IntervalComparator implements Comparator<int []> {
         @Override
         // sort by start interval first then end interval
@@ -869,6 +870,20 @@ public class PhoneIQ {
         mergelist.add(lastInv);
         return mergelist.toArray(new int[mergelist.size()][]);
 
+    }
+
+    public int[][] merge2(int[][] intervals) {
+        LinkedList<int[]> mgrList = new LinkedList<>();
+        Arrays.sort(intervals,(a,b)->(a[0] -b[0]));
+
+        for (int[] inv:intervals) {
+            if (mgrList.isEmpty() || mgrList.getLast()[1] < inv[0])
+                mgrList.add(inv);
+            else {
+                mgrList.getLast()[1] = Math.max(mgrList.getLast()[1], inv[1]);
+            }
+        }
+        return mgrList.toArray(new int[mgrList.size()][]);
     }
 
     // We need ot find the intersect & union of sorted intervals (if the intervals are not sorted we sort
