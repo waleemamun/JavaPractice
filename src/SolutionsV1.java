@@ -564,11 +564,16 @@ public class SolutionsV1 {
     }
 
     //Leetcode :: 68. Text Justification (Hard)
+    // Note :: Check the V2 version its more concise and better way to address the problem,
+    //          Interviewers are looking for a solution of this kind.
+    //          The basic idea is simple but how you organise your code is important.
     // The basic idea is to scan through the array and find out how many words
     // fit per line and  how many space per line in O(n). To do that we create and additional array which store
     // word count per line & another array that store total space per line. The we scan through the words array again
     // & build the line by getting  the word from words array using wordCount per line from strCount array also used
     // the space count per line to distribute the spaces
+    // Note :: Check the V2 version its more concise and better way to address the problem,
+    //          Interviewers are looking for a solution of this kind.
     private String createSpace(int count){
         String s= "";
         for(int i = 0; i < count; i++)
@@ -668,6 +673,60 @@ public class SolutionsV1 {
 
 
         return resultList;
+    }
+    public List<String> fullJustifyV2(String[] words, int maxWidth) {
+        int left = 0; List<String> result = new ArrayList<>();
+
+        while (left < words.length) {
+            int right = findRight(left, words, maxWidth);
+            result.add(justify(left, right, words, maxWidth));
+            left = right + 1;
+        }
+
+        return result;
+    }
+
+    private int findRight(int left, String[] words, int maxWidth) {
+        int right = left;
+        int sum = words[right++].length();
+
+        while (right < words.length && (sum + 1 + words[right].length()) <= maxWidth)
+            sum += 1 + words[right++].length();
+
+        return right - 1;
+    }
+
+    private String justify(int left, int right, String[] words, int maxWidth) {
+        if (right - left == 0) return padResult(words[left], maxWidth);
+
+        boolean isLastLine = right == words.length - 1;
+        int numSpaces = right - left;
+        int totalSpace = maxWidth - wordsLength(left, right, words);
+
+        String space = isLastLine ? " " : blank(totalSpace / numSpaces);
+        int remainder = isLastLine ? 0 : totalSpace % numSpaces;
+
+        StringBuilder result = new StringBuilder();
+        for (int i = left; i <= right; i++)
+            result.append(words[i])
+                    .append(space)
+                    .append(remainder-- > 0 ? " " : "");
+
+        return padResult(result.toString().trim(), maxWidth);
+    }
+
+    private int wordsLength(int left, int right, String[] words) {
+        int wordsLength = 0;
+        for (int i = left; i <= right; i++) wordsLength += words[i].length();
+        return wordsLength;
+    }
+
+    private String padResult(String result, int maxWidth) {
+        return result + blank(maxWidth - result.length());
+    }
+
+    private String blank(int length) {
+        return new String(new char[length]).replace('\0', ' ');
     }
 
     //LeetCode :: 71 Simplify Path

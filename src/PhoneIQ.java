@@ -937,6 +937,10 @@ public class PhoneIQ {
     }
 
     // LeetCode :: 57 Insert Intervals
+    // This is the best solution although we used 3 loops the runtime is O(n)
+    // and we only process n elements., making this one single loop and processing
+    // everything like the merge interval problem would cause
+    // unnecessary  complexity
     public int[][] insert(int[][] intervals, int[] newInterval) {
         LinkedList<int []> resList = new LinkedList<>();
         int i = 0;
