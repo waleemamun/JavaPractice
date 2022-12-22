@@ -674,6 +674,8 @@ public class SolutionsV1 {
 
         return resultList;
     }
+
+    //This version is mpre concise and I think interviewers would look for an approach like this for this problem.
     public List<String> fullJustifyV2(String[] words, int maxWidth) {
         int left = 0; List<String> result = new ArrayList<>();
 
@@ -1772,7 +1774,7 @@ public class SolutionsV1 {
     // if yes we increase the length. The hashset makes the lookup O(1), we also use another optimization;
     // if the prev number is already  in the array then we must have accounted for the current number already
     // so no need to process this number
-    public int longestConsecutive(int[] nums) {
+    public int longestConsecutivev1(int[] nums) {
         HashSet<Integer> hashSet = new HashSet<>();
         // create the hashset
         for (int i = 0; i <nums.length; i++)
