@@ -250,7 +250,7 @@ public class Main {
         GraphNode g1 = new GraphNode();
         Ctci ct1 = new Ctci();
         DataStructProblem d1 = new DataStructProblem();
-        LinkList ls1 = new LinkList();
+        ListNode ls1 = new ListNode();
         ls1 = ls1.createList(arr);
         SolutionsV3 sv3  = new SolutionsV3();
 

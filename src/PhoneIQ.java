@@ -644,16 +644,16 @@ public class PhoneIQ {
         return result;
     }
 
-    public LinkList revertList (LinkList startNode, LinkList endNode) {
+    public ListNode revertList (ListNode startNode, ListNode endNode) {
 
-        LinkList curr = startNode;
-        LinkList reverseNode = curr.next;
+        ListNode curr = startNode;
+        ListNode reverseNode = curr.next;
         // we already saved the startNode & its next node in curr & reverseNode,
         // so its safe to make startNode next point to the endNode next
         startNode.next = endNode.next;
         // scan the list and reverse it
         while (curr != endNode && reverseNode!= null) {
-            LinkList nextNode = reverseNode.next;
+            ListNode nextNode = reverseNode.next;
             reverseNode.next = curr;
             curr = reverseNode;
             reverseNode = nextNode;
@@ -662,18 +662,18 @@ public class PhoneIQ {
         return endNode;
     }
 
-    public LinkList reverseConsecutiveEvenNodes(LinkList head) {
-        LinkList curr = head;
-        LinkList prev = null;
-        LinkList start = null;
-        LinkList end = null;
-        LinkList lastPrev = null;
+    public ListNode reverseConsecutiveEvenNodes(ListNode head) {
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode start = null;
+        ListNode end = null;
+        ListNode lastPrev = null;
         while (curr != null) {
             if ((curr.val % 2) != 0) {
                 prev = curr;
                 // we found an even consecutive list in the last iteration
                 if (start != null && start != end){
-                    LinkList tempHead = revertList(start,end);
+                    ListNode tempHead = revertList(start,end);
                     if (lastPrev != null)
                         lastPrev.next = tempHead;
                     else
@@ -692,7 +692,7 @@ public class PhoneIQ {
             curr = curr.next;
         }
         if (start!=null && end.next == null) {
-            LinkList tempHead = revertList(start, end);
+            ListNode tempHead = revertList(start, end);
             if (prev != null)
                 prev.next = tempHead;
             else
@@ -703,11 +703,11 @@ public class PhoneIQ {
     // this version is simpler as we use two loops but note the its still O(n) because after completing
     // the inner loop  update curr pointer base on the 2nd loop iteration this will do a 2n iteration
     // which is same as O(n)
-    public LinkList reverseConsecutiveEvenNodesSimple(LinkList head){
+    public ListNode reverseConsecutiveEvenNodesSimple(ListNode head){
          if (head == null || head.next == null)
              return head;
-        LinkList curr = head;
-        LinkList prev = null;
+        ListNode curr = head;
+        ListNode prev = null;
         while (curr != null) {
             // odd entry found save it as prevNode
             if ((curr.val % 2) != 0) {
@@ -715,11 +715,11 @@ public class PhoneIQ {
                 curr = curr.next;
             } else {
                 // even entry
-                LinkList start = curr;
+                ListNode start = curr;
                 while (curr.next != null && (curr.next.val %2) == 0)
                     curr = curr.next;
-                LinkList nextNode = curr.next;
-                LinkList tempHead = revertList(start,curr);
+                ListNode nextNode = curr.next;
+                ListNode tempHead = revertList(start,curr);
                 if (prev !=null)
                     prev.next = tempHead;
                 else
@@ -732,11 +732,11 @@ public class PhoneIQ {
     }
 
     // This is also O(n) with actual n iteration 1 - pass
-    public LinkList reverseConsecutiveEvenNodesSimpleV2(LinkList head){
+    public ListNode reverseConsecutiveEvenNodesSimpleV2(ListNode head){
         if (head == null || head.next == null)
             return head;
-        LinkList curr = head;
-        LinkList prev = null;
+        ListNode curr = head;
+        ListNode prev = null;
         while (curr != null) {
             // odd entry found save it as prevNode
             if ((curr.val % 2) != 0) {
@@ -744,11 +744,11 @@ public class PhoneIQ {
 
             } else {
                 // even entry
-                LinkList start = curr;
-                LinkList reverseNode = curr.next;
+                ListNode start = curr;
+                ListNode reverseNode = curr.next;
 
                 while (reverseNode!= null && (reverseNode.val %2) == 0){
-                    LinkList nextNode = reverseNode.next;
+                    ListNode nextNode = reverseNode.next;
                     reverseNode.next = curr;
                     curr = reverseNode;
                     reverseNode = nextNode;

@@ -1526,7 +1526,7 @@ public class Tree {
     // from mid.next node to end node
     // Remember in this case we consider the end node to exclusive & start node to be inclusive so (start,end]
     // check the v2
-    public TreeNode sortedListToBST(LinkList head) {
+    public TreeNode sortedListToBST(ListNode head) {
         TreeNode root = null;
         if (head == null)
             return root;
@@ -1535,15 +1535,15 @@ public class Tree {
         return root;
     }
     // create the current node & recursively create the left & right subtree
-    private TreeNode sortedListToBSTRec(LinkList start, LinkList end) {
+    private TreeNode sortedListToBSTRec(ListNode start, ListNode end) {
         if (start == end)
             return null;
         if (start.next == end) {
             TreeNode node = new TreeNode(start.data);
             return node;
         }
-        LinkList slow = start;
-        LinkList fast = start.next;
+        ListNode slow = start;
+        ListNode fast = start.next;
         // find the mid node using slow & fast pointers
         while (fast!= end && fast.next != end) {
             slow = slow.next;
@@ -1567,8 +1567,8 @@ public class Tree {
     // the range is split to (low, mid -1) & (mid + 1, high) this range allows the node to be created in proper order (inorder).
     // Note:: we can also build a perfect BST same way if we are given a array of inorder traversal. It be same approach
     // only no need to manage a linkedlist but an array, so just neeed a global index
-    LinkList inNode = null;
-    public TreeNode sortedListToBSTV2(LinkList head) {
+    ListNode inNode = null;
+    public TreeNode sortedListToBSTV2(ListNode head) {
         inNode = head;
         int sz = 0;
         while(head != null) {

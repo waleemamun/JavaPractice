@@ -1,28 +1,28 @@
 import java.util.*;
 
 
-public class LinkList {
+public class ListNode {
     int data;
-    LinkList next;
+    ListNode next;
     public int val;
 
-    public LinkList() {
+    public ListNode() {
         int data = 0;
         val = 0;
         next = null;
     }
 
-    public LinkList (int data){
+    public ListNode(int data){
         this.data = data;
         val = data;
         next = null;
     }
 
-    public LinkList createList(int []arr) {
-        LinkList head = null;
+    public ListNode createList(int []arr) {
+        ListNode head = null;
 
         for (int i = arr.length-1 ; i>=0 ;i--) {
-            LinkList elem = new LinkList(arr[i]);
+            ListNode elem = new ListNode(arr[i]);
             elem.next = head;
             head = elem;
 
@@ -31,7 +31,7 @@ public class LinkList {
     }
 
     public int getSize(){
-        LinkList ls = this;
+        ListNode ls = this;
         int count = 0;
         while(ls!=null) {
             count++;
@@ -40,8 +40,8 @@ public class LinkList {
         return count;
 
     }
-    public static void printList(LinkList head) {
-        LinkList ls = head;
+    public static void printList(ListNode head) {
+        ListNode ls = head;
         int count = 0;
         while(ls!=null) {
             count++;
@@ -52,7 +52,7 @@ public class LinkList {
     }
 
     public void printList(int size) {
-        LinkList ls = this;
+        ListNode ls = this;
         int count = 0;
         while(ls != null) {
             System.out.print(ls.data + "->");
@@ -64,8 +64,8 @@ public class LinkList {
         System.out.println("null");
     }
 
-    public LinkList getNode(int val) {
-        LinkList ls = this;
+    public ListNode getNode(int val) {
+        ListNode ls = this;
         while(ls != null && ls.val != val)
             ls = ls.next;
         return ls;
@@ -78,8 +78,8 @@ public class LinkList {
     // we use the prev pointer to point to the next elem
     public void removeDuplicate () {
         HashSet <Integer> map = new HashSet<>();
-        LinkList ls = this;
-        LinkList prev = ls;
+        ListNode ls = this;
+        ListNode prev = ls;
         while (ls != null) {
             // found the entry time to delete
             if (!map.add(ls.data)) {
@@ -95,9 +95,9 @@ public class LinkList {
     }
 
     // Leetcode 19 :: Remove Nth Node From End of List
-    public LinkList removeNthFromEndV2(LinkList head, int n) {
-        LinkList prevN = head;
-        LinkList fast = head;
+    public ListNode removeNthFromEndV2(ListNode head, int n) {
+        ListNode prevN = head;
+        ListNode fast = head;
         int count = 0;
         if (head == null)
             return null;
@@ -126,12 +126,12 @@ public class LinkList {
     }
 
     // this version has a cleaner code
-    public LinkList removeNthFromEnd(LinkList head, int n) {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
         if (head == null)
             return null;
-        LinkList dummy = new LinkList();
-        LinkList slow = dummy;
-        LinkList fast = dummy;
+        ListNode dummy = new ListNode();
+        ListNode slow = dummy;
+        ListNode fast = dummy;
         dummy.next = head;
 
         while (fast != null &&  n >= 0) {
@@ -147,16 +147,16 @@ public class LinkList {
     }
     // Leetcode :: 21  Merge Two Sorted Lists
     // Check the V2 its the better implementation uses O(1) space
-    public LinkList mergeTwoLists(LinkList l1, LinkList l2) {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 
-        LinkList head = null;
-        LinkList curr = null;
+        ListNode head = null;
+        ListNode curr = null;
         if (l1 ==null)
             return l2;
         if (l2 == null)
             return l1;
         while (l1 != null  && l2 != null){
-            LinkList tmpElem = new LinkList();
+            ListNode tmpElem = new ListNode();
 
             if (l1.data <= l2.data) {
                 tmpElem.data = l1.data;
@@ -179,14 +179,14 @@ public class LinkList {
         }
 
         while (l1 != null) {
-            LinkList tmpElem = new LinkList();
+            ListNode tmpElem = new ListNode();
             tmpElem.data = l1.data;
             curr.next = tmpElem;
             curr = tmpElem;
             l1 = l1.next;
         }
         while (l2 != null) {
-            LinkList tmpElem = new LinkList();
+            ListNode tmpElem = new ListNode();
             tmpElem.data = l2.data;
             curr.next = tmpElem;
             curr = tmpElem;
@@ -198,9 +198,9 @@ public class LinkList {
 
     // lets use the two list to buld the sorted list without using any additional space
     // Use dummy node which will point to the new list
-    public LinkList mergeTwoListsV2(LinkList l1, LinkList l2){
-        LinkList dummy = new LinkList();
-        LinkList curr = dummy;
+    public ListNode mergeTwoListsV2(ListNode l1, ListNode l2){
+        ListNode dummy = new ListNode();
+        ListNode curr = dummy;
         while (l1 != null && l2 != null){
 
             if (l1.val <= l2.val) {
@@ -233,19 +233,19 @@ public class LinkList {
      *
      */
 
-    public LinkList mergeKLists(LinkList[] lists) {
+    public ListNode mergeKLists(ListNode[] lists) {
         if (lists == null || lists.length == 0)
-            return new LinkList();
+            return new ListNode();
 
-        LinkList resultList = new LinkList(-1); // create a dummy list node as the result list
-        PriorityQueue<LinkList> pQueue = new PriorityQueue<>((o1,o2)->(o1.data -o2.data));
+        ListNode resultList = new ListNode(-1); // create a dummy list node as the result list
+        PriorityQueue<ListNode> pQueue = new PriorityQueue<>((o1, o2)->(o1.data -o2.data));
         pQueue.addAll(Arrays.asList(lists));
         // create curr pointer for the result list we will increase the curr pointer
         // to add items at the end of the list as we remove them from the MIN Heap
         // each item added will be the smallest item on the Heap
-        LinkList curr = resultList;
+        ListNode curr = resultList;
         while (!pQueue.isEmpty()) {
-            LinkList tempList = pQueue.remove();
+            ListNode tempList = pQueue.remove();
             if (tempList.next != null)
                 pQueue.add(tempList.next);
             curr.next = tempList;
@@ -259,17 +259,17 @@ public class LinkList {
     }
 
     // LeetCode 24
-    public LinkList swapPairs(LinkList head) {
-        LinkList resultList = new LinkList(-1);
+    public ListNode swapPairs(ListNode head) {
+        ListNode resultList = new ListNode(-1);
         if (head == null)
             return null;
         if (head.next == null)
             return head;
 
-        LinkList node1 = head;
-        LinkList node2 = head.next;
+        ListNode node1 = head;
+        ListNode node2 = head.next;
         resultList.next = head.next;
-        LinkList prev = node1;
+        ListNode prev = node1;
         boolean isfirst = true;
         while (node1 != null && node1.next != null) {
             //swap nodes by changing the next pointers of the nodes
@@ -300,28 +300,53 @@ public class LinkList {
         return resultList.next;
 
     }
+
+    // This is more concise version of the solution
+    public ListNode swapPairs2(ListNode head) {
+        if (head == null)
+            return head;
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        ListNode n1, n2, prev;
+        prev = dummy;
+        n1= head;
+        n2 = head.next;
+        while(n1!=null && n1.next!=null){
+            //swap
+            n1.next = n2.next;
+            n2.next = n1;
+            prev.next = n2;
+            //advance
+            prev = n1;
+            n1 = n1.next;
+            if (n1!= null)
+                n2 = n1.next;
+        }
+        return dummy.next;
+    }
+
     // Try solving with recursion
-    private LinkList swapPairHelper2 (LinkList first) {
+    private ListNode swapPairHelper2 (ListNode first) {
         if(first == null || first.next == null)
             return first;
-        LinkList sec = first.next;
+        ListNode sec = first.next;
         first.next = swapPairHelper2(sec.next);
         sec.next = first;
         return sec;
     }
 
-    private LinkList swapPairHelper (LinkList head, LinkList first) {
+    private ListNode swapPairHelper (ListNode head, ListNode first) {
         if(first == null || first.next == null)
             return first;
-        LinkList sec = first.next;
+        ListNode sec = first.next;
         first.next = swapPairHelper(head, sec.next);
         sec.next = first;
         return sec;
     }
-    public LinkList swapPairsV2(LinkList head) {
+    public ListNode swapPairsV2(ListNode head) {
         if(head == null)
             return head;
-        LinkList newHead = swapPairHelper(head, head);
+        ListNode newHead = swapPairHelper(head, head);
         return newHead;
     }
 
@@ -330,7 +355,7 @@ public class LinkList {
     // LeetCode :: 206. Reverse Linked List
     // reverse a List recursively, This passed.
     // The trick is to handle the first node specially
-    private LinkList revListV2 (LinkList nodeC, LinkList nodeN, LinkList head) {
+    private ListNode revListV2 (ListNode nodeC, ListNode nodeN, ListNode head) {
         // this is  the first node, make it point to null
         // as in the reverse list it needs to point to NULL
         if (head == nodeC)
@@ -343,12 +368,12 @@ public class LinkList {
         }
         // nodeC is the current node & nodeN is the next node. At call
         // (some other node)<-2(nodeC)  (nodeN) 3->(some other node) now lets make it 2<-3
-        LinkList savedNode = nodeN.next;
+        ListNode savedNode = nodeN.next;
         nodeN.next = nodeC;
         return revListV2(nodeN, savedNode, head);
     }
 
-    public LinkList reverseListV2(LinkList head) {
+    public ListNode reverseListV2(ListNode head) {
         if (head == null)
             return null;
         head = revListV2(head,head.next,head);
@@ -357,7 +382,7 @@ public class LinkList {
     }
 
     //This is version 1 both version works its just a different way to handle recursion in this case
-    private void revList(LinkList nodeP, LinkList nodeC, LinkList newhead, LinkList head) {
+    private void revList(ListNode nodeP, ListNode nodeC, ListNode newhead, ListNode head) {
         if (nodeC.next == null) {
             newhead.next = nodeC;
             nodeC.next = nodeP;
@@ -372,15 +397,15 @@ public class LinkList {
 
 
     }
-    public LinkList reverseList(LinkList head) {
+    public ListNode reverseList(ListNode head) {
         if (head == null || head.next == null)
             return head;
-        LinkList newHead = new LinkList();
+        ListNode newHead = new ListNode();
         revList(head,head.next, newHead, head);
         return newHead.next;
     }
     // more simpler version easy to read
-    public void revList(LinkList p, LinkList c, LinkList nh){
+    public void revList(ListNode p, ListNode c, ListNode nh){
         if (c==null) {
             nh.next = p;
             return;
@@ -389,10 +414,10 @@ public class LinkList {
         c.next = p;
 
     }
-    public LinkList reverseListV3(LinkList head) {
+    public ListNode reverseListV3(ListNode head) {
         if (head == null)
             return head;
-        LinkList newHead = new LinkList();
+        ListNode newHead = new ListNode();
         revList(head,head.next,newHead);
         head.next = null;
         return newHead.next;
@@ -410,16 +435,16 @@ public class LinkList {
     //       The prevLastNode will create the link between the original list and the newly reversed k size list.
     //       Example 1->2->3->4->5->6 in first step 3->2->1->4->5->6 now prevLastNode = 1 and
     //       the new reversed group is 6->5->4, so prevLastNode now links it by 3->2->1-> 6->5->4
-    public LinkList reverseKGroup(LinkList head, int k) {
+    public ListNode reverseKGroup(ListNode head, int k) {
         // if k = 1 we dont need to process
         if (k == 1)
             return head;
 
-        LinkList curr = head;      // get a pointer to head
+        ListNode curr = head;      // get a pointer to head
         int count = 1;             // count for k
         boolean isFirst = true;
-        LinkList fromNode =null, toNode = null;
-        LinkList tempHead = null, prevLastNode = null;
+        ListNode fromNode =null, toNode = null;
+        ListNode tempHead = null, prevLastNode = null;
 
         while (curr != null) {
             if (count % k == 1) {
@@ -459,15 +484,15 @@ public class LinkList {
     }
     // reverse a List recursively between nodes fromNode to toNode,
     // return  a pointer the points to the reversed list
-    private LinkList revListFromTo(LinkList nodeC, LinkList nodeN,
-                                   LinkList fromNode, LinkList toNode) {
+    private ListNode revListFromTo(ListNode nodeC, ListNode nodeN,
+                                   ListNode fromNode, ListNode toNode) {
 
         // from & to pointing to the same no change required
         if (fromNode == toNode)
             return fromNode;
         // swap case: fromNode & toNode are adjacent
         if (fromNode == nodeC && toNode == nodeN){
-            LinkList saveNext = toNode.next;
+            ListNode saveNext = toNode.next;
             nodeN.next = nodeC;
             nodeC.next = saveNext;
             return toNode;
@@ -484,7 +509,7 @@ public class LinkList {
         // later this will help us achieve 3->2->1->4
         if (fromNode == nodeC)
             nodeC.next = toNode.next;
-        LinkList savedNode = nodeN.next;
+        ListNode savedNode = nodeN.next;
         nodeN.next = nodeC;
         return revListFromTo(nodeN, savedNode, fromNode, toNode);
 
@@ -493,13 +518,13 @@ public class LinkList {
     // after that make the end node point to the first (node pointed by head) node.
     // The node before the new start node points to null
     // for example 1->2->3->4->5->null becomes 2->3->4->5->1->null
-    public LinkList rotateRight(LinkList head, int k) {
+    public ListNode rotateRight(ListNode head, int k) {
         if(head == null || head.next == null)
             return head;
 
-        LinkList cur = head;
-        LinkList end = null;
-        LinkList prev = null;
+        ListNode cur = head;
+        ListNode end = null;
+        ListNode prev = null;
         int count = 0;
 
         // count the size of the list, end points to the last list
@@ -536,11 +561,11 @@ public class LinkList {
     // The list is sorted so we store the first unique value and then conitnue
     // to scan until we found anothe unique value, when we have found such a
     // value we point to the new unique
-    public LinkList deleteDuplicates(LinkList head) {
+    public ListNode deleteDuplicates(ListNode head) {
         if (head == null)
             return head;
-        LinkList unique =  head;
-        LinkList cur = unique.next;
+        ListNode unique =  head;
+        ListNode cur = unique.next;
         while (cur != null) {
             if(cur.data != unique.data) {
                 unique.next = cur;
@@ -557,15 +582,15 @@ public class LinkList {
     // with prev value the distance between prev & cur determines whether this value
     // is unique or not. If the distance is 1 then its unique otherwise it not unique
     // and we can skip this value
-    public LinkList deleteDuplicatesKeepDistinctv2(LinkList head) {
+    public ListNode deleteDuplicatesKeepDistinctv2(ListNode head) {
         if (head == null)
             return null;
-        LinkList newHead = null; // we need a newhead if the first entry pointed by head is duplicated
-        LinkList cur = head;
-        LinkList unq = null;
+        ListNode newHead = null; // we need a newhead if the first entry pointed by head is duplicated
+        ListNode cur = head;
+        ListNode unq = null;
         while (cur != null) {
             int len = 0;
-            LinkList prev = cur;
+            ListNode prev = cur;
             while (cur != null && cur.data == prev.data){
                 len++;
                 cur = cur.next;
@@ -592,15 +617,15 @@ public class LinkList {
     }
 
     // just little optimization
-    public LinkList deleteDuplicatesKeepDistinct2(LinkList head) {
+    public ListNode deleteDuplicatesKeepDistinct2(ListNode head) {
         if (head == null)
             return null;
-        LinkList dummy = new LinkList(); // we need a newhead if the first entry pointed by head is duplicated
-        LinkList cur = head;
-        LinkList unq = dummy;
+        ListNode dummy = new ListNode(); // we need a newhead if the first entry pointed by head is duplicated
+        ListNode cur = head;
+        ListNode unq = dummy;
         while (cur != null) {
             int len = 0;
-            LinkList prev = cur;
+            ListNode prev = cur;
             while (cur != null && cur.data == prev.data){
                 len++;
                 cur = cur.next;
@@ -624,15 +649,15 @@ public class LinkList {
     // last element points to the tailHead and have our desired list.
     // Note we dont need to create any new list we use the current list
     // pointer & move them around to create the desired list
-    public LinkList partition(LinkList head, int x) {
+    public ListNode partition(ListNode head, int x) {
         // list has one or zero entries
         if (head == null || head.next == null)
             return head;
-        LinkList cur = head;
-        LinkList front = null; // moving pointer in frontHead list
-        LinkList tail = null;  // moving pointer in tailHead list
-        LinkList frontHead = null; // points to the head of list with values < x
-        LinkList tailHead = null;  // points to the head of list with values > x
+        ListNode cur = head;
+        ListNode front = null; // moving pointer in frontHead list
+        ListNode tail = null;  // moving pointer in tailHead list
+        ListNode frontHead = null; // points to the head of list with values < x
+        ListNode tailHead = null;  // points to the head of list with values > x
         while (cur != null) {
             if (cur.data < x) {
                 // first elem in frontHead lets the frontHead point ot the first elem
@@ -671,13 +696,13 @@ public class LinkList {
     // 92. Reverse Linked List II
     // The idea is to use a stack to reverse the List
     // This require O(n) time & O(n) space
-    public LinkList reverseBetween(LinkList head, int m, int n) {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
         if (head == null || head.next == null)
             return head;
-        LinkList curr = head;
-        LinkList mPrevNode = null; // node before m node
-        LinkList nNodeNext = null; // node after n node, if its null its fine
-        Stack<LinkList> listStack = new Stack<>();
+        ListNode curr = head;
+        ListNode mPrevNode = null; // node before m node
+        ListNode nNodeNext = null; // node after n node, if its null its fine
+        Stack<ListNode> listStack = new Stack<>();
         int pos = 1;
         // scan the array to build the stack
         while (curr != null) {
@@ -694,7 +719,7 @@ public class LinkList {
         }
         // remove the node from the stack and add them back between mPrevNode & nNextNode
         while (!listStack.empty()) {
-            LinkList ls = listStack.pop();
+            ListNode ls = listStack.pop();
 
             if (mPrevNode != null) {
                 mPrevNode.next = ls;
@@ -716,14 +741,14 @@ public class LinkList {
     // so when we start prev == m curr == m+1 & nexNode = m+2, now we make curr point to prev
     // but before that save curr's next pointer in nextNode, we keep doing it till node n
     // after that we just need to fix the tail(nexNode) & head(mPrev or head) pointers
-    public LinkList reverseBetweenV2(LinkList head, int m, int n) {
+    public ListNode reverseBetweenV2(ListNode head, int m, int n) {
         if (head == null || head.next == null || m == n )
             return head;
-        LinkList curr = head;
-        LinkList mPrev = null;
-        LinkList prev = null;
-        LinkList nextNode = null;
-        LinkList mNode = null;
+        ListNode curr = head;
+        ListNode mPrev = null;
+        ListNode prev = null;
+        ListNode nextNode = null;
+        ListNode mNode = null;
         int pos = 1;
 
         while (curr != null) {
@@ -761,11 +786,11 @@ public class LinkList {
     // LeetCode :: 876. Middle of the Linked List
     // Consider the scenario for even number of nodes
     // 1,2,3,4,5,6 here 4 is the middle node not 3
-    public LinkList midNode(LinkList head){
+    public ListNode midNode(ListNode head){
         if(head == null || head.next == null)
             return head;
-        LinkList slow = head;
-        LinkList fast = head;
+        ListNode slow = head;
+        ListNode fast = head;
         while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
@@ -774,11 +799,11 @@ public class LinkList {
 
     }
     // LeetCode :: 141. Linked List Cycle
-    public boolean hasCycle(LinkList head) {
+    public boolean hasCycle(ListNode head) {
         if (head == null || head.next == null)
             return false;
-        LinkList slow = head;
-        LinkList fast = head;
+        ListNode slow = head;
+        ListNode fast = head;
 
         while (fast!= null && fast.next != null) {
             slow = slow.next;
@@ -790,11 +815,11 @@ public class LinkList {
     }
 
     // Leetcode :: 142. Linked List Cycle II
-    public LinkList detectCycle(LinkList head) {
+    public ListNode detectCycle(ListNode head) {
         if (head == null || head.next == null)
             return null;
-        LinkList slow = head;
-        LinkList fast = head;
+        ListNode slow = head;
+        ListNode fast = head;
         // check if fast & fast.next is not null, checking fast !=null also make sure
         // that in corner case slow is not null
         while (fast != null &&
@@ -820,13 +845,13 @@ public class LinkList {
     // Adnan Aziz 14.9 sort a linked list
     // We need to use a merge sort. First we split the list into two halves and
     // recursively sort the left & right half then merge the two sorted halves
-    private LinkList mergeSortList(LinkList l1) {
+    private ListNode mergeSortList(ListNode l1) {
 
         if (l1 == null || l1.next == null)
             return l1;
-        LinkList slow = l1;
-        LinkList fast = l1;
-        LinkList preSlow = null;
+        ListNode slow = l1;
+        ListNode fast = l1;
+        ListNode preSlow = null;
         while (fast!=null && fast.next != null) {
             fast = fast.next.next;
             preSlow = slow;
@@ -836,25 +861,25 @@ public class LinkList {
         if (preSlow != null)
             preSlow.next = null;
         // recursive sort the left half of the list
-        LinkList ls1= mergeSortList(l1);
+        ListNode ls1= mergeSortList(l1);
         // recursive sort the right half of the list
-        LinkList ls2 = mergeSortList(slow);
+        ListNode ls2 = mergeSortList(slow);
         // merge the left & right sorted list to a single merge list
-        LinkList mergeList = mergeTwoListsV2(ls1,ls2);
+        ListNode mergeList = mergeTwoListsV2(ls1,ls2);
 
         return mergeList;
     }
 
     // LeetCode :: 148. Sort List
     // look at the mergeSortList as done for Adnan Aziz 14.9
-    public LinkList sortList(LinkList head) {
+    public ListNode sortList(ListNode head) {
         return mergeSortList(head);
     }
 
     // LeetCode :: 160. Intersection of Two Linked Lists
-    public LinkList getIntersectionNode(LinkList headA, LinkList headB) {
-        LinkList lsA = headA;
-        LinkList lsB = headB;
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode lsA = headA;
+        ListNode lsB = headB;
         int lenA = 0;
         int lenB = 0;
         while (lsA != null) {
@@ -888,14 +913,14 @@ public class LinkList {
     }
 
     // LeetCode :: 328. Odd Even Linked List
-    public LinkList oddEvenList(LinkList head) {
+    public ListNode oddEvenList(ListNode head) {
         if (head == null)
             return head;
-        LinkList oddHead = new LinkList();
-        LinkList evenHead = new LinkList();
-        LinkList odd = oddHead;
-        LinkList even = evenHead;
-        LinkList curr = head;
+        ListNode oddHead = new ListNode();
+        ListNode evenHead = new ListNode();
+        ListNode odd = oddHead;
+        ListNode even = evenHead;
+        ListNode curr = head;
         boolean isOdd = true;
         while (curr != null) {
             if (isOdd) {
@@ -914,7 +939,7 @@ public class LinkList {
     }
 
     // LeetCode ::  Plus One Linked List
-    private int plusOneHelper(LinkList node){
+    private int plusOneHelper(ListNode node){
         if (node == null)
             return 1;
         int sum = node.data + plusOneHelper(node.next);
@@ -922,12 +947,12 @@ public class LinkList {
         return sum/10;
     }
 
-    public LinkList plusOne(LinkList head) {
+    public ListNode plusOne(ListNode head) {
         if (head == null)
             return head;
         int carry = plusOneHelper(head);
         if (carry == 1) {
-            LinkList top = new LinkList(1);
+            ListNode top = new ListNode(1);
             top.next = head;
             head = top;
         }
