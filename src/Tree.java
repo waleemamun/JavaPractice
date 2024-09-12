@@ -28,7 +28,7 @@ public class Tree {
     // print the tree using a preorder approach 
     // we print the tree in preorder while printing instead of top down we go 
     // left to right for root --> leaf for ease of printing. we use a padding
-    // string & shildArrow to denote left or right child.
+    // string & childArrow to denote left or right child.
     // '|--' denotes left child
     // '|->' denotes right child
     // we also use '|' to draw a vertical line to connect left & right siblings
@@ -396,8 +396,6 @@ public class Tree {
         Stack<TreeNode> stack = new Stack<>();
         TreeNode lastPoppedNode = null;
         TreeNode node = root;
-        int count = 0;
-
         while (!stack.isEmpty() || node != null) {
             if(node != null) {
                 stack.push(node);
@@ -788,8 +786,7 @@ public class Tree {
             rList.add(new ArrayList<>());
         }
         // get the list at this level and add the node , remember levels are 0 based indexed
-        List<Integer> ls = rList.get(level-1);
-        ls.add(node.val);
+        rList.get(level -1).add(node.val);
         levelOrderRecHelper(rList, level + 1, node.left);
         levelOrderRecHelper(rList, level + 1, node.right);
     }
@@ -1718,7 +1715,7 @@ public class Tree {
             return null;
         TreeNode curr = root;
         TreeNode rightAncestor = null;
-        while (curr != null && curr.val != node.val) {
+        while (curr != null) {
             if (node.val > curr.val) {
                 rightAncestor = curr;
                 curr = curr.right;
@@ -1730,6 +1727,7 @@ public class Tree {
     }
 
     private int rootIdx = 0;
+    // Given a preorder traversal build the BST
     // The idea is to create the tree in preorder while maintaining a range boundary
     // we can start with a root node and (-INF to +INF) boundary and as we move lef or right we shrink the boundary
     private TreeNode buildBSTFromPreOrderRec(int []preorder, int lower , int upper) {
@@ -2207,9 +2205,10 @@ public class Tree {
             int size = q.size();
             for (int i = 0; i <size; i++) {
                 VerticalNode nd = q.remove();
-                ArrayList<Integer> tList = map.getOrDefault(nd.pos, new ArrayList<>());
-                tList.add(nd.node.val);
-                map.put(nd.pos, tList);
+//                ArrayList<Integer> tList = map.getOrDefault(nd.pos, new ArrayList<>());
+//                tList.add(nd.node.val);
+//                map.put(nd.pos, tList);
+                map.computeIfAbsent(nd.pos, k->new ArrayList<>()).add(nd.node.val);
                 min = Math.min(min, nd.pos);
                 max = Math.max(max, nd.pos);
                 if (nd.node.left != null)
@@ -2332,6 +2331,21 @@ public class Tree {
         return diff == 0;
     }
 
+    // The idea here is that for a full binary tree # of leaves == # of non-leaves + 1
+    // Here the tree can be treated as full binary tree if we consider all the null nodes (#)
+    // as the leaf node
+    public boolean isValidSerializationV3(String preorder){
+        String []nodes = preorder.split(",");
+        int leaves = 0, nonLeaves= 0;
+        for (String node: nodes){
+            if(node.equals("#"))
+                leaves++;
+            else
+                nonLeaves++;
+        }
+        return leaves == (nonLeaves +1);
+    }
+
     // LeetCode 226. Invert Binary Tree
     public TreeNode invertTree(TreeNode root) {
         if (root == null)
@@ -2404,14 +2418,14 @@ public class Tree {
     private void pathSumHelperIII (TreeNode root, int k,
                                    HashMap<Integer, Integer> map, int runningSum) {
         // base case, mo need to process further
-        if(root == null)
+        if (root == null)
             return;
         // calc the current running sum on this path
         runningSum += root.val;
         // check if the runningSUm - k has been seen in the map if yes we have found our 'sum' which is 'k' here
         // in the current path so update the result
         if (map.containsKey(runningSum - k)) {
-            pathSumCount+= map.get(runningSum -k);
+            pathSumCount += map.get(runningSum - k);
         }
         // updathe current running sum count for this path
         map.put(runningSum, map.getOrDefault(runningSum, 0) + 1);

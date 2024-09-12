@@ -1301,6 +1301,31 @@ public class Solutions {
         return result.get(n-1);
     }
 
+    public String countAndSayV2(int n) {
+        if (n==1)
+            return "1";
+        String s = "1";
+        while (n > 1) {
+            int count = 1;
+            StringBuilder strB = new StringBuilder();
+            int i = 0;
+            for (i = 0; i< s.length() -1; i++) {
+                if (s.charAt(i) != s.charAt(i+1)) {
+                    strB.append(count);
+                    strB.append(s.charAt(i));
+                    count = 1;
+                } else {
+                    count++;
+                }
+            }
+            strB.append(count);
+            strB.append(s.charAt(i));
+            s = strB.toString();
+            n--;
+        }
+        return s;
+    }
+
     // Get the duplicate number in an array  of n where numbers are between 1 to  n -1.
     // Find a solution that is O(n) and O(1) space, You are allowed to modify the array elements.
     // If we are allowed to modify the array elements, we can use an interesting approach
@@ -1524,6 +1549,7 @@ public class Solutions {
     // for example in [0, 3,1,2, 6] in position 1 bar size = 3  and left max = 3
     // so for position 1 totwater is zero but for position 2 it will be 2
     //
+    // ********** Check the V3 below its same as this but more concise*****/
     public int trapV2(int[] height) {
         // sanity check
         if( height.length <= 2)
@@ -1553,6 +1579,27 @@ public class Solutions {
 
         return totWater;
 
+    }
+    // same idea as above we keep track of left & right max but as we move we just compare the current left or right
+    // this works too because if height[l] < height[r] then height[l] < height[lamx] < height[rmax]
+    // cause you can only move left or right if the other side is stuck at current opposite max
+    public int trapV3(int [] height){
+        int l = 0, r = height.length -1;
+        int lmax = height[l];
+        int rmax = height[r];
+        int water = 0;
+        while(l<r){
+            if(height[l]<=height[r]){
+                lmax = Math.max(lmax, height[l]);
+                water += lmax - height[l];
+                l++;
+            } else {
+                rmax = Math.max(rmax, height[r]);
+                water += rmax - height[r];
+                r--;
+            }
+        }
+        return water;
     }
 
     // LeetCode 45:: Jump Game 2 (Hard)

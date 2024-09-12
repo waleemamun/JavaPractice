@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -293,6 +294,18 @@ public class Main {
         tr.preOrderTraversalRec(nd2);
         System.out.println();
         tr.print(nd2);
+        Recursions rs1 = new Recursions();
+        int []nums1 = {1,2,3};
+        rs1.subsets(nums1);
+
+        int[][] vec = {{1,2,3}, {4,5,6}, {7,8,9}};
+        Iterator<int []> o = Arrays.stream(vec).iterator();
+        SolStrings sl1 = new SolStrings();
+        while(o.hasNext()) {
+            int []x = o.next();
+            System.out.println(Arrays.toString(x));
+        }
+
 
 
 

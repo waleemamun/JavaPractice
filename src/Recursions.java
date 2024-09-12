@@ -357,6 +357,7 @@ public class Recursions {
     // we use another binary search to find the target but this time while calculating mid
     // we use the splitIndex to get the actual mid
     // we can then use the split index to find the actual mid
+    // ||Note:: Check searchRotNoDup implementation below ||
     public int rotatedBinSearchV2 (int []nums, int target){
         int mid = 0;
         int low = 0;
@@ -389,6 +390,29 @@ public class Recursions {
                 low = mid + 1;
         }
 
+        return -1;
+    }
+    // The idea is that one of the half is properly sorted and we have to move the left & right in such a way that our tar
+    public int searchRotNoDup(int[] nums, int target) {
+        int left = 0, right = nums.length-1;
+        while(left<=right) {
+            int mid = left + (right-left)/2;
+            if (nums[mid] == target)
+                return mid;
+            else if (nums[left] <= nums[mid]){ // 1st half is sorted
+                if(nums[left] <= target && target < nums[mid]){
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else { // 2nd half is sorted
+                if (nums[mid] < target && target <=nums[right]) {
+                    left = mid +1;
+                } else {
+                    right = mid -1;
+                }
+            }
+        }
         return -1;
     }
 
@@ -1584,6 +1608,35 @@ public class Recursions {
         int x = rotatedBinSearchDup(nums, target);
         return (x == -1)? false: true;
     }
+    // The idea is little different here as the array sorted and the rotated once with duplicates
+    // so one half of the array will be sorted
+    public boolean searchRot(int[] nums, int target) {
+        int left = 0, right = nums.length-1;
+        while(left<=right) {
+            int mid = left + (right-left)/2;
+            if (nums[mid] == target)
+                return true;
+            if (nums[left]==nums[mid] && nums[mid]==nums[right]){
+                left++;
+                right--;
+            }
+            else if (nums[left] <= nums[mid]){ // 1st half is sorted
+                if(nums[left] <= target && target < nums[mid]){
+                    right = mid - 1;
+                } else { // this will also handle a case where nums[left] == nums[mid] but nums[mid] != nums[right]
+                    left = mid + 1;
+                }
+            } else { // 2nd half is sorted
+                if (nums[mid] < target && target <=nums[right]) {
+                    left = mid +1;
+                } else {
+                    right = mid -1;
+                }
+            }
+        }
+        return false;
+
+    }
 
     // LeetCode :: 91. Decode Ways, This is not the right solution check the DP solution in the DP file
     int countDecode = 0;
@@ -1729,20 +1782,16 @@ public class Recursions {
         if (dotCount == 3) {
             if (index >= s.length())
                 return;
-            else {
-                String sb = s.substring(index, s.length());
-                if(isValidIP(sb))
-                    list.add(ip+ sb);
-                return;
-            }
+            String sb = s.substring(index, s.length());
+            if(isValidIP(sb))
+                list.add(ip+ sb);
+            return;
         }
         for (int i = 1; i <=3 && index + i <= s.length(); i++) {
             String sub = s.substring(index, index + i);
             if (!isValidIP(sub))
                 continue;
             resIP(s, index +i, list, ip +sub + ".", dotCount + 1);
-
-
         }
     }
 
@@ -1925,7 +1974,7 @@ public class Recursions {
             return false;
         int i = 0;
         int j = matrix[0].length - 1;
-        while( i< matrix.length || j>=0) {
+        while(i< matrix.length && j>=0) {
             if(matrix[i][j] == target)
                 return true;
             else if(target > matrix[i][j]) {
@@ -2036,14 +2085,14 @@ public class Recursions {
     private void combinationSum3RecV2(int k, int target, int sum,
                                     List<List<Integer>> resList,
                                     ArrayList<Integer> tempList,
-                                    int startIdx) {
+                                    int index) {
         if (tempList.size() > k)
             return;
         if (tempList.size() == k && sum == target) {
             resList.add(new ArrayList<>(tempList));
             return;
         }
-        for (int i = startIdx; i <= 9; i++) {
+        for (int i = index; i <= 9; i++) {
             tempList.add(i);
             combinationSum3RecV2(k, target, sum + i, resList, tempList, i+1);
             tempList.remove(tempList.size() -1);
@@ -2052,7 +2101,7 @@ public class Recursions {
     }
     public List<List<Integer>> combinationSum3V2(int k, int n) {
         List<List<Integer>> resList = new ArrayList<>();
-        combinationSum3RecV2(k, n,0,resList, new ArrayList<>(), 1);
+        combinationSum3RecV2(k, n,0,resList, new ArrayList<>(), 1); // make sure index = 1 when we call this function the first time
         return resList;
     }
 
@@ -2692,7 +2741,7 @@ public class Recursions {
     }
 
     // LeetCode ::490. The Maze
-    // The idea is to use a DFS approcah to solve this. One trick is to run the DFS When we hit the wall before that
+    // The idea is to use a DFS approach to solve this. One trick is to run the DFS When we hit the wall before that
     // we can move left, right, up and down direction to reach the wall and then call DFS
     private boolean hasMazePath(int [][] maze, int r, int c, int [] dest) {
         if (maze[r][c] != 0) {
@@ -2719,7 +2768,7 @@ public class Recursions {
         int right = c+1;
         while (right <maze[0].length && maze[r][right] != 1)
             right++;
-        if(hasMazePath(maze, r , right -1, dest))
+        if (hasMazePath(maze, r , right -1, dest))
             return true;
         return false;
     }

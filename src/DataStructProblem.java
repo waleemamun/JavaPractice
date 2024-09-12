@@ -168,6 +168,15 @@ public class DataStructProblem {
                     else return 0;
                 }
             });
+            // the same calandar set above can be re-written as below this easy to use the code for the re-write version
+            calendarSet = new TreeSet<>(((o1, o2) -> {
+                if (o1[1]<=o2[0])
+                    return -1;
+                else if(o1[0]>=o2[1])
+                    return 1;
+                else
+                    return 0;
+            }));
 
 
         }
@@ -452,6 +461,25 @@ public class DataStructProblem {
 
         }
 
+        private boolean search2 (String word, int index, TrieNode node) {
+            if (index > word.length() || node == null)
+                return false;
+            if (node!=null && index == word.length())
+                return node.hasWord;
+
+            char ch = word.charAt(index);
+            if (ch !='.') {
+                return search2(word, index + 1, node.mapChild[ch-'a']);
+            } else {
+                for (int i =0; i<26; i++) {
+                    if (search2(word,index+1,node.mapChild[i]))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+
         public boolean search(String word) {
             int i = 0;
             return search(word, 0, root);
@@ -652,6 +680,13 @@ public class DataStructProblem {
     // Note its easier to use dlist with head/tail to code this. We can also use only head and use head.prev to point
     // to the head of the list head.next to point to the tail of the list but the code becomes hard to manage
     // during interview, so we can discuss this as an optimisation.
+    // Note the frequency map is keyed by the frequency so <freq, dlist>
+    // and the cache map is keyed by the actual key <key, dlist> both dlist are same node and using the cachemap node's
+    // count we we put that node in the frqmap doubly linked list
+    // Note for all frequencies in the current list we have that many doubly linked list
+    // freq 1 head-dlist-dlist-tail
+    // freq 2 head-dlist-dlist-tail
+    // freq 5 head-dlist-dlist-tail
     class LFUCache {
         HashMap<Integer, DblLinkList> cache;
         HashMap<Integer, DblLinkList> freqMap;
@@ -830,8 +865,10 @@ public class DataStructProblem {
             time++;
             Tweet tw = new Tweet(userId, tweetId, time);
             // add tweet to user's own TimeLine
-            timeLineMap.putIfAbsent(userId, new LinkedList<>());
-            timeLineMap.get(userId).addFirst(tw);
+            // the next two lines are commented out and replaced by the last line
+//            timeLineMap.putIfAbsent(userId, new LinkedList<>());
+//            timeLineMap.get(userId).addFirst(tw);
+            timeLineMap.computeIfAbsent(userId, k->new LinkedList<>()).addFirst(tw);
         }
 
         /** Retrieve the 10 most recent tweet ids in the user's news feed.
@@ -849,12 +886,7 @@ public class DataStructProblem {
                 return newsFeed;
 
             // create min heap create the most recent tweets from the followers
-            PriorityQueue<QueueItem> maxHeap = new PriorityQueue<>(new Comparator<QueueItem>() {
-                @Override
-                public int compare(QueueItem o1, QueueItem o2) {
-                    return o2.tw.time - o1.tw.time;
-                }
-            });
+            PriorityQueue<QueueItem> maxHeap = new PriorityQueue<>(((o1, o2) -> {return o2.tw.time - o1.tw.time;}));
 
             // From the follower list get the timeline for each follow and add an iterator to the timeLine list
             if (followList != null) {
@@ -899,8 +931,9 @@ public class DataStructProblem {
         public void follow(int followerId, int followeeId) {
             if (followeeId == followerId)
                 return;
-            followMap.putIfAbsent(followerId, new HashSet<>());
-            followMap.get(followerId).add(followeeId);
+//            followMap.putIfAbsent(followerId, new HashSet<>());
+//            followMap.get(followerId).add(followeeId);
+            followMap.computeIfAbsent(followerId,k->new HashSet<>()).add(followeeId);
         }
 
         /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
@@ -981,16 +1014,17 @@ public class DataStructProblem {
             // repeativly try to map the row & col to a 2d space where the value is between 1 to 40
             // as row & col max is 7 so possible values are 1 - 49
             while (true) {
-                row= rand7();
+                row = rand7();
                 col = rand7();
                 idx = (row-1) * 7 + col;
                 // found row col that maps to 40 we can use this as our result
                 if (idx <= 40)
                     break;
             }
-            if (idx%10 == 0)
-                return 10;
-            return idx%10;
+            return idx%10 == 0 ? 10 : idx%10;
+//            if (idx%10 == 0)
+//                return 10;
+//            return idx%10;
         }
     }
 
@@ -1138,10 +1172,10 @@ public class DataStructProblem {
             if(outer.hasNext())
                 inner = outer.next().iterator();
         }
-        public int next() {
+        public int nextx() {
             return inner.next();
         }
-        public boolean hasNext() {
+        public boolean hasNextx() {
             if(inner.hasNext())
                 return true;
             else {
@@ -1155,8 +1189,32 @@ public class DataStructProblem {
                 return has;
             }
         }
+        Iterator<int []> rows;
+        Iterator<Integer> cols;
+        public Vector2D(int[][] vec) {
+            rows = Arrays.stream(vec).iterator();
+            if (rows.hasNext())
+                cols = Arrays.stream(rows.next()).iterator();
+        }
 
+        public int next() {
+            return cols.next();
+
+        }
+
+        public boolean hasNext() {
+            if (cols.hasNext())
+                return true;
+            else {
+                if(rows.hasNext()){
+                    cols = Arrays.stream(rows.next()).iterator();
+                    return cols.hasNext();
+                }
+                return false;
+            }
+        }
     }
+
     // LeetCode :: 384. Shuffle an Array
     // The idea is use The Fisher-Yates algorithm for random shuffling
     // The Fisher-Yates algorithm runs in linear time, as generating a

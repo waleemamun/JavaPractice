@@ -1877,7 +1877,7 @@ public class SolutionsV1 {
             }
             else { // sum is negative, so discard everything up to this point
                 firstPositive = -1;
-                sum = 0;
+                sum = 0; // sum was negative so discard this from our candidate starting index
             }
             j++;
         }

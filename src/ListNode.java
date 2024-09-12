@@ -423,6 +423,25 @@ public class ListNode {
         return newHead.next;
     }
 
+    public ListNode reverseList4(ListNode head) {
+        if (head == null)
+            return head;
+        ListNode dummy = new ListNode();
+        ListNode c = revLs(head, dummy);
+        return dummy.next;
+
+    }
+    public ListNode revLs(ListNode node, ListNode nh) {
+        if (node.next == null){
+            nh.next = node;
+            return node;
+        }
+        ListNode c = revLs(node.next, nh);
+        c.next = node;
+        node.next = null;
+        return node;
+    }
+
     // LeetCode 25:  Reverse Nodes in k-Group
     // The idea is to call the api (revListFromTo) multiple times.
     // The api reverses all the node between fromNode & toNode.
@@ -643,6 +662,7 @@ public class ListNode {
     }
 
     // Leetcode :: 86 Partition List
+    // Note the version 2 exactly same idea but more concise coding
     // The idea is to use two heads frontHead & tailHead, frontHead points to the list of lower values
     // & tailHead points to the head of greater or equal values. Then we use two moving pointers front
     // & tail two add element in the fronthead list & tailHead List. At the end we make frontHead list
@@ -691,6 +711,25 @@ public class ListNode {
         if (tail != null)
             tail.next = null;
         return frontHead;
+    }
+
+    public ListNode partitionV2(ListNode head, int x) {
+        ListNode dm1 = new ListNode();
+        ListNode dm2 = new ListNode();
+        ListNode d1 = dm1, d2 = dm2 , cur = head;
+        while (cur!= null) {
+            if(cur.val < x){
+                d1.next = cur;
+                d1 = d1.next;
+            } else {
+                d2.next = cur;
+                d2 = d2.next;
+            }
+            cur = cur.next;
+        }
+        d2.next = null;
+        d1.next = dm2.next;
+        return dm1.next;
     }
 
     // 92. Reverse Linked List II
@@ -858,8 +897,7 @@ public class ListNode {
             slow = slow.next;
         }
         // make the first list end point to null & return a pointer to the middle of the list
-        if (preSlow != null)
-            preSlow.next = null;
+        preSlow.next = null;
         // recursive sort the left half of the list
         ListNode ls1= mergeSortList(l1);
         // recursive sort the right half of the list
