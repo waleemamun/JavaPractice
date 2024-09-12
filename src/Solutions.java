@@ -169,10 +169,10 @@ public class Solutions {
 
     //LeetCode 9 Palindrome Number
 
-    public boolean isPalindrome(int x) {
+    public boolean isPalindrome(Integer x) {
         if (x < 0)
             return false;
-        String str = new Integer(x).toString();
+        String str = x.toString();
         int i = 0;
         int j = str.length()-1;
         while ( i <= j && str.charAt(i) == str.charAt(j)) {
