@@ -300,11 +300,12 @@ public class Main {
 
         int[][] vec = {{1,2,3}, {4,5,6}, {7,8,9}};
         Iterator<int []> o = Arrays.stream(vec).iterator();
-        SolStrings sl1 = new SolStrings();
         while(o.hasNext()) {
             int []x = o.next();
             System.out.println(Arrays.toString(x));
         }
+        SolStrings sl1 = new SolStrings();
+        sl1.repeatLimitedString("cczzazcc", 3);
 
 
 

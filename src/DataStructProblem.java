@@ -1810,4 +1810,43 @@ public class DataStructProblem {
         }
     }
 
+    // 155. Min Stack
+    // The idea is to keep a stack of minimum stack minStk alongside the main stack
+    // we keep the so far minimums in the minStk, if a value bigger than the so far min appears
+    // in the main stack it's okay because that value will be popped before this min stack anyway
+    // push in the minStk if the top os the stk >= current pushed value
+    // pop from the minStk if the top is equal to the currnet pop value
+    class MinStack {
+        Stack<Integer> stk;
+        Stack<Integer> minStk;
+
+        public MinStack() {
+            stk = new Stack<>();
+            minStk = new Stack<>();
+
+        }
+
+        public void push(int val) {
+            stk.push(val);
+            if (minStk.isEmpty() || minStk.peek()>=val){
+                minStk.push(val);
+            }
+        }
+
+        public void pop() {
+            if(!minStk.isEmpty() && minStk.peek().equals(stk.peek())) {
+                minStk.pop();
+            }
+            stk.pop();
+        }
+
+        public int top() {
+            return stk.peek();
+        }
+
+        public int getMin() {
+            return  minStk.peek();
+        }
+    }
+
 }

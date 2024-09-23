@@ -13,9 +13,9 @@ public class SolutionsV2 {
     // from current val.So the perfect candiate would be a TreeSet. We have to keep right fixed so to solve
     // this we can use a TreeSet store all the value in sliding window in TreeSet (which is a sorted Set) Now we make
     // use of the floor & ceiling method TreeSet.
-    // floor​(E e): This method returns the greatest element in this set less than or equal to the given element,
+    // floor(E e): This method returns the greatest element in this set less than or equal to the given element,
     // or null if there is no such element.
-    // ceiling​(E e): This method returns the least element in this set greater than or equal to the given element,
+    // ceiling(E e): This method returns the least element in this set greater than or equal to the given element,
     // or null if there is no such element.
     // Check the version2 its more easy to read
     public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {

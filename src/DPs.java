@@ -9,7 +9,7 @@ public class DPs {
     /***
      * Notes: Donot confuse divide & conquer with DP. If we divide a problem into two halves and solve
      * the problem in halves its actually divide & conquer.
-     * For DP we need overlapping sub problems, & combinning the subproblem creates a solution to the orginal problem
+     * For DP we need overlapping sub problems, & combinning the subproblem creates a solution to the original problem
      * DP can be solved using top down memoization approach or bottom UP approach
      *
      ***/
@@ -21,6 +21,8 @@ public class DPs {
     // This is also a DP problem notice in here we based our solution of ith element based on the solution of i-1
     // element hence using overlapping sub problems
     // This is also called the kadane's algorithm
+    // The dp solution: dp[i] = max(nums[i], nums[i] + runningSum)
+    // we make a decision from the two option look at the version 2 for concise and more appropriate solution
     public int maxSubArray(int[] nums) {
 
         int maxSum = nums[0];
@@ -769,7 +771,7 @@ public class DPs {
 
     // Here we do another further optimisation by using a Max value to set the dp array,
     // we feel the dp array with max val which helps to get over multiple if & else condition
-    // in the previous cases. So its be come less clumssy.
+    // in the previous cases. So its become less clumsy.
     // Note: when dealing with mins in an array its often easier to set the whole array to max
     // Note: here that we need to get the minimum count of coin not ways ot reach the amount that's
     // why we have the +1 in the dp eqn
@@ -2191,6 +2193,60 @@ public class DPs {
         return dp[1][n-2];
     }
 
+    // LeetCode :: 788. Rotated Digits
+    // Using DP this problem become O(n) time and space.
+    // The brute force is also O(n*d) where d is the length of the digit, where d is close to 6 so O(n*d) == O(n)
+    // But the DP approach is nice
+    // The idea is to check if we can decompose the current digit to some previous digits which can be rotated
+    // for example if the current digit is 212 we decompose it to 21 and 2 and check if 21 and 2 are rotatable
+    // if true we mark this '212' as rotatable and increase count. Special case is number 0,1 and 8 where we the
+    // dp state 1 indicates this is rotateble but if it forms with another digit with dp state 2
+    // dp[i] = 2 if dp[i/10]>=1 and dp[i/10] >=1
+    // dp[i] = 1 if dp[i/10] == 1  and dp[i/10] == 1
+    // else dp[i] = 0
+    public int rotatedDigits(int n) {
+        int []digits = new int[n+1];
+        int count = 0;
+        digits[0] = 1;
+
+        for (int i = 1; i <= n; i++){
+            if (i < 10) {
+                if (i == 1 || i == 8 || i == 0)
+                    digits[i] = 1;
+                if (i == 2 || i == 5 || i == 6 || i == 9) {
+                    digits[i] = 2;
+                    count++;
+                }
+            } else {
+                int div = digits[i / 10];
+                int rem = digits[i % 10];
+                if (div == 1 && rem == 1){
+                    digits[i] = 1;
+                }else if (div>=1 && rem>=1) {
+                    digits[i] = 2;
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    // LC :: 1143 Longest Common Subsequnce
+    // Classic LCS solution dp(i,j) = dp(i-1, j-1) if s[i] == t[j]
+    //                      dp(i,j) = max(dp(i,j-1), dp(i-1, j)) if s[i]!=t[j]
+    public int longestCommonSubsequence(String text1, String text2) {
+        int [][]dp = new int[text1.length()+1][text2.length()+1];
+        for(int i = 1; i < dp.length; i++) {
+            for(int j = 1; j < dp[0].length; j++) {
+                if (text1.charAt(i-1) == text2.charAt(j-1)) {
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                }
+            }
+        }
+        return dp[text1.length()][text2.length()];
+    }
 
 
 
